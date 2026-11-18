@@ -1,0 +1,27 @@
+<button type="button" class="eds-button eds-button-tertiary" id="abrir-menu">Menu</button>
+
+<dialog class="eds-drawer eds-drawer-start" id="drawer-menu" aria-labelledby="drawer-menu-t">
+  <header class="eds-drawer-header">
+    <h2 class="eds-drawer-title" id="drawer-menu-t">Menu</h2>
+    <form method="dialog">
+      <button class="eds-button eds-button-ghost eds-button-icon" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </form>
+  </header>
+  <div class="eds-drawer-body">
+    <ul>
+      <li><a href="/inicio">Início</a></li>
+      <li><a href="/projetos">Projetos</a></li>
+      <li><a href="/relatorios">Relatórios</a></li>
+    </ul>
+  </div>
+</dialog>
+
+<script>
+  document.getElementById('abrir-menu').addEventListener('click', () => {
+    document.getElementById('drawer-menu').showModal();
+  });
+</script>

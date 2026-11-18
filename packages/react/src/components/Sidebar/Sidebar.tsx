@@ -19,7 +19,7 @@ import { flushSync } from 'react-dom';
 import { cx } from '../../utils/cx';
 import { SidebarCollapseGlyph } from '../../internal/glyphs-d';
 import { mergeRefs } from '../../internal/refs-d';
-import { AppShellContext, useShellState } from '../AppShell/context';
+import { AppShellContext, SidebarSlotContext, useShellState } from '../AppShell/context';
 
 const SidebarContext = createContext<{ onNavigate: () => void } | null>(null);
 
@@ -68,7 +68,10 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
 ) {
   const uid = useId();
   const local = useShellState(rest.id ?? `${uid}-nav`, '');
-  const shell = useContext(AppShellContext) ?? local;
+  // Só a Sidebar do slot `sidebar` do AppShell usa o estado do shell; fora dele é avulsa.
+  const inShellSlot = useContext(SidebarSlotContext);
+  const shellContext = useContext(AppShellContext);
+  const shell = (inShellSlot ? shellContext : null) ?? local;
   const navRef = useRef<HTMLElement>(null);
 
   const [innerCollapsed, setInnerCollapsed] = useState(defaultCollapsed);
@@ -120,6 +123,8 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
     current.closeNav();
   };
 
+  // A <nav> sempre tem id: o do consumidor, o do shell (slot) ou o local gerado com useId.
+  const navId = ownId ?? shell.navId;
   const hasHeader = brandIcon !== undefined || brandLabel !== undefined;
   const hasFooter = footer !== undefined || collapsible;
 
@@ -128,7 +133,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
       <nav
         {...rest}
         ref={mergeRefs(navRef, ref)}
-        id={ownId ?? shell.navId}
+        id={navId}
         popover="auto"
         aria-label={ariaLabel}
         data-collapsed={isCollapsed || undefined}
@@ -149,6 +154,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
                 type="button"
                 className="eds-sidebar-item"
                 aria-expanded={!isCollapsed}
+                aria-controls={navId}
                 onClick={toggleCollapsed}
               >
                 {collapseIcon ?? <SidebarCollapseGlyph />}

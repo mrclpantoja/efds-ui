@@ -20,7 +20,18 @@
  * absolute na sua posição estática (insets auto). Sidebar e item NÃO são posicionados, então o
  * bloco de contenção é .eds-app (fora do overflow da sidebar) e o rótulo não é recortado.
  * Não use title.
- * Faixas lidas do contêiner eds-app (layout/app.css); fora de .eds-app fica expandida.
+ * Faixas lidas do contêiner eds-app (layout/app.css) e aplicadas SÓ à sidebar do shell
+ * (.eds-app > .eds-sidebar). Qualquer outra .eds-sidebar (amostra no <main>, painel lateral
+ * de página) fica sempre expandida e estática, mesmo dentro de um .eds-app; só [data-collapsed]
+ * a compacta.
+ *
+ * Modificador .eds-sidebar-full (apenas na sidebar do shell): menu só de texto que não cabe em
+ * trilho de ícones. Mantém rótulos e largura cheia na faixa 768–1023px; abaixo de 768px
+ * segue off-canvas como as demais. ≥ 1024px não muda nada. Botão de colapsar (.eds-sidebar-item
+ * com aria-expanded no rodapé): sem o modificador ele some abaixo de 1024px; com o modificador
+ * continua visível e funcional de 768 a 1023px (alterna [data-collapsed] na sidebar, vira
+ * trilho como em ≥ 1024px) e some abaixo de 768px. O ícone do botão deve ser coerente com isso
+ * (aria-expanded vem do JS/React, não do CSS).
  *
  * Off-canvas (mobile, [popover]) NÃO é modal: o navegador dá Esc, clique fora e foco de
  * volta ao gatilho, mas o Tab pode sair para o conteúdo atrás do backdrop. O JS deve, no
@@ -212,9 +223,13 @@
     --_sidebar-tip-fg: var(--eds-color-bg-surface);
   }
 
-  /* Tablet (e fallback do mobile sem Popover API): compacta automática. */
+  /* Escopo: as faixas abaixo valem só para a sidebar DO SHELL (filha direta de .eds-app). Uma
+     sidebar de exemplo dentro do <main>, ou em qualquer outro lugar, fica sempre expandida e
+     estática (a menos que receba [data-collapsed]). :where() mantém a especificidade de uma
+     classe, como o restante do arquivo.
+     Tablet (e fallback do mobile sem Popover API): compacta automática, exceto .eds-sidebar-full. */
   @container eds-app (width < 1024px) {
-    .eds-sidebar {
+    :where(.eds-app) > .eds-sidebar:where(:not(.eds-sidebar-full)) {
       --_sidebar-width: var(--eds-layout-sidebar-width-collapsed);
       --_sidebar-text: 0;
       --_sidebar-tip-position: absolute;
@@ -227,18 +242,43 @@
       --_sidebar-tip-fg: var(--eds-color-bg-surface);
     }
 
-    /* Abaixo de 1024px o contêiner já compacta (ou é off-canvas): o botão de colapsar não tem
-       efeito e exporia aria-expanded="true" com a sidebar compacta. Volta a aparecer em ≥ 1024px. */
-    .eds-sidebar-footer > .eds-sidebar-item[aria-expanded] {
+    /* Sem .eds-sidebar-full, abaixo de 1024px o contêiner já compacta (ou é off-canvas): o botão
+       de colapsar não tem efeito e exporia aria-expanded="true" com a sidebar compacta. Volta a
+       aparecer em ≥ 1024px. Com .eds-sidebar-full ele segue visível e funcional de 768 a 1023. */
+    :where(.eds-app)
+      > .eds-sidebar:where(:not(.eds-sidebar-full))
+      .eds-sidebar-footer
+      > .eds-sidebar-item[aria-expanded] {
+      display: none;
+    }
+  }
+
+  /* .eds-sidebar-full: só abaixo de 768px volta ao comportamento comum (compacta no fallback
+     sem Popover API; off-canvas logo abaixo, quando há suporte). O botão de colapsar some. */
+  @container eds-app (width < 768px) {
+    :where(.eds-app) > .eds-sidebar-full {
+      --_sidebar-width: var(--eds-layout-sidebar-width-collapsed);
+      --_sidebar-text: 0;
+      --_sidebar-tip-position: absolute;
+      --_sidebar-tip-offset: calc(
+        var(--eds-layout-sidebar-width-collapsed) - var(--_sidebar-pad) -
+          var(--_sidebar-item-start) + var(--eds-space-1)
+      );
+      --_sidebar-tip-pad: var(--eds-space-1) var(--eds-space-2);
+      --_sidebar-tip-bg: var(--eds-color-text-primary);
+      --_sidebar-tip-fg: var(--eds-color-bg-surface);
+    }
+
+    :where(.eds-app) > .eds-sidebar-full .eds-sidebar-footer > .eds-sidebar-item[aria-expanded] {
       display: none;
     }
   }
 
   /* Mobile: off-canvas no top layer via Popover API (Esc, clique fora e aria-expanded no
-     botão vêm do navegador). Sempre expandida; ignora [data-collapsed]. */
+     botão vêm do navegador). Sempre expandida; ignora [data-collapsed]. Só a sidebar do shell. */
   @supports selector(:popover-open) {
     @container eds-app (width < 768px) {
-      .eds-sidebar[popover] {
+      :where(.eds-app) > .eds-sidebar[popover] {
         /* % resolve contra a viewport (bloco de contenção do fixed): sobra uma faixa do fundo. */
         --_sidebar-width: min(var(--eds-layout-sidebar-width), calc(100% - var(--eds-space-9)));
         --_sidebar-text: 1;

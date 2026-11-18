@@ -298,6 +298,56 @@ describe('Toast', () => {
     expect(toasts()).toHaveLength(0);
   });
 
+  describe('severidade em texto', () => {
+    const hidden = () => document.querySelector('.eds-toast .eds-visually-hidden');
+
+    it.each([
+      ['info', 'Informação:'],
+      ['success', 'Sucesso:'],
+      ['warning', 'Atenção:'],
+      ['danger', 'Erro:'],
+    ] as const)('sem title, %s ganha o prefixo oculto "%s"', async (variant, label) => {
+      const user = setupUser();
+      render(
+        <ToastProvider>
+          <Trigger options={{ variant, message: 'Pedido salvo.' }} />
+        </ToastProvider>,
+      );
+      await user.click(screen.getByRole('button', { name: 'Disparar' }));
+      expect(hidden()).toHaveTextContent(label);
+      expect(document.querySelector('.eds-toast-content')).toHaveTextContent(
+        `${label} Pedido salvo.`,
+      );
+    });
+
+    it('com title, não há prefixo oculto', async () => {
+      const user = setupUser();
+      render(
+        <ToastProvider>
+          <Trigger options={{ variant: 'success', title: 'Sucesso:', message: 'Salvo.' }} />
+        </ToastProvider>,
+      );
+      await user.click(screen.getByRole('button', { name: 'Disparar' }));
+      expect(hidden()).toBeNull();
+      expect(document.querySelector('.eds-toast-content')).toHaveTextContent('Sucesso: Salvo.');
+    });
+
+    it('severityLabels substitui só as variantes informadas', async () => {
+      const user = setupUser();
+      render(
+        <ToastProvider severityLabels={{ success: 'Done:' }}>
+          <Trigger options={{ variant: 'success', message: 'Ok.' }} label="S" />
+          <Trigger options={{ variant: 'warning', message: 'Cuidado.' }} label="W" />
+        </ToastProvider>,
+      );
+      await user.click(screen.getByRole('button', { name: 'S' }));
+      await user.click(screen.getByRole('button', { name: 'W' }));
+      const [ok, aviso] = Array.from(toasts());
+      expect(ok!.querySelector('.eds-visually-hidden')).toHaveTextContent('Done:');
+      expect(aviso!.querySelector('.eds-visually-hidden')).toHaveTextContent('Atenção:');
+    });
+  });
+
   describe('dentro de dialog:modal', () => {
     function Page({ open }: { open: boolean }) {
       return (

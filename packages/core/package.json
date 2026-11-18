@@ -1,13 +1,18 @@
 {
   "name": "@eds-ui/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
   "description": "CSS puro do eDS.ui: tokens, base, layout e componentes.",
+  "keywords": [
+    "design-system",
+    "css",
+    "design-tokens",
+    "eds"
+  ],
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "sideEffects": [
     "*.css"
@@ -40,5 +45,14 @@
   },
   "devDependencies": {
     "vite": "catalog:"
+  },
+  "publishConfig": {
+    "exports": {
+      "./index.css": "./dist/index.css",
+      "./tokens.css": "./dist/tokens.css",
+      "./base.css": "./dist/base.css",
+      "./layout/*.css": "./dist/layout/*.css",
+      "./components/*.css": "./dist/components/*.css"
+    }
   }
 }

@@ -1,0 +1,26 @@
+<div class="eds-grid eds-grid-auto">
+  <div class="eds-field">
+    <label class="eds-label" for="sel-depto" data-required>Departamento</label>
+    <select id="sel-depto" class="eds-select" required>
+      <option value="" disabled selected>Selecione</option>
+      <option>Compras</option>
+      <option>Financeiro</option>
+      <option>Tecnologia</option>
+    </select>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="sel-prio">Prioridade</label>
+    <select id="sel-prio" class="eds-select" aria-invalid="true" aria-describedby="sel-prio-erro">
+      <option value="">Selecione</option>
+      <option>Alta</option>
+      <option>Baixa</option>
+    </select>
+    <p class="eds-error" id="sel-prio-erro">Escolha uma prioridade.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="sel-regiao">Região</label>
+    <select id="sel-regiao" class="eds-select" disabled>
+      <option>Sudeste</option>
+    </select>
+  </div>
+</div>

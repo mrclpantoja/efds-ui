@@ -1,0 +1,49 @@
+<div class="eds-app">
+  <a class="eds-skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <nav class="eds-sidebar" id="nav" popover aria-label="Principal">
+    <div class="eds-sidebar-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 2 3 7v10l9 5 9-5V7z" />
+        <path d="M3 7l9 5 9-5M12 12v10" />
+      </svg>
+      <span class="eds-sidebar-label">Gestão Exemplo</span>
+    </div>
+    <div class="eds-sidebar-section">
+      <p class="eds-sidebar-section-title">Geral</p>
+      <a class="eds-sidebar-item" href="/dashboard" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="9" rx="1" />
+          <rect x="14" y="3" width="7" height="5" rx="1" />
+          <rect x="14" y="12" width="7" height="9" rx="1" />
+          <rect x="3" y="16" width="7" height="5" rx="1" />
+        </svg>
+        <span class="eds-sidebar-label">Dashboard</span>
+      </a>
+      <a class="eds-sidebar-item" href="/usuarios">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="8" r="4" />
+          <path d="M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3" />
+        </svg>
+        <span class="eds-sidebar-label">Usuários</span>
+      </a>
+    </div>
+  </nav>
+
+  <header class="eds-app-header eds-navbar">
+    <!-- Visível só quando a sidebar vira off-canvas (abaixo de 768px de largura do shell). -->
+    <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-app-nav-toggle"
+      popovertarget="nav" aria-label="Abrir navegação" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+    <div class="eds-navbar-actions">
+      <input class="eds-input" type="search" placeholder="Buscar…" aria-label="Buscar no sistema" />
+    </div>
+  </header>
+
+  <main class="eds-app-main" id="conteudo" tabindex="-1">
+    <h1 class="eds-text-h1">Dashboard</h1>
+  </main>
+</div>

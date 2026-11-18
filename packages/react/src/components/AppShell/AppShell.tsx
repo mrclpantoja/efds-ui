@@ -16,7 +16,13 @@ import { MenuGlyph } from '../../internal/glyphs-d';
 import { mergeRefs } from '../../internal/refs-d';
 import { Button } from '../Button';
 import { Navbar, type NavbarProps } from '../Navbar';
-import { AppShellContext, useAppShell, useInert, useShellState } from './context';
+import {
+  AppShellContext,
+  SidebarSlotContext,
+  useAppShell,
+  useInert,
+  useShellState,
+} from './context';
 
 export interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Slot da `<Sidebar>`. */
@@ -85,7 +91,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
         <a ref={skipRef} className="eds-skip-link" href={`#${mainId}`} onClick={skip}>
           {skipLinkLabel}
         </a>
-        {sidebar}
+        <SidebarSlotContext.Provider value>{sidebar}</SidebarSlotContext.Provider>
         {header}
         <main
           ref={mergeRefs(innerMainRef, mainRef)}

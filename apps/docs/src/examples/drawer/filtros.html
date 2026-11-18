@@ -1,0 +1,53 @@
+<button type="button" class="eds-button eds-button-secondary" id="abrir-filtros">Filtros</button>
+
+<dialog class="eds-drawer" id="drawer-filtros" aria-labelledby="drawer-filtros-t">
+  <header class="eds-drawer-header">
+    <h2 class="eds-drawer-title" id="drawer-filtros-t">Filtros</h2>
+    <button type="submit" form="filtros-f" formmethod="dialog" formnovalidate
+      class="eds-button eds-button-ghost eds-button-icon" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </header>
+  <div class="eds-drawer-body">
+    <form id="filtros-f" method="dialog" class="eds-stack eds-gap-4">
+      <div class="eds-field">
+        <label class="eds-label" for="filtro-busca">Buscar</label>
+        <input id="filtro-busca" class="eds-input" autocomplete="off" placeholder="Nome ou código" />
+      </div>
+      <div class="eds-field">
+        <label class="eds-label" for="filtro-dep">Departamento</label>
+        <select id="filtro-dep" class="eds-select">
+          <option value="">Todos</option>
+          <option>Compras</option>
+          <option>Financeiro</option>
+          <option>Tecnologia</option>
+        </select>
+      </div>
+      <fieldset class="eds-fieldset">
+        <legend class="eds-legend">Situação</legend>
+        <label class="eds-check"><input type="checkbox" class="eds-checkbox" checked /> Em andamento</label>
+        <label class="eds-check"><input type="checkbox" class="eds-checkbox" /> Concluído</label>
+        <label class="eds-check"><input type="checkbox" class="eds-checkbox" /> Arquivado</label>
+      </fieldset>
+      <label class="eds-check">
+        <input type="checkbox" role="switch" class="eds-switch" />
+        Somente meus projetos
+      </label>
+    </form>
+  </div>
+  <footer class="eds-drawer-footer">
+    <button type="reset" form="filtros-f" class="eds-button eds-button-tertiary">Limpar</button>
+    <button type="submit" form="filtros-f" formmethod="dialog" formnovalidate class="eds-button eds-button-secondary">Cancelar</button>
+    <button type="submit" form="filtros-f" class="eds-button eds-button-primary">Aplicar</button>
+  </footer>
+</dialog>
+
+<script>
+  document.getElementById('abrir-filtros').addEventListener('click', () => {
+    const dialog = document.getElementById('drawer-filtros');
+    dialog.showModal();
+    document.getElementById('filtro-busca').focus();
+  });
+</script>

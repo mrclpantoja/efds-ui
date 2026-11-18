@@ -20,10 +20,20 @@ export type ToastVariant = 'info' | 'success' | 'warning' | 'danger';
 export interface ToastOptions {
   /** Padrão: `info`. `danger` e `warning` não fecham sozinhos; `danger` é anunciado como `alert`. */
   variant?: ToastVariant;
-  /** Rótulo em destaque que diz a severidade (ex.: "Erro:"): a cor nunca é o único canal. */
+  /**
+   * Rótulo em destaque que diz a severidade (ex.: "Erro:"): a cor nunca é o único canal.
+   * Sem `title`, a severidade vai num prefixo oculto (ver `severityLabels` do `ToastProvider`).
+   */
   title?: string;
   message: string;
 }
+
+const severityDefault: Record<ToastVariant, string> = {
+  info: 'Informação:',
+  success: 'Sucesso:',
+  warning: 'Atenção:',
+  danger: 'Erro:',
+};
 
 export interface ToastApi {
   /** Enfileira um toast e devolve o id. O foco volta ao elemento ativo de agora ao fechar. */
@@ -92,12 +102,21 @@ interface ToastItemProps {
   toast: ToastEntry;
   paused: boolean;
   closeLabel: string;
+  severityLabel: string;
   remaining: RefObject<Map<number, number>>;
   register: (id: number, el: HTMLElement | null) => void;
   onDismiss: (id: number) => void;
 }
 
-function ToastItem({ toast, paused, closeLabel, remaining, register, onDismiss }: ToastItemProps) {
+function ToastItem({
+  toast,
+  paused,
+  closeLabel,
+  severityLabel,
+  remaining,
+  register,
+  onDismiss,
+}: ToastItemProps) {
   const { id, variant, title, message, closing } = toast;
 
   // Tempo restante vive no provider: sobrevive à remontagem da região (abrir/fechar modal).
@@ -130,7 +149,11 @@ function ToastItem({ toast, paused, closeLabel, remaining, register, onDismiss }
       onKeyDown={handleKeyDown}
     >
       <div className="eds-toast-content">
-        {title ? <strong className="eds-toast-title">{title}</strong> : null}
+        {title ? (
+          <strong className="eds-toast-title">{title}</strong>
+        ) : (
+          <span className="eds-visually-hidden">{severityLabel} </span>
+        )}
         {title ? ' ' : null}
         {message}
       </div>
@@ -154,6 +177,11 @@ export interface ToastProviderProps {
   closeLabel?: string;
   /** Toasts visíveis ao mesmo tempo; os demais esperam na fila. Padrão: 3. */
   maxVisible?: number;
+  /**
+   * Prefixo oculto (só leitores de tela) que diz a severidade quando o toast não tem `title`.
+   * Padrão: "Informação:", "Sucesso:", "Atenção:", "Erro:". Substitua por variante (i18n).
+   */
+  severityLabels?: Partial<Record<ToastVariant, string>>;
 }
 
 /**
@@ -164,6 +192,7 @@ export function ToastProvider({
   children,
   closeLabel = 'Fechar notificação',
   maxVisible = 3,
+  severityLabels,
 }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastEntry[]>([]);
   const nextId = useRef(1);
@@ -254,6 +283,7 @@ export function ToastProvider({
           toast={toast}
           paused={hover || focusWithin}
           closeLabel={closeLabel}
+          severityLabel={severityLabels?.[toast.variant] ?? severityDefault[toast.variant]}
           remaining={remaining}
           register={register}
           onDismiss={dismiss}

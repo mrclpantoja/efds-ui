@@ -28,6 +28,13 @@ export interface AppShellState {
 
 export const AppShellContext = createContext<AppShellState | null>(null);
 
+/**
+ * Verdadeiro só no slot `sidebar` do AppShell. Uma Sidebar fora dele (ex.: num exemplo dentro
+ * do conteúdo) não adota o estado do shell: senão herdaria o mesmo navId (id duplicado) e
+ * passaria a responder ao gatilho do menu da página.
+ */
+export const SidebarSlotContext = createContext(false);
+
 /** Estado do shell: usado pelo AppShell e, como reserva local, pela Sidebar avulsa. */
 export function useShellState(navId: string, mainId: string): AppShellState {
   const [navOpen, setNavOpen] = useState(false);

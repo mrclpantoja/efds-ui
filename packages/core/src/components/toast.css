@@ -22,7 +22,9 @@
    um modal que atinja o max-block-size (corpo rolando) pode ter o rodapé tocado pelo toast.
    Posição (decisão): canto inferior-final a partir de 640px; abaixo disso, largura total menos o
    gutter, no rodapé. No topo a região cobria os botões do header (WCAG 2.4.11); o app que tiver
-   barra de ação ou navegação inferior fixa deve deslocar a região (inset-block-end). */
+   barra de ação ou navegação inferior fixa deve deslocar a região (inset-block-end).
+   Foco não obscurecido: enquanto há toast, layout/app.css aplica scroll-padding-block-end no
+   documento e na .eds-app-main (via :has), para que o foco rolado não fique sob a região. */
 @layer eds.components {
   .eds-toast-region {
     /* Camada interna (não há token de z-index): acima de navbar/sidebar fixos. */

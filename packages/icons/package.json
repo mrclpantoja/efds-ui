@@ -1,10 +1,16 @@
 {
   "name": "@eds-ui/icons",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
   "description": "Ícones do eDS.ui.",
+  "keywords": [
+    "design-system",
+    "react",
+    "icons",
+    "eds"
+  ],
   "files": [
     "dist"
   ],

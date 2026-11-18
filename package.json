@@ -11,10 +11,13 @@
   },
   "scripts": {
     "dev": "pnpm --filter @eds-ui/playground dev",
+    "docs:dev": "pnpm --filter @eds-ui/docs dev",
+    "docs:check": "pnpm --filter @eds-ui/docs check:visual",
     "tokens": "node scripts/build-tokens.ts",
     "tokens:check": "node scripts/build-tokens.ts --check",
     "prebuild": "pnpm tokens",
     "build": "pnpm -r build",
+    "pack:check": "node scripts/check-pack.ts",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
     "test": "pnpm -r test",

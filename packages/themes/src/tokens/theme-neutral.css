@@ -1,14 +1,14 @@
 /* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/theme-neutral.json */
-/* Tema neutral: acento em cinzas (500 = gray-700) */
+/* Tema neutral: acento em cinzas (500 = gray-700). No modo escuro a ação precisa ser mais clara que text-secondary (gray-300), então 400/300/200 sobem para gray-100/50/0 (hover e active seguem clareando) */
 
 /* prettier-ignore */
 @layer eds.tokens {
   [data-theme="neutral"] {
     --eds-accent-50: var(--eds-gray-200);
     --eds-accent-100: var(--eds-gray-100);
-    --eds-accent-200: var(--eds-gray-200);
-    --eds-accent-300: var(--eds-gray-300);
-    --eds-accent-400: var(--eds-gray-400);
+    --eds-accent-200: var(--eds-gray-0);
+    --eds-accent-300: var(--eds-gray-50);
+    --eds-accent-400: var(--eds-gray-100);
     --eds-accent-500: var(--eds-gray-700);
     --eds-accent-600: var(--eds-gray-800);
     --eds-accent-700: var(--eds-gray-900);

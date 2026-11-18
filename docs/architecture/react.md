@@ -50,3 +50,9 @@ Vitest + Testing Library + `user-event` + matchers do jest-dom (já no setup do 
 | Table, Pagination, EmptyState                                              | pronto | D    |
 
 Ícones (`@eds-ui/icons`): 18 prontos (busca, filtro, mais, editar, excluir, 4 chevrons, fechar, check, setas, menu, sino, usuário, download, adicionar). Demais sob demanda.
+
+## Notas de comportamento (Fase 6)
+
+- **Toast sem `title`**: a severidade vai num `<span class="eds-visually-hidden">` ("Informação:", "Sucesso:", "Atenção:", "Erro:"), como no `severityLabel` do Alert. Com `title`, nada é acrescentado. Para i18n: `<ToastProvider severityLabels={{ danger: 'Error:' }} />` (`Partial<Record<ToastVariant, string>>`).
+- **Sidebar**: o botão de colapsar leva `aria-expanded` e `aria-controls` apontando para o `id` da `<nav>` (do consumidor, do shell no slot `sidebar` ou o gerado localmente); a `<nav>` sempre tem id.
+- **Modal/Drawer (DialogBase)**: se o consumidor mantém `open` e ignora `onClose`, o dialog é reaberto 50 ms após o fechamento nativo (2º Esc). O foco volta ao último elemento focado dentro do dialog (rastreado por `focusin`), não ao botão Fechar.

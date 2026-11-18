@@ -11,6 +11,7 @@ Requer Node >= 20 e pnpm 12 (versão fixada em `packageManager`).
 | `pnpm install`      | Instala as dependências do monorepo   |
 | `pnpm dev`          | Sobe o playground (Vite)              |
 | `pnpm build`        | Compila todos os pacotes              |
+| `pnpm pack:check`   | Valida os tarballs (não publica)      |
 | `pnpm typecheck`    | Verifica os tipos (TypeScript strict) |
 | `pnpm lint`         | ESLint em todo o repositório          |
 | `pnpm test`         | Testes (Vitest + Testing Library)     |
@@ -42,6 +43,15 @@ packages/
   icons/        ícones
 tooling/
   typescript-config/  eslint-config/  vitest-config/
+scripts/        gerador de tokens (build-tokens.ts) e verificação de tarballs (check-pack.ts)
+docs/           documentos de arquitetura
+CHANGELOG.md    histórico de versões
 ```
+
+## Publicação
+
+Os pacotes `@eds-ui/core`, `@eds-ui/themes`, `@eds-ui/react` e `@eds-ui/icons` estão na versão 0.1.0, mas **não são publicados**: seguem `"private": true` e `"license": "UNLICENSED"` até o usuário decidir a licença e o nome/escopo `@eds-ui`. `pnpm pack:check` garante que cada tarball é consumível (alvos de `exports` existem, sem testes, `src` ou `workspace:` dentro).
+
+Nos pacotes de CSS (`core`, `themes`), o `package.json` do repositório mantém a condição `development` (aponta para `src`, útil no monorepo); o tarball a remove via `publishConfig.exports` e leva só `dist/`. O `@eds-ui/react` não importa CSS: o consumidor importa o do core.
 
 Dependências: `core` <- `themes`, `core` <- `react` <- `icons`.

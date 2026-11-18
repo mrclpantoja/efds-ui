@@ -13,6 +13,8 @@
  * Faixas (largura do contêiner .eds-app): ≥1024 sidebar expandida · 768–1023 compacta
  * (72px, só ícones) · <768 sidebar vira off-canvas via Popover API (ver sidebar.css).
  * Colapsar à mão: [data-collapsed] na .eds-sidebar (não na .eds-app).
+ * As faixas valem só para a sidebar do shell (.eds-app > .eds-sidebar); `.eds-sidebar-full` nela
+ * mantém a sidebar expandida em 768–1023 (ver sidebar.css).
  *
  *   <div class="eds-app">
  *     <a class="eds-skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -101,6 +103,27 @@
         display: inline-flex;
       }
     }
+  }
+
+  /* Toast e WCAG 2.4.11 (Focus Not Obscured): a região de toasts é position: fixed no canto
+     inferior-final e danger/warning não fecham sozinhos; sem folga, um controle focado no rodapé
+     da rolagem ficaria sob ela. Enquanto houver toast, o scroller reserva scroll-padding-block-end:
+     o documento (<html>) e, no app shell, a .eds-app-main (quem rola de fato). Um toast de duas
+     linhas ocupa ~ space-9 + space-4 com a margem da região; o valor soma uma folga (space-5) a
+     isso. Com 2 ou mais toasts empilhados reserva mais um passo. A reserva só existe com toast
+     montado: o :has() sai com o último toast. Limite: pilhas com 3+ toasts cobrem parte da folga. */
+  :where(html):has(.eds-toast-region > .eds-toast) {
+    --_toast-clearance: calc(var(--eds-space-9) + var(--eds-space-5) + var(--eds-space-4));
+
+    scroll-padding-block-end: var(--_toast-clearance);
+  }
+
+  :where(html):has(.eds-toast-region > .eds-toast + .eds-toast) {
+    --_toast-clearance: calc(var(--eds-space-9) * 2 + var(--eds-space-5) + var(--eds-space-4));
+  }
+
+  :where(html):has(.eds-toast-region > .eds-toast) .eds-app-main {
+    scroll-padding-block-end: var(--_toast-clearance);
   }
 
   /* Página que É um app shell (o <main> é a .eds-app-main): o documento nunca rola, quem

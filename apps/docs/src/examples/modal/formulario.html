@@ -1,0 +1,43 @@
+<dialog class="eds-modal" id="modal-novo" aria-labelledby="modal-novo-t">
+  <header class="eds-modal-header">
+    <h2 class="eds-modal-title" id="modal-novo-t">Novo projeto</h2>
+    <!-- form= liga o botão ao formulário do corpo; formmethod="dialog" fecha sem validar. -->
+    <button type="submit" form="modal-novo-f" formmethod="dialog" formnovalidate
+      class="eds-button eds-button-ghost eds-button-icon" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </header>
+  <div class="eds-modal-body">
+    <form id="modal-novo-f" method="dialog" class="eds-stack eds-gap-4">
+      <p class="eds-helper">* campo obrigatório</p>
+      <div class="eds-field">
+        <label class="eds-label" for="modal-nome" data-required>Nome do projeto</label>
+        <input id="modal-nome" class="eds-input" required autofocus autocomplete="off" placeholder="Ex.: Projeto Horizonte" />
+      </div>
+      <div class="eds-field">
+        <label class="eds-label" for="modal-dep" data-required>Departamento</label>
+        <select id="modal-dep" class="eds-select" required>
+          <option value="" disabled selected>Selecione</option>
+          <option>Compras</option>
+          <option>Financeiro</option>
+          <option>Tecnologia</option>
+        </select>
+      </div>
+      <div class="eds-field">
+        <label class="eds-label" for="modal-desc">Descrição</label>
+        <textarea id="modal-desc" class="eds-textarea" aria-describedby="modal-desc-h" placeholder="Objetivo e escopo"></textarea>
+        <p class="eds-helper" id="modal-desc-h">Máximo de 500 caracteres.</p>
+      </div>
+      <label class="eds-check">
+        <input type="checkbox" class="eds-checkbox" checked />
+        Notificar a equipe por e-mail
+      </label>
+    </form>
+  </div>
+  <footer class="eds-modal-footer">
+    <button type="submit" form="modal-novo-f" formmethod="dialog" formnovalidate class="eds-button eds-button-secondary">Cancelar</button>
+    <button type="submit" form="modal-novo-f" class="eds-button eds-button-primary">Criar projeto</button>
+  </footer>
+</dialog>

@@ -12,6 +12,11 @@ export function installDialogPolyfill(): () => void {
     if (this.open) throw new DOMException('já aberto', 'InvalidStateError');
     this.setAttribute('open', '');
     modals.push(this);
+    // Passos de foco do dialog (spec): [autofocus] ou o primeiro focável, que no nosso
+    // markup é o botão Fechar do cabeçalho.
+    this.querySelector<HTMLElement>(
+      '[autofocus], button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    )?.focus();
   };
   proto.show = function show(this: HTMLDialogElement) {
     this.setAttribute('open', '');

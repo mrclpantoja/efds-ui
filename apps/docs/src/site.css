@@ -1,0 +1,345 @@
+/*
+ * CSS do site de documentação: o mínimo que o core não cobre (moldura dos exemplos, código,
+ * links e listas do texto corrido). Só tokens semânticos (--eds-*): nenhum valor literal de
+ * cor, espaço, raio ou altura. Verificado por `pnpm --filter @eds-ui/docs check:visual`.
+ */
+
+.docs-muted {
+  color: var(--eds-color-text-secondary);
+}
+
+/* Respiro vertical da página: o breadcrumb não cola no topo nem o fim na borda. */
+.eds-app-main {
+  padding-block: var(--eds-space-6) var(--eds-space-8);
+}
+
+/*
+ * Medida do texto corrido: ~72 caracteres por linha. Só parágrafos e listas; tabelas, exemplos
+ * e código seguem na largura cheia.
+ */
+:where(.eds-app-main) :is(article, section, .docs-example) > p,
+.docs-list {
+  max-inline-size: 72ch;
+}
+
+/* Links do texto corrido: o reset do core herda a cor do pai. */
+.eds-app-main :is(p, li, td) a:not(.eds-button) {
+  color: var(--eds-color-action-primary);
+  text-underline-offset: 0.2em;
+}
+
+.docs-list {
+  display: grid;
+  gap: var(--eds-space-2);
+  padding-inline-start: var(--eds-space-5);
+  list-style: disc;
+}
+
+/* Código em linha: não quebra no meio (`--` / `eds-`); padding curto, sobra espaço da pontuação. */
+:where(.eds-app-main) code {
+  padding-inline: calc(var(--eds-space-1) / 2);
+  border-radius: var(--eds-radius-sm);
+  background: var(--eds-color-bg-subtle);
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+/* Tipos TypeScript com espaços (uniões) podem quebrar nos espaços. */
+.docs-code-wrap {
+  white-space: normal;
+}
+
+/* Exemplo vivo */
+.docs-example {
+  display: grid;
+  gap: var(--eds-space-3);
+  min-inline-size: 0;
+}
+
+.docs-example-body {
+  display: grid;
+  gap: var(--eds-space-3);
+  padding-block-start: var(--eds-space-2);
+  min-inline-size: 0;
+}
+
+.docs-preview {
+  padding: var(--eds-space-5);
+  border: 1px solid var(--eds-color-border-default);
+  border-radius: var(--eds-radius-lg);
+  background: var(--eds-color-bg-surface);
+  overflow-x: auto;
+}
+
+/* Em contêiner estreito o preview perde parte do respiro. */
+@container eds-app (width < 640px) {
+  .docs-preview {
+    padding: var(--eds-space-3);
+  }
+}
+
+.docs-code-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--eds-space-2);
+  color: var(--eds-color-text-secondary);
+}
+
+.docs-code-bar-label {
+  margin-inline-end: auto;
+}
+
+.docs-code {
+  margin: 0;
+  padding: var(--eds-space-4);
+  border: 1px solid var(--eds-color-border-default);
+  border-radius: var(--eds-radius-md);
+  background: var(--eds-color-bg-subtle);
+  font-size: var(--eds-font-size-small);
+  line-height: var(--eds-line-height-body);
+  overflow-x: auto;
+  tab-size: 2;
+
+  & > code {
+    padding: 0;
+    background: none;
+    font-size: inherit;
+    white-space: inherit;
+  }
+}
+
+/* Menu de aparência (Dropdown com selects) */
+.docs-appearance {
+  padding: var(--eds-space-4);
+}
+
+/* Cards "Quando usar" / "Quando não usar": mesma altura (stretch) na linha do grid. */
+.docs-usecase {
+  block-size: 100%;
+}
+
+/* Marca no header: só quando a sidebar está off-canvas (abaixo de 768px) e não mostra a sua. */
+.docs-header-brand {
+  display: none;
+}
+
+@container eds-app (width < 768px) {
+  .docs-header-brand {
+    display: inline-flex;
+  }
+}
+
+/* Quadros de largura explícita: o Grid responde ao contêiner, não à janela. */
+.docs-frame-wide,
+.docs-frame-narrow {
+  outline: 1px dashed var(--eds-color-border-strong);
+  outline-offset: var(--eds-space-1);
+}
+
+.docs-frame-wide {
+  inline-size: min(100%, var(--eds-layout-container-md));
+}
+
+.docs-frame-narrow {
+  inline-size: min(100%, calc(var(--eds-layout-container-sm) / 2));
+}
+
+/* Amostras de tokens */
+.docs-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--eds-layout-sidebar-width)), 1fr));
+  gap: var(--eds-space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.docs-swatch {
+  display: grid;
+  gap: var(--eds-space-2);
+  padding: var(--eds-space-2);
+  border: 1px solid var(--eds-color-border-default);
+  border-radius: var(--eds-radius-md);
+  background: var(--eds-color-bg-surface);
+  font-size: var(--eds-font-size-small);
+}
+
+.docs-swatch-chip {
+  block-size: var(--eds-control-height-lg);
+  border: 1px solid var(--eds-color-border-default);
+  border-radius: var(--eds-radius-sm);
+}
+
+.docs-sw-bg-page {
+  background: var(--eds-color-bg-page);
+}
+.docs-sw-bg-surface {
+  background: var(--eds-color-bg-surface);
+}
+.docs-sw-bg-subtle {
+  background: var(--eds-color-bg-subtle);
+}
+.docs-sw-text-primary {
+  background: var(--eds-color-text-primary);
+}
+.docs-sw-text-secondary {
+  background: var(--eds-color-text-secondary);
+}
+.docs-sw-text-muted {
+  background: var(--eds-color-text-muted);
+}
+.docs-sw-border-default {
+  background: var(--eds-color-border-default);
+}
+.docs-sw-border-strong {
+  background: var(--eds-color-border-strong);
+}
+.docs-sw-action-primary {
+  background: var(--eds-color-action-primary);
+}
+.docs-sw-action-primary-subtle {
+  background: var(--eds-color-action-primary-subtle);
+}
+.docs-sw-action-danger {
+  background: var(--eds-color-action-danger);
+}
+.docs-sw-status-info {
+  background: var(--eds-color-status-info);
+}
+.docs-sw-status-success {
+  background: var(--eds-color-status-success);
+}
+.docs-sw-status-warning {
+  background: var(--eds-color-status-warning);
+}
+.docs-sw-status-danger {
+  background: var(--eds-color-status-danger);
+}
+.docs-sw-focus-ring {
+  background: var(--eds-color-focus-ring);
+}
+
+/* Escalas de espaço e de raio */
+.docs-scale {
+  display: grid;
+  gap: var(--eds-space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.docs-scale-row {
+  display: grid;
+  grid-template-columns: 22ch 1fr;
+  align-items: center;
+  gap: var(--eds-space-3);
+}
+
+.docs-scale-track {
+  display: flex;
+  align-items: center;
+  gap: var(--eds-space-3);
+}
+
+.docs-scale-bar {
+  flex: none;
+  block-size: var(--eds-space-4);
+  border-radius: var(--eds-radius-sm);
+  background: var(--eds-color-action-primary);
+}
+
+.docs-space-1 {
+  inline-size: var(--eds-space-1);
+}
+.docs-space-2 {
+  inline-size: var(--eds-space-2);
+}
+.docs-space-3 {
+  inline-size: var(--eds-space-3);
+}
+.docs-space-4 {
+  inline-size: var(--eds-space-4);
+}
+.docs-space-5 {
+  inline-size: var(--eds-space-5);
+}
+.docs-space-6 {
+  inline-size: var(--eds-space-6);
+}
+.docs-space-7 {
+  inline-size: var(--eds-space-7);
+}
+.docs-space-8 {
+  inline-size: var(--eds-space-8);
+}
+.docs-space-9 {
+  inline-size: var(--eds-space-9);
+}
+
+.docs-radius-box {
+  inline-size: var(--eds-control-height-lg);
+  block-size: var(--eds-control-height-lg);
+  border: 2px solid var(--eds-color-action-primary);
+  background: var(--eds-color-action-primary-subtle);
+}
+
+.docs-radius-none {
+  border-radius: var(--eds-radius-none);
+}
+.docs-radius-sm {
+  border-radius: var(--eds-radius-sm);
+}
+.docs-radius-md {
+  border-radius: var(--eds-radius-md);
+}
+.docs-radius-lg {
+  border-radius: var(--eds-radius-lg);
+}
+.docs-radius-xl {
+  border-radius: var(--eds-radius-xl);
+}
+.docs-radius-full {
+  border-radius: var(--eds-radius-full);
+}
+
+.docs-radius-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--eds-space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.docs-radius-item {
+  display: grid;
+  justify-items: center;
+  gap: var(--eds-space-2);
+  font-size: var(--eds-font-size-small);
+}
+
+/* Cinco temas lado a lado: cada célula troca só o data-theme. */
+.docs-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--eds-layout-sidebar-width)), 1fr));
+  gap: var(--eds-space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.docs-theme-cell {
+  display: grid;
+  gap: var(--eds-space-3);
+  justify-items: start;
+  padding: var(--eds-space-4);
+  border: 1px solid var(--eds-color-border-default);
+  border-radius: var(--eds-radius-md);
+  background: var(--eds-color-bg-surface);
+  color: var(--eds-color-text-primary);
+}
+
+.docs-theme-cell-chip {
+  inline-size: 100%;
+  block-size: var(--eds-space-3);
+  border-radius: var(--eds-radius-sm);
+  background: var(--eds-color-action-primary);
+}

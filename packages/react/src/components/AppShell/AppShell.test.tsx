@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { AppShell, AppShellHeader, AppShellNavToggle } from './AppShell';
 import { useAppShell } from './context';
+import { Sidebar, SidebarItem } from '../Sidebar/Sidebar';
 
 function Probe() {
   const { navOpen, mainId } = useAppShell();
@@ -35,6 +36,33 @@ describe('AppShell', () => {
     expect(screen.getAllByRole('main')).toHaveLength(1);
     expect(screen.getByRole('banner')).toHaveClass('eds-app-header', 'eds-navbar');
     expect(root?.firstElementChild).toHaveClass('eds-skip-link');
+  });
+
+  it('Sidebar no conteúdo não adota o estado do shell (ids distintos)', () => {
+    render(
+      <AppShell
+        sidebar={
+          <Sidebar aria-label="Principal">
+            <SidebarItem href="#a">A</SidebarItem>
+          </Sidebar>
+        }
+        header={
+          <AppShellHeader aria-label="Topo">
+            <AppShellNavToggle />
+          </AppShellHeader>
+        }
+      >
+        <Sidebar aria-label="Exemplo">
+          <SidebarItem href="#b">B</SidebarItem>
+        </Sidebar>
+      </AppShell>,
+    );
+    const principal = document.querySelector<HTMLElement>('nav[aria-label="Principal"]');
+    const exemplo = document.querySelector<HTMLElement>('nav[aria-label="Exemplo"]');
+    if (!principal || !exemplo) throw new Error('navs não renderizadas');
+    expect(principal.id).not.toBe(exemplo.id);
+    const toggle = document.querySelector('[popovertarget]');
+    expect(toggle?.getAttribute('popovertarget')).toBe(principal.id);
   });
 
   it('skip link move o foco ao main sem alterar o hash', async () => {

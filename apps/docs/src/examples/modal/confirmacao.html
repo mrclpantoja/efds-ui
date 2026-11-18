@@ -1,0 +1,23 @@
+<button type="button" class="eds-button eds-button-danger" id="abrir-exclusao">Excluir projeto</button>
+
+<dialog class="eds-modal eds-modal-sm" id="modal-exclusao" aria-labelledby="modal-exclusao-t" aria-describedby="modal-exclusao-d">
+  <header class="eds-modal-header">
+    <h2 class="eds-modal-title" id="modal-exclusao-t">Excluir projeto?</h2>
+  </header>
+  <div class="eds-modal-body" id="modal-exclusao-d">
+    O projeto Aurora e suas 12 tarefas serão removidos. Esta ação não pode ser desfeita.
+  </div>
+  <footer class="eds-modal-footer">
+    <form method="dialog" class="eds-stack eds-stack-row eds-gap-3">
+      <button class="eds-button eds-button-secondary" value="cancelar">Cancelar</button>
+      <button class="eds-button eds-button-danger" value="excluir">Excluir</button>
+    </form>
+  </footer>
+</dialog>
+
+<script>
+  // O diálogo só é modal (foco preso, fundo inerte, Esc) quando aberto com showModal().
+  document.getElementById('abrir-exclusao').addEventListener('click', () => {
+    document.getElementById('modal-exclusao').showModal();
+  });
+</script>

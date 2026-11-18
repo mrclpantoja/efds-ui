@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="blue" data-mode="light" data-density="comfortable" data-shape="soft">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Aparência salva (tema, modo, densidade, forma), aplicada antes da primeira pintura.
+      // Sem preferência salva, o modo vem de prefers-color-scheme.
+      (function () {
+        var root = document.documentElement;
+        var saved = {};
+        try {
+          saved = JSON.parse(localStorage.getItem('eds-docs-appearance') || '{}') || {};
+        } catch (e) {}
+        if (!saved.mode && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          saved.mode = 'dark';
+        }
+        ['theme', 'mode', 'density', 'shape'].forEach(function (axis) {
+          if (typeof saved[axis] === 'string') root.setAttribute('data-' + axis, saved[axis]);
+        });
+      })();
+    </script>
+    <title>eDS.ui · Documentação</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,123 @@
+<div class="eds-table-toolbar">
+  <span>1 selecionado</span>
+  <button type="button" class="eds-button eds-button-primary eds-button-sm">Novo pedido</button>
+</div>
+
+<div class="eds-table-wrap">
+  <table class="eds-table">
+    <caption class="eds-table-caption eds-visually-hidden">Pedidos recentes, ordenáveis por código, cliente e total</caption>
+    <thead>
+      <tr>
+        <th scope="col" class="eds-table-check">
+          <input type="checkbox" class="eds-checkbox" aria-label="Selecionar todos desta página" />
+        </th>
+        <th scope="col" aria-sort="ascending">
+          <button type="button" class="eds-table-sort">
+            Código
+            <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+            </svg>
+          </button>
+        </th>
+        <th scope="col" aria-sort="none">
+          <button type="button" class="eds-table-sort">
+            Cliente
+            <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+            </svg>
+          </button>
+        </th>
+        <th scope="col">Situação</th>
+        <th scope="col" class="eds-table-num" aria-sort="none">
+          <button type="button" class="eds-table-sort">
+            Total
+            <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+            </svg>
+          </button>
+        </th>
+        <th scope="col" class="eds-table-actions"><span class="eds-visually-hidden">Ações</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="eds-table-check">
+          <input type="checkbox" class="eds-checkbox" aria-label="Selecionar PED-0001" />
+        </td>
+        <td>PED-0001</td>
+        <td>Atelier Exemplo</td>
+        <td><span class="eds-badge eds-badge-success">Pago</span></td>
+        <td class="eds-table-num">R$ 1.280,50</td>
+        <td class="eds-table-actions">
+          <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Editar PED-0001">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+              <path d="M4 20h4L19 9l-4-4L4 16v4zM13 7l4 4" />
+            </svg>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td class="eds-table-check">
+          <input type="checkbox" class="eds-checkbox" aria-label="Selecionar PED-0002" />
+        </td>
+        <td>PED-0002</td>
+        <td>Comércio Modelo</td>
+        <td><span class="eds-badge eds-badge-warning">Pendente</span></td>
+        <td class="eds-table-num">R$ 459,00</td>
+        <td class="eds-table-actions">
+          <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Editar PED-0002">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+              <path d="M4 20h4L19 9l-4-4L4 16v4zM13 7l4 4" />
+            </svg>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td class="eds-table-check">
+          <input type="checkbox" class="eds-checkbox" aria-label="Selecionar PED-0003" checked />
+        </td>
+        <td>PED-0003</td>
+        <td>Oficina Fictícia</td>
+        <td><span class="eds-badge eds-badge-danger">Atrasado</span></td>
+        <td class="eds-table-num">R$ 8.920,90</td>
+        <td class="eds-table-actions">
+          <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Editar PED-0003">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+              <path d="M4 20h4L19 9l-4-4L4 16v4zM13 7l4 4" />
+            </svg>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="eds-table-footer">
+  <p>1–3 de 9</p>
+  <nav class="eds-pagination" aria-label="Paginação">
+    <ul class="eds-pagination-list">
+      <li>
+        <button type="button" class="eds-pagination-prev" aria-disabled="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+          <span>Anterior</span>
+        </button>
+      </li>
+      <li><button type="button" class="eds-pagination-item" aria-label="Página 1" aria-current="page">1</button></li>
+      <li><button type="button" class="eds-pagination-item" aria-label="Página 2">2</button></li>
+      <li><button type="button" class="eds-pagination-item" aria-label="Página 3">3</button></li>
+      <li><span class="eds-pagination-info">Página 1 de 3</span></li>
+      <li>
+        <button type="button" class="eds-pagination-next">
+          <span>Próxima</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<!-- Região de status única da tabela, montada vazia: o JS escreve aqui "Ordenado por Cliente, crescente.", "2 pedidos selecionados." etc. -->
+<div role="status" class="eds-visually-hidden"></div>

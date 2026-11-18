@@ -1,13 +1,19 @@
 {
   "name": "@eds-ui/themes",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
   "description": "Temas e eixos (theme, mode, density, shape) do eDS.ui.",
+  "keywords": [
+    "design-system",
+    "css",
+    "themes",
+    "dark-mode",
+    "eds"
+  ],
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "sideEffects": [
     "*.css"
@@ -28,5 +34,11 @@
   },
   "devDependencies": {
     "vite": "catalog:"
+  },
+  "publishConfig": {
+    "exports": {
+      "./index.css": "./dist/index.css",
+      "./*.css": "./dist/*.css"
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppShell, AppShellHeader, AppShellNavToggle } from '../AppShell';
@@ -53,6 +53,30 @@ function Layout({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 describe('Sidebar', () => {
+  it('o botão de colapsar aponta para a nav com aria-controls (avulsa e no shell)', () => {
+    const { unmount } = render(<Sidebar />);
+    const nav = screen.getByLabelText('Principal');
+    expect(nav.id).not.toBe('');
+    expect(screen.getByRole('button', { name: 'Menu lateral', hidden: true })).toHaveAttribute(
+      'aria-controls',
+      nav.id,
+    );
+    unmount();
+    render(<Sidebar id="meu-menu" />);
+    expect(screen.getByRole('button', { name: 'Menu lateral', hidden: true })).toHaveAttribute(
+      'aria-controls',
+      'meu-menu',
+    );
+    cleanup();
+    render(<Layout />);
+    const shellNav = screen.getByTestId('nav');
+    expect(shellNav.id).not.toBe('');
+    expect(screen.getByRole('button', { name: 'Menu lateral', hidden: true })).toHaveAttribute(
+      'aria-controls',
+      shellNav.id,
+    );
+  });
+
   it('é um nav popover nomeado, com seção, itens e aria-current', () => {
     const ref = createRef<HTMLElement>();
     render(
@@ -91,7 +115,7 @@ describe('Sidebar', () => {
     expect(button).toHaveAttribute('type', 'button');
   });
 
-  it('colapsar: aria-expanded (sem aria-controls para o próprio nav), rótulo fixo e data-collapsed', async () => {
+  it('colapsar: aria-expanded e aria-controls (id do próprio nav), rótulo fixo e data-collapsed', async () => {
     const user = userEvent.setup();
     const onCollapsedChange = vi.fn();
     render(
@@ -102,7 +126,7 @@ describe('Sidebar', () => {
     const nav = screen.getByLabelText('Principal');
     const toggle = screen.getByRole('button', { name: 'Menu lateral', hidden: true });
     expect(toggle).toHaveAttribute('aria-expanded', 'true');
-    expect(toggle).not.toHaveAttribute('aria-controls');
+    expect(toggle).toHaveAttribute('aria-controls', nav.id);
     expect(nav).not.toHaveAttribute('data-collapsed');
 
     await user.click(toggle);

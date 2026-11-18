@@ -41,6 +41,36 @@ function Harness({ closeOnBackdrop }: { closeOnBackdrop?: boolean }) {
 }
 
 describe('Modal', () => {
+  it('2º Esc nativo com open mantido e onClose ignorado: reabre e o foco segue dentro', async () => {
+    vi.useFakeTimers();
+    try {
+      const onClose = vi.fn();
+      render(
+        <Modal open onClose={onClose} title="Editar">
+          <input aria-label="Nome" />
+        </Modal>,
+      );
+      const dialog = document.querySelector('dialog')!;
+      const input = screen.getByLabelText('Nome');
+      input.focus();
+      expect(dialog).toHaveAttribute('open');
+      // Fechamento nativo (2º Esc sem nova ativação do usuário): `cancel` não cancelável.
+      act(() => dialog.close());
+      expect(dialog).not.toHaveAttribute('open');
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(60);
+      });
+      expect(onClose).toHaveBeenCalled();
+      expect(dialog).toHaveAttribute('open');
+      expect(dialog.contains(document.activeElement)).toBe(true);
+      expect(document.activeElement).not.toBe(document.body);
+      // O reabrir devolve o foco ao campo que o usuário editava (não ao Fechar).
+      expect(document.activeElement).toBe(input);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('renderiza as partes do core, nomeado pelo título', () => {
     render(
       <Modal open={false} onClose={() => {}} title="Título" footer={<p>rodapé</p>}>

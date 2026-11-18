@@ -74,6 +74,7 @@ export const DialogBase = forwardRef<HTMLDialogElement, DialogBaseProps>(functio
   const openRef = useRef(open);
   const onCloseRef = useRef(onClose);
   const initialFocusRef = useRef(initialFocus);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     openRef.current = open;
     onCloseRef.current = onClose;
@@ -120,16 +121,27 @@ export const DialogBase = forwardRef<HTMLDialogElement, DialogBaseProps>(functio
       // Se quem controla manteve open=true, o dialog é reaberto: a prop manda.
       // Espera o React confirmar o setState do consumidor (open=false) antes de decidir.
       setTimeout(() => {
-        if (openRef.current && !dialog.open && dialog.isConnected) dialog.showModal();
+        if (openRef.current && !dialog.open && dialog.isConnected) {
+          // Lido antes: o foco inicial do showModal() também dispara focusin.
+          const last = lastFocusedRef.current;
+          dialog.showModal();
+          if (last?.isConnected && dialog.contains(last)) last.focus();
+        }
       }, 50);
     };
     dialog.addEventListener('cancel', onCancel);
+    // Último foco dentro do dialog: o reabrir devolve o foco a ele (senão iria ao 1º focável).
+    const onFocusIn = (event: FocusEvent) => {
+      if (event.target instanceof HTMLElement) lastFocusedRef.current = event.target;
+    };
+    dialog.addEventListener('focusin', onFocusIn);
     // O atributo `open` é a fonte da verdade: o evento `close` é assíncrono e pode não disparar
     // com a aba oculta.
     const observer = new MutationObserver(onNativeClose);
     observer.observe(dialog, { attributes: true, attributeFilter: ['open'] });
     return () => {
       dialog.removeEventListener('cancel', onCancel);
+      dialog.removeEventListener('focusin', onFocusIn);
       observer.disconnect();
     };
   }, []);

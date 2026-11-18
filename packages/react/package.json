@@ -1,16 +1,20 @@
 {
   "name": "@eds-ui/react",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
   "description": "Componentes React do eDS.ui: wrappers sobre as classes do core.",
+  "keywords": [
+    "design-system",
+    "react",
+    "components",
+    "eds"
+  ],
   "files": [
     "dist"
   ],
-  "sideEffects": [
-    "*.css"
-  ],
+  "sideEffects": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

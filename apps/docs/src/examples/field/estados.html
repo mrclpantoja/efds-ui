@@ -1,0 +1,21 @@
+<div class="eds-grid eds-grid-auto">
+  <div class="eds-field">
+    <label class="eds-label" for="campo-email">E-mail</label>
+    <input id="campo-email" class="eds-input" type="email" autocomplete="email" inputmode="email" value="maria.exemplo@" aria-invalid="true" aria-describedby="campo-email-erro" />
+    <p class="eds-error" id="campo-email-erro">Informe um e-mail válido, como nome@exemplo.com.br.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="campo-codigo">Código</label>
+    <input id="campo-codigo" class="eds-input" value="PRJ-0042" data-valid="true" aria-describedby="campo-codigo-ok" />
+    <p class="eds-success" id="campo-codigo-ok">Código disponível.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="campo-depto" data-required>Departamento</label>
+    <select id="campo-depto" class="eds-select" required>
+      <option value="" disabled selected>Selecione</option>
+      <option>Compras</option>
+      <option>Financeiro</option>
+      <option>Tecnologia</option>
+    </select>
+  </div>
+</div>

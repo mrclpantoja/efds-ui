@@ -102,4 +102,13 @@
       }
     }
   }
+
+  /* Página que É um app shell (o <main> é a .eds-app-main): o documento nunca rola, quem
+     rola é a main. A trava de rolagem do Modal/Drawer reserva a barra no <html>
+     (scrollbar-gutter: stable); aqui isso só encolheria o shell com o modal aberto e
+     poderia trocar a faixa da sidebar (ex.: 1024 → compacta) atrás do backdrop.
+     Shell dentro de moldura (página que rola) não casa o seletor e mantém a reserva. */
+  :where(html):has(main.eds-app-main) {
+    scrollbar-gutter: auto;
+  }
 }

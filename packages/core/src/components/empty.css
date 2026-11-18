@@ -1,0 +1,54 @@
+/* Empty State: ausência de conteúdo (lista vazia, busca sem resultado).
+   Markup:
+     <div class="eds-empty">
+       <svg class="eds-empty-icon" aria-hidden="true">…</svg>
+       <h3 class="eds-empty-title">Nenhum pedido encontrado</h3>
+       <p class="eds-empty-text">Ajuste os filtros ou crie um novo pedido.</p>
+       <div class="eds-empty-actions"><button class="eds-button eds-button-primary">…</button></div>
+     </div>
+   Dentro de Table: <tr><td colspan="N" class="eds-table-empty"><div class="eds-empty">…</div></td></tr> */
+@layer eds.components {
+  .eds-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--eds-space-2);
+    box-sizing: border-box;
+    padding-block: var(--eds-space-8);
+    padding-inline: var(--eds-space-5);
+    text-align: center;
+    color: var(--eds-color-text-secondary);
+  }
+
+  .eds-empty-icon {
+    flex: none;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    margin-block-end: var(--eds-space-1);
+    color: var(--eds-color-text-muted);
+  }
+
+  .eds-empty-title {
+    margin: 0;
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-h4);
+    line-height: var(--eds-line-height-h4);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-empty-text {
+    margin: 0;
+    max-inline-size: 45ch;
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    color: var(--eds-color-text-secondary);
+  }
+
+  .eds-empty-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--eds-space-2);
+    margin-block-start: var(--eds-space-3);
+  }
+}

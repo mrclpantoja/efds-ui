@@ -1,0 +1,202 @@
+/* Pagination: navegação entre páginas. Responde à largura do próprio contêiner.
+   Markup:
+     <nav class="eds-pagination" aria-label="Paginação">
+       <ul class="eds-pagination-list">
+         <li><a class="eds-pagination-prev" href="…"><svg aria-hidden="true"/><span>Anterior</span></a></li>
+         <li><a class="eds-pagination-item" href="…">1</a></li>
+         <li><a class="eds-pagination-item" href="…" aria-current="page">2</a></li>
+         <li><span class="eds-pagination-ellipsis" aria-hidden="true">…</span></li>
+         <li><span class="eds-pagination-info">Página 2 de 25</span></li>
+         <li><a class="eds-pagination-next" href="…"><span>Próxima</span><svg aria-hidden="true"/></a></li>
+       </ul>
+     </nav>
+   Desabilitado: aria-disabled="true" (link) ou disabled (botão). O texto de prev/next deve
+   estar num <span> (some visualmente, mas fica acessível, em contêiner < 36rem). Abaixo de
+   24rem os números e reticências somem e ficam prev + info + next (a ordem é forçada por
+   CSS, não depende da posição do info no DOM). O info aparece sempre que existir no markup. */
+@layer eds.components {
+  .eds-pagination {
+    --_pagination-justify: flex-start;
+
+    container: eds-pagination / inline-size;
+    display: flex;
+    justify-content: var(--_pagination-justify);
+    min-inline-size: 0;
+  }
+
+  .eds-pagination-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: inherit;
+    gap: var(--eds-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-pagination-item,
+  .eds-pagination-prev,
+  .eds-pagination-next {
+    --_pagination-bg: transparent;
+    --_pagination-fg: var(--eds-color-text-primary);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    min-inline-size: var(--eds-control-height-sm);
+    min-block-size: var(--eds-control-height-sm);
+    padding-inline: var(--eds-space-2);
+    border: 0;
+    border-radius: var(--eds-radius-md);
+    background: var(--_pagination-bg);
+    color: var(--_pagination-fg);
+    font-family: inherit;
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    font-weight: var(--eds-font-weight-medium);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    & > svg {
+      flex: none;
+      inline-size: 1rem;
+      block-size: 1rem;
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true'], [aria-current='page']) {
+      --_pagination-bg: var(--eds-color-bg-subtle);
+    }
+
+    &:active:not(:disabled, [aria-disabled='true'], [aria-current='page']) {
+      --_pagination-bg: color-mix(
+        in srgb,
+        var(--eds-color-bg-subtle),
+        var(--eds-color-text-primary) 8%
+      );
+    }
+
+    &[aria-current='page'] {
+      --_pagination-bg: var(--eds-color-action-primary);
+      --_pagination-fg: var(--eds-color-text-on-action);
+      font-weight: var(--eds-font-weight-semibold);
+      cursor: default;
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      --_pagination-fg: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+
+    &:is(a)[aria-disabled='true'] {
+      pointer-events: none;
+    }
+  }
+
+  .eds-pagination-prev,
+  .eds-pagination-next {
+    padding-inline: var(--eds-space-3);
+  }
+
+  .eds-pagination-ellipsis,
+  .eds-pagination-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--eds-control-height-sm);
+    padding-inline: var(--eds-space-2);
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    white-space: nowrap;
+  }
+
+  /* O info só aparece no modo compacto (prev + info + next). */
+  .eds-pagination-info,
+  .eds-pagination-list > li:has(> .eds-pagination-info) {
+    display: none;
+  }
+
+  .eds-pagination-ellipsis {
+    color: var(--eds-color-text-muted);
+  }
+
+  /* Contêiner estreito: prev/next só com ícone (texto segue acessível). */
+  @container eds-pagination (inline-size < 36rem) {
+    :is(.eds-pagination-prev, .eds-pagination-next) > span {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    :is(.eds-pagination-prev, .eds-pagination-next) {
+      padding-inline: var(--eds-space-2);
+    }
+  }
+
+  /* Muito estreito: prev + info + next; números e reticências saem. */
+  @container eds-pagination (inline-size < 24rem) {
+    .eds-pagination-info {
+      display: inline-flex;
+    }
+
+    .eds-pagination-list > li:has(> .eds-pagination-info) {
+      display: list-item;
+    }
+
+    .eds-pagination-list {
+      justify-content: center;
+    }
+
+    .eds-pagination-list
+      > li:has(> :is(.eds-pagination-item, .eds-pagination-ellipsis)):not(
+        :has(> :is(.eds-pagination-prev, .eds-pagination-next))
+      ) {
+      display: none;
+    }
+
+    .eds-pagination-list > li:has(> .eds-pagination-prev) {
+      order: -1;
+    }
+
+    .eds-pagination-list > li:has(> .eds-pagination-next) {
+      order: 1;
+    }
+  }
+
+  /* Toque: alvos maiores. */
+  @media (pointer: coarse) {
+    .eds-pagination-item,
+    .eds-pagination-prev,
+    .eds-pagination-next {
+      min-inline-size: var(--eds-control-height-md);
+      min-block-size: var(--eds-control-height-md);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-pagination-item[aria-current='page'] {
+      --_pagination-bg: Highlight;
+      --_pagination-fg: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    .eds-pagination-item:is(:disabled, [aria-disabled='true']),
+    .eds-pagination-prev:is(:disabled, [aria-disabled='true']),
+    .eds-pagination-next:is(:disabled, [aria-disabled='true']) {
+      --_pagination-fg: GrayText;
+    }
+  }
+}

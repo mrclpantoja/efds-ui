@@ -1,6 +1,6 @@
 # Contrato de comportamento (JS/React)
 
-O core é CSS puro. O que o CSS e a plataforma **não** entregam fica a cargo da camada React (`@eds-ui/react`), e — se um dia existir — do pacote de comportamento para quem usa só HTML (decisão em aberto). Este documento lista essas obrigações, levantadas nas auditorias de UX/WCAG 2.2 AA das Fases 2 e 3. O markup de referência de cada componente está em `apps/playground/src/demos/*.tsx`.
+O core é CSS puro. O que o CSS e a plataforma **não** entregam fica a cargo da camada React (`@eds-ui/react`), e — se um dia existir — do pacote de comportamento para quem usa só HTML (decisão em aberto). Este documento lista essas obrigações, levantadas nas auditorias de UX/WCAG 2.2 AA das Fases 2 a 4. O markup de referência de cada componente está em `apps/playground/src/demos/*.tsx`.
 
 ## Ações
 
@@ -14,7 +14,8 @@ O core é CSS puro. O que o CSS e a plataforma **não** entregam fica a cargo da
 - `data-required` em `.eds-label`/`.eds-legend` é só visual: o controle precisa de `required` ou `aria-required`.
 - Erro: `aria-invalid="true"` + `aria-describedby` apontando para `.eds-error`; em grupos, descrever o controle, não o `fieldset` (evita leitura dupla).
 - `indeterminate` do checkbox é propriedade DOM (definir via ref).
-- Campos de dados pessoais com `autocomplete` adequado (WCAG 1.3.5).
+- Campos de dados **do usuário logado** com `autocomplete` adequado (WCAG 1.3.5). Em cadastro de terceiros (cliente, fornecedor, contato), `autocomplete="off"` para o navegador não preencher a entidade com os dados do operador.
+- Validação no envio (`noValidate`): em erro, focar o resumo (`role="group"` + `aria-labelledby`, `tabIndex=-1`), com links que focam o campo sem alterar o hash; em sucesso, focar o alerta de sucesso. O resumo é o retrato do último envio e diz isso.
 
 ## Superfícies
 
@@ -40,10 +41,28 @@ O core é CSS puro. O que o CSS e a plataforma **não** entregam fica a cargo da
 | Alert fechável     | Ao remover, mover o foco para um elemento lógico seguinte.                                                                                                                                                                                                                                                                                                                                                       |
 | Spinner / Skeleton | Região `role="status"` montada vazia desde o início e preenchida ao entrar em loading (live region que nasce preenchida não é anunciada). Skeleton com `aria-hidden`; contêiner com `aria-busy="true"`.                                                                                                                                                                                                          |
 
+## Dados
+
+| Componente           | Obrigação                                                                                                                                                                                                                                                                                                                                                                                    |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Table (ordenação)    | Botão `.eds-table-sort` dentro do `th`; `aria-sort` no `th` (`ascending`/`descending`; `none` nas demais ordenáveis). Ao ordenar, anunciar na região `role="status"` da tabela ("Ordenado por Cliente, crescente."): `aria-sort` não é anunciado com o foco no botão. O nome da região/landmark da tabela é estável (não inclui a ordenação).                                                |
+| Table (rolagem)      | `.eds-table-wrap` recebe `tabIndex=0` + `role="region"` + `aria-labelledby` **somente** quando rola de fato.                                                                                                                                                                                                                                                                                 |
+| Table (seleção)      | Checkbox de todos com `indeterminate` via propriedade DOM, nome "Selecionar todos desta página"; por linha, "Selecionar {identificador}". Região `role="status"` montada vazia, com plural correto. Ao limpar/excluir a seleção, devolver o foco a um controle habilitado (fallback: busca ou ação do estado vazio), nunca a um `disabled`. Busca/filtro que zera a seleção avisa no status. |
+| Table (busca/filtro) | Uma única região de status por tabela ("Mostrando 1–10 de 86", "Nenhum cliente encontrado."); busca assíncrona anuncia após debounce.                                                                                                                                                                                                                                                        |
+| Pagination           | `nav` com `aria-label="Paginação"`; `aria-current="page"`; reticências `aria-hidden`; prev/next desabilitados com `aria-disabled` (continuam focáveis, o handler ignora). Ao trocar de página o foco permanece no controle acionado e a mudança é anunciada pelo status da tabela.                                                                                                           |
+| Empty State          | Título no nível coerente da página. "Nenhum resultado" é anunciado pelo status da tabela; o estado vazio em si não é live. A ação nomeia tudo o que faz ("Limpar busca e filtros").                                                                                                                                                                                                          |
+
+## Telas e roteamento
+
+- A cada mudança de rota (hash/SPA), atualizar `document.title` e mover o foco para o h1 da nova tela (`tabIndex=-1`), incluindo a volta à página inicial. Skip link funcional. Um único `<main>`.
+- Indicadores (KPIs): o sentido bom/ruim nunca é só cor — ícone de direção (`aria-hidden`) + texto oculto "melhora"/"piora".
+- Exclusão em massa: o modal informa a quantidade e que é irreversível; foco inicial em Cancelar; o foco volta a um elemento existente e habilitado.
+
 ## Limitações conhecidas
 
 - **Tooltip da Sidebar compacta**: quando o trilho compacto rola (telas curtas na faixa 768–1023px), o rótulo flutuante fica deslocado na vertical pelo `scrollTop`. A correção limpa é CSS Anchor Positioning, que ainda não tem suporte no Firefox; reavaliar quando tiver.
 - **Toast**: ao abrir/fechar um modal a região é remontada e os temporizadores reiniciam; `role="alert"` do toast danger dentro da região polite pode gerar anúncio duplicado em alguns leitores — validar com leitor real antes de fixar no React.
+- **Table**: sem coluna fixa no MVP; ao rolar horizontalmente a coluna de identificação sai de vista (avaliar coluna sticky pós-MVP).
 - **Popover da Sidebar**: com os irmãos em `inert`, a devolução nativa de foco falha; o JS devolve o foco ao botão de menu manualmente.
 
 ## Ainda não testado

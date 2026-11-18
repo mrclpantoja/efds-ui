@@ -7,6 +7,7 @@ import { NavigationDemo } from './demos/NavigationDemo';
 import { SurfacesDemo } from './demos/SurfacesDemo';
 import { FormsDemo } from './demos/FormsDemo';
 import { LayoutDemo } from './demos/LayoutDemo';
+import { DataDemo } from './demos/DataDemo';
 
 const axes = [
   { attr: 'theme', label: 'Tema', options: ['blue', 'green', 'purple', 'orange', 'neutral'] },
@@ -33,8 +34,23 @@ export function App() {
 
   return (
     <main>
-      <h1 className="eds-text-h1">eDS.ui Playground</h1>
+      <h1 className="eds-text-h1" id="playground-titulo" tabIndex={-1}>
+        eDS.ui Playground
+      </h1>
       <p>Escolha os eixos abaixo; eles são aplicados como atributos no elemento html.</p>
+      <nav aria-label="Telas de referência">
+        <ul className="eds-stack eds-stack-row eds-stack-wrap eds-gap-4">
+          <li>
+            <a href="#/dashboard">Dashboard</a>
+          </li>
+          <li>
+            <a href="#/listagem">Listagem</a>
+          </li>
+          <li>
+            <a href="#/formulario">Formulário</a>
+          </li>
+        </ul>
+      </nav>
       <div className="eds-stack eds-stack-row eds-stack-wrap eds-gap-4">
         {axes.map(({ attr, label, options }) => (
           <div className="eds-field" key={attr}>
@@ -63,6 +79,7 @@ export function App() {
       <SurfacesDemo />
       <NavigationDemo />
       <FeedbackDemo />
+      <DataDemo />
       <AppShellDemo />
     </main>
   );

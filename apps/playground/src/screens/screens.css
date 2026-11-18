@@ -1,0 +1,21 @@
+/*
+ * Telas de referência — só o que não é do framework. Todo o layout vem de .eds-app,
+ * .eds-container, .eds-grid e .eds-stack; aqui ficam dois ajustes de página.
+ */
+
+/* Respiro vertical da página (o container só cuida do lateral). Também neutraliza o
+   `main { padding }` global do playground (foundations.css), que é da página de demos. */
+.rs-main {
+  padding-block: var(--eds-space-5) var(--eds-space-8);
+  padding-inline: 0;
+}
+
+/* Card que não acompanha a altura da linha da grade (conteúdo curto, sem vazio esticado). */
+.rs-self-start {
+  align-self: start;
+}
+
+/* Texto de apoio (descrições, metadados). */
+.rs-muted {
+  color: var(--eds-color-text-secondary);
+}

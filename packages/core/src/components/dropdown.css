@@ -121,8 +121,8 @@
     border-block-start: 1px solid var(--eds-color-border-default);
   }
 
-  /* Indicador de menu no gatilho; gira quando aria-expanded="true". */
-  .eds-button[popovertarget]::after {
+  /* Indicador de menu no gatilho (não em botão só de ícone); gira quando aria-expanded="true". */
+  .eds-button[popovertarget]:not(.eds-button-icon)::after {
     content: '';
     inline-size: 0.4em;
     block-size: 0.4em;
@@ -134,7 +134,7 @@
     transition: rotate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
   }
 
-  .eds-button[popovertarget][aria-expanded='true']::after {
+  .eds-button[popovertarget]:not(.eds-button-icon)[aria-expanded='true']::after {
     rotate: 225deg;
     translate: 0 0.1em;
   }

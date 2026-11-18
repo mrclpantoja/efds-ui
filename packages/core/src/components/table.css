@@ -1,0 +1,329 @@
+/* Table: dados tabulares simples (DataGrid fica para depois). Só linhas horizontais.
+   Markup:
+     <div class="eds-table-toolbar">…busca e filtros… <div>…ações…</div></div>
+     <div class="eds-table-wrap">           (quando rola: tabindex="0" role="region" aria-labelledby)
+       <table class="eds-table [eds-table-sticky]">
+         <caption class="eds-table-caption [eds-visually-hidden]">Pedidos</caption>
+         <thead><tr>
+           <th scope="col" class="eds-table-check"><input type="checkbox" class="eds-checkbox" aria-label="Selecionar todos"></th>
+           <th scope="col" aria-sort="ascending"><button type="button" class="eds-table-sort">Código <svg aria-hidden="true"/></button></th>
+           <th scope="col" class="eds-table-num">Valor</th>
+           <th scope="col" class="eds-table-actions"><span class="eds-visually-hidden">Ações</span></th>
+         </tr></thead>
+         <tbody>…</tbody>
+       </table>
+     </div>
+     <div class="eds-table-footer"><p>1–10 de 248</p><nav class="eds-pagination">…</nav></div>
+   Ícone do .eds-table-sort: <svg class="eds-table-sort-icon" viewBox="0 0 16 16"> com dois paths
+   .eds-table-sort-up / -down; aria-sort esconde o oposto; "none" mostra ambos em text-muted.
+   Linha selecionada: tbody tr:has(.eds-table-check input:checked), sem classe.
+   Sticky: o wrap precisa de altura limitada (ex.: max-block-size) para o thead fixar.
+   Altura da linha: --eds-table-row-height (densidade). */
+@layer eds.components {
+  .eds-table-wrap {
+    /* Bloco de contenção: filhos absolutos (ex.: .eds-visually-hidden em th) ficam presos à
+       rolagem do wrap em vez de alargar a página. */
+    position: relative;
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    overflow: auto;
+    border: 1px solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+
+    /* Foco inset: a borda arredondada e o overflow não cortam o anel. */
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+  }
+
+  .eds-table {
+    /* Abaixo disto a tabela não espreme colunas: rola dentro do wrap. */
+    --_table-min-inline-size: 36rem;
+
+    inline-size: 100%;
+    min-inline-size: var(--_table-min-inline-size);
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    text-align: start;
+
+    & :where(th, td) {
+      box-sizing: border-box;
+      block-size: var(--eds-table-row-height);
+      padding-block: var(--eds-space-1);
+      padding-inline: var(--eds-space-4);
+      border-block-end: 1px solid var(--eds-color-border-default);
+      text-align: start;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    & th {
+      background: var(--eds-color-bg-subtle);
+      color: var(--eds-color-text-secondary);
+      font-size: var(--eds-font-size-small);
+      line-height: var(--eds-line-height-small);
+      font-weight: var(--eds-font-weight-semibold);
+    }
+
+    & tbody tr:last-child > :is(td, th) {
+      border-block-end: 0;
+    }
+
+    /* th de linha (<th scope="row">) no tbody: dado, não cabeçalho. */
+    & tbody th {
+      background: transparent;
+      color: var(--eds-color-text-primary);
+      font-size: inherit;
+      line-height: inherit;
+      font-weight: var(--eds-font-weight-medium);
+    }
+
+    /* Hover discreto (só com ponteiro real), nunca no estado vazio. */
+    @media (hover: hover) {
+      & tbody tr:hover:not(:has(.eds-table-empty)) {
+        background: color-mix(in srgb, var(--eds-color-bg-subtle) 60%, var(--eds-color-bg-surface));
+      }
+    }
+
+    /* Selecionada: vem do checkbox marcado; vence o hover. */
+    & tbody tr:has(.eds-table-check input:checked) {
+      background: var(--eds-color-action-primary-subtle);
+
+      /* Barra na primeira célula: o fundo sozinho quase não se vê em alguns temas claros. */
+      & > :first-child {
+        box-shadow: inset var(--eds-focus-ring-width) 0 0 var(--eds-color-action-primary);
+      }
+    }
+  }
+
+  .eds-table-caption {
+    caption-side: top;
+    text-align: start;
+  }
+
+  .eds-table-caption:not(.eds-visually-hidden) {
+    padding-block: var(--eds-space-3);
+    padding-inline: var(--eds-space-4);
+    border-block-end: 1px solid var(--eds-color-border-default);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  /* Opt-out do nowrap (descrições, textos longos): classe na célula. */
+  .eds-table .eds-table-wrap-text {
+    white-space: normal;
+  }
+
+  .eds-table-num {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Seleção: coluna estreita só com o checkbox. */
+  .eds-table .eds-table-check {
+    inline-size: 1%;
+    padding-inline-end: 0;
+
+    & > .eds-checkbox {
+      margin: 0;
+    }
+  }
+
+  .eds-table .eds-table-actions {
+    inline-size: 1%;
+    padding-block: 0;
+    text-align: end;
+    white-space: nowrap;
+
+    /* Ações de linha são secundárias: ghost em text-secondary (o hover mantém o fundo do ghost). */
+    & .eds-button-ghost {
+      --_button-fg: var(--eds-color-text-secondary);
+    }
+
+    & > :is(.eds-button, a, button) + :is(.eds-button, a, button) {
+      margin-inline-start: var(--eds-space-1);
+    }
+  }
+
+  /* Ordenação: botão discreto dentro do th; a direção vem de aria-sort. */
+  .eds-table-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    /* Nunca passa da altura da linha (o th não cresce): 1px a menos para a borda. */
+    min-block-size: max(1.5rem, calc(var(--eds-table-row-height) - 1px));
+    margin-inline: calc(var(--eds-space-2) * -1);
+    padding-block: 0;
+    padding-inline: var(--eds-space-2);
+    border: 0;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    & > svg {
+      flex: none;
+      inline-size: 1rem;
+      block-size: 1rem;
+      color: var(--eds-color-text-muted);
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
+    }
+  }
+
+  .eds-table th:has(.eds-table-sort) {
+    padding-block: 0;
+  }
+
+  /* Ícone: dois chevrons (cima/baixo). none: ambos em text-muted; ordenada: só o da direção,
+     em cor plena. A direção também é dita por aria-sort (não depende só de cor). */
+  .eds-table-sort-icon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .eds-table th:is([aria-sort='ascending'], [aria-sort='descending']) {
+    color: var(--eds-color-text-primary);
+
+    & .eds-table-sort > svg {
+      color: currentColor;
+    }
+  }
+
+  .eds-table th[aria-sort='ascending'] .eds-table-sort-down,
+  .eds-table th[aria-sort='descending'] .eds-table-sort-up {
+    display: none;
+  }
+
+  /* Cabeçalho fixo no topo do wrap. */
+  .eds-table-sticky thead th {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+  }
+
+  /* Estado vazio dentro da tabela. */
+  .eds-table .eds-table-empty {
+    block-size: auto;
+    padding: 0;
+    text-align: center;
+
+    /* Ancorado à área visível do wrap quando a tabela rola na horizontal. */
+    & > .eds-empty {
+      position: sticky;
+      inset-inline-start: 0;
+      inline-size: 100cqi;
+      white-space: normal; /* o td é nowrap; o texto do estado vazio quebra */
+      max-inline-size: 100%;
+    }
+  }
+
+  .eds-table-wrap:has(.eds-table-empty) {
+    container-type: inline-size;
+  }
+
+  .eds-table-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-3);
+    padding-block-end: var(--eds-space-3);
+
+    /* Ações no fim; ao quebrar linha, continuam alinhadas ao fim. */
+    & > :last-child:not(:first-child) {
+      margin-inline-start: auto;
+    }
+  }
+
+  .eds-table-footer {
+    container: eds-table-footer / inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-3);
+    padding-block-start: var(--eds-space-3);
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+
+    & > :is(p, span, div) {
+      margin: 0;
+    }
+
+    & > .eds-pagination {
+      --_pagination-justify: flex-end;
+
+      flex: 1 1 auto;
+    }
+  }
+
+  /* Contêiner estreito: contagem em cima, paginação embaixo, ambas centradas. */
+  @container eds-table-footer (inline-size < 40rem) {
+    .eds-table-footer > * {
+      flex: 1 1 100%;
+      text-align: center;
+    }
+
+    .eds-table-footer > .eds-pagination {
+      --_pagination-justify: center;
+    }
+  }
+
+  /* Dentro de Card: sangra até as bordas do card (já é filho direto, sem padding), sem borda
+     própria, e o texto das células extremas alinha com o título (--_card-padding). */
+  .eds-card > .eds-table-wrap {
+    border: 0;
+    border-radius: 0;
+
+    &:last-child {
+      border-end-start-radius: var(--_card-radius);
+      border-end-end-radius: var(--_card-radius);
+    }
+
+    & .eds-table :is(th, td):first-child {
+      padding-inline-start: var(--_card-padding);
+    }
+
+    & .eds-table :is(th, td):last-child {
+      padding-inline-end: var(--_card-padding);
+    }
+  }
+
+  .eds-card-header + .eds-table-wrap {
+    margin-block-start: var(--_card-padding);
+    border-block-start: 1px solid var(--eds-color-border-default);
+  }
+
+  .eds-card > :is(.eds-table-toolbar, .eds-table-footer) {
+    padding-inline: var(--_card-padding);
+  }
+
+  .eds-card > .eds-table-footer {
+    padding-block: var(--_card-padding);
+  }
+
+  .eds-card > .eds-table-toolbar {
+    padding-block-start: var(--_card-padding);
+  }
+
+  @media (forced-colors: active) {
+    .eds-table tbody tr:has(.eds-table-check input:checked) > :first-child {
+      box-shadow: inset calc(var(--eds-focus-ring-width) * 2) 0 0 Highlight;
+    }
+  }
+}

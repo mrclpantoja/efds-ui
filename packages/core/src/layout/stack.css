@@ -11,6 +11,12 @@
  *                                             Use em toda linha cujo conteúdo possa não caber
  *                                             a 320px (WCAG 1.4.10 reflow); sem ela não há quebra.
  *   .eds-gap-{0..9}                           espaçamento (utilities.css)
+ *   .eds-stack-grow                           (no ITEM) ocupa o espaço que sobra na linha.
+ *                                             Base de 256px (space-9 × 4, o mesmo do
+ *                                             .eds-grid-auto): em linha com wrap, quebra
+ *                                             quando não cabe a base; sem wrap, encolhe até 0.
+ *                                             Ex.: busca + botão Filtros sempre juntos.
+ *                                             Vale em qualquer pai flex (toolbar, navbar).
  *
  *   <div class="eds-stack eds-stack-row eds-stack-justify-between eds-gap-2">…</div>
  *
@@ -77,5 +83,11 @@
 
   .eds-stack-justify-between {
     --_stack-justify: space-between;
+  }
+
+  /* Item: a base decide quando quebrar (com wrap); min 0 deixa encolher numa linha sem wrap. */
+  .eds-stack-grow {
+    flex: 1 1 calc(var(--eds-space-9) * 4);
+    min-inline-size: 0;
   }
 }

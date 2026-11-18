@@ -5,7 +5,10 @@
 
 export type Situacao = 'ativo' | 'pendente' | 'inativo' | 'bloqueado';
 
-export const situacoes: Record<Situacao, { label: string; badge: string }> = {
+export const situacoes: Record<
+  Situacao,
+  { label: string; badge: 'success' | 'warning' | 'neutral' | 'danger' }
+> = {
   ativo: { label: 'Ativo', badge: 'success' },
   pendente: { label: 'Pendente', badge: 'warning' },
   inativo: { label: 'Inativo', badge: 'neutral' },

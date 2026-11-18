@@ -21,6 +21,9 @@
     --_drawer-radius: 0;
     --_drawer-dir: 1;
     --_drawer-offset: calc(100% * var(--_drawer-dir));
+    /* Altura mínima do rodapé (botão md + padding + borda); o toast abaixo de 640px usa-a para
+       ficar acima das ações. */
+    --_drawer-footer-size: calc(var(--eds-control-height-md) + 2 * var(--eds-space-4) + 1px);
 
     inset-block: 0;
     inset-inline: auto 0;
@@ -53,9 +56,11 @@
       --_drawer-dir: -1;
     }
 
+    /* Na base (não em [open]) para o layout não virar row durante a animação de saída; ver modal.css. */
+    flex-direction: column;
+
     &[open] {
       display: flex;
-      flex-direction: column;
       opacity: 1;
       transform: none;
     }

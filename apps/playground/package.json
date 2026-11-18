@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@eds-ui/core": "workspace:*",
+    "@eds-ui/icons": "workspace:*",
+    "@eds-ui/react": "workspace:*",
     "@eds-ui/themes": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"

@@ -1,18 +1,56 @@
 import './screens.css';
-import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
-import { flushSync } from 'react-dom';
-import { icons } from './icons';
+import { useEffect, useRef, type ReactNode } from 'react';
+import {
+  AppShell,
+  AppShellHeader,
+  AppShellNavToggle,
+  Breadcrumb,
+  BreadcrumbItem,
+  Button,
+  Container,
+  NavbarActions,
+  Sidebar,
+  SidebarItem,
+  SidebarSection,
+  Stack,
+} from '@eds-ui/react';
+import {
+  ArrowLeftIcon,
+  BellIcon,
+  DashboardIcon,
+  UserIcon,
+  UserPlusIcon,
+  UsersIcon,
+} from '@eds-ui/icons';
 
 export type ScreenId = 'dashboard' | 'listagem' | 'formulario';
 
-const NAV_ID = 'rs-nav';
-const MAIN_ID = 'conteudo';
-
 const navItems: { id: ScreenId; label: string; icon: ReactNode }[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: icons.dashboard },
-  { id: 'listagem', label: 'Clientes', icon: icons.clientes },
-  { id: 'formulario', label: 'Novo cliente', icon: icons.novo },
+  { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
+  { id: 'listagem', label: 'Clientes', icon: <UsersIcon /> },
+  { id: 'formulario', label: 'Novo cliente', icon: <UserPlusIcon /> },
 ];
+
+/** Marca fictícia da aplicação de exemplo (não é ícone do framework). */
+function BrandMark() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="1em"
+      height="1em"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M12 2 3 7v10l9 5 9-5V7z" />
+      <path d="M3 7l9 5 9-5M12 12v10" />
+    </svg>
+  );
+}
 
 /**
  * Estado que sobrevive à troca de tela (cada tela monta o próprio shell):
@@ -39,9 +77,9 @@ interface ReferenceShellProps {
 }
 
 /**
- * App shell das telas de referência: um único <main>, sidebar compacta na faixa 768–1023 e
- * off-canvas (Popover API) abaixo de 768 — tudo pelo CSS do core (layout/app.css); o JS só
- * cumpre o contrato de comportamento (aria-expanded, inert, foco).
+ * App shell das telas de referência sobre `@eds-ui/react`: um único <main>, sidebar compacta
+ * na faixa 768–1023 e off-canvas (Popover API) abaixo de 768. O que sobra aqui é da tela:
+ * itens de navegação, preferência de colapso e foco no h1 ao trocar de rota.
  */
 export function ReferenceShell({
   current,
@@ -52,8 +90,6 @@ export function ReferenceShell({
   width = 'xl',
   children,
 }: ReferenceShellProps) {
-  const [collapsed, setCollapsed] = useState(shellState.collapsed);
-  const [navOpen, setNavOpen] = useState(false);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -66,149 +102,81 @@ export function ReferenceShell({
     titleRef.current?.focus();
   }, []);
 
-  // Off-canvas: o popover não é modal. No toggle: aria-expanded, inert nos irmãos e foco.
-  useEffect(() => {
-    const nav = document.getElementById(NAV_ID);
-    if (!nav) return;
-    const onToggle = (event: Event) => {
-      const open = (event as ToggleEvent).newState === 'open';
-      flushSync(() => setNavOpen(open));
-      if (open) {
-        nav.querySelector<HTMLElement>('[aria-current="page"]')?.focus();
-      } else if (document.activeElement === document.body || nav.contains(document.activeElement)) {
-        document.querySelector<HTMLElement>(`[popovertarget="${NAV_ID}"]`)?.focus();
-      }
-    };
-    nav.addEventListener('toggle', onToggle);
-    return () => nav.removeEventListener('toggle', onToggle);
-  }, []);
-
-  // Navegar fecha o off-canvas; o href (#/rota) segue normalmente para o roteador.
-  const closeNav = () => {
-    const nav = document.getElementById(NAV_ID);
-    if (nav?.matches(':popover-open')) nav.hidePopover();
-  };
-
-  // O hash é a rota: o skip link não pode trocar o hash, então move o foco à mão.
-  const skip = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    document.getElementById(MAIN_ID)?.focus();
-  };
-
-  const toggleCollapsed = () => {
-    shellState.collapsed = !collapsed;
-    setCollapsed(!collapsed);
-  };
-
   return (
-    <div className="eds-app">
-      <a className="eds-skip-link" href={`#${MAIN_ID}`} onClick={skip} inert={navOpen}>
-        Pular para o conteúdo
-      </a>
-
-      <nav
-        className="eds-sidebar"
-        id={NAV_ID}
-        popover="auto"
-        aria-label="Principal"
-        data-collapsed={collapsed || undefined}
-      >
-        <div className="eds-sidebar-header">
-          {icons.marca}
-          <span className="eds-sidebar-label">Gestão Exemplo</span>
-        </div>
-        <div className="eds-sidebar-section">
-          <p className="eds-sidebar-section-title">Telas de referência</p>
-          {navItems.map((item) => (
-            <a
-              key={item.id}
-              className="eds-sidebar-item"
-              href={`#/${item.id}`}
-              aria-current={current === item.id ? 'page' : undefined}
-              onClick={closeNav}
-            >
-              {item.icon}
-              <span className="eds-sidebar-label">{item.label}</span>
-            </a>
-          ))}
-        </div>
-        <div className="eds-sidebar-footer">
-          <a className="eds-sidebar-item" href="#/" onClick={closeNav}>
-            {icons.voltar}
-            <span className="eds-sidebar-label">Voltar ao playground</span>
-          </a>
-          <button
-            type="button"
-            className="eds-sidebar-item"
-            aria-expanded={!collapsed}
-            aria-controls={NAV_ID}
-            onClick={toggleCollapsed}
-          >
-            {icons.recolher}
-            <span className="eds-sidebar-label">Menu lateral</span>
-          </button>
-        </div>
-      </nav>
-
-      <header className="eds-app-header eds-navbar" inert={navOpen}>
-        <button
-          type="button"
-          className="eds-button eds-button-ghost eds-button-icon eds-app-nav-toggle"
-          popoverTarget={NAV_ID}
-          aria-label="Abrir navegação"
-          aria-expanded={navOpen}
+    <AppShell
+      mainId="conteudo"
+      mainClassName="rs-main"
+      sidebar={
+        <Sidebar
+          brandIcon={<BrandMark />}
+          brandLabel="Gestão Exemplo"
+          defaultCollapsed={shellState.collapsed}
+          onCollapsedChange={(collapsed) => {
+            shellState.collapsed = collapsed;
+          }}
+          footer={
+            <SidebarItem href="#/" icon={<ArrowLeftIcon />}>
+              Voltar ao playground
+            </SidebarItem>
+          }
         >
-          {icons.menu}
-        </button>
-        <div className="eds-navbar-actions">
-          <button
-            type="button"
-            className="eds-button eds-button-ghost eds-button-icon"
-            aria-label="Notificações"
-          >
-            {icons.sino}
-          </button>
-          <button
-            type="button"
-            className="eds-button eds-button-ghost eds-button-icon"
-            aria-label="Conta de Ana Exemplo"
-          >
-            {icons.conta}
-          </button>
-        </div>
-      </header>
-
-      <main className="eds-app-main rs-main" id={MAIN_ID} tabIndex={-1} inert={navOpen}>
-        <div
-          className={`eds-container${width === 'lg' ? ' eds-container-lg' : ''} eds-stack eds-gap-5`}
-        >
-          <div className="eds-stack eds-gap-2">
-            <nav className="eds-breadcrumb" aria-label="Trilha">
-              <ol className="eds-breadcrumb-list">
-                {breadcrumb.map((crumb) => (
-                  <li key={crumb.label} className="eds-breadcrumb-item">
-                    {crumb.href ? (
-                      <a href={crumb.href}>{crumb.label}</a>
-                    ) : (
-                      <span aria-current="page">{crumb.label}</span>
-                    )}
-                  </li>
-                ))}
-              </ol>
-            </nav>
-            <div className="eds-stack eds-stack-row eds-stack-wrap eds-stack-justify-between eds-gap-3">
+          <SidebarSection title="Telas de referência">
+            {navItems.map((item) => (
+              <SidebarItem
+                key={item.id}
+                href={`#/${item.id}`}
+                icon={item.icon}
+                current={current === item.id}
+              >
+                {item.label}
+              </SidebarItem>
+            ))}
+          </SidebarSection>
+        </Sidebar>
+      }
+      header={
+        <AppShellHeader>
+          <AppShellNavToggle />
+          <NavbarActions>
+            <Button variant="ghost" iconOnly aria-label="Notificações">
+              <BellIcon />
+            </Button>
+            <Button variant="ghost" iconOnly aria-label="Conta de Ana Exemplo">
+              <UserIcon />
+            </Button>
+          </NavbarActions>
+        </AppShellHeader>
+      }
+    >
+      <Container size={width === 'lg' ? 'lg' : 'xl'}>
+        <Stack gap={5}>
+          <Stack gap={2}>
+            <Breadcrumb>
+              {breadcrumb.map((crumb) => (
+                <BreadcrumbItem
+                  key={crumb.label}
+                  href={crumb.href}
+                  current={crumb.href === undefined}
+                >
+                  {crumb.label}
+                </BreadcrumbItem>
+              ))}
+            </Breadcrumb>
+            <Stack direction="row" wrap justify="between" gap={3}>
               <h1 className="eds-text-h1" ref={titleRef} tabIndex={-1}>
                 {title}
               </h1>
               {actions ? (
-                <div className="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">{actions}</div>
+                <Stack direction="row" wrap gap={2}>
+                  {actions}
+                </Stack>
               ) : null}
-            </div>
+            </Stack>
             {description ? <p className="rs-muted">{description}</p> : null}
-          </div>
+          </Stack>
           {children}
-        </div>
-      </main>
-    </div>
+        </Stack>
+      </Container>
+    </AppShell>
   );
 }

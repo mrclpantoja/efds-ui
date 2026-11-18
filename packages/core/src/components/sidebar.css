@@ -226,6 +226,12 @@
       --_sidebar-tip-bg: var(--eds-color-text-primary);
       --_sidebar-tip-fg: var(--eds-color-bg-surface);
     }
+
+    /* Abaixo de 1024px o contêiner já compacta (ou é off-canvas): o botão de colapsar não tem
+       efeito e exporia aria-expanded="true" com a sidebar compacta. Volta a aparecer em ≥ 1024px. */
+    .eds-sidebar-footer > .eds-sidebar-item[aria-expanded] {
+      display: none;
+    }
   }
 
   /* Mobile: off-canvas no top layer via Popover API (Esc, clique fora e aria-expanded no

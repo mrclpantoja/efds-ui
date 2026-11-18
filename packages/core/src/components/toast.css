@@ -17,7 +17,9 @@
    acessível: o texto deve dizer a severidade.
    Dentro de modal: <dialog> modal torna o resto da página inerte e fica na top layer, então
    a região deve ser renderizada DENTRO do dialog aberto (portal); continua position: fixed
-   no canto inferior-final.
+   no canto inferior-final. Em Modal centralizado o canto não cobre o rodapé enquanto o modal
+   for mais baixo que a viewport menos ~5rem (verificado a 1280 e 375 com o modal de exclusão);
+   um modal que atinja o max-block-size (corpo rolando) pode ter o rodapé tocado pelo toast.
    Posição (decisão): canto inferior-final a partir de 640px; abaixo disso, largura total menos o
    gutter, no rodapé. No topo a região cobria os botões do header (WCAG 2.4.11); o app que tiver
    barra de ação ou navegação inferior fixa deve deslocar a região (inset-block-end). */
@@ -41,6 +43,28 @@
     @media (min-width: 640px) {
       inset-inline: auto var(--eds-space-4);
       inline-size: min(24rem, calc(100% - var(--eds-space-4) * 2));
+    }
+  }
+
+  /* Dentro de um Drawer (portal no dialog aberto) o canto inferior-final cobriria o rodapé de
+     ações (WCAG 2.4.11). A partir de 640px a região vai para o lado oposto ao drawer, sobre o
+     backdrop: drawer no fim -> região no canto inferior-início; .eds-drawer-start -> inferior-fim.
+     Abaixo de 640px o drawer ocupa a largura toda e nenhum canto é livre (header tem Fechar,
+     rodapé tem ações): a região fica embaixo, logo acima do rodapé, deslocada por
+     --_drawer-footer-size (definido em drawer.css). Limitação: se o rodapé quebrar linha, ele
+     cresce além dessa estimativa e o toast pode cobrir parte dele. */
+  .eds-drawer .eds-toast-region {
+    inset-block-end: calc(var(--_drawer-footer-size) + var(--eds-space-4));
+
+    @media (min-width: 640px) {
+      inset-block-end: var(--eds-space-4);
+      inset-inline: var(--eds-space-4) auto;
+    }
+  }
+
+  .eds-drawer-start .eds-toast-region {
+    @media (min-width: 640px) {
+      inset-inline: auto var(--eds-space-4);
     }
   }
 

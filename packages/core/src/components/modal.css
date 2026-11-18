@@ -47,9 +47,13 @@
       display var(--eds-motion-duration-base) allow-discrete,
       overlay var(--eds-motion-duration-base) allow-discrete;
 
+    /* flex-direction fica na base, não em [open]: na saída o dialog perde [open] mas segue
+       exibido (display discreto); se a direção voltasse a row, header/body/footer virariam
+       colunas lado a lado e o título sairia espremido/deformado. */
+    flex-direction: column;
+
     &[open] {
       display: flex;
-      flex-direction: column;
       opacity: 1;
       transform: none;
     }

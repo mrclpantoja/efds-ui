@@ -1,7 +1,31 @@
-import { useRef } from 'react';
-import { useScrollRegion } from './behavior';
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  CardActions,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Grid,
+  GridItem,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from '@eds-ui/react';
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  DownloadIcon,
+  PlusIcon,
+  UserPlusIcon,
+  UsersIcon,
+} from '@eds-ui/icons';
 import { formatarData, moeda } from './data';
-import { icons } from './icons';
 import { ReferenceShell } from './ReferenceShell';
 
 /**
@@ -75,9 +99,6 @@ const atividades = [
 ] as const;
 
 export function Dashboard() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  useScrollRegion(wrapRef, 'dash-pedidos-t');
-
   return (
     <ReferenceShell
       current="dashboard"
@@ -86,170 +107,160 @@ export function Dashboard() {
       breadcrumb={[{ label: 'Início' }]}
       actions={
         <>
-          <button type="button" className="eds-button eds-button-secondary">
-            {icons.exportar}
+          <Button>
+            <DownloadIcon />
             Exportar
-          </button>
-          <a className="eds-button eds-button-primary" href="#/formulario">
-            {icons.mais}
+          </Button>
+          <Button variant="primary" href="#/formulario">
+            <PlusIcon />
             Novo cliente
-          </a>
+          </Button>
         </>
       }
     >
       {/* KPIs: 2 colunas desde o mobile → 4 quando o grid tem ≥ 768px (largura do grid, não da tela). */}
-      <section aria-labelledby="dash-kpis-t" className="eds-stack eds-gap-3">
+      <Stack as="section" gap={3} aria-labelledby="dash-kpis-t">
         <h2 id="dash-kpis-t" className="eds-visually-hidden">
           Indicadores do mês
         </h2>
-        <ul className="eds-grid">
+        <Grid as="ul">
           {kpis.map((kpi) => (
-            <li key={kpi.label} className="eds-card eds-col-span-6 eds-col-span-md-3">
-              <div className="eds-card-body eds-stack eds-gap-2">
-                <p className="eds-text-label rs-muted">{kpi.label}</p>
-                {/* h3: com 2 colunas desde 320px, o valor precisa caber em ~100px sem partir o número. */}
-                <p className="eds-text-h3">{kpi.value}</p>
-                <p className="eds-stack eds-stack-row eds-stack-wrap eds-gap-2 eds-text-small">
-                  <span className={`eds-badge eds-badge-${kpi.good ? 'success' : 'danger'}`}>
-                    {kpi.up ? icons.subiu : icons.desceu}
-                    {kpi.delta}
-                    <span className="eds-visually-hidden">
-                      {kpi.good ? ', melhora' : ', piora'}
-                    </span>
-                  </span>
-                  <span className="rs-muted">vs. mês anterior</span>
-                </p>
-              </div>
-            </li>
+            <GridItem key={kpi.label} as="li" span={6} spanMd={3}>
+              <Card>
+                <CardBody>
+                  <Stack gap={2}>
+                    <p className="eds-text-label rs-muted">{kpi.label}</p>
+                    {/* h3: com 2 colunas desde 320px, o valor precisa caber em ~100px sem partir o número. */}
+                    <p className="eds-text-h3">{kpi.value}</p>
+                    <Stack direction="row" wrap gap={2} className="eds-text-small">
+                      <Badge variant={kpi.good ? 'success' : 'danger'}>
+                        {kpi.up ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                        {kpi.delta}
+                        <span className="eds-visually-hidden">
+                          {kpi.good ? ', melhora' : ', piora'}
+                        </span>
+                      </Badge>
+                      <span className="rs-muted">vs. mês anterior</span>
+                    </Stack>
+                  </Stack>
+                </CardBody>
+              </Card>
+            </GridItem>
           ))}
-        </ul>
-      </section>
+        </Grid>
+      </Stack>
 
-      <div className="eds-grid">
+      <Grid>
         {/* Pedidos recentes: 8 de 12 colunas quando o grid tem ≥ 1024px. */}
-        <section
-          className="eds-card eds-col-span-lg-8"
-          aria-labelledby="dash-pedidos-t"
-          id="dash-pedidos"
-        >
-          <header className="eds-card-header">
-            <h2 className="eds-card-title" id="dash-pedidos-t">
+        <Card className="eds-col-span-lg-8" role="region" aria-labelledby="dash-pedidos-t">
+          <CardHeader>
+            <CardTitle level={2} id="dash-pedidos-t">
               Pedidos recentes
-            </h2>
-            <div className="eds-card-actions">
-              <a className="eds-button eds-button-ghost eds-button-sm" href="#/listagem">
+            </CardTitle>
+            <CardActions>
+              <Button variant="ghost" size="sm" href="#/listagem">
                 Ver clientes
-              </a>
-            </div>
-          </header>
+              </Button>
+            </CardActions>
+          </CardHeader>
           {/* Tabela em Card: o wrap é filho direto (o core tira a borda dupla e alinha ao padding). */}
-          <div className="eds-table-wrap" ref={wrapRef}>
-            <table className="eds-table">
-              <caption className="eds-table-caption eds-visually-hidden">
-                Pedidos recentes, do mais novo para o mais antigo
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">Pedido</th>
-                  <th scope="col">Situação</th>
-                  <th scope="col" className="eds-table-num">
-                    Valor
-                  </th>
-                  <th scope="col">Cliente</th>
-                  <th scope="col">Data</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pedidos.map((p) => (
-                  <tr key={p.id}>
-                    <th scope="row">{p.id}</th>
-                    <td>
-                      <span className={`eds-badge eds-badge-${pedidoStatus[p.status].badge}`}>
-                        {pedidoStatus[p.status].label}
-                      </span>
-                    </td>
-                    <td className="eds-table-num">{moeda.format(p.valor)}</td>
-                    <td>{p.cliente}</td>
-                    <td>{formatarData(p.data)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+          <Table caption="Pedidos recentes, do mais novo para o mais antigo">
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Pedido</TableHeaderCell>
+                <TableHeaderCell>Situação</TableHeaderCell>
+                <TableHeaderCell numeric>Valor</TableHeaderCell>
+                <TableHeaderCell>Cliente</TableHeaderCell>
+                <TableHeaderCell>Data</TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {pedidos.map((p) => (
+                <TableRow key={p.id}>
+                  <TableHeaderCell scope="row">{p.id}</TableHeaderCell>
+                  <TableCell>
+                    <Badge variant={pedidoStatus[p.status].badge}>
+                      {pedidoStatus[p.status].label}
+                    </Badge>
+                  </TableCell>
+                  <TableCell numeric>{moeda.format(p.valor)}</TableCell>
+                  <TableCell>{p.cliente}</TableCell>
+                  <TableCell>{formatarData(p.data)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
 
         {/*
           Coluna lateral: é um grid aninhado. No lg ocupa 4 de 12 e, estreita, empilha os
           cards; abaixo do lg vai para baixo da tabela com a largura toda e os mesmos cards
           viram 3 colunas — cada grid lê a própria largura, sem nenhuma classe a mais.
         */}
-        <div className="eds-col-span-lg-4 eds-grid">
-          <section
-            className="eds-card eds-col-span-md-4 rs-self-start"
+        <Grid className="eds-col-span-lg-4">
+          <Card
+            className="eds-col-span-md-4 rs-self-start"
+            role="region"
             aria-labelledby="dash-acoes-t"
           >
-            <header className="eds-card-header">
-              <h2 className="eds-card-title" id="dash-acoes-t">
+            <CardHeader>
+              <CardTitle level={2} id="dash-acoes-t">
                 Ações rápidas
-              </h2>
-            </header>
-            <div className="eds-card-body eds-stack eds-stack-align-start eds-gap-2">
-              <a className="eds-button eds-button-secondary eds-button-sm" href="#/formulario">
-                {icons.novo}
+              </CardTitle>
+            </CardHeader>
+            <CardBody className="eds-stack eds-stack-align-start eds-gap-2">
+              <Button size="sm" href="#/formulario">
+                <UserPlusIcon />
                 Cadastrar cliente
-              </a>
-              <a className="eds-button eds-button-secondary eds-button-sm" href="#/listagem">
-                {icons.clientes}
+              </Button>
+              <Button size="sm" href="#/listagem">
+                <UsersIcon />
                 Consultar clientes
-              </a>
-              <button type="button" className="eds-button eds-button-secondary eds-button-sm">
-                {icons.exportar}
+              </Button>
+              <Button size="sm">
+                <DownloadIcon />
                 Relatório do mês
-              </button>
-            </div>
-          </section>
+              </Button>
+            </CardBody>
+          </Card>
 
-          <section className="eds-card eds-col-span-md-4" aria-labelledby="dash-alertas-t">
-            <header className="eds-card-header">
-              <h2 className="eds-card-title" id="dash-alertas-t">
+          <Card className="eds-col-span-md-4" role="region" aria-labelledby="dash-alertas-t">
+            <CardHeader>
+              <CardTitle level={2} id="dash-alertas-t">
                 Alertas
-              </h2>
-            </header>
-            <div className="eds-card-body eds-stack eds-gap-3">
-              <div className="eds-alert eds-alert-warning">
-                <div className="eds-alert-content">
-                  <p className="eds-alert-title">17 pedidos em atraso</p>
-                  <p>Cinco deles passaram de 30 dias.</p>
-                </div>
-              </div>
-              <div className="eds-alert eds-alert-info">
-                <div className="eds-alert-content">
-                  <p className="eds-alert-title">Fechamento do mês</p>
-                  <p>O período contábil fecha em 30/11.</p>
-                </div>
-              </div>
-            </div>
-          </section>
+              </CardTitle>
+            </CardHeader>
+            <CardBody className="eds-stack eds-gap-3">
+              <Alert variant="warning" title="17 pedidos em atraso">
+                <p>Cinco deles passaram de 30 dias.</p>
+              </Alert>
+              <Alert variant="info" title="Fechamento do mês">
+                <p>O período contábil fecha em 30/11.</p>
+              </Alert>
+            </CardBody>
+          </Card>
 
-          <section className="eds-card eds-col-span-md-4" aria-labelledby="dash-ativ-t">
-            <header className="eds-card-header">
-              <h2 className="eds-card-title" id="dash-ativ-t">
+          <Card className="eds-col-span-md-4" role="region" aria-labelledby="dash-ativ-t">
+            <CardHeader>
+              <CardTitle level={2} id="dash-ativ-t">
                 Atividade recente
-              </h2>
-            </header>
-            <ol className="eds-card-body eds-stack eds-gap-3">
-              {atividades.map((a) => (
-                <li key={a.oque} className="eds-stack eds-gap-1">
-                  <p>
-                    <strong>{a.quem}</strong> {a.oque}
-                  </p>
-                  <p className="eds-text-small rs-muted">{a.quando}</p>
-                </li>
-              ))}
-            </ol>
-          </section>
-        </div>
-      </div>
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <Stack as="ol" gap={3}>
+                {atividades.map((a) => (
+                  <Stack as="li" key={a.oque} gap={1}>
+                    <p>
+                      <strong>{a.quem}</strong> {a.oque}
+                    </p>
+                    <p className="eds-text-small rs-muted">{a.quando}</p>
+                  </Stack>
+                ))}
+              </Stack>
+            </CardBody>
+          </Card>
+        </Grid>
+      </Grid>
     </ReferenceShell>
   );
 }

@@ -1,5 +1,24 @@
 import { useRef, useState, type FormEvent, type MouseEvent, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
+import {
+  Alert,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Checkbox,
+  Field,
+  Fieldset,
+  Grid,
+  Input,
+  Radio,
+  RadioGroup,
+  Select,
+  Stack,
+  Switch,
+  Textarea,
+} from '@eds-ui/react';
 import { segmentos } from './data';
 import { ReferenceShell } from './ReferenceShell';
 
@@ -61,23 +80,15 @@ function validar(data: FormData): Erros {
   return erros;
 }
 
-interface ControlProps {
-  id: string;
-  name: string;
-  required?: boolean;
-  'aria-invalid'?: true;
-  'aria-describedby'?: string;
-}
-
-/** Campo: rótulo, controle, ajuda e erro. O controle recebe id, aria-invalid e aria-describedby. */
-function Field({
+/** Campo do cadastro: id fixo (`cli-<name>`) para o resumo de erros focar o controle. */
+function Campo({
   name,
   label,
   required,
   helper,
   error,
   span = 'eds-col-span-sm-6',
-  control,
+  children,
 }: {
   name: string;
   label: string;
@@ -85,51 +96,37 @@ function Field({
   helper?: string;
   error?: string;
   span?: string;
-  control: (props: ControlProps) => ReactNode;
+  children: ReactNode;
 }) {
-  const id = `cli-${name}`;
-  const describedby = [error && `${id}-e`, helper && `${id}-h`].filter(Boolean).join(' ');
   return (
-    <div className={`eds-field ${span}`}>
-      <label className="eds-label" htmlFor={id} data-required={required || undefined}>
-        {label}
-      </label>
-      {control({
-        id,
-        name,
-        required,
-        'aria-invalid': error ? true : undefined,
-        'aria-describedby': describedby || undefined,
-      })}
-      {helper ? (
-        <p className="eds-helper" id={`${id}-h`}>
-          {helper}
-        </p>
-      ) : null}
-      {error ? (
-        <p className="eds-error" id={`${id}-e`}>
-          {error}
-        </p>
-      ) : null}
-    </div>
+    <Field
+      className={span}
+      controlId={`cli-${name}`}
+      label={label}
+      required={required}
+      helper={helper}
+      error={error}
+    >
+      {children}
+    </Field>
   );
 }
 
 /** Seção: card com título; o fieldset é nomeado pelo título (aria-labelledby), sem legend dupla. */
 function Secao({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <div className="eds-card">
-      <header className="eds-card-header">
-        <h2 className="eds-card-title" id={`${id}-t`}>
+    <Card>
+      <CardHeader>
+        <CardTitle level={2} id={`${id}-t`}>
           {title}
-        </h2>
-      </header>
-      <div className="eds-card-body">
+        </CardTitle>
+      </CardHeader>
+      <CardBody>
         <fieldset className="eds-fieldset" aria-labelledby={`${id}-t`}>
-          <div className="eds-grid">{children}</div>
+          <Grid>{children}</Grid>
         </fieldset>
-      </div>
-    </div>
+      </CardBody>
+    </Card>
   );
 }
 
@@ -180,296 +177,216 @@ export function Formulario() {
       width="lg"
     >
       {resumo.length > 0 ? (
-        <div
+        <Alert
           ref={summaryRef}
-          className="eds-alert eds-alert-danger"
+          variant="danger"
           tabIndex={-1}
           role="group"
           aria-labelledby="cli-resumo-t"
-        >
-          <div className="eds-alert-content">
-            <p className="eds-alert-title" id="cli-resumo-t">
+          title={
+            <span id="cli-resumo-t">
               {resumo.length === 1
                 ? 'Último envio: 1 campo com erro'
                 : `Último envio: ${resumo.length} campos com erro`}
-            </p>
-            {/* role="list": o reset tira os marcadores e o Safari deixa de expor a lista. */}
-            {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
-            <ul role="list">
-              {resumo.map(([name, msg]) => (
-                <li key={name}>
-                  <a href={`#cli-${name}`} onClick={irPara(name)}>
-                    {rotulos[name]}: {msg}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+            </span>
+          }
+        >
+          {/* role="list": o reset tira os marcadores e o Safari deixa de expor a lista. */}
+          {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
+          <ul role="list">
+            {resumo.map(([name, msg]) => (
+              <li key={name}>
+                <a href={`#cli-${name}`} onClick={irPara(name)}>
+                  {rotulos[name]}: {msg}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Alert>
       ) : null}
 
       {salvo ? (
-        <div
+        <Alert
           ref={successRef}
-          className="eds-alert eds-alert-success"
+          variant="success"
           tabIndex={-1}
           role="group"
           aria-labelledby="cli-ok-t"
+          title={<span id="cli-ok-t">Cliente salvo (simulação).</span>}
         >
-          <div className="eds-alert-content">
-            <p className="eds-alert-title" id="cli-ok-t">
-              Cliente salvo (simulação).
-            </p>
-            <p>
-              Nenhum dado foi enviado. <a href="#/listagem">Voltar para a lista de clientes</a>
-            </p>
-          </div>
-        </div>
+          <p>
+            Nenhum dado foi enviado. <a href="#/listagem">Voltar para a lista de clientes</a>
+          </p>
+        </Alert>
       ) : null}
 
-      <form className="eds-stack eds-gap-5" noValidate onSubmit={onSubmit} onChange={onChange}>
-        <Secao id="cli-empresa" title="Dados da empresa">
-          <Field
-            name="razao"
-            label="Razão social"
-            required
-            error={erros.razao}
-            control={(p) => (
-              <input
-                {...p}
-                className="eds-input"
+      <form noValidate onSubmit={onSubmit} onChange={onChange}>
+        <Stack gap={5}>
+          <Secao id="cli-empresa" title="Dados da empresa">
+            <Campo name="razao" label="Razão social" required error={erros.razao}>
+              <Input
+                name="razao"
                 autoComplete="off"
                 placeholder="Ex.: Aurora Comércio Exemplo Ltda."
               />
-            )}
-          />
-          <Field
-            name="fantasia"
-            label="Nome fantasia"
-            control={(p) => <input {...p} className="eds-input" autoComplete="off" />}
-          />
-          <Field
-            name="segmento"
-            label="Segmento"
-            required
-            error={erros.segmento}
-            control={(p) => (
-              <select {...p} className="eds-select" defaultValue="">
+            </Campo>
+            <Campo name="fantasia" label="Nome fantasia">
+              <Input name="fantasia" autoComplete="off" />
+            </Campo>
+            <Campo name="segmento" label="Segmento" required error={erros.segmento}>
+              <Select name="segmento" defaultValue="">
                 <option value="" disabled>
                   Selecione
                 </option>
                 {segmentos.map((s) => (
                   <option key={s}>{s}</option>
                 ))}
-              </select>
-            )}
-          />
-          <Field
-            name="site"
-            label="Site"
-            helper="Opcional. Endereço completo, com https://."
-            error={erros.site}
-            control={(p) => (
-              <input
-                {...p}
-                className="eds-input"
+              </Select>
+            </Campo>
+            <Campo
+              name="site"
+              label="Site"
+              helper="Opcional. Endereço completo, com https://."
+              error={erros.site}
+            >
+              <Input
+                name="site"
                 type="url"
                 inputMode="url"
                 autoComplete="off"
                 placeholder="https://www.example.com"
               />
-            )}
-          />
-        </Secao>
+            </Campo>
+          </Secao>
 
-        <Secao id="cli-contato" title="Contato">
-          <Field
-            name="responsavel"
-            label="Responsável"
-            required
-            error={erros.responsavel}
-            control={(p) => <input {...p} className="eds-input" autoComplete="off" />}
-          />
-          <Field
-            name="cargo"
-            label="Cargo"
-            control={(p) => <input {...p} className="eds-input" autoComplete="off" />}
-          />
-          <Field
-            name="email"
-            label="E-mail"
-            required
-            error={erros.email}
-            control={(p) => (
-              <input
-                {...p}
-                className="eds-input"
+          <Secao id="cli-contato" title="Contato">
+            <Campo name="responsavel" label="Responsável" required error={erros.responsavel}>
+              <Input name="responsavel" autoComplete="off" />
+            </Campo>
+            <Campo name="cargo" label="Cargo">
+              <Input name="cargo" autoComplete="off" />
+            </Campo>
+            <Campo name="email" label="E-mail" required error={erros.email}>
+              <Input
+                name="email"
                 type="email"
                 inputMode="email"
                 autoComplete="off"
                 placeholder="nome@example.com"
               />
-            )}
-          />
-          <Field
-            name="telefone"
-            label="Telefone"
-            helper="Opcional. Com DDD."
-            error={erros.telefone}
-            control={(p) => (
-              <input
-                {...p}
-                className="eds-input"
+            </Campo>
+            <Campo
+              name="telefone"
+              label="Telefone"
+              helper="Opcional. Com DDD."
+              error={erros.telefone}
+            >
+              <Input
+                name="telefone"
                 type="tel"
                 inputMode="tel"
                 autoComplete="off"
                 placeholder="(00) 00000-0000"
               />
-            )}
-          />
-        </Secao>
+            </Campo>
+          </Secao>
 
-        <Secao id="cli-endereco" title="Endereço">
-          <Field
-            name="cep"
-            label="CEP"
-            required
-            span="eds-col-span-sm-4"
-            error={erros.cep}
-            control={(p) => (
-              <input
-                {...p}
-                className="eds-input"
-                inputMode="numeric"
-                autoComplete="off"
-                placeholder="00000-000"
-              />
-            )}
-          />
-          <Field
-            name="logradouro"
-            label="Logradouro"
-            required
-            span="eds-col-span-sm-8"
-            error={erros.logradouro}
-            control={(p) => <input {...p} className="eds-input" autoComplete="off" />}
-          />
-          <Field
-            name="numero"
-            label="Número"
-            required
-            span="eds-col-span-sm-4"
-            error={erros.numero}
-            control={(p) => <input {...p} className="eds-input" autoComplete="off" />}
-          />
-          <Field
-            name="complemento"
-            label="Complemento"
-            span="eds-col-span-sm-8"
-            control={(p) => <input {...p} className="eds-input" autoComplete="off" />}
-          />
-          <Field
-            name="uf"
-            label="UF"
-            required
-            span="eds-col-span-sm-4"
-            error={erros.uf}
-            control={(p) => (
-              <select {...p} className="eds-select" autoComplete="off" defaultValue="">
+          <Secao id="cli-endereco" title="Endereço">
+            <Campo name="cep" label="CEP" required span="eds-col-span-sm-4" error={erros.cep}>
+              <Input name="cep" inputMode="numeric" autoComplete="off" placeholder="00000-000" />
+            </Campo>
+            <Campo
+              name="logradouro"
+              label="Logradouro"
+              required
+              span="eds-col-span-sm-8"
+              error={erros.logradouro}
+            >
+              <Input name="logradouro" autoComplete="off" />
+            </Campo>
+            <Campo
+              name="numero"
+              label="Número"
+              required
+              span="eds-col-span-sm-4"
+              error={erros.numero}
+            >
+              <Input name="numero" autoComplete="off" />
+            </Campo>
+            <Campo name="complemento" label="Complemento" span="eds-col-span-sm-8">
+              <Input name="complemento" autoComplete="off" />
+            </Campo>
+            <Campo name="uf" label="UF" required span="eds-col-span-sm-4" error={erros.uf}>
+              <Select name="uf" autoComplete="off" defaultValue="">
                 <option value="" disabled>
                   Selecione
                 </option>
                 {ufs.map((uf) => (
                   <option key={uf}>{uf}</option>
                 ))}
-              </select>
-            )}
-          />
-          <Field
-            name="cidade"
-            label="Cidade"
-            required
-            span="eds-col-span-sm-8"
-            error={erros.cidade}
-            control={(p) => <input {...p} className="eds-input" autoComplete="off" />}
-          />
-        </Secao>
+              </Select>
+            </Campo>
+            <Campo
+              name="cidade"
+              label="Cidade"
+              required
+              span="eds-col-span-sm-8"
+              error={erros.cidade}
+            >
+              <Input name="cidade" autoComplete="off" />
+            </Campo>
+          </Secao>
 
-        <Secao id="cli-pref" title="Preferências">
-          <fieldset className="eds-fieldset eds-col-span-sm-6">
-            <legend className="eds-legend">Condição de pagamento</legend>
-            <label className="eds-check">
-              <input
-                type="radio"
-                name="pagamento"
-                value="avista"
-                className="eds-radio"
-                defaultChecked
-              />
-              À vista
-            </label>
-            <label className="eds-check">
-              <input type="radio" name="pagamento" value="30" className="eds-radio" />
-              30 dias
-            </label>
-            <label className="eds-check">
-              <input type="radio" name="pagamento" value="30-60" className="eds-radio" />
-              30/60 dias
-            </label>
-          </fieldset>
-          <fieldset className="eds-fieldset eds-col-span-sm-6">
-            <legend className="eds-legend">Comunicação</legend>
-            <label className="eds-check">
-              <input
-                type="checkbox"
-                role="switch"
-                name="avisos"
-                className="eds-switch"
-                defaultChecked
-              />
-              Receber avisos de pedidos por e-mail
-            </label>
-            <label className="eds-check">
-              <input type="checkbox" role="switch" name="boletim" className="eds-switch" />
-              Receber boletim mensal
-            </label>
-          </fieldset>
-          <Field
-            name="observacoes"
-            label="Observações"
-            helper="Máximo de 500 caracteres."
-            span="eds-col-span-12"
-            control={(p) => <textarea {...p} className="eds-textarea" maxLength={500} />}
-          />
-          <div className="eds-field eds-col-span-12">
-            <label className="eds-check">
-              <input
+          <Secao id="cli-pref" title="Preferências">
+            <RadioGroup
+              className="eds-col-span-sm-6"
+              legend="Condição de pagamento"
+              name="pagamento"
+              defaultValue="avista"
+            >
+              <Radio value="avista">À vista</Radio>
+              <Radio value="30">30 dias</Radio>
+              <Radio value="30-60">30/60 dias</Radio>
+            </RadioGroup>
+            <Fieldset className="eds-col-span-sm-6" legend="Comunicação">
+              <Switch name="avisos" defaultChecked>
+                Receber avisos de pedidos por e-mail
+              </Switch>
+              <Switch name="boletim">Receber boletim mensal</Switch>
+            </Fieldset>
+            <Campo
+              name="observacoes"
+              label="Observações"
+              helper="Máximo de 500 caracteres."
+              span="eds-col-span-12"
+            >
+              <Textarea name="observacoes" maxLength={500} />
+            </Campo>
+            <div className="eds-field eds-col-span-12">
+              <Checkbox
                 id="cli-aceite"
-                type="checkbox"
                 name="aceite"
-                className="eds-checkbox"
                 required
-                aria-invalid={erros.aceite ? true : undefined}
+                invalid={erros.aceite ? true : undefined}
                 aria-describedby={erros.aceite ? 'cli-aceite-e' : undefined}
-              />
-              Confirmo que os dados deste cadastro são fictícios (obrigatório)
-            </label>
-            {erros.aceite ? (
-              <p className="eds-error" id="cli-aceite-e">
-                {erros.aceite}
-              </p>
-            ) : null}
-          </div>
-        </Secao>
+              >
+                Confirmo que os dados deste cadastro são fictícios (obrigatório)
+              </Checkbox>
+              {erros.aceite ? (
+                <p className="eds-error" id="cli-aceite-e">
+                  {erros.aceite}
+                </p>
+              ) : null}
+            </div>
+          </Secao>
 
-        <div className="eds-stack eds-stack-row eds-stack-wrap eds-stack-justify-end eds-gap-3">
-          <a className="eds-button eds-button-secondary" href="#/listagem">
-            Cancelar
-          </a>
-          <button type="submit" className="eds-button eds-button-primary">
-            Salvar cliente
-          </button>
-        </div>
+          <Stack direction="row" wrap justify="end" gap={3}>
+            <Button href="#/listagem">Cancelar</Button>
+            <Button type="submit" variant="primary">
+              Salvar cliente
+            </Button>
+          </Stack>
+        </Stack>
       </form>
     </ReferenceShell>
   );

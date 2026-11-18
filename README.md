@@ -17,6 +17,18 @@ Requer Node >= 20 e pnpm 12 (versão fixada em `packageManager`).
 | `pnpm format`       | Formata com Prettier                  |
 | `pnpm format:check` | Verifica a formatação                 |
 
+## Importação seletiva
+
+Além do `index.css` completo, cada pacote publica um CSS por arquivo-fonte. Cada arquivo começa com a declaração de ordem de `@layer`, então a cascata não depende da ordem dos imports.
+
+```ts
+import '@eds-ui/core/tokens.css'; // todos os tokens
+import '@eds-ui/core/base.css'; // reset, root, tipografia, acessibilidade
+import '@eds-ui/core/layout/stack.css'; // um arquivo de layout
+import '@eds-ui/core/components/button.css'; // um componente
+import '@eds-ui/themes/theme-blue.css'; // um valor de eixo (theme, mode, density, shape)
+```
+
 ## Estrutura
 
 ```

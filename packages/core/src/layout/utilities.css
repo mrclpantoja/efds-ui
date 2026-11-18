@@ -1,0 +1,23 @@
+/*
+ * Utilitários de layout — o mínimo compartilhado por Grid e Stack.
+ *
+ * API
+ *   .eds-gap-{0..9}   espaçamento entre filhos de .eds-grid / .eds-stack = --eds-space-N
+ *                     (space-4 acompanha a densidade). 0 remove o espaçamento.
+ *
+ * Fica em eds.utilities: vence o padrão do bloco base (eds.layout) em qualquer ordem de
+ * import. Só reatribui --_gap no próprio elemento; grids/stacks aninhados voltam ao padrão.
+ */
+/* prettier-ignore */
+@layer eds.utilities {
+  .eds-gap-0 { --_gap: 0; }
+  .eds-gap-1 { --_gap: var(--eds-space-1); }
+  .eds-gap-2 { --_gap: var(--eds-space-2); }
+  .eds-gap-3 { --_gap: var(--eds-space-3); }
+  .eds-gap-4 { --_gap: var(--eds-space-4); }
+  .eds-gap-5 { --_gap: var(--eds-space-5); }
+  .eds-gap-6 { --_gap: var(--eds-space-6); }
+  .eds-gap-7 { --_gap: var(--eds-space-7); }
+  .eds-gap-8 { --_gap: var(--eds-space-8); }
+  .eds-gap-9 { --_gap: var(--eds-space-9); }
+}

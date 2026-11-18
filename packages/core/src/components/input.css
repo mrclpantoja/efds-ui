@@ -1,0 +1,78 @@
+/* Input de texto. Estados por atributo: :disabled, [readonly], [aria-invalid="true"], [data-valid="true"]. */
+@layer eds.components {
+  .eds-input {
+    --_input-height: var(--eds-control-height-md);
+    --_input-radius: var(--eds-radius-md);
+    --_input-padding-x: var(--eds-space-3);
+    --_input-bg: var(--eds-color-bg-surface);
+    --_input-fg: var(--eds-color-text-primary);
+    --_input-border: var(--eds-color-border-strong);
+
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--_input-height);
+    padding-block: 0;
+    padding-inline: var(--_input-padding-x);
+    border: 1px solid var(--_input-border);
+    border-radius: var(--_input-radius);
+    background: var(--_input-bg);
+    color: var(--_input-fg);
+    font: inherit;
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    transition: border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &::placeholder {
+      color: var(--eds-color-text-muted);
+      opacity: 1;
+    }
+
+    /* Hover escurece a borda para text-muted (decisão registrada: mais contraste que border-strong). */
+    &:hover:not(:disabled, [readonly], [aria-invalid='true'], [data-valid='true']) {
+      --_input-border: var(--eds-color-text-muted);
+    }
+
+    /* Campos de texto mostram foco também no clique. */
+    &:focus {
+      --_input-border: var(--eds-color-action-primary);
+
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 0;
+    }
+
+    &[readonly] {
+      --_input-bg: var(--eds-color-bg-subtle);
+    }
+
+    &[data-valid='true'] {
+      --_input-border: var(--eds-color-status-success-text);
+    }
+
+    &[aria-invalid='true'] {
+      --_input-border: var(--eds-color-status-danger);
+    }
+
+    &:disabled {
+      --_input-bg: var(--eds-color-bg-subtle);
+      --_input-fg: var(--eds-color-text-muted);
+      --_input-border: var(--eds-color-border-default);
+
+      cursor: not-allowed;
+    }
+  }
+
+  .eds-input-sm {
+    --_input-height: var(--eds-control-height-sm);
+  }
+
+  .eds-input-lg {
+    --_input-height: var(--eds-control-height-lg);
+  }
+
+  @media (forced-colors: active) {
+    .eds-input:focus {
+      outline-color: Highlight;
+    }
+  }
+}

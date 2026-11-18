@@ -1,0 +1,72 @@
+/* Textarea: mesma linguagem do Input; resize vertical. */
+@layer eds.components {
+  .eds-textarea {
+    --_textarea-min-height: calc(var(--eds-control-height-md) * 2);
+    --_textarea-radius: var(--eds-radius-md);
+    --_textarea-padding-x: var(--eds-space-3);
+    --_textarea-padding-y: var(--eds-space-2);
+    --_textarea-bg: var(--eds-color-bg-surface);
+    --_textarea-fg: var(--eds-color-text-primary);
+    --_textarea-border: var(--eds-color-border-strong);
+
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--_textarea-min-height);
+    padding-block: var(--_textarea-padding-y);
+    padding-inline: var(--_textarea-padding-x);
+    border: 1px solid var(--_textarea-border);
+    border-radius: var(--_textarea-radius);
+    background: var(--_textarea-bg);
+    color: var(--_textarea-fg);
+    font: inherit;
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    resize: vertical;
+    transition: border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &::placeholder {
+      color: var(--eds-color-text-muted);
+      opacity: 1;
+    }
+
+    /* Hover escurece a borda para text-muted (decisão registrada: mais contraste que border-strong). */
+    &:hover:not(:disabled, [readonly], [aria-invalid='true'], [data-valid='true']) {
+      --_textarea-border: var(--eds-color-text-muted);
+    }
+
+    &:focus {
+      --_textarea-border: var(--eds-color-action-primary);
+
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 0;
+    }
+
+    &[readonly] {
+      --_textarea-bg: var(--eds-color-bg-subtle);
+    }
+
+    &[data-valid='true'] {
+      --_textarea-border: var(--eds-color-status-success-text);
+    }
+
+    &[aria-invalid='true'] {
+      --_textarea-border: var(--eds-color-status-danger);
+    }
+
+    &:disabled {
+      --_textarea-bg: var(--eds-color-bg-subtle);
+      --_textarea-fg: var(--eds-color-text-muted);
+      --_textarea-border: var(--eds-color-border-default);
+
+      cursor: not-allowed;
+      resize: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-textarea:focus {
+      outline-color: Highlight;
+    }
+  }
+}

@@ -1,0 +1,153 @@
+/*
+ * Grid — Swiss Grid de 12 colunas, sem JS. Responde à largura do PRÓPRIO grid (container
+ * query), não da viewport: o mesmo markup funciona na página, numa sidebar ou num modal.
+ *
+ * API
+ *   .eds-grid                         12 colunas; filhos ocupam a linha inteira por padrão
+ *   .eds-col-span-{1..12}             colunas ocupadas pelo item (todas as larguras)
+ *   .eds-col-span-{sm|md|lg}-{1..12}  idem quando o GRID tiver ≥ 640 / 768 / 1024px
+ *                                     (mobile-first; cada faixa herda a anterior)
+ *   .eds-grid-auto                    colunas intrínsecas: auto-fit com mínimo de 256px
+ *                                     (space-9 × 4); quebra sozinha, sem nenhum span
+ *   .eds-grid-subgrid                 num item que também é .eds-grid: herda as trilhas do
+ *                                     grid pai (alinha conteúdo aninhado às 12 colunas)
+ *   .eds-gap-{0..9}                   espaçamento (utilities.css); padrão space-4, que
+ *                                     acompanha a densidade
+ *
+ *   <div class="eds-grid">
+ *     <section class="eds-col-span-md-6 eds-col-span-lg-4">…</section>
+ *   </div>
+ *
+ * Observações
+ *   - O grid é um query container (container-type: inline-size): sua largura não pode vir
+ *     do conteúdo. Por isso ocupa 100% do espaço disponível, inclusive como item flex.
+ *   - Não há faixa xl: um grid dentro de .eds-container (≤ 1280px com padding) quase
+ *     nunca a alcançaria; acima de lg use o próprio layout de 12 colunas.
+ *   - .eds-grid-subgrid não é query container (containment anularia o subgrid); seus filhos
+ *     respondem à largura do grid pai. Não funciona em <fieldset> (a caixa anônima do
+ *     fieldset impede o subgrid); use <div role="group" aria-labelledby>. Padding no subgrid
+ *     desloca só as trilhas das bordas — prefira o respiro nos filhos.
+ *   - Sem subgrid, .eds-grid-subgrid mantém 12 colunas próprias (declaração inválida é
+ *     descartada pelo navegador) — continua funcional, só sem o alinhamento ao pai.
+ */
+@layer eds.layout {
+  .eds-grid {
+    --_gap: var(--eds-space-4);
+
+    container: eds-grid / inline-size;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--_gap);
+    inline-size: 100%;
+  }
+
+  .eds-grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--eds-space-9) * 4)), 1fr));
+  }
+
+  /*
+   * Containment de tamanho transforma o elemento em contexto independente e anula o
+   * subgrid (verificado no Chromium). Sem container próprio, os filhos consultam o grid pai —
+   * coerente, pois os spans do subgrid contam trilhas do pai.
+   */
+  .eds-grid-subgrid {
+    container-type: normal;
+    grid-template-columns: subgrid;
+  }
+
+  /*
+   * Itens: especificidade zero. Zera os spans herdados de um item-pai (grids aninhados) e
+   * deixa qualquer .eds-col-span-* (uma classe) vencer sem depender da ordem dos arquivos.
+   * O span padrão é definido no ITEM (não no grid) para que um grid aninhado use o padrão
+   * do pai ao se posicionar e o seu próprio para os filhos.
+   */
+  :where(.eds-grid) > * {
+    --_span-default: 12;
+    --_span: initial;
+    --_span-sm: initial;
+    --_span-md: initial;
+    --_span-lg: initial;
+
+    grid-column: span var(--_span, var(--_span-default));
+    min-inline-size: 0;
+  }
+
+  :where(.eds-grid-auto) > * {
+    --_span-default: 1;
+  }
+
+  @container eds-grid (min-width: 640px) {
+    :where(.eds-grid) > * {
+      grid-column: span var(--_span-sm, var(--_span, var(--_span-default)));
+    }
+  }
+
+  @container eds-grid (min-width: 768px) {
+    :where(.eds-grid) > * {
+      grid-column: span var(--_span-md, var(--_span-sm, var(--_span, var(--_span-default))));
+    }
+  }
+
+  @container eds-grid (min-width: 1024px) {
+    :where(.eds-grid) > * {
+      grid-column: span
+        var(--_span-lg, var(--_span-md, var(--_span-sm, var(--_span, var(--_span-default)))));
+    }
+  }
+}
+
+/* Spans: uma linha por classe (prettier-ignore só neste bloco). */
+/* prettier-ignore */
+@layer eds.layout {
+  .eds-col-span-1 { --_span: 1; }
+  .eds-col-span-2 { --_span: 2; }
+  .eds-col-span-3 { --_span: 3; }
+  .eds-col-span-4 { --_span: 4; }
+  .eds-col-span-5 { --_span: 5; }
+  .eds-col-span-6 { --_span: 6; }
+  .eds-col-span-7 { --_span: 7; }
+  .eds-col-span-8 { --_span: 8; }
+  .eds-col-span-9 { --_span: 9; }
+  .eds-col-span-10 { --_span: 10; }
+  .eds-col-span-11 { --_span: 11; }
+  .eds-col-span-12 { --_span: 12; }
+
+  .eds-col-span-sm-1 { --_span-sm: 1; }
+  .eds-col-span-sm-2 { --_span-sm: 2; }
+  .eds-col-span-sm-3 { --_span-sm: 3; }
+  .eds-col-span-sm-4 { --_span-sm: 4; }
+  .eds-col-span-sm-5 { --_span-sm: 5; }
+  .eds-col-span-sm-6 { --_span-sm: 6; }
+  .eds-col-span-sm-7 { --_span-sm: 7; }
+  .eds-col-span-sm-8 { --_span-sm: 8; }
+  .eds-col-span-sm-9 { --_span-sm: 9; }
+  .eds-col-span-sm-10 { --_span-sm: 10; }
+  .eds-col-span-sm-11 { --_span-sm: 11; }
+  .eds-col-span-sm-12 { --_span-sm: 12; }
+
+  .eds-col-span-md-1 { --_span-md: 1; }
+  .eds-col-span-md-2 { --_span-md: 2; }
+  .eds-col-span-md-3 { --_span-md: 3; }
+  .eds-col-span-md-4 { --_span-md: 4; }
+  .eds-col-span-md-5 { --_span-md: 5; }
+  .eds-col-span-md-6 { --_span-md: 6; }
+  .eds-col-span-md-7 { --_span-md: 7; }
+  .eds-col-span-md-8 { --_span-md: 8; }
+  .eds-col-span-md-9 { --_span-md: 9; }
+  .eds-col-span-md-10 { --_span-md: 10; }
+  .eds-col-span-md-11 { --_span-md: 11; }
+  .eds-col-span-md-12 { --_span-md: 12; }
+
+  .eds-col-span-lg-1 { --_span-lg: 1; }
+  .eds-col-span-lg-2 { --_span-lg: 2; }
+  .eds-col-span-lg-3 { --_span-lg: 3; }
+  .eds-col-span-lg-4 { --_span-lg: 4; }
+  .eds-col-span-lg-5 { --_span-lg: 5; }
+  .eds-col-span-lg-6 { --_span-lg: 6; }
+  .eds-col-span-lg-7 { --_span-lg: 7; }
+  .eds-col-span-lg-8 { --_span-lg: 8; }
+  .eds-col-span-lg-9 { --_span-lg: 9; }
+  .eds-col-span-lg-10 { --_span-lg: 10; }
+  .eds-col-span-lg-11 { --_span-lg: 11; }
+  .eds-col-span-lg-12 { --_span-lg: 12; }
+}

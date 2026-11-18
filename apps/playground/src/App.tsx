@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Foundations } from './Foundations';
+import { ActionsDemo } from './demos/ActionsDemo';
+import { FormsDemo } from './demos/FormsDemo';
+import { LayoutDemo } from './demos/LayoutDemo';
 
 const axes = [
   { attr: 'theme', label: 'Tema', options: ['blue', 'green', 'purple', 'orange', 'neutral'] },
@@ -28,11 +31,15 @@ export function App() {
     <main>
       <h1 className="eds-text-h1">eDS.ui Playground</h1>
       <p>Escolha os eixos abaixo; eles são aplicados como atributos no elemento html.</p>
-      {axes.map(({ attr, label, options }) => (
-        <p key={attr}>
-          <label>
-            {label}{' '}
+      <div className="eds-stack eds-stack-row eds-stack-wrap eds-gap-4">
+        {axes.map(({ attr, label, options }) => (
+          <div className="eds-field" key={attr}>
+            <label className="eds-label" htmlFor={`axis-${attr}`}>
+              {label}
+            </label>
             <select
+              id={`axis-${attr}`}
+              className="eds-select eds-select-sm"
               value={values[attr]}
               onChange={(event) => setValues((prev) => ({ ...prev, [attr]: event.target.value }))}
             >
@@ -42,10 +49,13 @@ export function App() {
                 </option>
               ))}
             </select>
-          </label>
-        </p>
-      ))}
+          </div>
+        ))}
+      </div>
       <Foundations />
+      <LayoutDemo />
+      <ActionsDemo />
+      <FormsDemo />
     </main>
   );
 }

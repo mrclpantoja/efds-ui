@@ -1,0 +1,34 @@
+/* Button Group: botões colados com raio só nas pontas e divisória visível. */
+@layer eds.components {
+  .eds-button-group {
+    display: inline-flex;
+    align-items: stretch;
+    max-inline-size: 100%;
+
+    & > .eds-button {
+      --_button-radius: 0;
+
+      &:not(:nth-child(1 of .eds-button)) {
+        margin-inline-start: -1px;
+        border-inline-start-color: var(--_button-divider, var(--_button-border));
+      }
+
+      &:nth-child(1 of .eds-button) {
+        border-start-start-radius: var(--eds-radius-md);
+        border-end-start-radius: var(--eds-radius-md);
+      }
+
+      &:nth-last-child(1 of .eds-button) {
+        border-start-end-radius: var(--eds-radius-md);
+        border-end-end-radius: var(--eds-radius-md);
+      }
+
+      /* Foco e hover sobem acima dos vizinhos para a borda/anel não ser cortado. */
+      &:hover,
+      &:focus-visible,
+      &[aria-expanded='true'] {
+        z-index: 1;
+      }
+    }
+  }
+}

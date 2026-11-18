@@ -1,0 +1,64 @@
+/*
+ * Container — largura máxima, centralização e respiro lateral da página. Só estrutura:
+ * nunca fundo, borda, raio ou sombra (não é card).
+ *
+ * API
+ *   .eds-container                    largura máxima xl (1280px), centralizado
+ *   .eds-container-{sm|md|lg|xl|2xl}  640 / 768 / 1024 / 1280 / 1440px
+ *   .eds-container-fluid              100% da largura disponível
+ *   .eds-container-flush              sem padding lateral (ex.: tabela de ponta a ponta)
+ *
+ * O padding lateral acompanha a viewport (esqueleto da página): space-4 (varia com a
+ * densidade) → space-5 a partir de 640px → space-6 a partir de 1024px.
+ * A largura máxima inclui o padding (box-sizing: border-box do reset).
+ *
+ *   <div class="eds-container eds-container-lg">…</div>
+ */
+@layer eds.layout {
+  .eds-container {
+    --_container-max: var(--eds-layout-container-xl);
+    --_container-pad: var(--eds-space-4);
+
+    inline-size: 100%;
+    max-inline-size: var(--_container-max);
+    margin-inline: auto;
+    padding-inline: var(--_container-pad);
+
+    @media (min-width: 640px) {
+      --_container-pad: var(--eds-space-5);
+    }
+
+    @media (min-width: 1024px) {
+      --_container-pad: var(--eds-space-6);
+    }
+  }
+
+  .eds-container-sm {
+    --_container-max: var(--eds-layout-container-sm);
+  }
+
+  .eds-container-md {
+    --_container-max: var(--eds-layout-container-md);
+  }
+
+  .eds-container-lg {
+    --_container-max: var(--eds-layout-container-lg);
+  }
+
+  .eds-container-xl {
+    --_container-max: var(--eds-layout-container-xl);
+  }
+
+  .eds-container-2xl {
+    --_container-max: var(--eds-layout-container-2xl);
+  }
+
+  .eds-container-fluid {
+    --_container-max: none;
+  }
+
+  /* Vence o padding responsivo do bloco base (declarado depois, mesma especificidade). */
+  .eds-container-flush {
+    padding-inline: 0;
+  }
+}

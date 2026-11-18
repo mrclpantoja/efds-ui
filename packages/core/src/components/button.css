@@ -1,0 +1,181 @@
+/* Button: referência dos componentes de Actions. Variantes e estados só reatribuem --_tokens. */
+@layer eds.components {
+  .eds-button {
+    --_button-height: var(--eds-control-height-md);
+    --_button-radius: var(--eds-radius-md);
+    --_button-padding-x: var(--eds-space-4);
+    --_button-icon-size: 1rem;
+    --_button-font-size: var(--eds-font-size-body);
+    --_button-bg: var(--eds-color-bg-surface);
+    --_button-bg-hover: var(--eds-color-bg-subtle);
+    --_button-bg-active: var(--eds-color-bg-subtle);
+    --_button-fg: var(--eds-color-text-primary);
+    --_button-border: transparent;
+    --_button-border-hover: transparent;
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--eds-space-2);
+    box-sizing: border-box;
+    min-block-size: var(--_button-height);
+    padding-inline: var(--_button-padding-x);
+    border: 1px solid var(--_button-border);
+    border-radius: var(--_button-radius);
+    background: var(--_button-bg);
+    color: var(--_button-fg);
+    font-family: inherit;
+    font-size: var(--_button-font-size);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-body);
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--_button-icon-size);
+      block-size: var(--_button-icon-size);
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
+      --_button-bg: var(--_button-bg-hover);
+      --_button-border: var(--_button-border-hover);
+    }
+
+    &:active:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
+      --_button-bg: var(--_button-bg-active);
+      --_button-border: var(--_button-border-hover);
+    }
+
+    /* O anel de foco vem de base/root.css (:focus-visible); nada aqui o esconde. */
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      --_button-bg: var(--_button-bg-disabled, var(--eds-color-bg-subtle));
+      --_button-fg: var(--eds-color-text-muted);
+      --_button-border: var(--_button-border-disabled, transparent);
+      cursor: not-allowed;
+    }
+
+    &:is(a)[aria-disabled='true'] {
+      pointer-events: none;
+    }
+
+    /* Loading: texto e ícones ficam transparentes (largura preservada) e o spinner cobre o centro. */
+    &[aria-busy='true'] {
+      color: transparent;
+      pointer-events: none;
+      cursor: progress;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        box-sizing: border-box;
+        inline-size: var(--_button-icon-size);
+        block-size: var(--_button-icon-size);
+        border: 0.125em solid transparent;
+        border-block-start-color: var(--_button-fg);
+        border-inline-end-color: var(--_button-fg);
+        border-radius: 50%;
+        animation: eds-button-spin calc(var(--eds-motion-duration-base) * 4) linear infinite;
+      }
+    }
+  }
+
+  @keyframes eds-button-spin {
+    to {
+      rotate: 1turn;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-button[aria-busy='true']::before {
+      animation: none;
+    }
+  }
+
+  /* Variantes */
+  .eds-button-primary {
+    --_button-bg: var(--eds-color-action-primary);
+    --_button-bg-hover: var(--eds-color-action-primary-hover);
+    --_button-bg-active: var(--eds-color-action-primary-active);
+    --_button-fg: var(--eds-color-text-on-action);
+    --_button-divider: color-mix(in srgb, var(--eds-color-text-on-action) 40%, transparent);
+  }
+
+  .eds-button-secondary {
+    --_button-bg: var(--eds-color-bg-surface);
+    --_button-bg-hover: var(--eds-color-bg-subtle);
+    --_button-bg-active: color-mix(
+      in srgb,
+      var(--eds-color-bg-subtle),
+      var(--eds-color-text-primary) 8%
+    );
+    --_button-fg: var(--eds-color-text-primary);
+    --_button-border: var(--eds-color-border-strong);
+    --_button-border-hover: var(--eds-color-text-muted);
+    --_button-border-disabled: var(--eds-color-border-default);
+  }
+
+  /* Tertiary (decisão): fundo bg-subtle, sem borda; escurece no hover/active. */
+  .eds-button-tertiary {
+    --_button-bg: var(--eds-color-bg-subtle);
+    --_button-bg-hover: color-mix(
+      in srgb,
+      var(--eds-color-bg-subtle),
+      var(--eds-color-text-primary) 8%
+    );
+    --_button-bg-active: color-mix(
+      in srgb,
+      var(--eds-color-bg-subtle),
+      var(--eds-color-text-primary) 14%
+    );
+    --_button-fg: var(--eds-color-text-primary);
+    --_button-divider: var(--eds-color-border-default);
+  }
+
+  .eds-button-ghost {
+    --_button-bg: transparent;
+    --_button-bg-disabled: transparent;
+    --_button-bg-hover: var(--eds-color-action-primary-subtle);
+    /* Sem mix no active: qualquer mistura reprova 4.5:1 em algum tema/modo (medido). */
+    --_button-bg-active: var(--eds-color-action-primary-subtle);
+    --_button-fg: var(--eds-color-action-primary);
+    --_button-divider: var(--eds-color-border-default);
+  }
+
+  .eds-button-danger {
+    --_button-bg: var(--eds-color-action-danger);
+    --_button-bg-hover: var(--eds-color-action-danger-hover);
+    --_button-bg-active: var(--eds-color-action-danger-active);
+    --_button-fg: var(--eds-color-text-on-action);
+    --_button-divider: color-mix(in srgb, var(--eds-color-text-on-action) 40%, transparent);
+  }
+
+  /* Tamanhos (md é o padrão) */
+  .eds-button-sm {
+    --_button-height: var(--eds-control-height-sm);
+    --_button-padding-x: var(--eds-space-3);
+  }
+
+  .eds-button-lg {
+    --_button-height: var(--eds-control-height-lg);
+    --_button-padding-x: var(--eds-space-5);
+    --_button-icon-size: 1.25rem;
+  }
+
+  /* Só ícone: quadrado (exige aria-label no HTML). */
+  .eds-button-icon {
+    inline-size: var(--_button-height);
+    padding-inline: 0;
+  }
+}

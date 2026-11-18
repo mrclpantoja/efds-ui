@@ -18,7 +18,7 @@
       "development": "./src/index.css",
       "default": "./dist/index.css"
     },
-    "./*": "./dist/*.css"
+    "./*.css": "./dist/*.css"
   },
   "scripts": {
     "build": "vite build"

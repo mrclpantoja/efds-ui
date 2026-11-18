@@ -1,0 +1,31 @@
+/* Aparência só da demonstração (caixas de amostra); o layout vem das classes do core. */
+.ld-section {
+  padding-block: var(--eds-space-6);
+  border-block-start: 1px solid var(--eds-color-border-default);
+}
+
+.ld-muted {
+  color: var(--eds-color-text-muted);
+}
+
+.ld-box {
+  padding: var(--eds-space-3);
+  border: 1px dashed var(--eds-color-border-strong);
+  border-radius: var(--eds-radius-sm);
+  background: var(--eds-color-bg-subtle);
+  color: var(--eds-color-text-secondary);
+  font-size: var(--eds-font-size-small);
+  text-align: center;
+}
+
+.ld-frame {
+  outline: 1px dashed var(--eds-color-action-primary);
+  outline-offset: -1px;
+}
+
+.ld-panel {
+  padding: var(--eds-space-4);
+  border: 1px solid var(--eds-color-border-default);
+  border-radius: var(--eds-radius-md);
+  background: var(--eds-color-bg-surface);
+}

@@ -1,0 +1,86 @@
+/* Select nativo, visualmente idêntico ao Input. Seta própria em gradientes (sem imagem externa). */
+@layer eds.components {
+  .eds-select {
+    --_select-height: var(--eds-control-height-md);
+    --_select-radius: var(--eds-radius-md);
+    --_select-padding-x: var(--eds-space-3);
+    --_select-bg: var(--eds-color-bg-surface);
+    --_select-fg: var(--eds-color-text-primary);
+    --_select-border: var(--eds-color-border-strong);
+    --_select-arrow: var(--eds-color-text-secondary);
+    --_select-arrow-size: 0.3125rem;
+
+    appearance: none;
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--_select-height);
+    padding-block: 0;
+    padding-inline-start: var(--_select-padding-x);
+    padding-inline-end: calc(var(--_select-padding-x) * 2 + var(--_select-arrow-size) * 2);
+    border: 1px solid var(--_select-border);
+    border-radius: var(--_select-radius);
+    background-color: var(--_select-bg);
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--_select-arrow) 50%),
+      linear-gradient(135deg, var(--_select-arrow) 50%, transparent 50%);
+    background-repeat: no-repeat;
+    background-size: var(--_select-arrow-size) var(--_select-arrow-size);
+    background-position:
+      calc(100% - var(--_select-padding-x) - var(--_select-arrow-size)) 50%,
+      calc(100% - var(--_select-padding-x)) 50%;
+    color: var(--_select-fg);
+    font: inherit;
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    /* Hover escurece a borda para text-muted (decisão registrada: mais contraste que border-strong). */
+    &:hover:not(:disabled, [readonly], [aria-invalid='true'], [data-valid='true']) {
+      --_select-border: var(--eds-color-text-muted);
+    }
+
+    &:focus {
+      --_select-border: var(--eds-color-action-primary);
+
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 0;
+    }
+
+    &[data-valid='true'] {
+      --_select-border: var(--eds-color-status-success-text);
+    }
+
+    &[aria-invalid='true'] {
+      --_select-border: var(--eds-color-status-danger);
+    }
+
+    &:disabled {
+      --_select-bg: var(--eds-color-bg-subtle);
+      --_select-fg: var(--eds-color-text-muted);
+      --_select-border: var(--eds-color-border-default);
+
+      cursor: not-allowed;
+    }
+  }
+
+  .eds-select-sm {
+    --_select-height: var(--eds-control-height-sm);
+  }
+
+  .eds-select-lg {
+    --_select-height: var(--eds-control-height-lg);
+  }
+
+  @media (forced-colors: active) {
+    .eds-select {
+      --_select-arrow: ButtonText;
+    }
+
+    .eds-select:focus {
+      outline-color: Highlight;
+    }
+  }
+}

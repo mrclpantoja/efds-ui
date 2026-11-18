@@ -28,6 +28,9 @@
     --eds-color-action-primary-hover: var(--eds-accent-600);
     --eds-color-action-primary-active: var(--eds-accent-700);
     --eds-color-action-primary-subtle: var(--eds-accent-50);
+    --eds-color-action-danger: var(--eds-danger-600);
+    --eds-color-action-danger-hover: var(--eds-danger-700);
+    --eds-color-action-danger-active: var(--eds-danger-800);
     --eds-color-status-info: var(--eds-blue-500);
     --eds-color-status-info-subtle: var(--eds-blue-50);
     --eds-color-status-info-text: var(--eds-blue-700);

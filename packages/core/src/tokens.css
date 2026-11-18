@@ -1,0 +1,12 @@
+/* @eds-ui/core - agregador dos tokens (usado por index.css e como entrada isolada tokens.css). */
+@import './tokens/primitives-colors.css';
+@import './tokens/primitives-spacing.css';
+@import './tokens/primitives-typography.css';
+@import './tokens/primitives-radius.css';
+@import './tokens/primitives-shadows.css';
+@import './tokens/primitives-motion.css';
+@import './tokens/semantic-colors.css';
+@import './tokens/semantic-typography.css';
+@import './tokens/semantic-control.css';
+@import './tokens/semantic-layout.css';
+@import './tokens/semantic-shadows.css';

@@ -18,7 +18,22 @@
       "development": "./src/index.css",
       "default": "./dist/index.css"
     },
-    "./*": "./dist/*.css"
+    "./tokens.css": {
+      "development": "./src/tokens.css",
+      "default": "./dist/tokens.css"
+    },
+    "./base.css": {
+      "development": "./src/base.css",
+      "default": "./dist/base.css"
+    },
+    "./layout/*.css": {
+      "development": "./src/layout/*.css",
+      "default": "./dist/layout/*.css"
+    },
+    "./components/*.css": {
+      "development": "./src/components/*.css",
+      "default": "./dist/components/*.css"
+    }
   },
   "scripts": {
     "build": "vite build"

@@ -1,0 +1,87 @@
+/* Switch: <input type="checkbox" role="switch">. Ligado/desligado, nunca uma ação. Rótulo: .eds-check (field.css). */
+@layer eds.components {
+  .eds-switch {
+    --_switch-width: 2.5rem;
+    --_switch-height: 1.375rem;
+    --_switch-thumb: 1rem;
+    --_switch-pad: 0.125rem;
+    --_switch-bg: var(--eds-color-border-strong);
+    --_switch-thumb-bg: var(--eds-color-bg-surface);
+    --_switch-travel: calc(
+      var(--_switch-width) - var(--_switch-thumb) - var(--_switch-pad) * 2 - 2px
+    );
+    --_switch-x: 0rem;
+
+    appearance: none;
+    display: flex;
+    flex: none;
+    align-items: center;
+    inline-size: var(--_switch-width);
+    block-size: var(--_switch-height);
+    margin: 0;
+    margin-block-start: calc((var(--eds-line-height-body) - var(--_switch-height)) / 2);
+    padding: var(--_switch-pad);
+    border: 1px solid transparent;
+    border-radius: var(--eds-radius-full);
+    background: var(--_switch-bg);
+    cursor: pointer;
+    transition: background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &::before {
+      content: '';
+      inline-size: var(--_switch-thumb);
+      block-size: var(--_switch-thumb);
+      border-radius: var(--eds-radius-full);
+      background: var(--_switch-thumb-bg);
+      box-shadow: var(--eds-shadow-xs);
+      transform: translateX(var(--_switch-x));
+      transition: transform var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+
+    /* Hover usa text-muted no trilho (decisão registrada). */
+    &:hover:not(:disabled, [aria-invalid='true']) {
+      --_switch-bg: var(--eds-color-text-muted);
+    }
+
+    &:checked {
+      --_switch-bg: var(--eds-color-action-primary);
+      --_switch-thumb-bg: var(--eds-color-text-on-action);
+      --_switch-x: var(--_switch-travel);
+
+      &:hover:not(:disabled, [aria-invalid='true']) {
+        --_switch-bg: var(--eds-color-action-primary-hover);
+      }
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--eds-color-status-danger);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:dir(rtl) {
+      --_switch-x: 0rem;
+
+      &:checked {
+        --_switch-x: calc(var(--_switch-travel) * -1);
+      }
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-switch {
+      --_switch-bg: Canvas;
+      --_switch-thumb-bg: ButtonText;
+
+      border-color: ButtonText;
+
+      &:checked {
+        --_switch-bg: Highlight;
+        --_switch-thumb-bg: HighlightText;
+      }
+    }
+  }
+}

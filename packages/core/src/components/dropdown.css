@@ -1,0 +1,141 @@
+/* Dropdown: padrão disclosure em Popover API (sem role="menu"): gatilho com popovertarget e
+   aria-expanded; menu com popover e aria-labelledby apontando para o gatilho; itens são
+   <button>. Abrir/fechar, Esc, clique fora e retorno do foco são nativos. Em HTML puro o
+   aria-expanded não se atualiza sozinho: React/JS o sincroniza no evento toggle. Navegação por
+   setas (role="menu") fica para quando houver o pacote de comportamento. */
+@layer eds.components {
+  .eds-dropdown {
+    --_dropdown-padding: var(--eds-space-1);
+    --_dropdown-offset: var(--eds-space-1);
+    --_dropdown-min-width: 11.25rem;
+
+    /* O UA define display:none para popover fechado; só declaramos display no aberto. */
+    min-inline-size: var(--_dropdown-min-width);
+    max-block-size: 80dvh;
+    padding: var(--_dropdown-padding);
+    border: 1px solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    box-shadow: var(--eds-shadow-md);
+    overflow: auto;
+    opacity: 0;
+    translate: 0 calc(-1 * var(--eds-space-1));
+    transition:
+      opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      translate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      display var(--eds-motion-duration-fast) allow-discrete,
+      overlay var(--eds-motion-duration-fast) allow-discrete;
+
+    &:popover-open {
+      display: block;
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @starting-style {
+    .eds-dropdown:popover-open {
+      opacity: 0;
+      translate: 0 calc(-1 * var(--eds-space-1));
+    }
+  }
+
+  /* Melhoria progressiva: ancorado ao gatilho (âncora implícita do popovertarget).
+     Sem suporte, vale o posicionamento padrão do UA para popover (centralizado na viewport). */
+  @supports (position-area: block-end) {
+    .eds-dropdown {
+      inset: auto;
+      margin: 0;
+      position-area: block-end span-inline-end;
+      position-try-fallbacks:
+        flip-block,
+        flip-inline,
+        flip-block flip-inline;
+      margin-block: var(--_dropdown-offset);
+      min-inline-size: max(var(--_dropdown-min-width), anchor-size(inline));
+    }
+  }
+
+  .eds-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-2);
+    inline-size: 100%;
+    min-block-size: var(--eds-space-7);
+    padding-inline: var(--eds-space-3);
+    border: 0;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: var(--eds-font-size-body);
+    font-weight: var(--eds-font-weight-regular);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+
+    & > svg {
+      flex: none;
+      inline-size: 1rem;
+      block-size: 1rem;
+      color: var(--eds-color-text-muted);
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true']),
+    &:focus-visible {
+      background: var(--eds-color-bg-subtle);
+    }
+
+    /* Anel por dentro, para o overflow do menu não cortá-lo. */
+    &:focus-visible {
+      outline-offset: calc(-1 * var(--eds-focus-ring-width));
+    }
+
+    &:disabled,
+    &:disabled,
+    &[aria-disabled='true'] {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  .eds-dropdown-item-danger {
+    color: var(--eds-color-status-danger-text);
+
+    & > svg {
+      color: inherit;
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true']),
+    &:focus-visible {
+      background: var(--eds-color-status-danger-subtle);
+    }
+  }
+
+  .eds-dropdown-separator {
+    block-size: 0;
+    margin-block: var(--eds-space-1);
+    margin-inline: 0;
+    border: 0;
+    border-block-start: 1px solid var(--eds-color-border-default);
+  }
+
+  /* Indicador de menu no gatilho; gira quando aria-expanded="true". */
+  .eds-button[popovertarget]::after {
+    content: '';
+    inline-size: 0.4em;
+    block-size: 0.4em;
+    margin-inline-start: var(--eds-space-1);
+    border-inline-end: 0.125em solid currentColor;
+    border-block-end: 0.125em solid currentColor;
+    rotate: 45deg;
+    translate: 0 -0.1em;
+    transition: rotate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+  }
+
+  .eds-button[popovertarget][aria-expanded='true']::after {
+    rotate: 225deg;
+    translate: 0 0.1em;
+  }
+}

@@ -1,0 +1,113 @@
+/* Field: label + controle + helper + erro.
+   [data-required] em .eds-label/.eds-legend é SÓ visual (asterisco): exige também `required` ou
+   `aria-required` no controle (nos rádios, `required` em cada um). */
+@layer eds.components {
+  .eds-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-1);
+    min-inline-size: 0;
+  }
+
+  .eds-label {
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    font-weight: var(--eds-font-weight-medium);
+
+    &[data-required]::after {
+      content: ' *';
+      content: ' *' / '';
+      color: var(--eds-color-status-danger-text);
+    }
+  }
+
+  .eds-helper,
+  .eds-error,
+  .eds-success {
+    --_msg-fg: var(--eds-color-text-secondary);
+
+    margin: 0;
+    color: var(--_msg-fg);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+  }
+
+  /* Mensagens de estado: ícone + texto, nunca só cor. */
+  .eds-error,
+  .eds-success {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--eds-space-1);
+
+    &::before {
+      content: '';
+      flex: none;
+      inline-size: 1em;
+      block-size: 1em;
+      background-color: currentColor;
+      mask: var(--_msg-icon) center / contain no-repeat;
+    }
+  }
+
+  .eds-error {
+    --_msg-fg: var(--eds-color-status-danger-text);
+    --_msg-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 4.5h1.5v4.5h-1.5V4.5Zm0 5.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-success {
+    --_msg-fg: var(--eds-color-status-success-text);
+    --_msg-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm3.2-8.3-3.7 4-2.7-2.6 1-1 1.7 1.6 2.7-3 1 1Z'/%3E%3C/svg%3E");
+  }
+
+  /* Grupos de checkbox/radio/switch. */
+  .eds-fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-2);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .eds-legend {
+    padding: 0;
+    margin-block-end: var(--eds-space-1);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    font-weight: var(--eds-font-weight-medium);
+
+    &[data-required]::after {
+      content: ' *';
+      content: ' *' / '';
+      color: var(--eds-color-status-danger-text);
+    }
+  }
+
+  /* Rótulo clicável de checkbox/radio/switch: alvo mínimo 24px (WCAG 2.5.8) mesmo em compact. */
+  .eds-check {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--eds-space-2);
+    min-inline-size: 0;
+    padding-block: calc((var(--eds-space-5) - var(--eds-line-height-body)) / 2);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    cursor: pointer;
+
+    &:has(:disabled) {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-error::before,
+    .eds-success::before {
+      background-color: CanvasText;
+    }
+  }
+}

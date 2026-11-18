@@ -1,0 +1,81 @@
+/*
+ * Stack — empilha filhos com espaçamento uniforme (flexbox). Existe para eliminar margens
+ * avulsas e CSS repetitivo de alinhamento.
+ *
+ * API
+ *   .eds-stack                                vertical, itens esticados, gap space-4
+ *   .eds-stack-row                            horizontal, itens centralizados no eixo cruzado
+ *   .eds-stack-align-{start|center|end|stretch|baseline}   eixo cruzado (align-items)
+ *   .eds-stack-justify-{start|center|end|between}          eixo principal (justify-content)
+ *   .eds-stack-wrap                           quebra linha quando não couber (tags, botões).
+ *                                             Use em toda linha cujo conteúdo possa não caber
+ *                                             a 320px (WCAG 1.4.10 reflow); sem ela não há quebra.
+ *   .eds-gap-{0..9}                           espaçamento (utilities.css)
+ *
+ *   <div class="eds-stack eds-stack-row eds-stack-justify-between eds-gap-2">…</div>
+ *
+ * Modificadores só reatribuem --_stack-*; um stack aninhado volta ao padrão porque o bloco
+ * base redeclara todas as variáveis.
+ */
+@layer eds.layout {
+  .eds-stack {
+    --_gap: var(--eds-space-4);
+    --_stack-direction: column;
+    --_stack-align: stretch;
+    --_stack-justify: flex-start;
+    --_stack-wrap: nowrap;
+
+    display: flex;
+    flex-direction: var(--_stack-direction);
+    flex-wrap: var(--_stack-wrap);
+    align-items: var(--_stack-align);
+    justify-content: var(--_stack-justify);
+    gap: var(--_gap);
+  }
+
+  /* Antes dos modificadores de alinhamento para que estes vençam (mesma especificidade). */
+  .eds-stack-row {
+    --_stack-direction: row;
+    --_stack-align: center;
+  }
+
+  .eds-stack-wrap {
+    --_stack-wrap: wrap;
+  }
+
+  .eds-stack-align-start {
+    --_stack-align: flex-start;
+  }
+
+  .eds-stack-align-center {
+    --_stack-align: center;
+  }
+
+  .eds-stack-align-end {
+    --_stack-align: flex-end;
+  }
+
+  .eds-stack-align-stretch {
+    --_stack-align: stretch;
+  }
+
+  .eds-stack-align-baseline {
+    --_stack-align: baseline;
+  }
+
+  .eds-stack-justify-start {
+    --_stack-justify: flex-start;
+  }
+
+  .eds-stack-justify-center {
+    --_stack-justify: center;
+  }
+
+  .eds-stack-justify-end {
+    --_stack-justify: flex-end;
+  }
+
+  .eds-stack-justify-between {
+    --_stack-justify: space-between;
+  }
+}

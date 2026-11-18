@@ -1,0 +1,29 @@
+{
+  "name": "@eds-ui/core",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "description": "CSS puro do eDS.ui: tokens, base, layout e componentes.",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "style": "./dist/index.css",
+  "exports": {
+    "./index.css": {
+      "development": "./src/index.css",
+      "default": "./dist/index.css"
+    },
+    "./*": "./dist/*.css"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "catalog:"
+  }
+}

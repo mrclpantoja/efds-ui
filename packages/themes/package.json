@@ -1,0 +1,32 @@
+{
+  "name": "@eds-ui/themes",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "description": "Temas e eixos (theme, mode, density, shape) do eDS.ui.",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "style": "./dist/index.css",
+  "exports": {
+    "./index.css": {
+      "development": "./src/index.css",
+      "default": "./dist/index.css"
+    },
+    "./*": "./dist/*.css"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@eds-ui/core": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "catalog:"
+  }
+}

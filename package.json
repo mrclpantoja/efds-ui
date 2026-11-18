@@ -1,0 +1,28 @@
+{
+  "name": "eds-ui",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "license": "UNLICENSED",
+  "description": "eDS.ui - Empresarial Design System UI Framework",
+  "packageManager": "pnpm@12.21.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @eds-ui/playground dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "test": "pnpm -r test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eds-ui/eslint-config": "workspace:*",
+    "@eds-ui/typescript-config": "workspace:*",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  }
+}

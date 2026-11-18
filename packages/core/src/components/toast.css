@@ -1,0 +1,151 @@
+/* Toast: notificação temporária. A região fica sempre montada e vazia; os toasts entram e saem dela.
+   Markup:
+     <div class="eds-toast-region" aria-live="polite">
+       <div class="eds-toast eds-toast-success">
+         <div class="eds-toast-content">
+           <strong class="eds-toast-title">Sucesso:</strong> Pedido salvo.
+         </div>
+         <button class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-toast-close"
+                 aria-label="Fechar notificação">...svg...</button>
+       </div>
+     </div>
+   Anúncio (decisão, a mais simples): UMA região polite para todos; só o toast danger leva
+   role="alert" (assertivo). Sem aria-label de landmark: a região é só um contêiner vivo.
+   Saída: o React põe [data-closing] e remove o nó ao fim da transição (ou por timer: sob
+   prefers-reduced-motion a duração é 0 e transitionend não dispara). Fila, auto-fechamento,
+   pausa em hover/foco, Esc e foco são do React. O ícone é ::before com máscara, sem nome
+   acessível: o texto deve dizer a severidade.
+   Dentro de modal: <dialog> modal torna o resto da página inerte e fica na top layer, então
+   a região deve ser renderizada DENTRO do dialog aberto (portal); continua position: fixed
+   no topo-direita.
+   Posição: topo-direita a partir de 640px; abaixo disso, largura total no topo (mesmo lugar,
+   ordem e leitura; o rodapé colide com barras de ação, navegação inferior e teclado virtual). */
+@layer eds.components {
+  .eds-toast-region {
+    /* Camada interna (não há token de z-index): acima de navbar/sidebar fixos. */
+    --_toast-z: 100;
+
+    position: fixed;
+    inset-block-start: var(--eds-space-4);
+    inset-inline: var(--eds-space-4);
+    z-index: var(--_toast-z);
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-2);
+    margin: 0;
+    padding: 0;
+    /* A região não bloqueia cliques no conteúdo; só os toasts os recebem. */
+    pointer-events: none;
+
+    @media (min-width: 640px) {
+      inset-inline: auto var(--eds-space-4);
+      inline-size: min(24rem, calc(100% - var(--eds-space-4) * 2));
+    }
+  }
+
+  .eds-toast {
+    --_toast-bg: var(--eds-color-status-info-subtle);
+    --_toast-accent: var(--eds-color-status-info-text);
+    --_toast-shift: calc(var(--eds-space-2) * -1);
+    --_toast-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 7h1.5v4.75h-1.5V7Zm0-2.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: var(--eds-space-3);
+    box-sizing: border-box;
+    padding: var(--eds-space-3);
+    border: 1px solid color-mix(in srgb, var(--_toast-accent) 30%, transparent);
+    border-radius: var(--eds-radius-md);
+    background: var(--_toast-bg);
+    box-shadow: var(--eds-shadow-md);
+    color: var(--_toast-accent);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    pointer-events: auto;
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--eds-motion-duration-base) var(--eds-motion-easing-standard),
+      translate var(--eds-motion-duration-base) var(--eds-motion-easing-standard);
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 var(--_toast-shift);
+    }
+
+    &[data-closing] {
+      opacity: 0;
+      translate: 0 var(--_toast-shift);
+      pointer-events: none;
+    }
+
+    &::before {
+      content: '';
+      grid-column: 1;
+      grid-row: 1;
+      inline-size: 1.25rem;
+      block-size: var(--eds-line-height-body);
+      background-color: currentColor;
+      mask: var(--_toast-icon) center / 1rem no-repeat;
+    }
+  }
+
+  .eds-toast-content {
+    grid-column: 2;
+    grid-row: 1;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .eds-toast-title {
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-toast .eds-toast-close {
+    --_button-fg: var(--_toast-accent);
+    --_button-bg-hover: color-mix(in srgb, var(--_toast-accent) 14%, transparent);
+    --_button-bg-active: color-mix(in srgb, var(--_toast-accent) 14%, transparent);
+
+    grid-column: 3;
+    grid-row: 1;
+    margin-block: calc((var(--eds-line-height-body) - var(--eds-control-height-sm)) / 2);
+    margin-inline-end: calc(var(--eds-space-2) * -1);
+  }
+
+  .eds-toast-info {
+    --_toast-bg: var(--eds-color-status-info-subtle);
+    --_toast-accent: var(--eds-color-status-info-text);
+  }
+
+  .eds-toast-success {
+    --_toast-bg: var(--eds-color-status-success-subtle);
+    --_toast-accent: var(--eds-color-status-success-text);
+    --_toast-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm3.2-8.3-3.7 4-2.7-2.6 1-1 1.7 1.6 2.7-3 1 1Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-toast-warning {
+    --_toast-bg: var(--eds-color-status-warning-subtle);
+    --_toast-accent: var(--eds-color-status-warning-text);
+    --_toast-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M7.13 2.25a1 1 0 0 1 1.74 0l6 10.5a1 1 0 0 1-.87 1.5H2a1 1 0 0 1-.87-1.5l6-10.5ZM7.25 6v3.5h1.5V6h-1.5Zm0 4.75v1.5h1.5v-1.5h-1.5Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-toast-danger {
+    --_toast-bg: var(--eds-color-status-danger-subtle);
+    --_toast-accent: var(--eds-color-status-danger-text);
+    --_toast-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 4.5h1.5v4.5h-1.5V4.5Zm0 5.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-toast {
+      --_toast-shift: 0;
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-toast::before {
+      background-color: CanvasText;
+    }
+  }
+}

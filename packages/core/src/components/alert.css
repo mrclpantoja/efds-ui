@@ -1,0 +1,112 @@
+/* Alert: mensagem de status persistente e estática (info, success, warning, danger).
+   Markup:
+     <div class="eds-alert eds-alert-danger">
+       <div class="eds-alert-content">
+         <strong class="eds-alert-title">Erro:</strong> texto
+       </div>
+       <div class="eds-alert-actions">...botões...</div>                       (opcional)
+       <button class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-alert-close"
+               aria-label="Fechar aviso">...svg...</button>                    (opcional)
+     </div>
+   O ícone é um ::before com máscara (mesmo padrão de field.css): decorativo, sem markup.
+   Como ele não tem nome acessível, o texto deve dizer a severidade ("Erro:", "Atenção:").
+   Sem role: estático por padrão; quem insere dinamicamente decide role="alert" ou "status". */
+@layer eds.components {
+  .eds-alert {
+    --_alert-bg: var(--eds-color-status-info-subtle);
+    --_alert-fg: var(--eds-color-status-info-text);
+    --_alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 7h1.5v4.75h-1.5V7Zm0-2.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: var(--eds-space-3);
+    box-sizing: border-box;
+    padding: var(--eds-space-3) var(--eds-space-4);
+    border: 1px solid color-mix(in srgb, var(--_alert-fg) 30%, transparent);
+    border-radius: var(--eds-radius-md);
+    background: var(--_alert-bg);
+    color: var(--_alert-fg);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+
+    &::before {
+      content: '';
+      grid-column: 1;
+      grid-row: 1;
+      inline-size: 1.25rem;
+      block-size: var(--eds-line-height-body);
+      background-color: currentColor;
+      mask: var(--_alert-icon) center / 1rem no-repeat;
+    }
+  }
+
+  .eds-alert-content {
+    grid-column: 2;
+    grid-row: 1;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .eds-alert-title {
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  /* Parágrafos dentro do conteúdo (título em bloco + texto) não ganham margem própria. */
+  .eds-alert-content > :where(p) {
+    margin: 0;
+  }
+
+  .eds-alert-actions {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--eds-space-2);
+    margin-block-start: var(--eds-space-2);
+  }
+
+  /* Botão fechar: um eds-button ghost icon sm; cor segue o alerta (a ghost padrão usa a
+     cor de ação, que não foi medida sobre os fundos de status). Dois seletores de classe
+     vencem .eds-button-ghost sem depender da ordem de import. */
+  .eds-alert .eds-alert-close {
+    --_button-fg: var(--_alert-fg);
+    --_button-bg-hover: color-mix(in srgb, var(--_alert-fg) 14%, transparent);
+    --_button-bg-active: color-mix(in srgb, var(--_alert-fg) 14%, transparent);
+
+    grid-column: 3;
+    grid-row: 1;
+    /* Centraliza o alvo (32px) na primeira linha sem aumentar a altura do alerta. */
+    margin-block: calc((var(--eds-line-height-body) - var(--eds-control-height-sm)) / 2);
+    margin-inline-end: calc(var(--eds-space-2) * -1);
+  }
+
+  .eds-alert-info {
+    --_alert-bg: var(--eds-color-status-info-subtle);
+    --_alert-fg: var(--eds-color-status-info-text);
+  }
+
+  .eds-alert-success {
+    --_alert-bg: var(--eds-color-status-success-subtle);
+    --_alert-fg: var(--eds-color-status-success-text);
+    --_alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm3.2-8.3-3.7 4-2.7-2.6 1-1 1.7 1.6 2.7-3 1 1Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-alert-warning {
+    --_alert-bg: var(--eds-color-status-warning-subtle);
+    --_alert-fg: var(--eds-color-status-warning-text);
+    --_alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M7.13 2.25a1 1 0 0 1 1.74 0l6 10.5a1 1 0 0 1-.87 1.5H2a1 1 0 0 1-.87-1.5l6-10.5ZM7.25 6v3.5h1.5V6h-1.5Zm0 4.75v1.5h1.5v-1.5h-1.5Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-alert-danger {
+    --_alert-bg: var(--eds-color-status-danger-subtle);
+    --_alert-fg: var(--eds-color-status-danger-text);
+    --_alert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 4.5h1.5v4.5h-1.5V4.5Zm0 5.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+  }
+
+  @media (forced-colors: active) {
+    .eds-alert::before {
+      background-color: CanvasText;
+    }
+  }
+}

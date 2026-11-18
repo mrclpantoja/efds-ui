@@ -1,0 +1,268 @@
+/*
+ * Sidebar — navegação principal do app shell. Estado vem do HTML: [aria-current='page']
+ * no item ativo, [data-collapsed] para compactar à mão, [popover] para virar off-canvas.
+ *
+ *   <nav class="eds-sidebar" id="nav" popover aria-label="Principal">
+ *     <div class="eds-sidebar-header"><svg …/><span class="eds-sidebar-label">Marca</span></div>
+ *     <div class="eds-sidebar-section">
+ *       <p class="eds-sidebar-section-title">Geral</p>
+ *       <a class="eds-sidebar-item" href="…" aria-current="page">
+ *         <svg aria-hidden="true" …/><span class="eds-sidebar-label">Dashboard</span>
+ *       </a>
+ *     </div>
+ *     <div class="eds-sidebar-footer">…itens (<a> ou <button class="eds-sidebar-item">)…</div>
+ *   </nav>
+ *
+ * Compacta = trocar --_tokens: a largura, a opacidade dos textos e o "modo tooltip" do
+ * rótulo. O ícone não se move (padding inicial calculado a partir da largura compacta); o
+ * rótulo fica transparente e recortado, mas continua sendo o nome acessível do link.
+ * Tooltip sem JS e sem title: em :hover/:focus-visible o próprio rótulo vira position:
+ * absolute na sua posição estática (insets auto). Sidebar e item NÃO são posicionados, então o
+ * bloco de contenção é .eds-app (fora do overflow da sidebar) e o rótulo não é recortado.
+ * Não use title.
+ * Faixas lidas do contêiner eds-app (layout/app.css); fora de .eds-app fica expandida.
+ *
+ * Off-canvas (mobile, [popover]) NÃO é modal: o navegador dá Esc, clique fora e foco de
+ * volta ao gatilho, mas o Tab pode sair para o conteúdo atrás do backdrop. O JS deve, no
+ * evento `toggle` da sidebar: newState 'open' → `inert` nos irmãos da sidebar em .eds-app
+ * (skip link, .eds-app-header, .eds-app-main), aria-expanded="true" no gatilho e foco no item
+ * atual; 'closed' → remover `inert`, aria-expanded="false" e devolver o foco ao gatilho (ou
+ * ao conteúdo, se houve navegação): o foco nativo de retorno falha porque o gatilho estava
+ * inerte. Em SPA, chamar hidePopover() ao navegar.
+ */
+@layer eds.components {
+  .eds-sidebar {
+    --_sidebar-width: var(--eds-layout-sidebar-width);
+    --_sidebar-text: 1;
+    /* Modo tooltip do rótulo: neutro na expandida; a compacta liga (ver abaixo). */
+    --_sidebar-tip-position: static;
+    --_sidebar-tip-offset: 0;
+    --_sidebar-tip-pad: 0;
+    --_sidebar-tip-bg: transparent;
+    --_sidebar-tip-fg: currentColor;
+    --_sidebar-pad: var(--eds-space-2);
+    --_sidebar-icon: 1.25rem;
+    /* Centraliza o ícone na largura compacta; vale também na expandida (alinhamento fixo). */
+    --_sidebar-item-start: calc(
+      (var(--eds-layout-sidebar-width-collapsed) - 2 * var(--_sidebar-pad) - var(--_sidebar-icon)) /
+        2
+    );
+
+    /* Valores explícitos também neutralizam o estilo de UA de [popover]. static de propósito:
+       o tooltip do rótulo precisa de um bloco de contenção fora do overflow da sidebar. */
+    position: static;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    inline-size: var(--_sidebar-width);
+    block-size: auto;
+    min-block-size: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 0;
+    border-inline-end: 1px solid var(--eds-color-border-default);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+  }
+
+  .eds-sidebar-header {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--eds-space-3);
+    min-block-size: var(--eds-layout-navbar-height);
+    padding-inline: calc(var(--_sidebar-pad) + var(--_sidebar-item-start));
+    border-block-end: 1px solid var(--eds-color-border-default);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body-lg);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: var(--eds-line-height-body-lg);
+    white-space: nowrap;
+
+    & > svg {
+      flex: none;
+      inline-size: var(--_sidebar-icon);
+      block-size: var(--_sidebar-icon);
+    }
+  }
+
+  .eds-sidebar-section,
+  .eds-sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-1);
+    padding: var(--eds-space-3) var(--_sidebar-pad);
+  }
+
+  .eds-sidebar-footer {
+    margin-block-start: auto;
+    border-block-start: 1px solid var(--eds-color-border-default);
+  }
+
+  .eds-sidebar-section-title {
+    margin: 0;
+    padding-block: var(--eds-space-1);
+    padding-inline: var(--_sidebar-item-start);
+    overflow: hidden;
+    color: var(--eds-color-text-muted);
+    font-size: var(--eds-font-size-small);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: var(--eds-line-height-small);
+    white-space: nowrap;
+    opacity: var(--_sidebar-text);
+  }
+
+  .eds-sidebar-label {
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: var(--_sidebar-text);
+    transition: opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+  }
+
+  .eds-sidebar-item {
+    --_item-bg: transparent;
+    --_item-fg: var(--eds-color-text-secondary);
+    --_item-icon: var(--eds-color-text-muted);
+
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-3);
+    min-block-size: var(--eds-control-height-md);
+    padding-inline: var(--_sidebar-item-start) var(--eds-space-3);
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--eds-radius-md);
+    background: var(--_item-bg);
+    color: var(--_item-fg);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: var(--eds-font-weight-medium);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--_sidebar-icon);
+      block-size: var(--_sidebar-icon);
+      color: var(--_item-icon);
+    }
+
+    /* Hover nunca sobrescreve o item atual. */
+    &:hover:not([aria-current='page']) {
+      --_item-bg: var(--eds-color-bg-subtle);
+      --_item-fg: var(--eds-color-text-primary);
+      --_item-icon: var(--eds-color-text-secondary);
+    }
+
+    /* Atual: superfície accent suave + texto action-primary (≥4.5:1 calculado em todos os
+       temas/modos) + peso semibold (pista que não depende de cor). */
+    &[aria-current='page'] {
+      --_item-bg: var(--eds-color-action-primary-subtle);
+      --_item-fg: var(--eds-color-action-primary);
+      --_item-icon: var(--eds-color-action-primary);
+
+      font-weight: var(--eds-font-weight-semibold);
+    }
+
+    /* Anel por dentro: a sidebar rola e recortaria o anel externo nas bordas. */
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+
+    /* Tooltip (só na compacta, onde os --_sidebar-tip-* não são neutros): absolute com
+       insets auto fica na posição estática (início do item, centrado na vertical) e não é recortado
+       pelo overflow dos ancestrais; a margem o leva para fora do trilho. */
+    &:is(:hover, :focus-visible) > .eds-sidebar-label {
+      position: var(--_sidebar-tip-position);
+      z-index: 1;
+      margin-inline-start: var(--_sidebar-tip-offset);
+      padding: var(--_sidebar-tip-pad);
+      border-radius: var(--eds-radius-sm);
+      background: var(--_sidebar-tip-bg);
+      color: var(--_sidebar-tip-fg);
+      opacity: 1;
+      pointer-events: none;
+    }
+  }
+
+  /* Compacta à mão. */
+  .eds-sidebar[data-collapsed] {
+    --_sidebar-width: var(--eds-layout-sidebar-width-collapsed);
+    --_sidebar-text: 0;
+    --_sidebar-tip-position: absolute;
+    --_sidebar-tip-offset: calc(
+      var(--eds-layout-sidebar-width-collapsed) - var(--_sidebar-pad) - var(--_sidebar-item-start) +
+        var(--eds-space-1)
+    );
+    --_sidebar-tip-pad: var(--eds-space-1) var(--eds-space-2);
+    --_sidebar-tip-bg: var(--eds-color-text-primary);
+    --_sidebar-tip-fg: var(--eds-color-bg-surface);
+  }
+
+  /* Tablet (e fallback do mobile sem Popover API): compacta automática. */
+  @container eds-app (width < 1024px) {
+    .eds-sidebar {
+      --_sidebar-width: var(--eds-layout-sidebar-width-collapsed);
+      --_sidebar-text: 0;
+      --_sidebar-tip-position: absolute;
+      --_sidebar-tip-offset: calc(
+        var(--eds-layout-sidebar-width-collapsed) - var(--_sidebar-pad) -
+          var(--_sidebar-item-start) + var(--eds-space-1)
+      );
+      --_sidebar-tip-pad: var(--eds-space-1) var(--eds-space-2);
+      --_sidebar-tip-bg: var(--eds-color-text-primary);
+      --_sidebar-tip-fg: var(--eds-color-bg-surface);
+    }
+  }
+
+  /* Mobile: off-canvas no top layer via Popover API (Esc, clique fora e aria-expanded no
+     botão vêm do navegador). Sempre expandida; ignora [data-collapsed]. */
+  @supports selector(:popover-open) {
+    @container eds-app (width < 768px) {
+      .eds-sidebar[popover] {
+        /* % resolve contra a viewport (bloco de contenção do fixed): sobra uma faixa do fundo. */
+        --_sidebar-width: min(var(--eds-layout-sidebar-width), calc(100% - var(--eds-space-9)));
+        --_sidebar-text: 1;
+        --_sidebar-tip-position: static;
+        --_sidebar-tip-offset: 0;
+        --_sidebar-tip-pad: 0;
+        --_sidebar-tip-bg: transparent;
+        --_sidebar-tip-fg: currentColor;
+
+        &:not(:popover-open) {
+          display: none;
+        }
+
+        &:popover-open {
+          position: fixed;
+          inset-block: 0;
+          inset-inline: 0 auto;
+          box-shadow: var(--eds-shadow-lg);
+        }
+
+        &::backdrop {
+          background: var(--eds-color-bg-overlay);
+        }
+      }
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-sidebar-item[aria-current='page'] {
+      outline: 1px solid CanvasText;
+    }
+  }
+}

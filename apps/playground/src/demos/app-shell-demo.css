@@ -1,0 +1,76 @@
+/* Aparência só da demonstração: a moldura que simula a janela. O shell vem do core. */
+.asd-frame {
+  inline-size: 100%;
+  block-size: 40rem;
+  max-block-size: 100dvh;
+  margin-inline: auto;
+  overflow: hidden;
+  border: 1px solid var(--eds-color-border-strong);
+  border-radius: var(--eds-radius-lg);
+}
+
+.asd-frame[data-width='tablet'] {
+  max-inline-size: 800px;
+}
+
+.asd-frame[data-width='mobile'] {
+  max-inline-size: 375px;
+}
+
+/* O shell ocupa a moldura, não a viewport (.eds-app usa 100dvh por padrão). */
+.asd-frame > .eds-app {
+  block-size: 100%;
+}
+
+.asd-section {
+  padding-block: var(--eds-space-6);
+  border-block-start: 1px solid var(--eds-color-border-default);
+}
+
+.asd-content {
+  padding-block: var(--eds-space-5);
+}
+
+.asd-muted {
+  color: var(--eds-color-text-muted);
+}
+
+.asd-card {
+  padding: var(--eds-space-4);
+  border: 1px solid var(--eds-color-border-default);
+  border-radius: var(--eds-radius-lg);
+  background: var(--eds-color-bg-surface);
+}
+
+.asd-kpi {
+  font-size: var(--eds-font-size-h3);
+  font-weight: var(--eds-font-weight-semibold);
+  line-height: var(--eds-line-height-h3);
+}
+
+.asd-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--eds-space-3);
+  padding-block: var(--eds-space-3);
+  border-block-end: 1px solid var(--eds-color-border-default);
+}
+
+.asd-avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--eds-control-height-md);
+  block-size: var(--eds-control-height-md);
+  border-radius: var(--eds-radius-full);
+  background: var(--eds-color-action-primary-subtle);
+  color: var(--eds-color-action-primary);
+  font-size: var(--eds-font-size-small);
+  font-weight: var(--eds-font-weight-semibold);
+}
+
+/* A busca é quem encolhe em contêiner estreito; botões e avatar mantêm o tamanho. */
+.asd-search {
+  flex: 0 1 16rem;
+  min-inline-size: 0;
+}

@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Foundations } from './Foundations';
 import { ActionsDemo } from './demos/ActionsDemo';
+import { AppShellDemo } from './demos/AppShellDemo';
+import { FeedbackDemo } from './demos/FeedbackDemo';
+import { NavigationDemo } from './demos/NavigationDemo';
+import { SurfacesDemo } from './demos/SurfacesDemo';
 import { FormsDemo } from './demos/FormsDemo';
 import { LayoutDemo } from './demos/LayoutDemo';
 
@@ -56,6 +60,10 @@ export function App() {
       <LayoutDemo />
       <ActionsDemo />
       <FormsDemo />
+      <SurfacesDemo />
+      <NavigationDemo />
+      <FeedbackDemo />
+      <AppShellDemo />
     </main>
   );
 }

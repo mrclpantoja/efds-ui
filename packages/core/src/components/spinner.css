@@ -1,0 +1,54 @@
+/* Spinner: indicador de carregamento indeterminado. Mesma linguagem do spinner do Button
+   em [aria-busy] (arco de dois lados girando); aqui com um trilho tênue para o arco
+   continuar legível parado. Cor padrão = cor de ação (sobrescreva com color).
+   Markup:
+     <span class="eds-spinner" role="status"><span class="eds-visually-hidden">Carregando</span></span>
+   Tamanhos: .eds-spinner-sm (1rem) · padrão (1.5rem) · .eds-spinner-lg (2rem).
+   Reduced-motion: não gira; o arco fixo continua indicando "em andamento" e o texto oculto
+   segue sendo anunciado. */
+@layer eds.components {
+  .eds-spinner {
+    --_spinner-size: 1.5rem;
+
+    color: var(--eds-color-action-primary);
+    display: inline-block;
+    flex: none;
+    box-sizing: border-box;
+    inline-size: var(--_spinner-size);
+    block-size: var(--_spinner-size);
+    border: calc(var(--_spinner-size) / 8) solid color-mix(in srgb, currentColor 25%, transparent);
+    border-block-start-color: currentColor;
+    border-inline-end-color: currentColor;
+    border-radius: 50%;
+    vertical-align: middle;
+    animation: eds-spinner-spin calc(var(--eds-motion-duration-base) * 4) linear infinite;
+  }
+
+  .eds-spinner-sm {
+    --_spinner-size: 1rem;
+  }
+
+  .eds-spinner-lg {
+    --_spinner-size: 2rem;
+  }
+
+  @keyframes eds-spinner-spin {
+    to {
+      rotate: 1turn;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-spinner {
+      animation: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-spinner {
+      border-color: GrayText;
+      border-block-start-color: CanvasText;
+      border-inline-end-color: CanvasText;
+    }
+  }
+}

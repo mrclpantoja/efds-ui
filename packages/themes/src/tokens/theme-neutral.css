@@ -4,7 +4,7 @@
 /* prettier-ignore */
 @layer eds.tokens {
   [data-theme="neutral"] {
-    --eds-accent-50: var(--eds-gray-50);
+    --eds-accent-50: var(--eds-gray-200);
     --eds-accent-100: var(--eds-gray-100);
     --eds-accent-200: var(--eds-gray-200);
     --eds-accent-300: var(--eds-gray-300);

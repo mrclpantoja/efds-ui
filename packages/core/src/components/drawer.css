@@ -1,0 +1,165 @@
+/*
+ * Drawer: painel lateral em <dialog> aberto com showModal() (foco preso, Esc e retorno do
+ * foco nativos). Padrão: borda final (direita em LTR); .eds-drawer-start na borda inicial.
+ *
+ *   <dialog class="eds-drawer [eds-drawer-start]" aria-labelledby="t">
+ *     <header class="eds-drawer-header">
+ *       <h2 class="eds-drawer-title" id="t">Filtros</h2>
+ *       <form method="dialog"><button class="eds-button eds-button-ghost eds-button-icon" aria-label="Fechar">…</button></form>
+ *     </header>
+ *     <div class="eds-drawer-body" tabindex="0">…</div>
+ *     <footer class="eds-drawer-footer">…ações…</footer>
+ *   </dialog>
+ *
+ * Largura: --_drawer-width = 360–480px (fluida) a partir de 640px; 100% abaixo disso.
+ * Clique no backdrop para fechar: responsabilidade do React/JS (e.target === dialog).
+ */
+@layer eds.components {
+  .eds-drawer {
+    --_drawer-width: clamp(22.5rem, 30vw, 30rem);
+    --_drawer-padding: var(--eds-space-5);
+    --_drawer-radius: 0;
+    --_drawer-dir: 1;
+    --_drawer-offset: calc(100% * var(--_drawer-dir));
+
+    inset-block: 0;
+    inset-inline: auto 0;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    block-size: 100dvh;
+    max-block-size: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    overscroll-behavior: contain;
+    border: 0;
+    border-inline-start: 1px solid var(--eds-color-border-default);
+    border-start-start-radius: var(--_drawer-radius);
+    border-end-start-radius: var(--_drawer-radius);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    box-shadow: var(--eds-shadow-lg);
+
+    opacity: 0;
+    transform: translateX(var(--_drawer-offset));
+    transition:
+      opacity var(--eds-motion-duration-base) var(--eds-motion-easing-standard),
+      transform var(--eds-motion-duration-base) var(--eds-motion-easing-standard),
+      display var(--eds-motion-duration-base) allow-discrete,
+      overlay var(--eds-motion-duration-base) allow-discrete;
+
+    &:dir(rtl) {
+      --_drawer-dir: -1;
+    }
+
+    &[open] {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      transform: none;
+    }
+
+    @starting-style {
+      &[open] {
+        opacity: 0;
+        transform: translateX(var(--_drawer-offset));
+      }
+    }
+
+    &::backdrop {
+      background: var(--eds-color-bg-overlay);
+      opacity: 0;
+      transition:
+        opacity var(--eds-motion-duration-base) var(--eds-motion-easing-standard),
+        display var(--eds-motion-duration-base) allow-discrete,
+        overlay var(--eds-motion-duration-base) allow-discrete;
+    }
+
+    &[open]::backdrop {
+      opacity: 1;
+    }
+
+    @starting-style {
+      &[open]::backdrop {
+        opacity: 0;
+      }
+    }
+  }
+
+  /* Borda inicial: espelha posição, borda, raio e sentido da animação. */
+  .eds-drawer-start {
+    --_drawer-dir: -1;
+
+    inset-inline: 0 auto;
+    border-inline-start: 0;
+    border-inline-end: 1px solid var(--eds-color-border-default);
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+    border-start-end-radius: var(--_drawer-radius);
+    border-end-end-radius: var(--_drawer-radius);
+
+    &:dir(rtl) {
+      --_drawer-dir: 1;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .eds-drawer {
+      --_drawer-radius: var(--eds-radius-lg);
+
+      inline-size: var(--_drawer-width);
+    }
+  }
+
+  .eds-drawer-header {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-3);
+    padding: var(--eds-space-4) var(--_drawer-padding);
+    min-block-size: calc(var(--eds-control-height-md) + 2 * var(--eds-space-4));
+  }
+
+  .eds-drawer-header > :is(form, .eds-button) {
+    display: flex;
+    margin-inline-end: calc(var(--eds-space-2) * -1);
+  }
+
+  .eds-drawer-title {
+    min-inline-size: 0;
+    font-size: var(--eds-font-size-h3);
+    line-height: var(--eds-line-height-h3);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-drawer-body {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--_drawer-padding);
+
+    &:focus-visible {
+      outline-offset: calc(-1 * var(--eds-focus-ring-width));
+    }
+  }
+
+  .eds-drawer-footer {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--eds-space-3);
+    padding: var(--eds-space-4) var(--_drawer-padding);
+    border-block-start: 1px solid var(--eds-color-border-default);
+  }
+
+  /* Trava a rolagem da página enquanto há modal/drawer modal aberto (idêntico ao de modal.css). */
+  :where(html):has(:is(.eds-modal, .eds-drawer):modal) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+}

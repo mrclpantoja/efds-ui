@@ -175,6 +175,7 @@
 
   /* Só ícone: quadrado (exige aria-label no HTML). */
   .eds-button-icon {
+    flex: none; /* nunca encolher abaixo do alvo mínimo (WCAG 2.5.8) */
     inline-size: var(--_button-height);
     padding-inline: 0;
   }

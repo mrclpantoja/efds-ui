@@ -1,0 +1,59 @@
+/*
+ * Breadcrumb: trilha de localização.
+ * Markup: nav.eds-breadcrumb[aria-label] > ol.eds-breadcrumb-list > li.eds-breadcrumb-item > a;
+ * o último item leva aria-current="page" (a ou span) e destaca em text-primary.
+ * Separador: ::after gerado (termina a linha em vez de iniciar a seguinte) com texto alternativo vazio, logo fora da árvore de acessibilidade.
+ * Telas estreitas (decisão, sem JS): a trilha quebra em mais linhas (nenhum nível se perde e não há
+ * rolagem horizontal); um único item mais largo que o contêiner ganha reticências.
+ */
+/* Links em text-secondary (decisão Swiss: trilha discreta, só o item atual em text-primary). */
+@layer eds.components {
+  .eds-breadcrumb {
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+  }
+
+  .eds-breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-breadcrumb-item {
+    display: flex;
+    align-items: center;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    color: var(--eds-color-text-secondary);
+
+    &:not(:last-child)::after {
+      content: '/' / '';
+      margin-inline: var(--eds-space-2);
+      color: var(--eds-color-text-muted);
+    }
+
+    /* Alvo com >= 24px de altura (WCAG 2.5.8) sem inflar a trilha. */
+    & > :is(a, span) {
+      min-inline-size: 0;
+      padding-block: var(--eds-space-1);
+      overflow: hidden;
+      color: inherit;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    & > a:hover {
+      color: var(--eds-color-text-primary);
+      text-decoration: underline;
+    }
+
+    & > [aria-current] {
+      color: var(--eds-color-text-primary);
+      font-weight: var(--eds-font-weight-medium);
+    }
+  }
+}

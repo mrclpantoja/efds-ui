@@ -1,0 +1,121 @@
+/*
+ * Navbar — barra superior discreta: ~64px, sem sombra, borda inferior suave.
+ * É contêiner de si mesma: abaixo de 768px de largura, a navegação desce para uma
+ * segunda linha com rolagem horizontal (reflow a 320px sem perder links).
+ *
+ *   <header class="eds-navbar">
+ *     <a class="eds-navbar-brand" href="/"><svg …/>Marca</a>
+ *     <nav class="eds-navbar-nav" aria-label="Seções">
+ *       <a class="eds-navbar-link" href="…" aria-current="page">Visão geral</a>
+ *     </nav>
+ *     <div class="eds-navbar-actions">…busca, botões…</div>
+ *   </header>
+ *
+ * No app shell, use no mesmo elemento: <header class="eds-app-header eds-navbar">.
+ */
+@layer eds.components {
+  .eds-navbar {
+    container-type: inline-size;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2) var(--eds-space-4);
+    box-sizing: border-box;
+    min-block-size: var(--eds-layout-navbar-height);
+    padding: var(--eds-space-2) var(--eds-space-4);
+    border-block-end: 1px solid var(--eds-color-border-default);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+  }
+
+  .eds-navbar-brand {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--eds-space-2);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body-lg);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: var(--eds-line-height-body-lg);
+    text-decoration: none;
+
+    & > svg {
+      flex: none;
+      inline-size: 1.5rem;
+      block-size: 1.5rem;
+    }
+  }
+
+  .eds-navbar-nav {
+    display: flex;
+    flex: 1 1 auto;
+    gap: var(--eds-space-1);
+    min-inline-size: 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .eds-navbar-link {
+    --_link-bg: transparent;
+    --_link-fg: var(--eds-color-text-secondary);
+
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    min-block-size: var(--eds-control-height-sm);
+    padding-inline: var(--eds-space-3);
+    border-radius: var(--eds-radius-md);
+    background: var(--_link-bg);
+    color: var(--_link-fg);
+    font-weight: var(--eds-font-weight-medium);
+    white-space: nowrap;
+    text-decoration: none;
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    /* Hover nunca sobrescreve o link atual. */
+    &:hover:not([aria-current='page']) {
+      --_link-bg: var(--eds-color-bg-subtle);
+      --_link-fg: var(--eds-color-text-primary);
+    }
+
+    &[aria-current='page'] {
+      --_link-bg: var(--eds-color-action-primary-subtle);
+      --_link-fg: var(--eds-color-action-primary);
+
+      font-weight: var(--eds-font-weight-semibold);
+    }
+
+    /* Anel por dentro: a lista rola e recortaria o anel externo. */
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+  }
+
+  .eds-navbar-actions {
+    /* Base 0: nunca força quebra de linha; ocupa a sobra e encosta à direita. */
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--eds-space-2);
+    min-inline-size: 0;
+  }
+
+  @container (width < 768px) {
+    .eds-navbar-nav {
+      order: 1;
+      flex-basis: 100%;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-navbar-link[aria-current='page'] {
+      outline: 1px solid CanvasText;
+    }
+  }
+}

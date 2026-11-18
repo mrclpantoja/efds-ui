@@ -1,0 +1,85 @@
+/* Badge: rótulo informativo. Não é controle: sem hover, sem cursor de clique, não focável.
+   Markup:
+     <span class="eds-badge eds-badge-success">Pago</span>
+     <span class="eds-badge eds-badge-danger eds-badge-dot">Atrasado</span>
+   Forma (decisão): raio sm, não pílula. Pílula lembra botão/chip e a spec pede evitar
+   pílulas em tudo; o raio acompanha o eixo data-shape. O ponto é sempre circular.
+   Cor e texto: fundo -subtle e texto -text (contraste medido nos dois modos). */
+@layer eds.components {
+  .eds-badge {
+    --_badge-bg: var(--eds-color-bg-subtle);
+    --_badge-fg: var(--eds-color-text-secondary);
+    --_badge-dot: var(--eds-color-text-secondary);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    padding-block: calc(var(--eds-space-1) / 2);
+    padding-inline: var(--eds-space-2);
+    border-radius: var(--eds-radius-sm);
+    background: var(--_badge-bg);
+    color: var(--_badge-fg);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    font-weight: var(--eds-font-weight-medium);
+    white-space: nowrap;
+    cursor: default;
+  }
+
+  .eds-badge-neutral {
+    --_badge-bg: var(--eds-color-bg-subtle);
+    --_badge-fg: var(--eds-color-text-secondary);
+    --_badge-dot: var(--eds-color-text-secondary);
+  }
+
+  .eds-badge-info {
+    --_badge-bg: var(--eds-color-status-info-subtle);
+    --_badge-fg: var(--eds-color-status-info-text);
+    --_badge-dot: var(--eds-color-status-info-text);
+  }
+
+  .eds-badge-success {
+    --_badge-bg: var(--eds-color-status-success-subtle);
+    --_badge-fg: var(--eds-color-status-success-text);
+    --_badge-dot: var(--eds-color-status-success-text);
+  }
+
+  .eds-badge-warning {
+    --_badge-bg: var(--eds-color-status-warning-subtle);
+    --_badge-fg: var(--eds-color-status-warning-text);
+    --_badge-dot: var(--eds-color-status-warning-text);
+  }
+
+  .eds-badge-danger {
+    --_badge-bg: var(--eds-color-status-danger-subtle);
+    --_badge-fg: var(--eds-color-status-danger-text);
+    --_badge-dot: var(--eds-color-status-danger-text);
+  }
+
+  /* Ponto + texto: sem fundo; o texto fica na cor primária, só o ponto leva o status. */
+  .eds-badge-dot {
+    --_badge-bg: transparent;
+    --_badge-fg: var(--eds-color-text-primary);
+    padding-inline: 0;
+
+    &::before {
+      content: '';
+      flex: none;
+      inline-size: 0.5rem;
+      block-size: 0.5rem;
+      border-radius: 50%;
+      background: var(--_badge-dot);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-badge:not(.eds-badge-dot) {
+      border: 1px solid currentColor;
+    }
+
+    .eds-badge-dot::before {
+      background: CanvasText;
+    }
+  }
+}

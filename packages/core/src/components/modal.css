@@ -1,0 +1,144 @@
+/*
+ * Modal: <dialog> nativo aberto com showModal(). O navegador entrega foco preso, fundo inerte,
+ * Esc para fechar e retorno do foco ao gatilho; este CSS só cuida da aparência.
+ *
+ *   <dialog class="eds-modal [eds-modal-sm | eds-modal-lg]" aria-labelledby="t">
+ *     <header class="eds-modal-header">
+ *       <h2 class="eds-modal-title" id="t">Título</h2>
+ *       <form method="dialog">
+ *         <button class="eds-button eds-button-ghost eds-button-icon" aria-label="Fechar">…</button>
+ *       </form>
+ *     </header>
+ *     <div class="eds-modal-body" tabindex="0">…</div>    (rolável; tabindex só se puder rolar)
+ *     <footer class="eds-modal-footer">…ações…</footer>
+ *   </dialog>
+ *
+ * Fora do escopo do CSS (responsabilidade do React/JS): fechar ao clicar no backdrop
+ * (e.target === dialog); o botão que abre deve chamar dialog.showModal().
+ * Estados: [open]. Formulário dentro do modal: use <form method="dialog"> nos botões que fecham.
+ */
+@layer eds.components {
+  .eds-modal {
+    --_modal-width: 35rem;
+    --_modal-gutter: var(--eds-space-4);
+    --_modal-radius: var(--eds-radius-lg);
+    --_modal-padding: var(--eds-space-5);
+
+    inline-size: min(var(--_modal-width), calc(100% - 2 * var(--_modal-gutter)));
+    max-inline-size: none;
+    max-block-size: calc(100dvh - 2 * var(--_modal-gutter));
+    box-sizing: border-box;
+    margin: auto;
+    padding: 0;
+    overflow: hidden;
+    overscroll-behavior: contain;
+    border: 1px solid var(--eds-color-border-default);
+    border-radius: var(--_modal-radius);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    box-shadow: var(--eds-shadow-lg);
+
+    /* Saída/entrada: só opacity + transform; display e overlay discretos mantêm o dialog visível até o fim. */
+    opacity: 0;
+    transform: translateY(var(--eds-space-3));
+    transition:
+      opacity var(--eds-motion-duration-base) var(--eds-motion-easing-standard),
+      transform var(--eds-motion-duration-base) var(--eds-motion-easing-standard),
+      display var(--eds-motion-duration-base) allow-discrete,
+      overlay var(--eds-motion-duration-base) allow-discrete;
+
+    &[open] {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      transform: none;
+    }
+
+    @starting-style {
+      &[open] {
+        opacity: 0;
+        transform: translateY(var(--eds-space-3));
+      }
+    }
+
+    &::backdrop {
+      background: var(--eds-color-bg-overlay);
+      opacity: 0;
+      transition:
+        opacity var(--eds-motion-duration-base) var(--eds-motion-easing-standard),
+        display var(--eds-motion-duration-base) allow-discrete,
+        overlay var(--eds-motion-duration-base) allow-discrete;
+    }
+
+    &[open]::backdrop {
+      opacity: 1;
+    }
+
+    @starting-style {
+      &[open]::backdrop {
+        opacity: 0;
+      }
+    }
+  }
+
+  .eds-modal-sm {
+    --_modal-width: 25rem;
+  }
+
+  .eds-modal-lg {
+    --_modal-width: 45rem;
+  }
+
+  .eds-modal-header {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-3);
+    padding: var(--eds-space-4) var(--_modal-padding);
+    min-block-size: calc(var(--eds-control-height-md) + 2 * var(--eds-space-4));
+  }
+
+  /* Alinha o ícone de fechar à mesma distância da borda que o título (compensa o padding do botão). */
+  .eds-modal-header > :is(form, .eds-button) {
+    display: flex;
+    margin-inline-end: calc(var(--eds-space-2) * -1);
+  }
+
+  .eds-modal-title {
+    min-inline-size: 0;
+    font-size: var(--eds-font-size-h3);
+    line-height: var(--eds-line-height-h3);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-modal-body {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--_modal-padding);
+
+    /* Dentro da área rolável o anel não pode ser cortado pelas bordas. */
+    &:focus-visible {
+      outline-offset: calc(-1 * var(--eds-focus-ring-width));
+    }
+  }
+
+  .eds-modal-footer {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--eds-space-3);
+    padding: var(--eds-space-4) var(--_modal-padding);
+    border-block-start: 1px solid var(--eds-color-border-default);
+  }
+
+  /* Trava a rolagem da página enquanto há modal/drawer modal aberto (sem JS). */
+  :where(html):has(:is(.eds-modal, .eds-drawer):modal) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+}

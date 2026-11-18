@@ -1,0 +1,152 @@
+/*
+ * Card: superfície de conteúdo. Padrão: bg-surface, borda 1px, raio md, sem sombra.
+ *
+ *   <article class="eds-card [eds-card-outlined | eds-card-elevated | eds-card-interactive]">
+ *     <header class="eds-card-header">
+ *       <h3 class="eds-card-title">Título</h3>
+ *       <div class="eds-card-actions">…</div>        (opcional)
+ *     </header>
+ *     <div class="eds-card-body">…</div>
+ *     <footer class="eds-card-footer">…</footer>
+ *   </article>
+ *
+ * Card inteiro clicável (padrão de link esticado; o card NÃO vira botão): coloque UM
+ * <a class="eds-card-link"> (normalmente dentro do título). O ::after dele cobre o card;
+ * botões e links extras dentro do card continuam clicáveis (ficam acima do link).
+ *
+ * Atenção: com o link esticado o ::after cobre o card, então o texto do card deixa de poder
+ * ser selecionado/copiado com o mouse. Use só quando o card inteiro é, de fato, um atalho.
+ *
+ * Alinhamento em grade: por padrão o card é uma coluna flex e o body cresce, então cards
+ * lado a lado numa .eds-grid têm a mesma altura e o footer fica no fim. Para alinhar também
+ * as LINHAS (título, corpo, rodapé na mesma altura entre cards vizinhos), use
+ * .eds-card-subgrid: exige header, body e footer como filhos diretos (3 linhas) e que o
+ * pai seja um grid (ex.: .eds-grid); sem subgrid no navegador, cai no comportamento padrão.
+ */
+@layer eds.components {
+  .eds-card {
+    --_card-radius: var(--eds-radius-md);
+    --_card-padding: var(--eds-space-4);
+    --_card-bg: var(--eds-color-bg-surface);
+    --_card-border: var(--eds-color-border-default);
+    --_card-shadow: none;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    border: 1px solid var(--_card-border);
+    border-radius: var(--_card-radius);
+    background: var(--_card-bg);
+    box-shadow: var(--_card-shadow);
+    color: var(--eds-color-text-primary);
+    transition:
+      border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      box-shadow var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    /* Controles dentro do card ficam acima do link esticado. */
+    & :is(a, button, input, select, textarea, summary):not(.eds-card-link) {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  .eds-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-3);
+    padding: var(--_card-padding) var(--_card-padding) 0;
+  }
+
+  .eds-card-title {
+    min-inline-size: 0;
+    font-size: var(--eds-font-size-h4);
+    line-height: var(--eds-line-height-h4);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-card-actions {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--eds-space-2);
+  }
+
+  .eds-card-body {
+    flex: 1 1 auto;
+    padding: var(--_card-padding);
+  }
+
+  .eds-card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-3);
+    padding: 0 var(--_card-padding) var(--_card-padding);
+  }
+
+  /* Variantes */
+  .eds-card-outlined {
+    --_card-border: var(--eds-color-border-strong);
+  }
+
+  /* Mantém a borda: no modo escuro a sombra some sobre o fundo escuro. */
+  .eds-card-elevated {
+    --_card-shadow: var(--eds-shadow-sm);
+  }
+
+  .eds-card-interactive {
+    &:focus-within {
+      --_card-border: var(--eds-color-border-strong);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        --_card-border: var(--eds-color-border-strong);
+        --_card-shadow: var(--eds-shadow-sm);
+      }
+    }
+  }
+
+  /* Link esticado. O anel de foco é desenhado no card inteiro (no ::after), nunca removido. */
+  .eds-card-link {
+    color: inherit;
+    text-decoration: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--_card-radius);
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      &::after {
+        outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+        outline-offset: var(--eds-focus-ring-offset);
+      }
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-card-link:focus-visible::after {
+      outline-color: Highlight;
+    }
+  }
+
+  /* Alinha header/body/footer entre cards vizinhos (opcional). */
+  .eds-card-subgrid {
+    grid-row: span 3;
+    display: grid;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+}

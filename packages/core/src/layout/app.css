@@ -1,0 +1,105 @@
+/*
+ * App shell — uma grade só: "sidebar header" / "sidebar main". Responde ao CONTÊINER
+ * (.eds-app é o contêiner nomeado eds-app), nunca à viewport: funciona igual em página
+ * inteira e dentro de uma moldura. Zero JS para responder à largura.
+ *
+ * API
+ *   .eds-app              grade de 100dvh; sidebar | header + main
+ *   .eds-app-header       área do topo (costuma ser o próprio <header class="eds-navbar">)
+ *   .eds-app-main         área de conteúdo; rola sozinha (scrollbar-gutter: stable)
+ *   .eds-app-nav-toggle   botão que abre a sidebar no mobile (popovertarget="id da sidebar")
+ *   .eds-skip-link        "Pular para o conteúdo"; primeiro filho de .eds-app, visível no foco
+ *
+ * Faixas (largura do contêiner .eds-app): ≥1024 sidebar expandida · 768–1023 compacta
+ * (72px, só ícones) · <768 sidebar vira off-canvas via Popover API (ver sidebar.css).
+ * Colapsar à mão: [data-collapsed] na .eds-sidebar (não na .eds-app).
+ *
+ *   <div class="eds-app">
+ *     <a class="eds-skip-link" href="#conteudo">Pular para o conteúdo</a>
+ *     <nav class="eds-sidebar" id="nav" popover aria-label="Principal">…</nav>
+ *     <header class="eds-app-header eds-navbar">
+ *       <button class="eds-button eds-button-ghost eds-button-icon eds-app-nav-toggle"
+ *               popovertarget="nav" aria-label="Abrir navegação">…</button> …
+ *     </header>
+ *     <main class="eds-app-main" id="conteudo" tabindex="-1">…</main>
+ *   </div>
+ *
+ * Dentro de moldura de altura fixa: sobrescreva block-size (ex.: 100%) no CSS da aplicação.
+ */
+@layer eds.layout {
+  .eds-app {
+    /* Contêiner: as faixas acima são lidas por @container eds-app. */
+    container: eds-app / inline-size;
+
+    position: relative; /* bloco de contenção do skip link */
+    display: grid;
+    grid-template:
+      'sidebar header' auto
+      'sidebar main' minmax(0, 1fr)
+      / auto minmax(0, 1fr);
+    block-size: 100vh;
+    block-size: 100dvh;
+    overflow: hidden;
+    background: var(--eds-color-bg-page);
+  }
+
+  .eds-app-header {
+    grid-area: header;
+  }
+
+  .eds-app-main {
+    grid-area: main;
+    min-block-size: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Newly available: sem suporte a declaração é descartada (só o layout "pula"). */
+    scrollbar-gutter: stable;
+
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+  }
+
+  :where(.eds-app) > .eds-sidebar {
+    grid-area: sidebar;
+  }
+
+  .eds-skip-link {
+    position: absolute;
+    inset-block-start: var(--eds-space-2);
+    inset-inline-start: var(--eds-space-2);
+    z-index: 1;
+    padding: var(--eds-space-2) var(--eds-space-3);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-action-primary);
+    color: var(--eds-color-text-on-action);
+    font-weight: var(--eds-font-weight-medium);
+    text-decoration: none;
+
+    &:not(:focus) {
+      inline-size: 1px;
+      block-size: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+}
+
+/* O toggle só existe onde a sidebar vira off-canvas. Fica em eds.utilities para vencer o
+   display do .eds-button (eds.components). Sem Popover API, o toggle some e a sidebar
+   permanece compacta no mobile (fallback funcional). */
+@layer eds.utilities {
+  .eds-app-nav-toggle {
+    display: none;
+  }
+
+  @supports selector(:popover-open) {
+    @container eds-app (width < 768px) {
+      .eds-app-nav-toggle {
+        display: inline-flex;
+      }
+    }
+  }
+}

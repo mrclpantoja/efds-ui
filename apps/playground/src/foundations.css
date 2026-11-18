@@ -1,6 +1,7 @@
 /* Estilos de demonstração do playground; cores e espaços vêm dos tokens. */
 .fnd {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--eds-space-5);
   max-inline-size: var(--eds-layout-container-lg);
   margin-block-start: var(--eds-space-7);
@@ -41,12 +42,14 @@
 
 .fnd-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--eds-space-4);
 }
 
 .fnd-label {
-  flex: 0 0 11rem;
+  flex: 0 1 11rem;
+  min-inline-size: 0;
   color: var(--eds-color-text-secondary);
 }
 

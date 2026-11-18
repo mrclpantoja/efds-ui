@@ -1,0 +1,93 @@
+/*
+ * Tabs: navegação entre painéis do mesmo contexto.
+ * Markup: .eds-tabs > .eds-tablist[role=tablist][aria-label] > button.eds-tab[role=tab] (+ .eds-tabpanel[role=tabpanel]).
+ * Estado vem do ARIA: [aria-selected="true"] (ativa), :disabled / [aria-disabled="true"].
+ * Sem JS (HTML puro) NÃO prometa o padrão tablist: o contrato exige o comportamento de roving tabindex/setas
+ * fornecido por JavaScript; sem ele, use links/âncoras ou seções comuns em vez de role=tablist.
+ * O CSS só estiliza. Roving tabindex (tabindex=0 na ativa, -1 nas demais), setas e Home/End são
+ * JavaScript: em HTML puro dependem da decisão em aberto sobre JS para quem usa só HTML (CLAUDE.md);
+ * a referência do contrato está em apps/playground/src/demos/NavigationDemo.tsx.
+ * Variante: .eds-tabs-fill (abas dividem a largura). Sem barra de rolagem pesada: a tablist rola na horizontal.
+ */
+@layer eds.components {
+  .eds-tabs {
+    --_tabs-grow: 0;
+    --_tabs-gap: var(--eds-space-4);
+
+    display: block;
+    min-inline-size: 0;
+  }
+
+  .eds-tabs-fill {
+    --_tabs-grow: 1;
+  }
+
+  .eds-tablist {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--eds-color-border-strong) transparent;
+    /* Linha de base desenhada por baixo; o indicador da aba (2px) a cobre. */
+    box-shadow: inset 0 -1px 0 var(--eds-color-border-default);
+  }
+
+  .eds-tab {
+    --_tab-height: var(--eds-control-height-md);
+    --_tab-fg: var(--eds-color-text-secondary);
+    --_tab-indicator: transparent;
+
+    flex: var(--_tabs-grow) 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-block-size: var(--_tab-height);
+    padding-inline: var(--eds-space-4);
+    border: 0;
+    border-block-end: 2px solid var(--_tab-indicator);
+    border-radius: 0;
+    background: transparent;
+    color: var(--_tab-fg);
+    font-family: inherit;
+    font-size: var(--eds-font-size-body);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-body);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    /* Hover nunca sobrescreve a aba ativa nem a desabilitada. */
+    &:hover:not([aria-selected='true'], :disabled, [aria-disabled='true']) {
+      --_tab-fg: var(--eds-color-text-primary);
+      --_tab-indicator: var(--eds-color-border-strong);
+    }
+
+    &[aria-selected='true'] {
+      --_tab-fg: var(--eds-color-action-primary);
+      --_tab-indicator: var(--eds-color-action-primary);
+    }
+
+    /* Foco por dentro: o contêiner rola (overflow) e cortaria um anel externo. */
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      --_tab-fg: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  .eds-tabpanel {
+    padding-block-start: var(--_tabs-gap);
+
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+  }
+}

@@ -1,0 +1,83 @@
+/* Skeleton: marcador de conteúdo em carregamento, decorativo.
+   Markup (o contêiner anuncia o estado; os blocos ficam ocultos para leitores de tela):
+     <div aria-busy="true">
+       <span class="eds-visually-hidden" role="status">Carregando contratos</span>
+       <span class="eds-skeleton eds-skeleton-circle" aria-hidden="true" style="inline-size: 2.5rem"></span>
+       <span class="eds-skeleton eds-skeleton-text eds-skeleton-shimmer" aria-hidden="true"></span>
+     </div>
+   Dimensões: vêm do markup (style inline ou classe da aplicação: inline-size / block-size).
+   Padrão do bloco: 100% x 1rem. .eds-skeleton-text ocupa a altura da linha de texto herdada
+   (1lh), com a barra mais baixa que a linha, e a última linha de um grupo fica mais curta.
+   .eds-skeleton-circle é quadrado por aspect-ratio: informe só inline-size.
+   Troque o skeleton pelo conteúdo em um contêiner de mesmo tamanho para não haver layout shift. */
+@layer eds.components {
+  .eds-skeleton {
+    --_skeleton-pad-y: 0;
+    --_skeleton-bg: color-mix(in srgb, var(--eds-color-text-primary) 8%, transparent);
+
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 1rem;
+    padding-block: var(--_skeleton-pad-y);
+    border-radius: var(--eds-radius-sm);
+    background: var(--_skeleton-bg);
+    background-clip: content-box;
+    overflow: hidden;
+  }
+
+  /* Texto: a caixa tem a altura da linha; a barra visível é 60% dela. */
+  .eds-skeleton-text {
+    --_skeleton-pad-y: 0.2lh;
+
+    block-size: 1lh;
+    line-height: inherit;
+
+    &:last-child:not(:first-child) {
+      inline-size: 60%;
+    }
+  }
+
+  .eds-skeleton-circle {
+    inline-size: 2.5rem;
+    block-size: auto;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+
+  /* Shimmer opcional: faixa clara varrendo o bloco. Só translate; some em reduced-motion. */
+  .eds-skeleton-shimmer::after {
+    content: '';
+    position: absolute;
+    inset-block: var(--_skeleton-pad-y);
+    inset-inline: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--eds-color-text-primary) 8%, transparent),
+      transparent
+    );
+    translate: -100% 0;
+    animation: eds-skeleton-shimmer calc(var(--eds-motion-duration-base) * 8) linear infinite;
+  }
+
+  @keyframes eds-skeleton-shimmer {
+    to {
+      translate: 100% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-skeleton-shimmer::after {
+      display: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-skeleton {
+      border: 1px solid GrayText;
+      background: transparent;
+    }
+  }
+}

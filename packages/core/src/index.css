@@ -1,2 +1,20 @@
 /* @eds-ui/core - ordem das camadas (menor para maior precedência). */
 @layer eds.reset, eds.tokens, eds.base, eds.layout, eds.components, eds.utilities;
+
+/* Tokens gerados por scripts/build-tokens.ts (pnpm tokens). */
+@import './tokens/primitives-colors.css';
+@import './tokens/primitives-spacing.css';
+@import './tokens/primitives-typography.css';
+@import './tokens/primitives-radius.css';
+@import './tokens/primitives-shadows.css';
+@import './tokens/primitives-motion.css';
+@import './tokens/semantic-colors.css';
+@import './tokens/semantic-typography.css';
+@import './tokens/semantic-control.css';
+@import './tokens/semantic-layout.css';
+@import './tokens/semantic-shadows.css';
+
+@import './base/reset.css';
+@import './base/root.css';
+@import './base/typography.css';
+@import './base/accessibility.css';

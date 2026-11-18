@@ -1,0 +1,18 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/theme-blue.json */
+/* Tema blue: escala de acento */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  [data-theme="blue"] {
+    --eds-accent-50: var(--eds-blue-50);
+    --eds-accent-100: var(--eds-blue-100);
+    --eds-accent-200: var(--eds-blue-200);
+    --eds-accent-300: var(--eds-blue-300);
+    --eds-accent-400: var(--eds-blue-400);
+    --eds-accent-500: var(--eds-blue-500);
+    --eds-accent-600: var(--eds-blue-600);
+    --eds-accent-700: var(--eds-blue-700);
+    --eds-accent-800: var(--eds-blue-800);
+    --eds-accent-900: var(--eds-blue-900);
+  }
+}

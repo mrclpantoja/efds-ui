@@ -1,0 +1,18 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/theme-orange.json */
+/* Tema orange: escala de acento */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  [data-theme="orange"] {
+    --eds-accent-50: var(--eds-orange-50);
+    --eds-accent-100: var(--eds-orange-100);
+    --eds-accent-200: var(--eds-orange-200);
+    --eds-accent-300: var(--eds-orange-300);
+    --eds-accent-400: var(--eds-orange-400);
+    --eds-accent-500: var(--eds-orange-500);
+    --eds-accent-600: var(--eds-orange-600);
+    --eds-accent-700: var(--eds-orange-700);
+    --eds-accent-800: var(--eds-orange-800);
+    --eds-accent-900: var(--eds-orange-900);
+  }
+}

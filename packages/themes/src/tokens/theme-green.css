@@ -1,0 +1,18 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/theme-green.json */
+/* Tema green: escala de acento */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  [data-theme="green"] {
+    --eds-accent-50: var(--eds-green-50);
+    --eds-accent-100: var(--eds-green-100);
+    --eds-accent-200: var(--eds-green-200);
+    --eds-accent-300: var(--eds-green-300);
+    --eds-accent-400: var(--eds-green-400);
+    --eds-accent-500: var(--eds-green-500);
+    --eds-accent-600: var(--eds-green-600);
+    --eds-accent-700: var(--eds-green-700);
+    --eds-accent-800: var(--eds-green-800);
+    --eds-accent-900: var(--eds-green-900);
+  }
+}

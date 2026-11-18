@@ -1,0 +1,14 @@
+{
+  "$selector": "[data-theme=\"orange\"]",
+  "$description": "Tema orange: escala de acento",
+  "accent-50": "{orange-50}",
+  "accent-100": "{orange-100}",
+  "accent-200": "{orange-200}",
+  "accent-300": "{orange-300}",
+  "accent-400": "{orange-400}",
+  "accent-500": "{orange-500}",
+  "accent-600": "{orange-600}",
+  "accent-700": "{orange-700}",
+  "accent-800": "{orange-800}",
+  "accent-900": "{orange-900}"
+}

@@ -1,0 +1,29 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/primitives/typography.json */
+/* Primitivos tipográficos (Inter). Tamanhos e alturas de linha em rem, base 16px. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  :where(:root) {
+    --eds-font-family-inter: Inter, Inter Variable, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --eds-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+    --eds-font-size-12: 0.75rem;
+    --eds-font-size-13: 0.8125rem;
+    --eds-font-size-14: 0.875rem;
+    --eds-font-size-16: 1rem;
+    --eds-font-size-20: 1.25rem;
+    --eds-font-size-24: 1.5rem;
+    --eds-font-size-32: 2rem;
+    --eds-font-size-40: 2.5rem;
+    --eds-line-height-16: 1rem;
+    --eds-line-height-18: 1.125rem;
+    --eds-line-height-20: 1.25rem;
+    --eds-line-height-24: 1.5rem;
+    --eds-line-height-28: 1.75rem;
+    --eds-line-height-32: 2rem;
+    --eds-line-height-40: 2.5rem;
+    --eds-line-height-48: 3rem;
+    --eds-font-weight-400: 400;
+    --eds-font-weight-500: 500;
+    --eds-font-weight-600: 600;
+  }
+}

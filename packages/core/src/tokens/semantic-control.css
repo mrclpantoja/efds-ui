@@ -1,0 +1,14 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/semantic/control.json */
+/* Dimensões de controles e foco (padrão comfortable). A densidade sobrescreve control-height-md e table-row-height. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  :where(:root) {
+    --eds-control-height-sm: 32px;
+    --eds-control-height-md: 38px;
+    --eds-control-height-lg: 44px;
+    --eds-table-row-height: 44px;
+    --eds-focus-ring-width: 2px;
+    --eds-focus-ring-offset: 2px;
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "$selector": ":where(:root)",
+  "$description": "Durações curtas e uma curva padrão. Zeradas sob prefers-reduced-motion (base/accessibility.css).",
+  "motion-duration-fast": "150ms",
+  "motion-duration-base": "200ms",
+  "motion-easing-standard": "cubic-bezier(0.2, 0, 0, 1)"
+}

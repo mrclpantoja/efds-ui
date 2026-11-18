@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Foundations } from './Foundations';
 
 const axes = [
   { attr: 'theme', label: 'Tema', options: ['blue', 'green', 'purple', 'orange', 'neutral'] },
@@ -25,7 +26,7 @@ export function App() {
 
   return (
     <main>
-      <h1>eDS.ui Playground</h1>
+      <h1 className="eds-text-h1">eDS.ui Playground</h1>
       <p>Escolha os eixos abaixo; eles são aplicados como atributos no elemento html.</p>
       {axes.map(({ attr, label, options }) => (
         <p key={attr}>
@@ -44,6 +45,7 @@ export function App() {
           </label>
         </p>
       ))}
+      <Foundations />
     </main>
   );
 }

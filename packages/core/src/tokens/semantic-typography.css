@@ -1,0 +1,31 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/semantic/typography.json */
+/* Tipografia semântica. Densidade não altera fonte. Estilos: display, h1-h4, body-lg, body, label, small. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  :where(:root) {
+    --eds-font-family: var(--eds-font-family-inter);
+    --eds-font-family-code: var(--eds-font-family-mono);
+    --eds-font-weight-regular: var(--eds-font-weight-400);
+    --eds-font-weight-medium: var(--eds-font-weight-500);
+    --eds-font-weight-semibold: var(--eds-font-weight-600);
+    --eds-font-size-display: var(--eds-font-size-40);
+    --eds-font-size-h1: var(--eds-font-size-32);
+    --eds-font-size-h2: var(--eds-font-size-24);
+    --eds-font-size-h3: var(--eds-font-size-20);
+    --eds-font-size-h4: var(--eds-font-size-16);
+    --eds-font-size-body-lg: var(--eds-font-size-16);
+    --eds-font-size-body: var(--eds-font-size-14);
+    --eds-font-size-label: var(--eds-font-size-13);
+    --eds-font-size-small: var(--eds-font-size-12);
+    --eds-line-height-display: var(--eds-line-height-48);
+    --eds-line-height-h1: var(--eds-line-height-40);
+    --eds-line-height-h2: var(--eds-line-height-32);
+    --eds-line-height-h3: var(--eds-line-height-28);
+    --eds-line-height-h4: var(--eds-line-height-24);
+    --eds-line-height-body-lg: var(--eds-line-height-24);
+    --eds-line-height-body: var(--eds-line-height-20);
+    --eds-line-height-label: var(--eds-line-height-18);
+    --eds-line-height-small: var(--eds-line-height-16);
+  }
+}

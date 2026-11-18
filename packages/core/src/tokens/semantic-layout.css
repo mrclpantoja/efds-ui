@@ -1,0 +1,16 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/semantic/layout.json */
+/* Estrutura de página. Breakpoints (documentação; custom properties não funcionam em @media): 640 / 768 / 1024 / 1280px. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  :where(:root) {
+    --eds-layout-sidebar-width: 240px;
+    --eds-layout-sidebar-width-collapsed: 72px;
+    --eds-layout-navbar-height: 64px;
+    --eds-layout-container-sm: 640px;
+    --eds-layout-container-md: 768px;
+    --eds-layout-container-lg: 1024px;
+    --eds-layout-container-xl: 1280px;
+    --eds-layout-container-2xl: 1536px;
+  }
+}

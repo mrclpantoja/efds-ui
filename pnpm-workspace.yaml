@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - packages/*
+  - scripts
   - tooling/*
 
 # Versões centralizadas; os pacotes referenciam com "catalog:".
@@ -10,6 +11,7 @@ catalog:
   '@testing-library/jest-dom': ^7.0.1
   '@testing-library/react': ^16.3.3
   '@testing-library/user-event': ^14.6.12
+  '@types/node': ^24.19.2
   '@types/react': ^19.3.0
   '@types/react-dom': ^19.3.0
   '@vitejs/plugin-react': ^6.3.0

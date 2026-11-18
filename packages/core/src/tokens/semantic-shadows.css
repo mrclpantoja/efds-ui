@@ -1,0 +1,12 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/semantic/shadows.json */
+/* Elevação semântica (valores do modo light; mode-dark.json pode sobrescrever). xs controles elevados, sm card elevado, md dropdown/modal, lg flutuantes. Card padrão não tem sombra. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  :where(:root) {
+    --eds-shadow-xs: var(--eds-shadow-level-1);
+    --eds-shadow-sm: var(--eds-shadow-level-2);
+    --eds-shadow-md: var(--eds-shadow-level-3);
+    --eds-shadow-lg: var(--eds-shadow-level-4);
+  }
+}

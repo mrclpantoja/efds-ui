@@ -1,0 +1,45 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/semantic/colors.json */
+/* Semânticos de cor: padrão tema blue, modo light. API pública. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  :where(:root) {
+    --eds-accent-50: var(--eds-blue-50);
+    --eds-accent-100: var(--eds-blue-100);
+    --eds-accent-200: var(--eds-blue-200);
+    --eds-accent-300: var(--eds-blue-300);
+    --eds-accent-400: var(--eds-blue-400);
+    --eds-accent-500: var(--eds-blue-500);
+    --eds-accent-600: var(--eds-blue-600);
+    --eds-accent-700: var(--eds-blue-700);
+    --eds-accent-800: var(--eds-blue-800);
+    --eds-accent-900: var(--eds-blue-900);
+    --eds-color-bg-page: var(--eds-gray-50);
+    --eds-color-bg-surface: var(--eds-gray-0);
+    --eds-color-bg-subtle: var(--eds-gray-100);
+    --eds-color-bg-overlay: color-mix(in srgb, var(--eds-gray-900) 50%, transparent);
+    --eds-color-text-primary: var(--eds-gray-900);
+    --eds-color-text-secondary: var(--eds-gray-700);
+    --eds-color-text-muted: var(--eds-gray-500);
+    --eds-color-text-on-action: var(--eds-gray-0);
+    --eds-color-border-default: var(--eds-gray-200);
+    --eds-color-border-strong: var(--eds-gray-400);
+    --eds-color-action-primary: var(--eds-accent-500);
+    --eds-color-action-primary-hover: var(--eds-accent-600);
+    --eds-color-action-primary-active: var(--eds-accent-700);
+    --eds-color-action-primary-subtle: var(--eds-accent-50);
+    --eds-color-status-info: var(--eds-blue-500);
+    --eds-color-status-info-subtle: var(--eds-blue-50);
+    --eds-color-status-info-text: var(--eds-blue-700);
+    --eds-color-status-success: var(--eds-success-500);
+    --eds-color-status-success-subtle: var(--eds-success-50);
+    --eds-color-status-success-text: var(--eds-success-700);
+    --eds-color-status-warning: var(--eds-warning-500);
+    --eds-color-status-warning-subtle: var(--eds-warning-50);
+    --eds-color-status-warning-text: var(--eds-warning-700);
+    --eds-color-status-danger: var(--eds-danger-500);
+    --eds-color-status-danger-subtle: var(--eds-danger-50);
+    --eds-color-status-danger-text: var(--eds-danger-700);
+    --eds-color-focus-ring: var(--eds-accent-500);
+  }
+}

@@ -1,0 +1,11 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/primitives/motion.json */
+/* Durações curtas e uma curva padrão. Zeradas sob prefers-reduced-motion (base/accessibility.css). */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  :where(:root) {
+    --eds-motion-duration-fast: 150ms;
+    --eds-motion-duration-base: 200ms;
+    --eds-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  }
+}

@@ -1,0 +1,11 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/shape-sharp.json */
+/* Forma sharp: raios sm, md e lg. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  [data-shape="sharp"] {
+    --eds-radius-sm: 2px;
+    --eds-radius-md: 4px;
+    --eds-radius-lg: 6px;
+  }
+}

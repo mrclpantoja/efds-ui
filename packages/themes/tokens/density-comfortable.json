@@ -1,0 +1,7 @@
+{
+  "$selector": "[data-density=\"comfortable\"]",
+  "$description": "Densidade comfortable: altura de controle md, espaço 4 e linha de tabela.",
+  "control-height-md": "38px",
+  "space-4": "16px",
+  "table-row-height": "44px"
+}

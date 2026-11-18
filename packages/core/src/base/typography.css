@@ -1,0 +1,66 @@
+/*
+ * Escala tipográfica por classe (.eds-text-*), não por tag: o nível semântico
+ * (h2) fica independente do visual (ex.: h2 com aparência de h4). Sem estilo
+ * de tag, o CSS não briga com o de apps consumidoras.
+ */
+@layer eds.base {
+  :where(
+    .eds-text-display,
+    .eds-text-h1,
+    .eds-text-h2,
+    .eds-text-h3,
+    .eds-text-h4,
+    .eds-text-body-lg,
+    .eds-text-body,
+    .eds-text-label,
+    .eds-text-small
+  ) {
+    font-family: var(--eds-font-family);
+    font-size: var(--_text-size);
+    line-height: var(--_text-line);
+    font-weight: var(--_text-weight, var(--eds-font-weight-regular));
+  }
+
+  .eds-text-display {
+    --_text-size: var(--eds-font-size-display);
+    --_text-line: var(--eds-line-height-display);
+    --_text-weight: var(--eds-font-weight-semibold);
+  }
+  .eds-text-h1 {
+    --_text-size: var(--eds-font-size-h1);
+    --_text-line: var(--eds-line-height-h1);
+    --_text-weight: var(--eds-font-weight-semibold);
+  }
+  .eds-text-h2 {
+    --_text-size: var(--eds-font-size-h2);
+    --_text-line: var(--eds-line-height-h2);
+    --_text-weight: var(--eds-font-weight-semibold);
+  }
+  .eds-text-h3 {
+    --_text-size: var(--eds-font-size-h3);
+    --_text-line: var(--eds-line-height-h3);
+    --_text-weight: var(--eds-font-weight-semibold);
+  }
+  .eds-text-h4 {
+    --_text-size: var(--eds-font-size-h4);
+    --_text-line: var(--eds-line-height-h4);
+    --_text-weight: var(--eds-font-weight-semibold);
+  }
+  .eds-text-body-lg {
+    --_text-size: var(--eds-font-size-body-lg);
+    --_text-line: var(--eds-line-height-body-lg);
+  }
+  .eds-text-body {
+    --_text-size: var(--eds-font-size-body);
+    --_text-line: var(--eds-line-height-body);
+  }
+  .eds-text-label {
+    --_text-size: var(--eds-font-size-label);
+    --_text-line: var(--eds-line-height-label);
+    --_text-weight: var(--eds-font-weight-medium);
+  }
+  .eds-text-small {
+    --_text-size: var(--eds-font-size-small);
+    --_text-line: var(--eds-line-height-small);
+  }
+}

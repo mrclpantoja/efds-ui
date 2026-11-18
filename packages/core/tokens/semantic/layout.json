@@ -1,0 +1,12 @@
+{
+  "$selector": ":where(:root)",
+  "$description": "Estrutura de página. Breakpoints (documentação; custom properties não funcionam em @media): 640 / 768 / 1024 / 1280px.",
+  "layout-sidebar-width": "240px",
+  "layout-sidebar-width-collapsed": "72px",
+  "layout-navbar-height": "64px",
+  "layout-container-sm": "640px",
+  "layout-container-md": "768px",
+  "layout-container-lg": "1024px",
+  "layout-container-xl": "1280px",
+  "layout-container-2xl": "1536px"
+}

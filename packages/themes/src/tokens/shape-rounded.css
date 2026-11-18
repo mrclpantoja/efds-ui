@@ -1,0 +1,11 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/shape-rounded.json */
+/* Forma rounded: raios sm, md e lg. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  [data-shape="rounded"] {
+    --eds-radius-sm: 8px;
+    --eds-radius-md: 12px;
+    --eds-radius-lg: 16px;
+  }
+}

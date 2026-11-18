@@ -1,0 +1,30 @@
+@layer eds.base {
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --eds-motion-duration-fast: 0ms;
+      --eds-motion-duration-base: 0ms;
+    }
+
+    :where(*, *::before, *::after) {
+      scroll-behavior: auto;
+    }
+  }
+
+  .eds-visually-hidden:not(:focus, :active) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (forced-colors: active) {
+    :where(:focus-visible) {
+      outline-color: Highlight;
+    }
+  }
+}

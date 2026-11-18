@@ -1,0 +1,38 @@
+@layer eds.base {
+  :root {
+    color-scheme: light;
+  }
+
+  [data-mode='dark'] {
+    color-scheme: dark;
+  }
+
+  [data-mode='light'] {
+    color-scheme: light;
+  }
+
+  :where(body) {
+    min-block-size: 100dvh;
+    background: var(--eds-color-bg-page);
+    color: var(--eds-color-text-primary);
+    font-family: var(--eds-font-family);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    font-weight: var(--eds-font-weight-regular);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :where(code, kbd, samp, pre) {
+    font-family: var(--eds-font-family-code);
+  }
+
+  :where(::selection) {
+    background: color-mix(in srgb, var(--eds-color-action-primary) 25%, transparent);
+  }
+
+  :where(:focus-visible) {
+    outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+    outline-offset: var(--eds-focus-ring-offset);
+  }
+}

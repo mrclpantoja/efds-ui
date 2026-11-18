@@ -1,0 +1,11 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/shape-soft.json */
+/* Forma soft: raios sm, md e lg. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  [data-shape="soft"] {
+    --eds-radius-sm: 4px;
+    --eds-radius-md: 8px;
+    --eds-radius-lg: 12px;
+  }
+}

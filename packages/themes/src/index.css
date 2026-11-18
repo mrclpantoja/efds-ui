@@ -1,8 +1,14 @@
-/*
- * @eds-ui/themes - placeholder.
- * Eixos aplicados por atributo no <html>, cada um tocando só os seus tokens:
- *   data-theme    (cor da marca)
- *   data-mode     (light | dark)
- *   data-density  (compact | comfortable | spacious)
- *   data-shape    (sharp | soft | rounded)
- */
+/* @eds-ui/themes - eixos aplicados por atributo (data-theme, data-mode, data-density, data-shape); cada arquivo toca só os seus tokens. Gerados por pnpm tokens. */
+@import './tokens/theme-blue.css';
+@import './tokens/theme-green.css';
+@import './tokens/theme-purple.css';
+@import './tokens/theme-orange.css';
+@import './tokens/theme-neutral.css';
+@import './tokens/mode-light.css';
+@import './tokens/mode-dark.css';
+@import './tokens/density-compact.css';
+@import './tokens/density-comfortable.css';
+@import './tokens/density-spacious.css';
+@import './tokens/shape-sharp.css';
+@import './tokens/shape-soft.css';
+@import './tokens/shape-rounded.css';

@@ -1,0 +1,11 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/density-comfortable.json */
+/* Densidade comfortable: altura de controle md, espaço 4 e linha de tabela. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  [data-density="comfortable"] {
+    --eds-control-height-md: 38px;
+    --eds-space-4: 16px;
+    --eds-table-row-height: 44px;
+  }
+}

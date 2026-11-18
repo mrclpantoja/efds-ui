@@ -1,0 +1,12 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/primitives/shadows.json */
+/* Sombras brutas do modo light, do mais sutil ao mais alto. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  :where(:root) {
+    --eds-shadow-level-1: 0 1px 2px rgb(15 23 42 / 0.06);
+    --eds-shadow-level-2: 0 1px 3px rgb(15 23 42 / 0.08), 0 1px 2px rgb(15 23 42 / 0.06);
+    --eds-shadow-level-3: 0 4px 12px rgb(15 23 42 / 0.1);
+    --eds-shadow-level-4: 0 12px 32px rgb(15 23 42 / 0.14);
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "$selector": ":where(:root)",
+  "$description": "Elevação semântica (valores do modo light; mode-dark.json pode sobrescrever). xs controles elevados, sm card elevado, md dropdown/modal, lg flutuantes. Card padrão não tem sombra.",
+  "shadow-xs": "{shadow-level-1}",
+  "shadow-sm": "{shadow-level-2}",
+  "shadow-md": "{shadow-level-3}",
+  "shadow-lg": "{shadow-level-4}"
+}

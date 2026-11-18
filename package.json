@@ -11,6 +11,9 @@
   },
   "scripts": {
     "dev": "pnpm --filter @eds-ui/playground dev",
+    "tokens": "node scripts/build-tokens.ts",
+    "tokens:check": "node scripts/build-tokens.ts --check",
+    "prebuild": "pnpm tokens",
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",

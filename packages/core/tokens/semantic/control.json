@@ -1,0 +1,10 @@
+{
+  "$selector": ":where(:root)",
+  "$description": "Dimensões de controles e foco (padrão comfortable). A densidade sobrescreve control-height-md e table-row-height.",
+  "control-height-sm": "32px",
+  "control-height-md": "38px",
+  "control-height-lg": "44px",
+  "table-row-height": "44px",
+  "focus-ring-width": "2px",
+  "focus-ring-offset": "2px"
+}

@@ -1,0 +1,11 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/density-spacious.json */
+/* Densidade spacious: altura de controle md, espaço 4 e linha de tabela. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  [data-density="spacious"] {
+    --eds-control-height-md: 44px;
+    --eds-space-4: 20px;
+    --eds-table-row-height: 52px;
+  }
+}

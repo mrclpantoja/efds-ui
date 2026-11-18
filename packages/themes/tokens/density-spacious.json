@@ -1,0 +1,7 @@
+{
+  "$selector": "[data-density=\"spacious\"]",
+  "$description": "Densidade spacious: altura de controle md, espaço 4 e linha de tabela.",
+  "control-height-md": "44px",
+  "space-4": "20px",
+  "table-row-height": "52px"
+}

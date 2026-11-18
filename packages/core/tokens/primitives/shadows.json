@@ -1,0 +1,8 @@
+{
+  "$selector": ":where(:root)",
+  "$description": "Sombras brutas do modo light, do mais sutil ao mais alto.",
+  "shadow-level-1": "0 1px 2px rgb(15 23 42 / 0.06)",
+  "shadow-level-2": "0 1px 3px rgb(15 23 42 / 0.08), 0 1px 2px rgb(15 23 42 / 0.06)",
+  "shadow-level-3": "0 4px 12px rgb(15 23 42 / 0.1)",
+  "shadow-level-4": "0 12px 32px rgb(15 23 42 / 0.14)"
+}

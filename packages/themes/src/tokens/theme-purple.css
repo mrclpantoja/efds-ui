@@ -1,0 +1,18 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/theme-purple.json */
+/* Tema purple: escala de acento */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  [data-theme="purple"] {
+    --eds-accent-50: var(--eds-purple-50);
+    --eds-accent-100: var(--eds-purple-100);
+    --eds-accent-200: var(--eds-purple-200);
+    --eds-accent-300: var(--eds-purple-300);
+    --eds-accent-400: var(--eds-purple-400);
+    --eds-accent-500: var(--eds-purple-500);
+    --eds-accent-600: var(--eds-purple-600);
+    --eds-accent-700: var(--eds-purple-700);
+    --eds-accent-800: var(--eds-purple-800);
+    --eds-accent-900: var(--eds-purple-900);
+  }
+}

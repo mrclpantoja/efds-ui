@@ -1,0 +1,7 @@
+{
+  "$selector": "[data-density=\"compact\"]",
+  "$description": "Densidade compact: altura de controle md, espaço 4 e linha de tabela.",
+  "control-height-md": "32px",
+  "space-4": "12px",
+  "table-row-height": "36px"
+}

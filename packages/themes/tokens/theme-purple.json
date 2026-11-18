@@ -1,0 +1,14 @@
+{
+  "$selector": "[data-theme=\"purple\"]",
+  "$description": "Tema purple: escala de acento",
+  "accent-50": "{purple-50}",
+  "accent-100": "{purple-100}",
+  "accent-200": "{purple-200}",
+  "accent-300": "{purple-300}",
+  "accent-400": "{purple-400}",
+  "accent-500": "{purple-500}",
+  "accent-600": "{purple-600}",
+  "accent-700": "{purple-700}",
+  "accent-800": "{purple-800}",
+  "accent-900": "{purple-900}"
+}

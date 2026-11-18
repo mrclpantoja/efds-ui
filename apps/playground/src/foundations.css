@@ -1,0 +1,96 @@
+/* Estilos de demonstração do playground; cores e espaços vêm dos tokens. */
+.fnd {
+  display: grid;
+  gap: var(--eds-space-5);
+  max-inline-size: var(--eds-layout-container-lg);
+  margin-block-start: var(--eds-space-7);
+}
+
+.fnd-muted {
+  color: var(--eds-color-text-muted);
+}
+
+.fnd-grid {
+  display: grid;
+  gap: var(--eds-space-4);
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+}
+
+.fnd-small {
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+}
+
+.fnd-card {
+  display: grid;
+  gap: var(--eds-space-2);
+  padding: var(--eds-space-4);
+  border: 1px solid var(--eds-color-border-default);
+  border-radius: var(--eds-radius-lg);
+  background: var(--eds-color-bg-surface);
+}
+
+.fnd-stack {
+  gap: var(--eds-space-3);
+}
+
+.fnd-swatch {
+  block-size: var(--eds-space-8);
+  border: 1px solid var(--eds-color-border-default);
+  border-radius: var(--eds-radius-md);
+}
+
+.fnd-row {
+  display: flex;
+  align-items: center;
+  gap: var(--eds-space-4);
+}
+
+.fnd-label {
+  flex: 0 0 11rem;
+  color: var(--eds-color-text-secondary);
+}
+
+.fnd-bar {
+  block-size: var(--eds-space-3);
+  border-radius: var(--eds-radius-sm);
+  background: var(--eds-color-action-primary);
+}
+
+.fnd-stage {
+  padding: var(--eds-space-5);
+  border-radius: var(--eds-radius-lg);
+  background: var(--eds-color-bg-subtle);
+}
+
+.fnd-item {
+  display: grid;
+  gap: var(--eds-space-2);
+  justify-items: start;
+}
+
+.fnd-box {
+  inline-size: var(--eds-space-9);
+  block-size: var(--eds-space-9);
+  border: 1px solid var(--eds-color-border-strong);
+  background: var(--eds-color-bg-subtle);
+}
+
+.fnd-box-raised {
+  border-color: var(--eds-color-border-default);
+  background: var(--eds-color-bg-surface);
+}
+
+.fnd-control {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding-inline: var(--eds-space-4);
+  border: 1px solid var(--eds-color-border-strong);
+  border-radius: var(--eds-radius-md);
+  background: var(--eds-color-bg-surface);
+  color: var(--eds-color-text-secondary);
+}
+
+main {
+  padding: var(--eds-space-6);
+}

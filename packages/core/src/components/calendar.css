@@ -1,0 +1,407 @@
+/* Calendário (popup do DatePicker/DateRangePicker). Superfície do Dropdown/Combobox.
+   Estrutura: .eds-calendar > .eds-calendar-header (nav + título) · .eds-calendar-jump (selects) ·
+   table.eds-calendar-grid (th.eds-calendar-weekday, td.eds-calendar-day) · .eds-calendar-footer.
+   Estado por atributo, no td do dia:
+     aria-selected="true"  escolhido (ou parte do período)
+     aria-current="date"   hoje (anel + peso, não só cor)
+     aria-disabled="true"  indisponível (riscado, além da cor)
+     data-range="start|middle|end|single"  período; faixa contínua entre as células
+     data-range-preview    prévia do período enquanto só o início foi escolhido
+   Dia fora do mês: <td> vazio (sem classe). O dia focado pela grade recebe tabindex="0" (roving).
+   Posição (definida pelo JS, em px, coordenadas da viewport): --_calendar-x (borda inicial do
+   campo) e --_calendar-y (borda inferior do campo; com data-placement="top", a borda superior). */
+@layer eds.components {
+  .eds-calendar {
+    --_calendar-x: 0px;
+    --_calendar-y: 0px;
+    --_calendar-offset: var(--eds-space-1);
+    --_calendar-padding: var(--eds-space-2);
+    --_day-size: var(--eds-control-height-md);
+    --_calendar-width: calc(var(--_day-size) * 7 + var(--_calendar-padding) * 2 + 2px);
+    --_calendar-gutter: var(--eds-space-2);
+
+    /* O UA define display:none para popover fechado; só declaramos display no aberto. */
+    box-sizing: border-box;
+    inline-size: min(var(--_calendar-width), calc(100vw - var(--_calendar-gutter) * 2));
+    max-block-size: 90dvh;
+    margin: 0;
+    padding: var(--_calendar-padding);
+    border: 1px solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    box-shadow: var(--eds-shadow-md);
+    overflow: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    transition:
+      opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      display var(--eds-motion-duration-fast) allow-discrete,
+      overlay var(--eds-motion-duration-fast) allow-discrete;
+
+    /* Coordenadas da viewport vindas do JS: por isso inset físico (left/top), não lógico. A borda
+       direita nunca passa da viewport (largura e posição se ajustam em telas estreitas). */
+    position: fixed;
+    inset: auto;
+    left: min(
+      var(--_calendar-x),
+      max(
+        var(--_calendar-gutter),
+        calc(
+          100vw - min(var(--_calendar-width), 100vw - var(--_calendar-gutter) * 2) -
+            var(--_calendar-gutter)
+        )
+      )
+    );
+    top: calc(var(--_calendar-y) + var(--_calendar-offset));
+
+    &:popover-open {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Abre para cima: o y é a borda superior do campo; o popup sobe pela própria altura. */
+    &[data-placement='top'] {
+      top: calc(var(--_calendar-y) - var(--_calendar-offset));
+      translate: 0 -100%;
+    }
+  }
+
+  @starting-style {
+    .eds-calendar:popover-open {
+      opacity: 0;
+    }
+  }
+
+  /* ---- Cabeçalho ---- */
+
+  .eds-calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-2);
+    margin-block-end: var(--eds-space-2);
+  }
+
+  .eds-calendar-title {
+    flex: 1;
+    min-inline-size: 0;
+    margin: 0;
+    font-size: var(--eds-font-size-body);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: var(--eds-line-height-body);
+    text-align: center;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  .eds-calendar-nav {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--eds-control-height-sm);
+    block-size: var(--eds-control-height-sm);
+    margin: 0;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--eds-radius-md);
+    background: transparent;
+    color: var(--eds-color-text-secondary);
+    font: inherit;
+    cursor: pointer;
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    /* Botão vazio: chevron por máscara (o primeiro aponta para o início, o último para o fim). */
+    &:not(:has(> svg))::before {
+      content: '';
+      inline-size: 1rem;
+      block-size: 1rem;
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M6 3l5 5-5 5' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    }
+
+    &:first-child:not(:has(> svg))::before {
+      rotate: 180deg;
+    }
+
+    &:dir(rtl):not(:has(> svg))::before {
+      rotate: 180deg;
+    }
+
+    &:dir(rtl):first-child:not(:has(> svg))::before {
+      rotate: 0deg;
+    }
+
+    & > svg {
+      inline-size: 1rem;
+      block-size: 1rem;
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background: var(--eds-color-bg-subtle);
+      color: var(--eds-color-text-primary);
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline-offset: 0;
+    }
+  }
+
+  /* Mês e ano por lista (saltos longos sem paginar). */
+  .eds-calendar-jump {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--eds-space-2);
+    margin-block-end: var(--eds-space-2);
+  }
+
+  /* ---- Grade ---- */
+
+  .eds-calendar-grid {
+    inline-size: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+  }
+
+  .eds-calendar-weekday {
+    block-size: var(--eds-control-height-sm);
+    padding: 0;
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-small);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .eds-calendar-day {
+    --_day-bg: transparent;
+    --_day-fg: var(--eds-color-text-primary);
+    --_day-ring: transparent;
+    --_day-radius: var(--eds-radius-md);
+    --_day-border: transparent;
+
+    box-sizing: border-box;
+    block-size: var(--_day-size);
+    padding: 0;
+    border: 1px solid var(--_day-border);
+    border-radius: var(--_day-radius);
+    background: var(--_day-bg);
+    box-shadow: inset 0 0 0 1px var(--_day-ring);
+    color: var(--_day-fg);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+
+    @media (hover: hover) {
+      &:hover:not([aria-selected='true'], [aria-disabled='true']) {
+        --_day-bg: var(--eds-color-bg-subtle);
+      }
+    }
+
+    /* Hoje: anel + peso (não só cor). */
+    &[aria-current='date'] {
+      --_day-ring: var(--eds-color-text-secondary);
+
+      font-weight: var(--eds-font-weight-semibold);
+    }
+
+    /* Escolhido. */
+    &[aria-selected='true'] {
+      --_day-bg: var(--eds-color-action-primary);
+      --_day-fg: var(--eds-color-text-on-action);
+      --_day-ring: transparent;
+
+      font-weight: var(--eds-font-weight-semibold);
+    }
+
+    &[aria-selected='true'][aria-current='date'] {
+      --_day-ring: var(--eds-color-text-on-action);
+    }
+
+    @media (hover: hover) {
+      &[aria-selected='true']:hover:not([aria-disabled='true']) {
+        --_day-bg: var(--eds-color-action-primary-hover);
+      }
+    }
+
+    /* Foco da grade: anel por dentro (a faixa e o popup cortariam um anel de fora). Sobre o dia
+       escolhido o anel passa a ser claro, pois focus-ring e fundo têm o mesmo tom. */
+    &:focus-visible {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+
+    &[aria-selected='true']:not([data-range='middle']):focus-visible {
+      outline-color: var(--eds-color-text-on-action);
+    }
+
+    /* Indisponível: riscado e apagado; recebe foco, mas não se escolhe. */
+    &[aria-disabled='true'] {
+      --_day-fg: var(--eds-color-text-muted);
+
+      text-decoration: line-through;
+      cursor: not-allowed;
+    }
+
+    /* ---- Período: faixa contínua entre células vizinhas ---- */
+
+    &[data-range] {
+      --_day-radius: 0;
+    }
+
+    &[data-range='start'] {
+      --_day-radius: var(--eds-radius-md) 0 0 var(--eds-radius-md);
+    }
+
+    &[data-range='end'] {
+      --_day-radius: 0 var(--eds-radius-md) var(--eds-radius-md) 0;
+    }
+
+    &[data-range='single'] {
+      --_day-radius: var(--eds-radius-md);
+    }
+
+    &:dir(rtl)[data-range='start'] {
+      --_day-radius: 0 var(--eds-radius-md) var(--eds-radius-md) 0;
+    }
+
+    &:dir(rtl)[data-range='end'] {
+      --_day-radius: var(--eds-radius-md) 0 0 var(--eds-radius-md);
+    }
+
+    /* Miolo: fundo suave com texto primário e borda sólida em cima e embaixo (1.4.11: o fundo
+       sozinho fica abaixo de 3:1; a borda liga as pontas sólidas). O anel de foco do miolo usa
+       focus-ring (o anel claro só vale sobre fundo sólido). O dia indisponível no meio mantém o risco. */
+    &[data-range='middle'] {
+      --_day-bg: var(--eds-color-action-primary-subtle);
+      --_day-fg: var(--eds-color-text-primary);
+      --_day-border: var(--eds-color-action-primary);
+
+      border-inline-width: 0;
+      font-weight: var(--eds-font-weight-regular);
+    }
+
+    &[data-range='middle'][aria-disabled='true'] {
+      --_day-fg: var(--eds-color-text-muted);
+    }
+
+    /* A faixa quebra de linha com cantos: primeiro e último dia da semana fecham a ponta. */
+    &[data-range='middle']:first-child {
+      --_day-radius: var(--eds-radius-md) 0 0 var(--eds-radius-md);
+    }
+
+    &[data-range='middle']:last-child {
+      --_day-radius: 0 var(--eds-radius-md) var(--eds-radius-md) 0;
+    }
+
+    @media (hover: hover) {
+      &[data-range='middle']:hover:not([aria-disabled='true']) {
+        --_day-bg: var(--eds-color-bg-subtle);
+      }
+    }
+
+    /* Prévia (só o início escolhido): tracejado em cima e embaixo, sem preencher como a faixa. */
+    &[data-range-preview]:not([aria-selected='true']) {
+      --_day-radius: 0;
+      --_day-border: var(--eds-color-action-primary);
+      --_day-bg: var(--eds-color-bg-subtle);
+
+      border-style: dashed;
+      border-inline-width: 0;
+    }
+  }
+
+  /* ---- Rodapé ---- */
+
+  .eds-calendar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-2);
+    margin-block-start: var(--eds-space-2);
+    padding-block-start: var(--eds-space-2);
+    border-block-start: 1px solid var(--eds-color-border-default);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-calendar,
+    .eds-calendar-nav {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-calendar {
+      border-color: CanvasText;
+    }
+
+    .eds-calendar-nav {
+      color: ButtonText;
+    }
+
+    .eds-calendar-nav:disabled {
+      color: GrayText;
+    }
+
+    .eds-calendar-day {
+      --_day-border: transparent;
+
+      forced-color-adjust: none;
+      color: CanvasText;
+      background: Canvas;
+    }
+
+    .eds-calendar-day[aria-current='date'] {
+      --_day-ring: CanvasText;
+    }
+
+    .eds-calendar-day[aria-selected='true'],
+    .eds-calendar-day[aria-selected='true']:hover {
+      background: Highlight;
+      color: HighlightText;
+      --_day-ring: HighlightText;
+    }
+
+    .eds-calendar-day[data-range='middle'] {
+      background: Canvas;
+      color: CanvasText;
+      --_day-border: Highlight;
+
+      border-inline-width: 0;
+    }
+
+    .eds-calendar-day[data-range-preview]:not([aria-selected='true']) {
+      --_day-border: Highlight;
+    }
+
+    .eds-calendar-day[aria-disabled='true'] {
+      color: GrayText;
+    }
+
+    .eds-calendar-day:focus-visible {
+      outline-color: Highlight;
+    }
+
+    .eds-calendar-day[aria-selected='true']:not([data-range='middle']):focus-visible {
+      outline-color: HighlightText;
+    }
+  }
+}

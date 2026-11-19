@@ -1,6 +1,6 @@
 # @eds-ui/behavior
 
-Comportamento interativo do eDS.ui em JavaScript puro (zero dependências), para quem usa só HTML: PHP, Java, .NET, Vue, Angular. O visual vem do `@eds-ui/core` (CSS); este pacote liga o que o CSS e a plataforma não entregam: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Table (ordenação e seleção), Sidebar, Combobox (simples e múltiplo), FileUpload (arrastar e soltar, modo formulário e imediato) e o PageLoader automático.
+Comportamento interativo do eDS.ui em JavaScript puro (zero dependências), para quem usa só HTML: PHP, Java, .NET, Vue, Angular. O visual vem do `@eds-ui/core` (CSS); este pacote liga o que o CSS e a plataforma não entregam: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Table (ordenação e seleção), Sidebar, Combobox (simples e múltiplo), DatePicker e DateRangePicker (calendário próprio, máscara dd/mm/aaaa), FileUpload (arrastar e soltar, modo formulário e imediato) e o PageLoader automático.
 
 > Pré-lançamento (0.1.0): `private` e `UNLICENSED` até a decisão de licença e de nome/escopo `@eds-ui`.
 
@@ -45,7 +45,7 @@ const destroy = init(document.querySelector('#app')!, {
 // ao desmontar: destroy();
 ```
 
-`init(root, options)` liga o que existe em `root`, observa o que entra e sai depois (htmx, Turbo, Livewire, parciais do servidor) e **não toca em nada fora do `root`**. Também há `initTabs`, `initModal`, `initDropdown`, `initAlert`, `initTable`, `initSidebar`, `initCombobox`, `initUpload`, `initToast` e `initLoader` para importar só o que usa (tree shaking).
+`init(root, options)` liga o que existe em `root`, observa o que entra e sai depois (htmx, Turbo, Livewire, parciais do servidor) e **não toca em nada fora do `root`**. Também há `initTabs`, `initModal`, `initDropdown`, `initAlert`, `initTable`, `initSidebar`, `initCombobox`, `initDatepicker`, `initUpload`, `initToast` e `initLoader` para importar só o que usa (tree shaking).
 
 Referência completa (atributos, eventos, opções, configuração do loader): [`docs/architecture/behavior.md`](../../docs/architecture/behavior.md).
 

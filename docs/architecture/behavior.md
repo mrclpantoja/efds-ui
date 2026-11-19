@@ -9,7 +9,7 @@ JavaScript puro (TypeScript no código-fonte), **zero dependências**, sem conhe
 | `dist/index.js` + `.d.ts` | ESM tree-shakeable (`import { init, initTabs, toast, loader } from '@eds-ui/behavior'`). |
 | `dist/eds-behavior.js`    | IIFE para `<script src defer>`: `window.EDS` e `init(document)` automático.              |
 
-`package.json`: `exports["."]` (ESM) e `exports["./eds-behavior.js"]` (IIFE); `unpkg`/`jsdelivr` apontam para o IIFE. O IIFE minificado tem cerca de 29 kB (cerca de 10 kB com gzip). `pnpm pack:check` valida o tarball e confere que o IIFE é script clássico com `EDS` e auto-init.
+`package.json`: `exports["."]` (ESM) e `exports["./eds-behavior.js"]` (IIFE); `unpkg`/`jsdelivr` apontam para o IIFE. O IIFE minificado tem cerca de 60 kB (cerca de 20 kB com gzip). `pnpm pack:check` valida o tarball e confere que o IIFE é script clássico com `EDS` e auto-init.
 
 ## API
 
@@ -18,7 +18,7 @@ init(root?: ParentNode = document, options?: BehaviorOptions): () => void  // de
 configure({ messages?, loader? }): void
 toast(options): number;  toast.dismiss(id);  toast.dismissAll()
 loader.start(opts?): () => void;  loader.track(promise, opts?): Promise;  loader.reset()
-initTabs | initModal | initDropdown | initAlert | initTable | initSidebar | initCombobox (root?) => destroy
+initTabs | initModal | initDropdown | initAlert | initTable | initSidebar | initCombobox | initDatepicker (root?) => destroy
 initToast() | initLoader() => destroy   // sistemas globais, contados por referência
 ```
 
@@ -91,6 +91,21 @@ Padrão APG "combobox com lista, autocomplete=list". Markup em `packages/core/sr
 - Obrigatório: `aria-required="true"` (ou `required`) no input aplica `setCustomValidity(comboMultiRequired)` ("Escolha ao menos uma opção.") enquanto não houver escolha.
 - Status (neutro em gênero): "Pelotas: selecionado. 3 itens selecionados." / "Pelotas: removido. 2 itens selecionados." (`comboMultiSelected`, `comboMultiRemoved` + `selectedNone/One/Many`). A contagem de resultados é a do Combobox.
 - Evento `eds:combobox-change` no `.eds-combobox`: `detail { values, labels }` (arrays, na ordem de escolha). `input` e `change` também sobem do `.eds-combobox`. O popup ancora na `.eds-combobox-control` (largura do campo todo).
+
+### DatePicker e DateRangePicker
+
+`[data-eds-datepicker]` (uma data) e `[data-eds-daterange]` (período) no `.eds-datepicker`; `initDatepicker` liga os dois. Markup em `packages/core/src/components/{datepicker,calendar}.css`: campo(s) de texto, `.eds-datepicker-toggle`, hidden(s) ISO, `.eds-calendar[role=dialog][popover=manual]` e `[role=status]`. O JS **monta o conteúdo do `.eds-calendar`** (header `[nav anterior][título h2 aria-live=polite][nav próximo]`, selects de mês e ano, `table.eds-calendar-grid[role=grid]`, rodapé Hoje/Fechar); o markup só traz o contêiner. Sem JS vira um campo de texto (para zero JS use `<input type="date">`).
+
+- Datas sem fuso (`core/date.ts`): calendário `{ano, mês, dia}`, nunca `new Date('aaaa-mm-dd')`. Semana começa no domingo; nomes por `Intl.DateTimeFormat(messages.dateLocale)` (`pt-BR`). `eds:date-change` entrega `date` como `Date` local.
+- Atributos no `.eds-datepicker`: `data-eds-min`, `data-eds-max` (ISO), `data-eds-disabled-dates="aaaa-mm-dd,..."`, `data-eds-disable-weekends`; no período também `data-eds-max-days` (dias corridos, inclusive). Lidos a cada uso.
+- Campo de texto: máscara dd/mm/aaaa (só dígitos, barras automáticas, caret preservado); cola dd/mm/aaaa ou aaaa-mm-dd. A cada digitação o hidden ISO e `setCustomValidity` ficam em dia (texto parcial = inválido, o formulário não envia); `aria-invalid="true"` e o evento só no `change`/blur. Mensagens: `dateInvalid`, `dateBetween|From|Until`, `dateBlocked`; período: `rangeEndBeforeStart`, `rangeMaxDays`, `rangeNeedStart|End` (um campo só preenchido, se não for `required`). Hidden vazio quando inválido. No `change`/blur com erro, o JS cria `<p class="eds-error" id="<input-id>-err">` logo após o `.eds-datepicker`, anexa o id ao `aria-describedby` do campo afetado e anuncia a mensagem no status; ao corrigir, remove os três. Ano com 2 dígitos (dd/mm/aa) tem mensagem própria (`dateInvalidShortYear`). `readonly` ou `disabled` no campo desabilita o botão do calendário.
+- Abrir: botão (`aria-expanded`, `aria-haspopup="dialog"`, `aria-controls`) ou Alt+↓ no campo. Foco inicial no dia escolhido, senão hoje, limitado a min/max (no período, o campo de onde abriu). Fechar: Esc (stopPropagation, devolve o foco ao botão, não fecha Modal em volta), escolher, Fechar, botão de novo; clicar fora fecha **sem mover o foco**. Tab circula no diálogo.
+- Grade (roving tabindex): ←/→ dia, ↑/↓ semana, Home/End domingo/sábado, PageUp/Down mês, Shift+PageUp/Down ano (dia ajustado ao fim do mês: 29/02 vira 28/02), Enter/Espaço escolhem. O foco não sai de min/max. Dia indisponível (`aria-disabled="true"`) recebe foco, mas não é escolhido: status "{data}: data indisponível.". Nome do dia: "15 de março de 2026, domingo" (número visível primeiro; no período, início e fim ganham ", início do período"/", fim do período" por `rangeStartLabel`/`rangeEndLabel`); o diálogo tem `aria-modal="true"` e o botão ganha o valor no nome ("Escolher data. Atual: 15/03/2026", `dateCurrent`/`rangeCurrent`); `aria-current="date"` em hoje; `aria-selected="true"` no escolhido; fora do mês, `<td>` vazio. Nav fora de min/max fica `aria-disabled` (sem `disabled`, para não perder o foco); meses/anos fora do intervalo ficam fora dos selects.
+- Hoje: escolhe a data de hoje; se estiver indisponível, anuncia e leva o foco ao dia de hoje. Anos do select: hoje −100/+50 (ou min/max), fixos até min/max mudarem; o ano da visão entra se estiver fora.
+- Período: 1º Enter/clique = início, 2º = fim (anterior ao início vira o novo início); fecha ao escolher o fim; Esc no meio descarta e mantém o período anterior. `aria-selected` em todos os dias do período; `data-range="start|middle|end"` (`single` com só o início ou início = fim); `data-range-preview` (sem `aria-selected`) entre o início e o dia focado/sob o mouse. Dias além de `data-eds-max-days` ficam `aria-disabled` e avisam. Datas bloqueadas podem ficar no meio. Status: "Início: 03/03/2026. Escolha a data final." e "Período: 03/03/2026 a 15/03/2026.".
+- Posição: o JS define em px `--_calendar-x` (esquerda do `.eds-datepicker`) e `--_calendar-y` (borda de baixo; com `data-placement="top"`, a de cima). Sem largura (o CSS decide). Recalcula em `scroll` (captura) e `resize`.
+- Eventos no `.eds-datepicker`: `eds:date-change` `detail { value: "aaaa-mm-dd" | null, date: Date | null }`; `eds:daterange-change` `detail { start, end }` (ISO ou `null`). Só quando o valor aceito muda. O hidden dispara `input`/`change`.
+- Textos (`configure({ messages })`): `dateLocale`, `dateChoose`, `rangeChoose`, `datePrevMonth`, `dateNextMonth`, `dateMonth`, `dateYear`, `dateToday`, `dateClose`, `dateInvalid`, `dateBetween`, `dateFrom`, `dateUntil`, `dateBlocked`, `dateUnavailable`, `dateSelected`, `rangeStart`, `rangePeriod`, `rangeEndBeforeStart`, `rangeMaxDays`, `rangeMaxDaysOne`, `rangeNeedStart`, `rangeNeedEnd`, `dateInvalidShortYear`, `dateCurrent`, `rangeCurrent`, `rangeStartLabel`, `rangeEndLabel`.
 
 ### FileUpload
 

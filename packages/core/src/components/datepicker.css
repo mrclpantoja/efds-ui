@@ -1,0 +1,165 @@
+/* DatePicker e DateRangePicker: campo, botão do calendário e período. O popup (.eds-calendar) está
+   em calendar.css. Padrão APG "Date Picker Dialog". Sem JS é só um campo de texto (para zero JS use
+   <input type="date" class="eds-input">).
+   Markup:
+     <div class="eds-datepicker" data-eds-datepicker>
+       <input class="eds-input eds-datepicker-input" type="text" inputmode="numeric" ... />
+       <button type="button" class="eds-datepicker-toggle" aria-label="Escolher data"
+         aria-haspopup="dialog" aria-expanded="false" aria-controls="...">[svg opcional]</button>
+       <input type="hidden" name="..." />
+       <div class="eds-calendar" popover="manual" role="dialog">...</div>
+       <span class="eds-visually-hidden" role="status"></span>
+     </div>
+   Período: .eds-datepicker.eds-daterange com dois .eds-datepicker-input, .eds-daterange-sep entre
+   eles e um único toggle. O botão vazio desenha o ícone por máscara; um <svg> filho o substitui.
+   Estados do campo vêm do input: [aria-invalid], [data-valid], :disabled (o toggle acompanha). */
+@layer eds.components {
+  .eds-datepicker {
+    /* Altura do campo (acompanha .eds-input-sm/-lg); o botão cabe nela com folga de 2px. */
+    --_dp-height: var(--eds-control-height-md);
+    --_dp-toggle-size: min(1.75rem, calc(var(--_dp-height) - 0.5rem));
+    --_dp-toggle-inset: var(--eds-space-1);
+    --_dp-icon-size: 1rem;
+    --_dp-toggle-fg: var(--eds-color-text-secondary);
+
+    position: relative;
+    display: block;
+    inline-size: 100%;
+
+    &:has(> .eds-input-sm) {
+      --_dp-height: var(--eds-control-height-sm);
+    }
+
+    &:has(> .eds-input-lg) {
+      --_dp-height: var(--eds-control-height-lg);
+      --_dp-toggle-size: 2rem;
+    }
+
+    /* Reserva o espaço do botão. */
+    & > .eds-datepicker-input {
+      padding-inline-end: calc(var(--_dp-toggle-size) + var(--_dp-toggle-inset) * 2);
+    }
+
+    &:has(.eds-datepicker-input:disabled) {
+      --_dp-toggle-fg: var(--eds-color-text-muted);
+    }
+  }
+
+  .eds-datepicker-toggle {
+    position: absolute;
+    inset-inline-end: var(--_dp-toggle-inset);
+    inset-block-start: 50%;
+    display: inline-grid;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_dp-toggle-size);
+    block-size: var(--_dp-toggle-size);
+    margin: 0;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: var(--_dp-toggle-fg);
+    font: inherit;
+    translate: 0 -50%;
+    cursor: pointer;
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &:not(:has(> svg))::before {
+      content: '';
+      inline-size: var(--_dp-icon-size);
+      block-size: var(--_dp-icon-size);
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 4.5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1zM2.5 7h11M5.5 2v3M10.5 2v3' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    }
+
+    & > svg {
+      inline-size: var(--_dp-icon-size);
+      block-size: var(--_dp-icon-size);
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background: var(--eds-color-action-primary-subtle);
+      color: var(--eds-color-action-primary);
+    }
+
+    &[aria-expanded='true'] {
+      background: var(--eds-color-action-primary-subtle);
+      color: var(--eds-color-action-primary);
+    }
+
+    &:focus-visible {
+      outline-offset: 0;
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  /* ---- Período ---- */
+
+  /* Dois campos + botão na mesma linha; em contêiner estreito quebra em "início até / fim [botão]".
+     O botão fica ao lado do segundo campo (não por cima), com a borda dos campos. */
+  .eds-daterange {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2);
+
+    & > .eds-datepicker-input {
+      flex: 1 1 9rem;
+      inline-size: auto;
+      padding-inline: var(--eds-space-3);
+    }
+
+    & > .eds-datepicker-toggle {
+      position: static;
+      align-self: stretch;
+      flex: none;
+      inline-size: var(--_dp-height);
+      block-size: auto;
+      min-block-size: var(--_dp-height);
+      border-color: var(--eds-color-border-strong);
+      border-radius: var(--eds-radius-md);
+      translate: none;
+
+      &:disabled {
+        border-color: var(--eds-color-border-default);
+        background: var(--eds-color-bg-subtle);
+      }
+    }
+  }
+
+  .eds-daterange-sep {
+    flex: none;
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-datepicker-toggle {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-datepicker {
+      --_dp-toggle-fg: ButtonText;
+    }
+
+    .eds-datepicker:has(.eds-datepicker-input:disabled) {
+      --_dp-toggle-fg: GrayText;
+    }
+
+    .eds-datepicker-toggle[aria-expanded='true'] {
+      border-color: Highlight;
+    }
+  }
+}

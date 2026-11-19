@@ -127,9 +127,10 @@ export default function Comportamento() {
     <>
       <p className="eds-text-body-lg">
         O CSS do core estiliza; o que o CSS e a plataforma não entregam (abrir um Modal, trocar
-        Tabs, ordenar uma Table, filtrar um Combobox, enviar arquivos, o carregamento de página) vem
-        do <code>@eds-ui/behavior</code>: JavaScript puro, <strong>zero dependências</strong>, para
-        quem usa só HTML (PHP, Java, .NET, Vue, Angular). Quem usa React não precisa dele:{' '}
+        Tabs, ordenar uma Table, filtrar um Combobox, escolher datas, enviar arquivos, o
+        carregamento de página) vem do <code>@eds-ui/behavior</code>: JavaScript puro,{' '}
+        <strong>zero dependências</strong>, para quem usa só HTML (PHP, Java, .NET, Vue, Angular).
+        Quem usa React não precisa dele:{' '}
         <a href={toHref('/comecar/uso-com-react')}>@eds-ui/react</a> já traz o mesmo comportamento.
       </p>
 
@@ -261,6 +262,35 @@ export default function Comportamento() {
               ),
             },
             {
+              name: 'data-eds-datepicker / data-eds-daterange',
+              effect: (
+                <>
+                  No <code>.eds-datepicker</code>: liga o{' '}
+                  <a href={toHref('/componentes/date-picker')}>DatePicker</a> (uma data) ou o{' '}
+                  <a href={toHref('/componentes/date-range-picker')}>DateRangePicker</a> (período).
+                  O JS monta o conteúdo do <code>.eds-calendar</code>.
+                </>
+              ),
+            },
+            {
+              name: 'data-eds-min / data-eds-max / data-eds-disabled-dates / data-eds-disable-weekends',
+              effect: (
+                <>
+                  Limites (ISO <code>aaaa-mm-dd</code>), datas bloqueadas (lista separada por
+                  vírgula) e fins de semana bloqueados, no <code>.eds-datepicker</code>.
+                </>
+              ),
+            },
+            {
+              name: 'data-eds-max-days',
+              effect: (
+                <>
+                  No <code>data-eds-daterange</code>: período máximo, em dias corridos, contando
+                  início e fim.
+                </>
+              ),
+            },
+            {
               name: 'data-eds-upload',
               effect: (
                 <>
@@ -334,6 +364,7 @@ export default function Comportamento() {
           Os componentes avisam o que aconteceu por <code>CustomEvent</code> com prefixo{' '}
           <code>eds:</code> (<code>eds:tabs-change</code>, <code>eds:modal-open</code>,{' '}
           <code>eds:sort</code>, <code>eds:select-change</code>, <code>eds:combobox-change</code>,{' '}
+          <code>eds:date-change</code>, <code>eds:daterange-change</code>,{' '}
           <code>eds:upload-change</code>, <code>eds:upload-progress</code>,{' '}
           <code>eds:upload-complete</code>, <code>eds:upload-error</code>, <code>eds:dismiss</code>,{' '}
           <code>eds:toast-close</code>, <code>eds:loader-show</code>, <code>eds:loader-hide</code>,{' '}

@@ -50,3 +50,15 @@ export function installDialogPolyfill(): () => void {
     modals.length = 0;
   };
 }
+
+/**
+ * jsdom esconde `[popover]` fechado (UA stylesheet) e não implementa `showPopover`, então os
+ * filhos ficam inacessíveis e sem foco. Em teste o popup é tratado como sempre visível; a
+ * abertura continua sendo decidida pelo React (conteúdo só existe aberto).
+ */
+export function installPopoverStyle(): () => void {
+  const style = document.createElement('style');
+  style.textContent = '[popover] { display: block !important; }';
+  document.head.appendChild(style);
+  return () => style.remove();
+}

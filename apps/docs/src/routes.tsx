@@ -26,6 +26,9 @@ import AppShellPage from './pages/componentes/AppShell';
 import BadgePage from './pages/componentes/Badge';
 import BreadcrumbPage from './pages/componentes/Breadcrumb';
 import ComboboxPage from './pages/componentes/Combobox';
+import DateInputPage from './pages/componentes/DateInput';
+import DatePickerPage from './pages/componentes/DatePicker';
+import DateRangePickerPage from './pages/componentes/DateRangePicker';
 import FileInputPage from './pages/componentes/FileInput';
 import FileUploadPage from './pages/componentes/FileUpload';
 import MultiSelectPage from './pages/componentes/MultiSelect';
@@ -124,6 +127,24 @@ export const routes: readonly DocRoute[] = [
   { path: '/componentes/card', title: 'Card', section: 'componentes', page: CardPage },
   { path: '/componentes/checkbox', title: 'Checkbox', section: 'componentes', page: CheckboxPage },
   { path: '/componentes/combobox', title: 'Combobox', section: 'componentes', page: ComboboxPage },
+  {
+    path: '/componentes/date-input',
+    title: 'Date Input',
+    section: 'componentes',
+    page: DateInputPage,
+  },
+  {
+    path: '/componentes/date-picker',
+    title: 'Date Picker',
+    section: 'componentes',
+    page: DatePickerPage,
+  },
+  {
+    path: '/componentes/date-range-picker',
+    title: 'Date Range Picker',
+    section: 'componentes',
+    page: DateRangePickerPage,
+  },
   { path: '/componentes/drawer', title: 'Drawer', section: 'componentes', page: DrawerPage },
   { path: '/componentes/dropdown', title: 'Dropdown', section: 'componentes', page: DropdownPage },
   { path: '/componentes/field', title: 'Field', section: 'componentes', page: FieldPage },

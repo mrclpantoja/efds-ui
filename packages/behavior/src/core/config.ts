@@ -62,6 +62,35 @@ export interface Messages {
   uploadSendingLabel: string;
   uploadBusy: string;
   uploadRequired: string;
+  /** DatePicker e DateRangePicker: locale do `Intl` e textos (`{date}`, `{min}`, `{max}`, `{start}`, `{end}`). */
+  dateLocale: string;
+  dateChoose: string;
+  rangeChoose: string;
+  datePrevMonth: string;
+  dateNextMonth: string;
+  dateMonth: string;
+  dateYear: string;
+  dateToday: string;
+  dateClose: string;
+  dateInvalid: string;
+  dateBetween: string;
+  dateFrom: string;
+  dateUntil: string;
+  dateBlocked: string;
+  dateUnavailable: string;
+  dateSelected: string;
+  rangeStart: string;
+  rangePeriod: string;
+  rangeEndBeforeStart: string;
+  rangeMaxDays: string;
+  rangeMaxDaysOne: string;
+  rangeNeedStart: string;
+  rangeNeedEnd: string;
+  dateInvalidShortYear: string;
+  dateCurrent: string;
+  rangeCurrent: string;
+  rangeStartLabel: string;
+  rangeEndLabel: string;
 }
 
 export const defaultMessages: Messages = {
@@ -117,6 +146,34 @@ export const defaultMessages: Messages = {
   uploadSendingLabel: 'Enviando {name}',
   uploadBusy: 'Aguarde o envio dos arquivos.',
   uploadRequired: 'Envie ao menos um arquivo.',
+  dateLocale: 'pt-BR',
+  dateChoose: 'Escolher data',
+  rangeChoose: 'Escolher período',
+  datePrevMonth: 'Mês anterior',
+  dateNextMonth: 'Próximo mês',
+  dateMonth: 'Mês',
+  dateYear: 'Ano',
+  dateToday: 'Hoje',
+  dateClose: 'Fechar',
+  dateInvalid: 'Data inválida. Use dd/mm/aaaa, com o ano em 4 dígitos (ex.: 15/03/2026).',
+  dateBetween: 'Escolha uma data entre {min} e {max}.',
+  dateFrom: 'Escolha uma data a partir de {min}.',
+  dateUntil: 'Escolha uma data até {max}.',
+  dateBlocked: 'Data indisponível.',
+  dateUnavailable: '{date}: data indisponível.',
+  dateSelected: 'Data selecionada: {date}.',
+  rangeStart: 'Início: {start}. Escolha a data final.',
+  rangePeriod: 'Período: {start} a {end}.',
+  rangeEndBeforeStart: 'A data final deve ser igual ou posterior à inicial.',
+  rangeMaxDays: 'O período pode ter no máximo {max} dias.',
+  rangeMaxDaysOne: 'O período pode ter no máximo 1 dia.',
+  rangeNeedStart: 'Informe também a data inicial.',
+  rangeNeedEnd: 'Informe também a data final.',
+  dateInvalidShortYear: 'Data inválida. Use dd/mm/aaaa, com o ano em 4 dígitos (ex.: 15/03/2026).',
+  dateCurrent: '{label}. Atual: {value}',
+  rangeCurrent: '{label}. Atual: {start} a {end}',
+  rangeStartLabel: 'início do período',
+  rangeEndLabel: 'fim do período',
 };
 
 let messages: Messages = { ...defaultMessages };

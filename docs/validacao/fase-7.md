@@ -156,6 +156,58 @@ Rota: `#/componentes/multi-select`. (R) (C) (S)
 | 12  | Tab com a lista aberta; clique numa opção com o mouse.                    | Tab fecha sem alterar a seleção; clique alterna e o foco permanece no campo.                                                                              | [ ] ok / [ ] falhou |
 | 13  | Largura 320px com muitas etiquetas.                                       | Etiquetas quebram de linha; sem rolagem horizontal; foco não fica coberto.                                                                                | [ ] ok / [ ] falhou |
 
+### 2.1e Data nativa (cerca de 6 min)
+
+Rota: `#/componentes/date-input`. (R) (C)
+
+| #   | O que fazer                                                                                          | Esperado                                                                                                                                                                         | Resultado           |
+| --- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| 1   | Tab até cada campo (data, hora, data e hora, mês); use as setas e dígitos.                           | Fala rótulo, tipo ("editor de data" ou equivalente) e a parte em foco (dia, mês, ano). Foco visível no campo todo; o ícone do seletor aparece com cor legível em claro e escuro. | [ ] ok / [ ] falhou |
+| 2   | Abra o seletor nativo (botão ou Alt+↓) e feche com Esc.                                              | O calendário é do navegador (anote só se ficar ilegível); o foco volta ao campo.                                                                                                 | [ ] ok / [ ] falhou |
+| 3   | Exemplo com limites: digite uma data de 2025 e envie.                                                | O navegador bloqueia o envio e explica (min/max); campo obrigatório vazio também bloqueia.                                                                                       | [ ] ok / [ ] falhou |
+| 4   | Exemplo de erro e desabilitado.                                                                      | Erro: fala "inválido" e a mensagem como descrição, visível por texto além da cor. Desabilitado: Tab não entra, aparência distinta.                                               | [ ] ok / [ ] falhou |
+| 5   | Compare a altura e o texto do campo de data com um Input de texto ao lado (Chrome, Firefox, Safari). | Mesma altura, borda e alinhamento do texto; sem desalinhamento vertical.                                                                                                         | [ ] ok / [ ] falhou |
+
+### 2.1f DatePicker (cerca de 18 min)
+
+Rota: `#/componentes/date-picker`. (R) (C) (S)
+
+| #   | O que fazer                                                                                   | Esperado                                                                                                                                                                                                                                                  | Resultado           |
+| --- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| 1   | Tab até o botão de calendário; Enter ou Espaço. Repita com Alt+↓ no campo.                    | Fala "Escolher data, botão, recolhido" e, aberto, "expandido". O diálogo abre (nomeado "Escolher data") com o foco no dia escolhido ou em hoje.                                                                                                           | [ ] ok / [ ] falhou |
+| 2   | Na grade, ←/→, ↑/↓, Home/End, PageUp/PageDown e Shift+PageUp/PageDown.                        | **Validar**: cada tecla fala a **data completa** ("15 de março de 2026, domingo", com hoje/selecionado/indisponível quando for o caso) uma vez só. PageUp/PageDown mudam o mês e Shift+PageUp/PageDown o ano, mantendo o dia (29/02 vira 28/02).          | [ ] ok / [ ] falhou |
+| 3   | Mude de mês pelas setas do cabeçalho, pelos selects e pelo teclado.                           | **Validar**: o NVDA fala o novo título ("abril de 2026") sem repetir; não fala duas vezes nem fica em silêncio.                                                                                                                                           | [ ] ok / [ ] falhou |
+| 4   | Enter ou Espaço num dia.                                                                      | Fecha, o foco volta ao botão, o campo mostra dd/mm/aaaa e o NVDA fala a data escolhida (status). Esc: fecha sem mudar a data e devolve o foco ao botão.                                                                                                   | [ ] ok / [ ] falhou |
+| 5   | Digite `15032026` no campo; depois cole `2026-03-15` e `15/03/2026`.                          | A máscara põe as barras (15/03/2026) e preserva o cursor; os dois formatos colados são aceitos.                                                                                                                                                           | [ ] ok / [ ] falhou |
+| 6   | Digite `31/02/2026`, uma data parcial (`15/03`) e uma fora do intervalo; saia do campo (Tab). | Fala "inválido" e a mensagem ("Data inválida. Use dd/mm/aaaa, com o ano em 4 dígitos (ex.: 15/03/2026)." / "Escolha uma data entre 01/01/2026 e 31/12/2026."); a mensagem visível aparece como texto, não só pela borda. Enviar o formulário é bloqueado. | [ ] ok / [ ] falhou |
+| 7   | Exemplo de bloqueios: navegue até um fim de semana e a um feriado listado.                    | O foco **chega** ao dia, que aparece riscado e é falado como indisponível; Enter não escolhe e avisa "data indisponível". Digitar uma data bloqueada dá erro.                                                                                             | [ ] ok / [ ] falhou |
+| 8   | Exemplo obrigatório: envie vazio.                                                             | Não envia; fala "obrigatório"/"inválido" e a mensagem; foco no campo.                                                                                                                                                                                     | [ ] ok / [ ] falhou |
+| 9   | Tab dentro do diálogo aberto (e Shift+Tab).                                                   | Circula: mês anterior, selects, próximo mês, grade, Hoje, Fechar; nunca sai para a página de trás.                                                                                                                                                        | [ ] ok / [ ] falhou |
+| 10  | Botão Hoje; clique fora do calendário.                                                        | Hoje escolhe e fecha (ou avisa indisponível). Clicar fora fecha **sem mover o foco**.                                                                                                                                                                     | [ ] ok / [ ] falhou |
+| 11  | Dentro de Modal (se houver): Esc com o calendário aberto; Esc com ele fechado.                | 1º Esc fecha só o calendário; o 2º fecha o modal.                                                                                                                                                                                                         | [ ] ok / [ ] falhou |
+| 12  | Largura 320px; abra o calendário.                                                             | As 7 colunas cabem sem rolagem horizontal; o calendário não é cortado nas bordas; alvos de 24px ou mais; o topo do calendário não cobre o foco.                                                                                                           | [ ] ok / [ ] falhou |
+| 13  | Alto contraste ligado.                                                                        | Hoje, escolhido, foco e indisponível distinguíveis sem cor; borda do calendário e do botão visíveis.                                                                                                                                                      | [ ] ok / [ ] falhou |
+
+### 2.1g DateRangePicker (cerca de 15 min)
+
+Rota: `#/componentes/date-range-picker`. (R) (C) (S)
+
+| #   | O que fazer                                                                                            | Esperado                                                                                                                                   | Resultado           |
+| --- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
+| 1   | Tab até o campo inicial, depois o final e o botão; Alt+↓ no campo.                                     | Cada campo fala "Data inicial" / "Data final" dentro do grupo nomeado ("Período do relatório"). O calendário abre com o foco no dia certo. | [ ] ok / [ ] falhou |
+| 2   | Enter num dia (início).                                                                                | Fala "Início: 03/03/2026. Escolha a data final." (status). O calendário **continua aberto**; o dia fala "início do período".               | [ ] ok / [ ] falhou |
+| 3   | Mova as setas e o mouse para outros dias.                                                              | A prévia da faixa acompanha o foco e o ponteiro; faixa contínua, início e fim em cor de ação e meio distinto (sem depender só de cor).     | [ ] ok / [ ] falhou |
+| 4   | Enter em um dia depois do início (fim).                                                                | Fala "Período: 03/03/2026 a 15/03/2026."; fecha; foco volta ao botão; os dois campos mostram as datas.                                     | [ ] ok / [ ] falhou |
+| 5   | Escolha um 2º dia **antes** do início.                                                                 | Vira o novo início (não fecha), com o aviso de início.                                                                                     | [ ] ok / [ ] falhou |
+| 6   | Esc no meio da escolha (só o início escolhido).                                                        | Descarta a escolha e mantém o período anterior; devolve o foco ao botão.                                                                   | [ ] ok / [ ] falhou |
+| 7   | Exemplo de período máximo: escolha o início e navegue além do limite.                                  | Dias além do máximo ficam indisponíveis, o foco chega e fala indisponível; digitar um fim além dele dá "O período máximo é de 7 dias.".    | [ ] ok / [ ] falhou |
+| 8   | Digite um fim anterior ao início, uma data inválida e deixe só um campo preenchido (exemplo opcional). | Fala "inválido" e a mensagem ("A data final deve ser igual ou posterior à inicial."); envio bloqueado; mensagem visível como texto.        | [ ] ok / [ ] falhou |
+| 9   | Exemplo obrigatório: envie vazio.                                                                      | Bloqueia o envio e leva ao primeiro campo vazio, falando "obrigatório".                                                                    | [ ] ok / [ ] falhou |
+| 10  | Máscara e colar nos dois campos (`03032026`, `2026-03-15`).                                            | Barras automáticas; os dois formatos aceitos; o hidden recebe ISO.                                                                         | [ ] ok / [ ] falhou |
+| 11  | Esc dentro de Modal (se houver).                                                                       | 1º Esc fecha só o calendário; o 2º fecha o modal.                                                                                          | [ ] ok / [ ] falhou |
+| 12  | Largura 320px; abra o calendário.                                                                      | Os dois campos quebram em linhas sem estourar; 7 colunas cabem; sem rolagem horizontal.                                                    | [ ] ok / [ ] falhou |
+| 13  | Alto contraste ligado.                                                                                 | Faixa do período, início, fim e prévia distinguíveis sem cor; foco visível.                                                                | [ ] ok / [ ] falhou |
+
 ### 2.2 PageLoader (cerca de 8 min)
 
 Rota: `#/componentes/page-loader`. (C)
@@ -273,7 +325,7 @@ Rota: `#/formulario` (playground). (R) (C)
 
 ## 3. Matriz navegador × verificação (cerca de 10 min)
 
-Sem leitor de tela (só teclado e olhos), em `#/componentes/modal`, `#/componentes/combobox` e `#/listagem`. Marque `ok`, `X` (falhou, com modelo da seção 6) ou `-` (não testado).
+Sem leitor de tela (só teclado e olhos), em `#/componentes/modal`, `#/componentes/combobox`, `#/componentes/date-picker`, `#/componentes/date-range-picker` e `#/listagem`. Marque `ok`, `X` (falhou, com modelo da seção 6) ou `-` (não testado).
 
 | Verificação                                                                                                              | Chrome | Edge | Firefox | Safari (opc.) |
 | ------------------------------------------------------------------------------------------------------------------------ | ------ | ---- | ------- | ------------- |
@@ -285,6 +337,9 @@ Sem leitor de tela (só teclado e olhos), em `#/componentes/modal`, `#/component
 | FileUpload: arrastar arquivos do Explorador, listar, remover (Firefox: drag-and-drop e `input.files` via `DataTransfer`) |        |      |         |               |
 | FileInput: escolher arquivo, nome mostrado, foco visível                                                                 |        |      |         |               |
 | MultiSelect: Enter alterna e mantém aberta, Backspace remove, etiquetas como lista (Firefox: `display: contents`)        |        |      |         |               |
+| Data nativa: campo igual ao Input (altura, alinhamento, ícone do seletor em claro e escuro)                              |        |      |         |               |
+| DatePicker: abre, setas/PageUp/Enter/Esc, máscara e colar, popup sobre tudo e posição certa (Safari: `popover`)          |        |      |         |               |
+| DateRangePicker: dois cliques, prévia da faixa, máximo de dias, Esc fecha só o calendário                                |        |      |         |               |
 | Tooltip da Sidebar compacta (Firefox: limitação conhecida, só anote)                                                     |        |      |         |               |
 | Tema `green` e modo escuro mudam sem recarregar; a aparência persiste ao recarregar                                      |        |      |         |               |
 | Linha selecionada (barra lateral, `:has()`) e Grid responsivo ao contêiner                                               |        |      |         |               |
@@ -308,6 +363,7 @@ Ligue um tema de contraste (seção 1.3). Em Edge ou Chrome e em Firefox, em cad
 - [ ] Badge, Alert e Toast: severidade legível pelo texto/ícone.
 - [ ] Skeleton e Spinner visíveis.
 - [ ] FileInput e FileUpload: dropzone com borda visível, foco e estado de arrasto distinguíveis; erro por arquivo e barra de progresso legíveis; desabilitado distinguível.
+- [ ] DatePicker e DateRangePicker: dia de hoje, dia escolhido, dia indisponível, foco da grade e faixa do período (início, meio, fim e prévia) distinguíveis sem cor; botão de calendário e borda do popup visíveis.
 - [ ] MultiSelect: etiquetas com borda, botão "Remover" visível e com foco; opção destacada e opção selecionada distinguíveis sem cor.
 - [ ] Backdrop do Modal/Drawer não esconde o conteúdo do diálogo.
 
@@ -337,6 +393,7 @@ Ctrl e `+` até 200% (janela de 1280px equivale a cerca de 640 px CSS).
 - [ ] Linhas de botões/campos quebram em vez de estourar.
 - [ ] Table rola só no próprio contêiner; Pagination estreita ("Página X de Y") legível.
 - [ ] Alvos de toque de pelo menos 24 px; na densidade `compact`, nenhum botão menor que isso.
+- [ ] DatePicker e DateRangePicker abertos: 7 colunas cabem, sem rolagem horizontal; os dois campos do período quebram em linhas.
 - [ ] Dropdown e Combobox abertos cabem na tela e não são cortados nas bordas.
 
 ## 5. Encerramento (cerca de 5 min)

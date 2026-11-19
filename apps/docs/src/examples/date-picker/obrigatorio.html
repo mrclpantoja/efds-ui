@@ -1,0 +1,31 @@
+<form action="#" onsubmit="event.preventDefault()">
+  <div class="eds-stack">
+    <div class="eds-field">
+      <label class="eds-label" for="dp-obr" data-required>Vencimento</label>
+      <div class="eds-datepicker" data-eds-datepicker>
+        <input id="dp-obr" class="eds-input eds-datepicker-input" type="text" inputmode="numeric"
+          placeholder="dd/mm/aaaa" autocomplete="off" required />
+        <button type="button" class="eds-datepicker-toggle" aria-label="Escolher data"></button>
+        <input type="hidden" name="vencimento" />
+        <div class="eds-calendar" popover="manual"></div>
+        <span class="eds-visually-hidden" role="status"></span>
+      </div>
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="dp-err">Data de admissão</label>
+      <div class="eds-datepicker" data-eds-datepicker>
+        <input id="dp-err" class="eds-input eds-datepicker-input" type="text" inputmode="numeric"
+          placeholder="dd/mm/aaaa" autocomplete="off" value="31/02/2026"
+          aria-invalid="true" aria-describedby="dp-err-msg" />
+        <button type="button" class="eds-datepicker-toggle" aria-label="Escolher data"></button>
+        <input type="hidden" name="admissao" />
+        <div class="eds-calendar" popover="manual"></div>
+        <span class="eds-visually-hidden" role="status"></span>
+      </div>
+      <p class="eds-error" id="dp-err-msg">Data inválida. Use dd/mm/aaaa.</p>
+    </div>
+    <div>
+      <button type="submit" class="eds-button eds-button-primary">Salvar</button>
+    </div>
+  </div>
+</form>

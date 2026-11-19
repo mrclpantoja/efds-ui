@@ -43,6 +43,15 @@ export type {
   FileUploadTexts,
   FileUploadUploadOptions,
 } from './components/FileUpload';
+export { DatePicker } from './components/DatePicker';
+export type { DatePickerProps, DatePickerSize, DatePickerTexts } from './components/DatePicker';
+export { DateRangePicker } from './components/DateRangePicker';
+export type {
+  DateRangePickerProps,
+  DateRangePickerSize,
+  DateRangePickerTexts,
+  DateRangeValue,
+} from './components/DateRangePicker';
 export { Checkbox } from './components/Checkbox';
 export type { CheckboxProps } from './components/Checkbox';
 export { Radio } from './components/Radio';

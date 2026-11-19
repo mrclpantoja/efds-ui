@@ -36,7 +36,7 @@ export default function Instalacao() {
           Cinco pacotes. <code>react</code> e <code>react-dom</code> (18 ou 19) são peer
           dependencies de <code>@eds-ui/react</code> e <code>@eds-ui/icons</code>. Quem usa só HTML
           instala <code>@eds-ui/core</code> e <code>@eds-ui/themes</code> (CSS) e, para o
-          comportamento de Tabs, Modal, Toast, Table, Combobox, FileUpload e PageLoader,{' '}
+          comportamento de Tabs, Modal, Toast, Table, Combobox, DatePicker, FileUpload e PageLoader,{' '}
           <code>@eds-ui/behavior</code> (JavaScript puro, sem dependências).
         </p>
         <CodeBlock code={addPnpm} label="Instalação com pnpm" />

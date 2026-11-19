@@ -139,6 +139,277 @@ function ComboboxDemo({
   );
 }
 
+/* DatePicker / DateRangePicker: demo estático do contrato de markup (março de 2026, dados
+   fictícios; hoje = 18). O calendário é aberto na carga e posicionado como o JS do
+   @eds-ui/behavior fará (--_calendar-x/-y em px, recalculadas em scroll/resize). */
+type RangeMode = 'done' | 'preview';
+
+const MES = 'março de 2026';
+const DIAS_SEMANA: [string, string][] = [
+  ['D', 'domingo'],
+  ['S', 'segunda-feira'],
+  ['T', 'terça-feira'],
+  ['Q', 'quarta-feira'],
+  ['Q', 'quinta-feira'],
+  ['S', 'sexta-feira'],
+  ['S', 'sábado'],
+];
+const NOME_DIA = DIAS_SEMANA.map(([, nome]) => nome);
+const HOJE = 18;
+const BLOQUEADOS = [4, 21, 28];
+
+function IconCalendar() {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M2.5 4.5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1zM2.5 7h11M5.5 2v3M10.5 2v3" />
+    </svg>
+  );
+}
+
+function CalendarDemo({
+  id,
+  label,
+  mode,
+  chosen,
+  focusDay,
+  range,
+  placement,
+  invalid,
+  disabled,
+  size,
+  open = true,
+}: {
+  id: string;
+  label: string;
+  mode?: 'range';
+  chosen?: number;
+  focusDay?: number;
+  range?: { mode: RangeMode; start: number; end: number };
+  placement?: 'top';
+  invalid?: boolean;
+  disabled?: boolean;
+  size?: 'sm' | 'lg';
+  open?: boolean;
+}) {
+  const box = useRef<HTMLDivElement>(null);
+  const pop = useRef<HTMLDivElement>(null);
+  const isOpen = open && !disabled;
+  const isRange = mode === 'range';
+
+  useEffect(() => {
+    const field = box.current;
+    const cal = pop.current;
+    if (!field || !cal || !isOpen) return;
+    const place = () => {
+      const r = field.getBoundingClientRect();
+      cal.style.setProperty('--_calendar-x', `${r.left}px`);
+      cal.style.setProperty('--_calendar-y', `${placement === 'top' ? r.top : r.bottom}px`);
+    };
+    place();
+    if (!cal.matches(':popover-open')) cal.showPopover();
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+    return () => {
+      window.removeEventListener('scroll', place, true);
+      window.removeEventListener('resize', place);
+      if (cal.matches(':popover-open')) cal.hidePopover();
+    };
+  }, [isOpen, placement]);
+
+  const start = 0; // 1º de março de 2026 é domingo
+  const total = 31;
+  const rows = Math.ceil((start + total) / 7);
+  const iso = (d: number) => `2026-03-${String(d).padStart(2, '0')}`;
+  const dayCell = (d: number) => {
+    const weekday = NOME_DIA[(start + d - 1) % 7];
+    let selected = d === chosen;
+    let dataRange: string | undefined;
+    if (range) {
+      const last = range.mode === 'done' ? range.end : range.start;
+      selected = d >= range.start && d <= last;
+      if (selected) {
+        dataRange =
+          range.mode === 'preview'
+            ? 'single'
+            : d === range.start
+              ? 'start'
+              : d === range.end
+                ? 'end'
+                : 'middle';
+      }
+    }
+    const preview = range?.mode === 'preview' && d > range.start && d <= range.end;
+    const blocked = BLOQUEADOS.includes(d);
+    return (
+      <td
+        key={d}
+        className="eds-calendar-day"
+        data-date={iso(d)}
+        tabIndex={d === (focusDay ?? chosen ?? range?.start ?? HOJE) ? 0 : -1}
+        aria-selected={selected ? 'true' : undefined}
+        aria-current={d === HOJE ? 'date' : undefined}
+        aria-disabled={blocked ? 'true' : undefined}
+        aria-label={`${d} de março de 2026, ${weekday}${blocked ? ', indisponível' : ''}`}
+        data-range={dataRange}
+        data-range-preview={preview ? '' : undefined}
+      >
+        {d}
+      </td>
+    );
+  };
+  const cells: ReactNode[] = [];
+  for (let r = 0; r < rows; r++) {
+    const tds: ReactNode[] = [];
+    for (let c = 0; c < 7; c++) {
+      const d = r * 7 + c - start + 1;
+      tds.push(d < 1 || d > total ? <td key={c} /> : dayCell(d));
+    }
+    cells.push(<tr key={r}>{tds}</tr>);
+  }
+
+  const sizeCls = size ? ` eds-input-${size}` : '';
+  const toggle = (
+    <button
+      type="button"
+      className="eds-datepicker-toggle"
+      aria-label={isRange ? 'Escolher período' : 'Escolher data'}
+      aria-haspopup="dialog"
+      aria-expanded={isOpen}
+      aria-controls={`${id}-cal`}
+      disabled={disabled}
+    >
+      <IconCalendar />
+    </button>
+  );
+
+  return (
+    <div className="eds-field">
+      {isRange ? (
+        <span className="eds-label" id={`${id}-l`}>
+          {label}
+        </span>
+      ) : (
+        <label className="eds-label" htmlFor={id}>
+          {label}
+        </label>
+      )}
+      <div
+        className={`eds-datepicker${isRange ? ' eds-daterange' : ''}`}
+        ref={box}
+        role={isRange ? 'group' : undefined}
+        aria-labelledby={isRange ? `${id}-l` : undefined}
+      >
+        {isRange ? (
+          <>
+            <input
+              className={`eds-input eds-datepicker-input${sizeCls}`}
+              type="text"
+              inputMode="numeric"
+              aria-label="Data inicial"
+              placeholder="dd/mm/aaaa"
+              autoComplete="off"
+              defaultValue={range ? '09/03/2026' : ''}
+              disabled={disabled}
+            />
+            <span className="eds-daterange-sep" aria-hidden="true">
+              até
+            </span>
+            <input
+              className={`eds-input eds-datepicker-input${sizeCls}`}
+              type="text"
+              inputMode="numeric"
+              aria-label="Data final"
+              placeholder="dd/mm/aaaa"
+              autoComplete="off"
+              defaultValue={range?.mode === 'done' ? `${range.end}/03/2026` : ''}
+              disabled={disabled}
+            />
+            {toggle}
+            <input type="hidden" name={`${id}-inicio`} />
+            <input type="hidden" name={`${id}-fim`} />
+          </>
+        ) : (
+          <>
+            <input
+              id={id}
+              className={`eds-input eds-datepicker-input${sizeCls}`}
+              type="text"
+              inputMode="numeric"
+              placeholder="dd/mm/aaaa"
+              autoComplete="off"
+              defaultValue={
+                chosen ? `${String(chosen).padStart(2, '0')}/03/2026` : invalid ? '31/02/2026' : ''
+              }
+              aria-invalid={invalid ? 'true' : undefined}
+              disabled={disabled}
+            />
+            {toggle}
+            <input type="hidden" name={id} />
+          </>
+        )}
+        <div
+          className="eds-calendar"
+          id={`${id}-cal`}
+          role="dialog"
+          aria-label={isRange ? 'Escolher período' : 'Escolher data'}
+          popover="manual"
+          ref={pop}
+          data-placement={placement}
+        >
+          <div className="eds-calendar-header">
+            <button type="button" className="eds-calendar-nav" aria-label="Mês anterior" />
+            <h2 className="eds-calendar-title" id={`${id}-cal-t`} aria-live="polite">
+              {MES}
+            </h2>
+            <button type="button" className="eds-calendar-nav" aria-label="Próximo mês" />
+          </div>
+          <div className="eds-calendar-jump">
+            <select className="eds-select eds-select-sm" aria-label="Mês" defaultValue="2">
+              <option value="1">fevereiro</option>
+              <option value="2">março</option>
+              <option value="3">abril</option>
+            </select>
+            <select className="eds-select eds-select-sm" aria-label="Ano" defaultValue="2026">
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+            </select>
+          </div>
+          <table className="eds-calendar-grid" role="grid" aria-labelledby={`${id}-cal-t`}>
+            <thead>
+              <tr>
+                {DIAS_SEMANA.map(([letra, nome]) => (
+                  <th key={nome} scope="col" abbr={nome} className="eds-calendar-weekday">
+                    {letra}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>{cells}</tbody>
+          </table>
+          <div className="eds-calendar-footer">
+            <button type="button" className="eds-button eds-button-ghost eds-button-sm">
+              Hoje
+            </button>
+            <button type="button" className="eds-button eds-button-secondary eds-button-sm">
+              Fechar
+            </button>
+          </div>
+        </div>
+        <span className="eds-visually-hidden" role="status" />
+      </div>
+    </div>
+  );
+}
+
 /* FileUpload: ícones do contrato (decorativos). */
 function IconUpload() {
   return (
@@ -701,6 +972,148 @@ export function FormsDemo() {
             maxReached
             open
           />
+        </div>
+      </Section>
+
+      <Section title="Data nativa (sem JS)">
+        <div style={cols}>
+          <div className="eds-field">
+            <label className="eds-label" htmlFor="dn-data">
+              Data
+            </label>
+            <input id="dn-data" className="eds-input" type="date" defaultValue="2026-03-15" />
+          </div>
+          <div className="eds-field">
+            <label className="eds-label" htmlFor="dn-hora">
+              Hora
+            </label>
+            <input id="dn-hora" className="eds-input" type="time" defaultValue="14:30" />
+          </div>
+          <div className="eds-field">
+            <label className="eds-label" htmlFor="dn-dh">
+              Data e hora
+            </label>
+            <input
+              id="dn-dh"
+              className="eds-input"
+              type="datetime-local"
+              defaultValue="2026-03-15T14:30"
+            />
+          </div>
+          <div className="eds-field">
+            <label className="eds-label" htmlFor="dn-mes">
+              Mês
+            </label>
+            <input id="dn-mes" className="eds-input" type="month" defaultValue="2026-03" />
+          </div>
+        </div>
+        <div style={cols}>
+          <div className="eds-field">
+            <label className="eds-label" htmlFor="dn-erro">
+              Data (erro)
+            </label>
+            <input
+              id="dn-erro"
+              className="eds-input"
+              type="date"
+              defaultValue="2026-03-15"
+              aria-invalid="true"
+              aria-describedby="dn-erro-e"
+            />
+            <p className="eds-error" id="dn-erro-e">
+              A data deve ser posterior a hoje.
+            </p>
+          </div>
+          <div className="eds-field">
+            <label className="eds-label" htmlFor="dn-ok">
+              Data (sucesso)
+            </label>
+            <input
+              id="dn-ok"
+              className="eds-input"
+              type="date"
+              defaultValue="2026-03-15"
+              data-valid="true"
+            />
+          </div>
+          <div className="eds-field">
+            <label className="eds-label" htmlFor="dn-dis">
+              Data (desabilitado)
+            </label>
+            <input
+              id="dn-dis"
+              className="eds-input"
+              type="date"
+              defaultValue="2026-03-15"
+              disabled
+            />
+          </div>
+          <div className="eds-field">
+            <label className="eds-label" htmlFor="dn-sm">
+              Pequeno
+            </label>
+            <input
+              id="dn-sm"
+              className="eds-input eds-input-sm"
+              type="date"
+              defaultValue="2026-03-15"
+            />
+          </div>
+          <div className="eds-field">
+            <label className="eds-label" htmlFor="dn-lg">
+              Grande
+            </label>
+            <input
+              id="dn-lg"
+              className="eds-input eds-input-lg"
+              type="date"
+              defaultValue="2026-03-15"
+            />
+          </div>
+        </div>
+      </Section>
+
+      <Section title="DatePicker (calendário próprio)">
+        <div style={{ ...cols, minBlockSize: '27rem' }}>
+          <CalendarDemo id="dp-aberto" label="Vencimento (aberto)" chosen={15} focusDay={12} />
+        </div>
+        <div style={cols}>
+          <CalendarDemo id="dp-fechado" label="Fechado" open={false} />
+          <CalendarDemo id="dp-erro" label="Com erro" open={false} invalid />
+          <CalendarDemo id="dp-dis" label="Desabilitado" open={false} disabled />
+          <CalendarDemo id="dp-sm" label="Pequeno" open={false} size="sm" />
+          <CalendarDemo id="dp-lg" label="Grande" open={false} size="lg" />
+        </div>
+        <p className="eds-helper">
+          Março de 2026: hoje = 18, escolhido = 15, indisponíveis = 4, 21 e 28. O anel de foco
+          aparece ao navegar com Tab e setas.
+        </p>
+        <div style={{ paddingBlockStart: '25rem' }}>
+          <CalendarDemo id="dp-topo" label="Abre para cima" chosen={15} placement="top" />
+        </div>
+      </Section>
+
+      <Section title="DateRangePicker (período)">
+        <div style={{ ...cols, minBlockSize: '27rem' }}>
+          <CalendarDemo
+            id="dr-feito"
+            label="Período escolhido (9 a 17)"
+            mode="range"
+            range={{ mode: 'done', start: 9, end: 17 }}
+          />
+        </div>
+        <div style={{ ...cols, minBlockSize: '27rem' }}>
+          <CalendarDemo
+            id="dr-previa"
+            label="Início escolhido, prévia até 14"
+            mode="range"
+            range={{ mode: 'preview', start: 9, end: 14 }}
+            focusDay={14}
+          />
+        </div>
+        <div style={cols}>
+          <CalendarDemo id="dr-fechado" label="Fechado" mode="range" open={false} />
+          <CalendarDemo id="dr-dis" label="Desabilitado" mode="range" open={false} disabled />
         </div>
       </Section>
 

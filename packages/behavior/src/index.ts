@@ -2,6 +2,7 @@ import { resetMessages, setMessages, type Messages } from './core/config';
 import { bindAll } from './core/registry';
 import { alertDismissBehavior, initAlert } from './components/alert';
 import { comboboxBehavior, initCombobox } from './components/combobox';
+import { datepickerBehavior, daterangeBehavior, initDatepicker } from './components/datepicker';
 import { dropdownBehavior, initDropdown } from './components/dropdown';
 import { initLoader, loader, setLoaderConfig, type LoaderOptions } from './components/loader';
 import { dialogBehavior, initModal, modalTriggerBehavior } from './components/modal';
@@ -41,6 +42,8 @@ export function init(root: ParentNode = document, options?: BehaviorOptions): ()
       sidebarBehavior,
       sidebarCollapseBehavior,
       comboboxBehavior,
+      datepickerBehavior,
+      daterangeBehavior,
       uploadBehavior,
     ]),
     initToast(),
@@ -68,6 +71,7 @@ export type { SortDirection } from './components/table';
 export {
   initAlert,
   initCombobox,
+  initDatepicker,
   initDropdown,
   initLoader,
   initModal,

@@ -24,6 +24,8 @@
 @import './components/textarea.css';
 @import './components/select.css';
 @import './components/combobox.css';
+@import './components/datepicker.css';
+@import './components/calendar.css';
 @import './components/file.css';
 @import './components/upload.css';
 @import './components/checkbox.css';

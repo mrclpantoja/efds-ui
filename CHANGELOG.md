@@ -1,6 +1,6 @@
 # Changelog
 
-Todas as mudanças relevantes do eDS.ui. Mantido à mão. Versão única para `@eds-ui/core`, `@eds-ui/themes`, `@eds-ui/react` e `@eds-ui/icons`.
+Todas as mudanças relevantes do eDS.ui. Mantido à mão. Versão única para `@eds-ui/core`, `@eds-ui/themes`, `@eds-ui/react`, `@eds-ui/icons` e `@eds-ui/behavior`.
 
 ## 0.1.0 (MVP, ainda não publicado)
 
@@ -32,3 +32,11 @@ Pré-lançamento: os pacotes seguem `private` e `UNLICENSED` até a decisão de 
 
 - Tarballs só com `dist/` (mais `package.json` e `README.md`); `pnpm pack:check` valida o conteúdo, os alvos de `exports` e a ausência de `workspace:`.
 - A fonte Inter e o CSS do core ficam por conta do consumidor.
+
+### @eds-ui/behavior
+
+- Comportamento em JavaScript puro (zero dependências) para quem usa só HTML: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Table (ordenação e seleção), Sidebar e Combobox.
+- `init(root, options)` devolve `destroy()`, observa o `root` (MutationObserver) e não liga nada fora dele. ESM tree-shakeable (`initTabs`, `initCombobox`...) e IIFE `dist/eds-behavior.js` com `window.EDS` e auto-init (`data-eds-manual` desliga).
+- PageLoader automático (ligado por padrão): intercepta fetch, XHR, envio de form e navegação por link; `data-eds-loader="auto|manual|off"` na tag do script ou `loader` nas opções; exceções por atributo, opção de fetch, cabeçalho e lista `exclude`; `destroy` restaura `fetch` e XHR.
+- Combobox (APG list autocomplete) com filtro local e fonte remota (`data-eds-source`).
+- PageLoader: saída após demora (`slowAfter`, 20 s: "Continuar aguardando" / "Fechar"), `navigationTimeout` 10 s, navegação cancelada detectada por `beforeunload`, downloads ignorados, reabre se fechado por fora, `trigger: "all" | "user"`; Combobox com validação de escolha (`setCustomValidity`, `data-eds-free-text`), anúncios de carregando/seleção e destaque por ponteiro.

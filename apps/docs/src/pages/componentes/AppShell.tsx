@@ -47,8 +47,10 @@ export default function AppShellPage() {
         <p className="docs-muted">
           O mesmo markup que o React emite. Sem JavaScript, o botão de menu abre a sidebar pelo
           Popover API; o contrato de foco e <code>inert</code> do off-canvas (ver Acessibilidade)
-          precisa de script ou do React. Dentro de uma moldura de altura fixa, sobrescreva{' '}
-          <code>block-size</code> da <code>.eds-app</code> no CSS da aplicação.
+          precisa do React ou do <code>@eds-ui/behavior</code>, que liga a sidebar off-canvas
+          sozinho (<code>inert</code> no resto da tela, foco e fechar ao navegar). Dentro de uma
+          moldura de altura fixa, sobrescreva <code>block-size</code> da <code>.eds-app</code> no
+          CSS da aplicação.
         </p>
         <CodeBlock code={completoHtml} label="Código HTML: aplicação completa" />
         <h3 className="eds-text-h4">Navegação em SPA com useAppShell</h3>

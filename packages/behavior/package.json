@@ -1,0 +1,46 @@
+{
+  "name": "@eds-ui/behavior",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "description": "Comportamento interativo do eDS.ui em JavaScript puro, para quem usa só HTML (PHP, Java, .NET, Vue, Angular).",
+  "keywords": [
+    "design-system",
+    "accessibility",
+    "vanilla-js",
+    "eds"
+  ],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/eds-behavior.js",
+  "jsdelivr": "./dist/eds-behavior.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./eds-behavior.js": "./dist/eds-behavior.js"
+  },
+  "scripts": {
+    "build": "vite build && vite build --config vite.iife.config.ts && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@eds-ui/typescript-config": "workspace:*",
+    "@eds-ui/vitest-config": "workspace:*",
+    "@testing-library/dom": "catalog:",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "jsdom": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}

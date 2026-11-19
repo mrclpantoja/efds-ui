@@ -5,6 +5,8 @@ import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
 import { Section } from '../../components/Section';
 import { UseCases } from '../../components/UseCases';
+import { toHref } from '../../router';
+import dispararHtml from '../../examples/toast/disparar.html?raw';
 import Disparar from '../../examples/toast/disparar';
 import dispararSource from '../../examples/toast/disparar.tsx?raw';
 import Fila from '../../examples/toast/fila';
@@ -33,28 +35,19 @@ const provider = `import { ToastProvider } from '@eds-ui/react';
   <App />
 </ToastProvider>`;
 
-const script = `
-// A região fica sempre no DOM, vazia. Cada toast entra e sai dela.
-const region = document.querySelector('.eds-toast-region');
+const behaviorApi = `// Com o eds-behavior.js carregado por <script> (window.EDS) ou por módulo:
+import { toast } from '@eds-ui/behavior';
 
-function showToast({ variant = 'info', title, message }) {
-  const toast = document.createElement('div');
-  toast.className = 'eds-toast eds-toast-' + variant;
-  if (variant === 'danger') toast.setAttribute('role', 'alert');
-  // ... monte .eds-toast-content (título em <strong>) e o botão de fechar, como no markup acima.
-  region.append(toast);
+const id = toast({
+  variant: 'success',            // info (padrão) | success | warning | danger
+  title: 'Sucesso:',             // opcional; sem ele, a severidade vai num prefixo oculto
+  message: 'O contrato foi assinado e arquivado.',
+  duration: 8000,                // opcional, em ms; 0 mantém até fechar
+});
 
-  // info e success fecham sozinhos; warning e danger ficam até serem fechados.
-  if (variant === 'info' || variant === 'success') {
-    setTimeout(() => closeToast(toast), 5000);
-  }
-}
-
-function closeToast(toast) {
-  toast.setAttribute('data-closing', ''); // o CSS anima a saída
-  setTimeout(() => toast.remove(), 300); // sem transitionend em reduced-motion: remova por timer
-}
-`;
+toast.dismiss(id);               // fecha um toast
+toast.dismissAll();              // fecha todos
+document.addEventListener('eds:toast-close', (e) => console.log(e.detail.id));`;
 
 export default function ToastPage() {
   return (
@@ -91,6 +84,7 @@ export default function ToastPage() {
               <code>Layout.tsx</code>): o exemplo apenas usa <code>useToast()</code>.
             </>
           }
+          html={dispararHtml}
           react={{ Component: Disparar, source: dispararSource }}
         />
         <Example
@@ -113,14 +107,17 @@ export default function ToastPage() {
           <CodeBlock code={provider} label="Código React: ToastProvider com opções" />
         </div>
         <div className="docs-example">
-          <h3 className="eds-text-h4">Markup do core (HTML)</h3>
+          <h3 className="eds-text-h4">HTML puro: API do @eds-ui/behavior</h3>
           <p className="docs-muted">
-            No HTML puro, o toast depende de JavaScript (fila, temporizador e foco), e por isso vem
-            como código, sem pré-visualização. O core só estiliza o markup abaixo; o comportamento é
-            seu. Não há ainda um pacote de JS para quem usa só HTML.
+            No HTML, o toast é disparado por JavaScript: <code>EDS.toast()</code>, do{' '}
+            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> (o botão do exemplo HTML
+            acima chama exatamente essa função). Ele cria a região <code>aria-live</code> sob
+            demanda, cuida da fila (máximo de 3 visíveis), do tempo, da pausa em hover e foco, do
+            Esc e do foco ao fechar, e renderiza dentro do <code>dialog</code> modal aberto. O
+            markup gerado é o do core, mostrado abaixo.
           </p>
+          <CodeBlock code={behaviorApi} label="Código JavaScript: API do toast" />
           <CodeBlock code={markup} label="Código HTML: markup do toast" />
-          <CodeBlock code={script} label="Código JavaScript: apoio do toast" />
         </div>
       </Section>
 

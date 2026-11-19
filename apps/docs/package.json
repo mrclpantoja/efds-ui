@@ -11,6 +11,7 @@
     "check:visual": "node scripts/check-visual.mjs"
   },
   "dependencies": {
+    "@eds-ui/behavior": "workspace:*",
     "@eds-ui/core": "workspace:*",
     "@eds-ui/icons": "workspace:*",
     "@eds-ui/react": "workspace:*",

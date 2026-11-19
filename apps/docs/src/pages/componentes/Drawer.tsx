@@ -1,10 +1,10 @@
 import { Alert, Stack } from '@eds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
-import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
 import { Section } from '../../components/Section';
 import { UseCases } from '../../components/UseCases';
+import { toHref } from '../../router';
 import Filtros from '../../examples/drawer/filtros';
 import filtrosHtml from '../../examples/drawer/filtros.html?raw';
 import filtrosSource from '../../examples/drawer/filtros.tsx?raw';
@@ -35,22 +35,27 @@ export default function DrawerPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="Preview em HTML">
-          No HTML, o diálogo só é modal quando aberto com <code>showModal()</code>; por isso o
-          código HTML aparece em bloco estático, sem preview. O preview vivo é o do React.
+        <Alert variant="info" title="HTML: precisa do @eds-ui/behavior">
+          <p>
+            No HTML, o diálogo só é modal quando aberto com <code>showModal()</code>. O pacote{' '}
+            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> faz isso por atributos:{' '}
+            <code>data-eds-open=&quot;ID&quot;</code> no botão e <code>data-autofocus</code> no
+            elemento que recebe o foco. Sem ele, chame <code>showModal()</code> você mesmo. O
+            preview HTML abaixo está ligado a ele.
+          </p>
         </Alert>
         <Example
           title="Filtros (borda final)"
           description="Os botões do rodapé usam form= para pertencer ao formulário do corpo. O primeiro campo recebe o foco inicial."
+          html={filtrosHtml}
           react={{ Component: Filtros, source: filtrosSource }}
         />
-        <CodeBlock code={filtrosHtml} label="Código HTML: filtros" />
         <Example
           title="Menu (borda inicial)"
           description="placement=start ancora o painel no início. Sem formulário, o foco inicial fica no botão Fechar."
+          html={menuHtml}
           react={{ Component: Menu, source: menuSource }}
         />
-        <CodeBlock code={menuHtml} label="Código HTML: menu" />
       </Section>
 
       <Section title="API React">

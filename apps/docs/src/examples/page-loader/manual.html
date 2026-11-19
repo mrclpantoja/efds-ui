@@ -1,0 +1,5 @@
+<!-- EDS.loader é a API do eds-behavior.js (window.EDS). track() mantém o loader até a promessa terminar. -->
+<button type="button" class="eds-button eds-button-primary"
+  onclick="EDS.loader.track(new Promise((resolve) => setTimeout(resolve, 2500)), { title: 'Buscando processo…', text: 'Aguarde um instante.' })">
+  Buscar processo
+</button>

@@ -259,6 +259,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@eds-ui/behavior':
+        specifier: workspace:*
+        version: link:../../packages/behavior
       '@eds-ui/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -342,6 +345,36 @@ importers:
       vite:
         specifier: 'catalog:'
         version: 8.3.8(@types/node@24.19.2)
+
+  packages/behavior:
+    devDependencies:
+      '@eds-ui/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@eds-ui/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@testing-library/dom':
+        specifier: 'catalog:'
+        version: 10.4.2
+      '@testing-library/jest-dom':
+        specifier: 'catalog:'
+        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.1.1(@types/node@24.19.2)(jsdom@31.0.1)(vite@8.3.8(@types/node@24.19.2)))
+      '@testing-library/user-event':
+        specifier: 'catalog:'
+        version: 14.6.12(@testing-library/dom@10.4.2)
+      jsdom:
+        specifier: 'catalog:'
+        version: 31.0.1
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 8.3.8(@types/node@24.19.2)
+      vitest:
+        specifier: 'catalog:'
+        version: 5.1.1(@types/node@24.19.2)(jsdom@31.0.1)(vite@8.3.8(@types/node@24.19.2))
 
   packages/core:
     devDependencies:

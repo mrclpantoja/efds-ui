@@ -52,8 +52,10 @@ export default function TablePage() {
           description={
             <>
               Clique nos cabeçalhos para ordenar, marque linhas (a seleção atravessa as páginas) e
-              troque de página. Cada mudança é anunciada em uma região de status única. O HTML
-              mostra o estado inicial; a ordenação, a seleção e a paginação são JavaScript seu.
+              troque de página. Cada mudança é anunciada em uma região de status única. No HTML, o{' '}
+              <code>@eds-ui/behavior</code> cuida da ordenação e da seleção (
+              <code>data-eds-select-all</code> e <code>data-eds-select-row</code>); a barra de
+              ferramentas e a paginação são do seu código.
             </>
           }
           html={interativaHtml}

@@ -39,6 +39,7 @@ export function Field({
 }: FieldProps) {
   const generated = useId();
   const id = controlId ?? generated;
+  const labelId = `${id}-label`;
   const helperId = `${id}-helper`;
   const errorId = `${id}-error`;
   const successId = `${id}-success`;
@@ -52,13 +53,13 @@ export function Field({
       .join(' ') || undefined;
 
   const value = useMemo(
-    () => ({ id, describedBy, invalid: hasError, valid: hasSuccess, required }),
-    [id, describedBy, hasError, hasSuccess, required],
+    () => ({ id, labelId, describedBy, invalid: hasError, valid: hasSuccess, required }),
+    [id, labelId, describedBy, hasError, hasSuccess, required],
   );
 
   return (
     <div {...rest} className={cx('eds-field', className)}>
-      <label className="eds-label" htmlFor={id} data-required={required || undefined}>
+      <label className="eds-label" id={labelId} htmlFor={id} data-required={required || undefined}>
         {label}
       </label>
       <FieldContext.Provider value={value}>{children}</FieldContext.Provider>

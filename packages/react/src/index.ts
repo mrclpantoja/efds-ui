@@ -31,6 +31,8 @@ export { Textarea } from './components/Textarea';
 export type { TextareaProps } from './components/Textarea';
 export { Select } from './components/Select';
 export type { SelectProps, SelectSize } from './components/Select';
+export { Combobox } from './components/Combobox';
+export type { ComboboxProps, ComboboxOption, ComboboxSize } from './components/Combobox';
 export { Checkbox } from './components/Checkbox';
 export type { CheckboxProps } from './components/Checkbox';
 export { Radio } from './components/Radio';
@@ -47,6 +49,13 @@ export { Badge } from './components/Badge';
 export type { BadgeProps, BadgeVariant } from './components/Badge';
 export { Spinner } from './components/Spinner';
 export type { SpinnerProps, SpinnerSize } from './components/Spinner';
+export { PageLoader, PageLoaderProvider, usePageLoader } from './components/PageLoader';
+export type {
+  PageLoaderProps,
+  PageLoaderProviderProps,
+  PageLoaderApi,
+  PageLoaderOptions,
+} from './components/PageLoader';
 export { Skeleton, SkeletonRegion } from './components/Skeleton';
 export type { SkeletonProps, SkeletonVariant, SkeletonRegionProps } from './components/Skeleton';
 

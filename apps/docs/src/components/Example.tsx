@@ -8,6 +8,7 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react';
+import { init } from '@eds-ui/behavior';
 import { Button, Tab, TabList, TabPanel, Tabs } from '@eds-ui/react';
 import { CodeBlock } from './CodeBlock';
 
@@ -28,7 +29,7 @@ export interface ExampleProps {
 
 /** Atributos cujo valor é (lista de) id ou referência a id. */
 const ID_ATTRS =
-  /(\s(?:id|for|aria-labelledby|aria-describedby|aria-controls|aria-owns|popovertarget|list)=)"([^"]*)"/g;
+  /(\s(?:id|for|form|aria-labelledby|aria-describedby|aria-controls|aria-owns|aria-activedescendant|aria-errormessage|popovertarget|list|data-eds-open|data-eds-status)=)"([^"]*)"/g;
 
 /**
  * Dá a cada id do exemplo um sufixo único por instância, para o mesmo exemplo poder aparecer
@@ -63,8 +64,17 @@ export function collapseIcons(html: string): string {
 function HtmlPreview({ html }: { html: string }) {
   const suffix = useId().replace(/[^A-Za-z0-9_-]/g, '');
   const scoped = useMemo(() => scopeIds(html, suffix), [html, suffix]);
+  const ref = useRef<HTMLDivElement | null>(null);
+  // O comportamento do `@eds-ui/behavior` liga só o markup HTML do preview (nunca o `document`:
+  // o resto do site é React e não pode ser ligado duas vezes). O loader automático fica
+  // desligado, para não bloquear a navegação da documentação.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    return init(el, { loader: { mode: 'manual' } });
+  }, [scoped]);
   // O HTML vem de arquivos do próprio repositório (?raw), nunca de entrada do usuário.
-  return <div className="docs-preview" dangerouslySetInnerHTML={{ __html: scoped }} />;
+  return <div ref={ref} className="docs-preview" dangerouslySetInnerHTML={{ __html: scoped }} />;
 }
 
 const statusText = {

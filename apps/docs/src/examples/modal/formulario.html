@@ -1,4 +1,7 @@
-<dialog class="eds-modal" id="modal-novo" aria-labelledby="modal-novo-t">
+<button type="button" class="eds-button eds-button-primary" data-eds-open="modal-novo">Novo projeto</button>
+
+<!-- data-eds-backdrop="static": clicar fora não fecha (há dados a perder). -->
+<dialog class="eds-modal" id="modal-novo" data-eds-backdrop="static" aria-labelledby="modal-novo-t">
   <header class="eds-modal-header">
     <h2 class="eds-modal-title" id="modal-novo-t">Novo projeto</h2>
     <!-- form= liga o botão ao formulário do corpo; formmethod="dialog" fecha sem validar. -->

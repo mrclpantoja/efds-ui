@@ -56,7 +56,14 @@ export default function AlertPage() {
         />
         <Example
           title="Com botão de fechar"
-          description="O Alert não se remove sozinho: o consumidor o desmonta e leva o foco para um elemento lógico, já que o botão que tinha o foco sai do DOM."
+          description={
+            <>
+              O Alert não se remove sozinho: no React, o consumidor o desmonta e leva o foco para um
+              elemento lógico, já que o botão que tinha o foco sai do DOM. No HTML, o{' '}
+              <code>@eds-ui/behavior</code> faz isso com <code>data-eds-dismiss</code> no botão (e
+              dispara <code>eds:dismiss</code>, cancelável).
+            </>
+          }
           html={fechavelHtml}
           react={{ Component: Fechavel, source: fechavelSource }}
         />

@@ -4,6 +4,8 @@ import { createContext, useContext } from 'react';
 export interface FieldContextValue {
   /** id do controle (só o Field define; Fieldset limpa). */
   id?: string;
+  /** id do rótulo (nomeia popups, ex.: a lista do Combobox). */
+  labelId?: string;
   /** ids das mensagens (ajuda, erro, sucesso) que descrevem o controle. */
   describedBy?: string;
   invalid?: boolean;

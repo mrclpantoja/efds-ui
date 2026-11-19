@@ -1,4 +1,4 @@
-<button type="button" class="eds-button eds-button-secondary" id="abrir-filtros">Filtros</button>
+<button type="button" class="eds-button eds-button-secondary" data-eds-open="drawer-filtros">Filtros</button>
 
 <dialog class="eds-drawer" id="drawer-filtros" aria-labelledby="drawer-filtros-t">
   <header class="eds-drawer-header">
@@ -14,7 +14,7 @@
     <form id="filtros-f" method="dialog" class="eds-stack eds-gap-4">
       <div class="eds-field">
         <label class="eds-label" for="filtro-busca">Buscar</label>
-        <input id="filtro-busca" class="eds-input" autocomplete="off" placeholder="Nome ou código" />
+        <input id="filtro-busca" class="eds-input" data-autofocus autocomplete="off" placeholder="Nome ou código" />
       </div>
       <div class="eds-field">
         <label class="eds-label" for="filtro-dep">Departamento</label>
@@ -43,11 +43,3 @@
     <button type="submit" form="filtros-f" class="eds-button eds-button-primary">Aplicar</button>
   </footer>
 </dialog>
-
-<script>
-  document.getElementById('abrir-filtros').addEventListener('click', () => {
-    const dialog = document.getElementById('drawer-filtros');
-    dialog.showModal();
-    document.getElementById('filtro-busca').focus();
-  });
-</script>

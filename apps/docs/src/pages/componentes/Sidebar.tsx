@@ -5,6 +5,7 @@ import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
 import { Section } from '../../components/Section';
 import { UseCases } from '../../components/UseCases';
+import { toHref } from '../../router';
 import Estatica from '../../examples/sidebar/estatica';
 import estaticaHtml from '../../examples/sidebar/estatica.html?raw';
 import estaticaSource from '../../examples/sidebar/estatica.tsx?raw';
@@ -51,8 +52,13 @@ export default function SidebarPage() {
         <p className="docs-muted">
           Código para o React: o botão de colapsar (rótulo fixo, <code>aria-expanded</code> e{' '}
           <code>aria-controls</code>) já vem na sidebar. Controle <code>collapsed</code> para
-          persistir a escolha. No HTML, basta o atributo <code>data-collapsed</code> na{' '}
-          <code>.eds-sidebar</code>.
+          persistir a escolha. No HTML, o{' '}
+          <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> liga um botão com{' '}
+          <code>data-eds-sidebar-collapse</code> dentro da <code>.eds-sidebar</code>: ele alterna{' '}
+          <code>data-collapsed</code> e <code>aria-expanded</code> (o exemplo HTML acima tem esse
+          botão; sem o pacote, ponha <code>data-collapsed</code> você mesmo). Dentro do app shell, o
+          mesmo pacote cuida do off-canvas: <code>inert</code> no resto da tela, foco e fechar ao
+          navegar.
         </p>
         <CodeBlock code={colapsavelSource} label="Código React: colapso controlado" />
       </Section>

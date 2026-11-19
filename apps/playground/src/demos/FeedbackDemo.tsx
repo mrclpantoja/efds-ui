@@ -483,6 +483,45 @@ function SyncDemo() {
   );
 }
 
+/* ------------------------------- PageLoader -------------------------------- */
+
+function PageLoaderDemo() {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const timer = useRef<number>(0);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  const run = () => {
+    const el = dialog.current;
+    if (!el || el.open) return;
+    el.showModal();
+    timer.current = window.setTimeout(() => el.close(), 2000);
+  };
+  return (
+    <Section title="PageLoader">
+      <div style={row}>
+        <button type="button" className="eds-button eds-button-secondary" onClick={run}>
+          Buscar processo
+        </button>
+        <span className="eds-helper">Bloqueia a tela por 2 segundos.</span>
+      </div>
+      <dialog
+        ref={dialog}
+        className="eds-page-loader"
+        aria-labelledby="demo-loader-title"
+        aria-describedby="demo-loader-text"
+        onCancel={(e) => e.preventDefault()}
+      >
+        <span className="eds-spinner eds-spinner-lg" aria-hidden="true" />
+        <p className="eds-page-loader-title" id="demo-loader-title">
+          Buscando processo…
+        </p>
+        <p className="eds-page-loader-text" id="demo-loader-text">
+          Aguarde um instante.
+        </p>
+      </dialog>
+    </Section>
+  );
+}
+
 function Spinners() {
   return (
     <Section title="Spinner">
@@ -609,6 +648,7 @@ export function FeedbackDemo() {
       <Toasts />
       <Badges />
       <Spinners />
+      <PageLoaderDemo />
       <SkeletonCard />
     </div>
   );

@@ -29,6 +29,116 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
+/* Combobox: demo estático do contrato de markup. O popup é aberto na carga e posicionado como o
+   JS do @eds-ui/behavior fará (propriedades --_combobox-* em px, recalculadas em scroll/resize). */
+type ComboState = 'options' | 'empty' | 'loading';
+
+function ComboboxDemo({
+  id,
+  label,
+  size,
+  state = 'options',
+  invalid,
+  disabled,
+  placement,
+}: {
+  id: string;
+  label: string;
+  size?: 'sm' | 'lg';
+  state?: ComboState;
+  invalid?: boolean;
+  disabled?: boolean;
+  placement?: 'top';
+}) {
+  const field = useRef<HTMLDivElement>(null);
+  const popup = useRef<HTMLDivElement>(null);
+  const open = !disabled && (state !== 'options' || id === 'cb-aberto');
+
+  useEffect(() => {
+    const box = field.current;
+    const pop = popup.current;
+    if (!box || !pop || !open) return;
+    const place = () => {
+      const r = box.getBoundingClientRect();
+      pop.style.setProperty('--_combobox-x', `${r.left}px`);
+      pop.style.setProperty('--_combobox-y', `${placement === 'top' ? r.top : r.bottom}px`);
+      pop.style.setProperty('--_combobox-width', `${r.width}px`);
+    };
+    place();
+    if (!pop.matches(':popover-open')) pop.showPopover();
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+    return () => {
+      window.removeEventListener('scroll', place, true);
+      window.removeEventListener('resize', place);
+      if (pop.matches(':popover-open')) pop.hidePopover();
+    };
+  }, [open, placement]);
+
+  const cidades = [
+    ['poa', 'Porto Alegre'],
+    ['pel', 'Pelotas'],
+    ['pf', 'Passo Fundo'],
+    ['pot', 'Potiraguá (indisponível)'],
+  ];
+
+  return (
+    <div className="eds-field">
+      <label className="eds-label" htmlFor={id}>
+        {label}
+      </label>
+      <div className="eds-combobox" ref={field}>
+        <input
+          id={id}
+          className={`eds-input${size ? ` eds-input-${size}` : ''}`}
+          type="text"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={open}
+          aria-controls={`${id}-lista`}
+          aria-activedescendant={open && state === 'options' ? `${id}-2` : undefined}
+          aria-invalid={invalid ? 'true' : undefined}
+          autoComplete="off"
+          disabled={disabled}
+          defaultValue={disabled ? 'Porto Alegre' : state === 'options' && open ? 'Po' : ''}
+        />
+        <input type="hidden" name={id} />
+        <div className="eds-combobox-popup" popover="manual" ref={popup} data-placement={placement}>
+          <ul
+            id={`${id}-lista`}
+            className="eds-combobox-listbox"
+            role="listbox"
+            aria-label="Cidades"
+            hidden={state !== 'options'}
+          >
+            {cidades.map(([value, text], i) => (
+              <li
+                key={value}
+                id={`${id}-${i + 1}`}
+                className="eds-combobox-option"
+                role="option"
+                data-value={value}
+                aria-selected={i === 1 ? 'true' : 'false'}
+                aria-disabled={i === 3 ? 'true' : undefined}
+                data-current={i === 0 ? '' : undefined}
+              >
+                {text}
+              </li>
+            ))}
+          </ul>
+          <p className="eds-combobox-empty" hidden={state !== 'empty'}>
+            Nenhum resultado
+          </p>
+          <p className="eds-combobox-loading" hidden={state !== 'loading'}>
+            <span className="eds-spinner eds-spinner-sm" aria-hidden="true" /> Carregando…
+          </p>
+        </div>
+        <span className="eds-visually-hidden" role="status" />
+      </div>
+    </div>
+  );
+}
+
 export function FormsDemo() {
   const indeterminate = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -153,6 +263,23 @@ export function FormsDemo() {
             </button>
           </div>
         ))}
+      </Section>
+
+      <Section title="Combobox (autocomplete)">
+        <div style={cols}>
+          <ComboboxDemo id="cb-aberto" label="Cidade (aberto)" />
+          <ComboboxDemo id="cb-vazio" label="Sem resultado" state="empty" />
+          <ComboboxDemo id="cb-carregando" label="Carregando" state="loading" />
+        </div>
+        <div style={cols}>
+          <ComboboxDemo id="cb-sm" label="Pequeno" size="sm" />
+          <ComboboxDemo id="cb-lg" label="Grande" size="lg" />
+          <ComboboxDemo id="cb-erro" label="Com erro" invalid />
+          <ComboboxDemo id="cb-dis" label="Desabilitado" disabled />
+        </div>
+        <div style={{ paddingBlockStart: '14rem' }}>
+          <ComboboxDemo id="cb-topo" label="Abre para cima" state="loading" placement="top" />
+        </div>
       </Section>
 
       <Section title="Textarea e Select">

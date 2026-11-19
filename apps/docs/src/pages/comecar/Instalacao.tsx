@@ -5,6 +5,7 @@ import { toHref } from '../../router';
 
 const addPnpm = 'pnpm add @eds-ui/core @eds-ui/themes @eds-ui/react @eds-ui/icons';
 const addNpm = 'npm install @eds-ui/core @eds-ui/themes @eds-ui/react @eds-ui/icons';
+const addHtml = 'pnpm add @eds-ui/core @eds-ui/themes @eds-ui/behavior';
 
 const importAll = `import '@eds-ui/core/index.css';    // tokens, base, layout e todos os componentes
 import '@eds-ui/themes/index.css';  // os eixos: tema, modo, densidade e forma`;
@@ -32,12 +33,20 @@ export default function Instalacao() {
 
       <Section title="Instalar os pacotes">
         <p>
-          Quatro pacotes. <code>react</code> e <code>react-dom</code> (18 ou 19) são peer
+          Cinco pacotes. <code>react</code> e <code>react-dom</code> (18 ou 19) são peer
           dependencies de <code>@eds-ui/react</code> e <code>@eds-ui/icons</code>. Quem usa só HTML
-          pode instalar apenas <code>@eds-ui/core</code> e <code>@eds-ui/themes</code>.
+          instala <code>@eds-ui/core</code> e <code>@eds-ui/themes</code> (CSS) e, para o
+          comportamento de Tabs, Modal, Toast, Table, Combobox e PageLoader,{' '}
+          <code>@eds-ui/behavior</code> (JavaScript puro, sem dependências).
         </p>
         <CodeBlock code={addPnpm} label="Instalação com pnpm" />
         <CodeBlock code={addNpm} label="Instalação com npm" />
+        <p>
+          Só HTML (PHP, Java, .NET, Vue, Angular): sem React, com o comportamento em JavaScript
+          puro. Veja <a href={toHref('/comecar/comportamento')}>Comportamento (JS)</a> para o uso
+          por <code>&lt;script&gt;</code> ou por módulo.
+        </p>
+        <CodeBlock code={addHtml} label="Instalação para HTML puro" />
       </Section>
 
       <Section title="Importar o CSS">

@@ -1,0 +1,15 @@
+<!-- Fonte remota: o @eds-ui/behavior faz GET em "<data-eds-source><texto digitado>". -->
+<div class="eds-field">
+  <label class="eds-label" for="cliente">Cliente</label>
+  <div class="eds-combobox" data-eds-source="/clientes/busca?q=" data-eds-min-chars="2">
+    <input id="cliente" class="eds-input" type="text" role="combobox" aria-autocomplete="list"
+      aria-expanded="false" aria-controls="cliente-lista" autocomplete="off" />
+    <input type="hidden" name="cliente" />
+    <div class="eds-combobox-popup" popover="manual">
+      <ul id="cliente-lista" class="eds-combobox-listbox" role="listbox" aria-label="Clientes"></ul>
+      <p class="eds-combobox-empty" hidden>Nenhum resultado</p>
+      <p class="eds-combobox-loading" hidden><span class="eds-spinner eds-spinner-sm" aria-hidden="true"></span> Carregando…</p>
+    </div>
+    <span class="eds-visually-hidden" role="status"></span>
+  </div>
+</div>

@@ -1,0 +1,245 @@
+/* Combobox (autocomplete): padrão APG "combobox com lista, autocomplete=list".
+   O input é o .eds-input; este arquivo cuida do indicador, do popup e das opções.
+   Markup:
+     <div class="eds-combobox">
+       <input class="eds-input" role="combobox" aria-autocomplete="list" aria-expanded="false"
+         aria-controls="lista" autocomplete="off" />
+       <input type="hidden" name="campo" />
+       <div class="eds-combobox-popup" popover="manual">
+         <ul class="eds-combobox-listbox" id="lista" role="listbox" aria-label="...">
+           <li class="eds-combobox-option" role="option">...</li>
+         </ul>
+         <p class="eds-combobox-empty" hidden>...</p>
+         <p class="eds-combobox-loading" hidden>...</p>
+       </div>
+       <span class="eds-visually-hidden" role="status"></span>
+     </div>
+   Estados por atributo: input[aria-expanded], option[aria-selected="true"] (destacada),
+   option[data-current] (escolhida), option[aria-disabled="true"], popup[aria-busy="true"].
+   Posição (definida pelo JS, em px, coordenadas da viewport): --_combobox-x (borda esquerda do
+   campo), --_combobox-y (borda inferior do campo; com data-placement="top", a borda superior) e
+   --_combobox-width (largura do campo). */
+@layer eds.components {
+  .eds-combobox {
+    --_combobox-arrow: var(--eds-color-text-secondary);
+    --_combobox-arrow-size: 0.3125rem;
+    --_combobox-padding-x: var(--eds-space-3);
+
+    position: relative;
+    display: block;
+    inline-size: 100%;
+
+    /* Reserva o espaço do indicador, como o Select. */
+    & > .eds-input {
+      padding-inline-end: calc(var(--_combobox-padding-x) * 2 + var(--_combobox-arrow-size) * 2);
+      text-overflow: ellipsis;
+    }
+
+    /* Indicador decorativo (não recebe clique; o campo continua sendo o input). Mesmo desenho do
+       Select (dois triângulos), em elemento próprio para poder girar quando aberto. */
+    &::after {
+      content: '';
+      position: absolute;
+      inset-inline-end: var(--_combobox-padding-x);
+      inset-block-start: 50%;
+      inline-size: calc(var(--_combobox-arrow-size) * 2);
+      block-size: var(--_combobox-arrow-size);
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--_combobox-arrow) 50%),
+        linear-gradient(135deg, var(--_combobox-arrow) 50%, transparent 50%);
+      background-repeat: no-repeat;
+      background-size: var(--_combobox-arrow-size) var(--_combobox-arrow-size);
+      background-position:
+        0 0,
+        100% 0;
+      translate: 0 -50%;
+      pointer-events: none;
+      transition: rotate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+
+    &:has(> [aria-expanded='true'])::after {
+      rotate: 180deg;
+    }
+
+    &:has(> :disabled) {
+      --_combobox-arrow: var(--eds-color-text-muted);
+    }
+  }
+
+  .eds-combobox-popup {
+    --_combobox-x: 0px;
+    --_combobox-y: 0px;
+    --_combobox-width: 15rem;
+    --_combobox-offset: var(--eds-space-1);
+    --_combobox-max-height: calc(var(--eds-space-7) * 8 + 2 * var(--eds-space-1));
+
+    /* O UA define display:none para popover fechado; só declaramos display no aberto. */
+    box-sizing: border-box;
+    inline-size: var(--_combobox-width);
+    max-block-size: min(var(--_combobox-max-height), 80dvh);
+    margin: 0;
+    padding: var(--eds-space-1);
+    border: 1px solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    box-shadow: var(--eds-shadow-md);
+    overflow: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    transition:
+      opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      display var(--eds-motion-duration-fast) allow-discrete,
+      overlay var(--eds-motion-duration-fast) allow-discrete;
+
+    /* Coordenadas da viewport vindas do JS: por isso inset físico (left/top), não lógico. */
+    position: fixed;
+    inset: auto;
+    left: var(--_combobox-x);
+    top: calc(var(--_combobox-y) + var(--_combobox-offset));
+
+    &:popover-open {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Abre para cima: o y é a borda superior do campo; o popup sobe pela própria altura. */
+    &[data-placement='top'] {
+      top: calc(var(--_combobox-y) - var(--_combobox-offset));
+      translate: 0 -100%;
+    }
+  }
+
+  @starting-style {
+    .eds-combobox-popup:popover-open {
+      opacity: 0;
+    }
+  }
+
+  .eds-combobox-listbox {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-combobox-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-2);
+    min-block-size: var(--eds-space-7);
+    padding-inline: var(--eds-space-3);
+    border-radius: var(--eds-radius-sm);
+    font-size: var(--eds-font-size-body);
+    font-weight: var(--eds-font-weight-regular);
+    cursor: pointer;
+
+    /* Hover do ponteiro: só o tom (o JS não move o destaque do teclado com o mouse). */
+    &:hover:not([aria-disabled='true']) {
+      background: var(--eds-color-bg-subtle);
+    }
+
+    /* Destacada pelo teclado ou ponteiro (aria-activedescendant + aria-selected). O tom de
+       fundo sozinho não chega a 3:1 (1.4.11): barra inicial em action-primary, como a linha
+       selecionada da Table. */
+    &[aria-selected='true'] {
+      background: var(--eds-color-bg-subtle);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block: var(--eds-space-2);
+        inline-size: 0.125rem;
+        border-radius: var(--eds-radius-sm);
+        background: var(--eds-color-action-primary);
+      }
+    }
+
+    /* Escolhida: check à direita (não depende só de cor). */
+    &[data-current] {
+      padding-inline-end: calc(var(--eds-space-3) * 2 + 0.5rem);
+      font-weight: var(--eds-font-weight-medium);
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset-inline-end: var(--eds-space-3);
+        inset-block-start: 50%;
+        inline-size: 0.3125rem;
+        block-size: 0.625rem;
+        border-inline-end: 0.125rem solid var(--eds-color-action-primary);
+        border-block-end: 0.125rem solid var(--eds-color-action-primary);
+        translate: 0 -65%;
+        rotate: 45deg;
+      }
+    }
+
+    &[aria-disabled='true'] {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+
+    /* O display:flex acima venceria o [hidden] do UA: opções filtradas pelo JS somem. */
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .eds-combobox-empty,
+  .eds-combobox-loading {
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-2);
+    min-block-size: var(--eds-space-7);
+    margin: 0;
+    padding-inline: var(--eds-space-3);
+    color: var(--eds-color-text-muted);
+    font-size: var(--eds-font-size-body);
+  }
+
+  /* [hidden] perde para o display acima; reafirma. */
+  .eds-combobox-empty[hidden],
+  .eds-combobox-loading[hidden] {
+    display: none;
+  }
+
+  .eds-combobox-popup[aria-busy='true'] .eds-combobox-listbox {
+    opacity: 0.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-combobox::after,
+    .eds-combobox-popup {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-combobox {
+      --_combobox-arrow: ButtonText;
+    }
+
+    .eds-combobox-popup {
+      border-color: CanvasText;
+    }
+
+    .eds-combobox-option[aria-selected='true'] {
+      background: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    .eds-combobox-option[aria-selected='true']::before {
+      background: currentColor;
+    }
+
+    .eds-combobox-option[data-current]::after {
+      border-color: currentColor;
+    }
+
+    .eds-combobox-option[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+}

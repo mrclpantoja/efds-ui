@@ -12,6 +12,7 @@
 import type { ComponentType } from 'react';
 import ButtonPage from './pages/componentes/Button';
 import TabsPage from './pages/componentes/Tabs';
+import Comportamento from './pages/comecar/Comportamento';
 import Instalacao from './pages/comecar/Instalacao';
 import Introducao from './pages/comecar/Introducao';
 import UsoComHtml from './pages/comecar/UsoComHtml';
@@ -24,6 +25,8 @@ import AlertPage from './pages/componentes/Alert';
 import AppShellPage from './pages/componentes/AppShell';
 import BadgePage from './pages/componentes/Badge';
 import BreadcrumbPage from './pages/componentes/Breadcrumb';
+import ComboboxPage from './pages/componentes/Combobox';
+import PageLoaderPage from './pages/componentes/PageLoader';
 import ButtonGroupPage from './pages/componentes/ButtonGroup';
 import CardPage from './pages/componentes/Card';
 import CheckboxPage from './pages/componentes/Checkbox';
@@ -70,6 +73,12 @@ export const routes: readonly DocRoute[] = [
   { path: '/comecar/instalacao', title: 'Instalação', section: 'comecar', page: Instalacao },
   { path: '/comecar/uso-com-html', title: 'Uso com HTML', section: 'comecar', page: UsoComHtml },
   { path: '/comecar/uso-com-react', title: 'Uso com React', section: 'comecar', page: UsoComReact },
+  {
+    path: '/comecar/comportamento',
+    title: 'Comportamento (JS)',
+    section: 'comecar',
+    page: Comportamento,
+  },
 
   // Fundamentos
   { path: '/fundamentos/tokens', title: 'Tokens', section: 'fundamentos', page: Tokens },
@@ -111,6 +120,7 @@ export const routes: readonly DocRoute[] = [
   },
   { path: '/componentes/card', title: 'Card', section: 'componentes', page: CardPage },
   { path: '/componentes/checkbox', title: 'Checkbox', section: 'componentes', page: CheckboxPage },
+  { path: '/componentes/combobox', title: 'Combobox', section: 'componentes', page: ComboboxPage },
   { path: '/componentes/drawer', title: 'Drawer', section: 'componentes', page: DrawerPage },
   { path: '/componentes/dropdown', title: 'Dropdown', section: 'componentes', page: DropdownPage },
   { path: '/componentes/field', title: 'Field', section: 'componentes', page: FieldPage },
@@ -118,6 +128,12 @@ export const routes: readonly DocRoute[] = [
   { path: '/componentes/input', title: 'Input', section: 'componentes', page: InputPage },
   { path: '/componentes/modal', title: 'Modal', section: 'componentes', page: ModalPage },
   { path: '/componentes/navbar', title: 'Navbar', section: 'componentes', page: NavbarPage },
+  {
+    path: '/componentes/page-loader',
+    title: 'Page Loader',
+    section: 'componentes',
+    page: PageLoaderPage,
+  },
   { path: '/componentes/radio', title: 'Radio', section: 'componentes', page: RadioPage },
   { path: '/componentes/select', title: 'Select', section: 'componentes', page: SelectPage },
   { path: '/componentes/sidebar', title: 'Sidebar', section: 'componentes', page: SidebarPage },

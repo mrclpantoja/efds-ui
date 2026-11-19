@@ -90,8 +90,13 @@ export function checkTarball(
   manifest: PackManifest,
   files: readonly string[],
   expectedVersion?: string,
+  requiredFiles: readonly string[] = [],
 ): string[] {
   const problems: string[] = [];
+
+  for (const required of requiredFiles) {
+    if (!files.includes(required)) problems.push(`falta ${required}`);
+  }
 
   if (expectedVersion && manifest.version !== expectedVersion) {
     problems.push(`versão ${manifest.version ?? '(ausente)'} (esperada ${expectedVersion})`);
@@ -120,6 +125,20 @@ export function checkTarball(
   }
   for (const dep of unresolvedDeps(manifest)) problems.push(`dependência não resolvida: ${dep}`);
 
+  return problems;
+}
+
+/**
+ * O bundle IIFE (`<script src>`) tem de ser script clássico: sem `import`/`export` de módulo, com a
+ * variável global `EDS` e o auto-init.
+ */
+export function checkIife(source: string): string[] {
+  const problems: string[] = [];
+  if (/(^|[;}])\s*(export\s*[{*]|import\s*[{*"'])/m.test(source)) {
+    problems.push('IIFE contém import/export de módulo');
+  }
+  if (!/^\s*var EDS\s*=/.test(source)) problems.push('IIFE não declara a global EDS');
+  if (!source.includes('data-eds-manual')) problems.push('IIFE sem o auto-init (data-eds-manual)');
   return problems;
 }
 

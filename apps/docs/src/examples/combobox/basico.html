@@ -1,0 +1,20 @@
+<div class="eds-field">
+  <label class="eds-label" for="cidade">Cidade</label>
+  <div class="eds-combobox">
+    <input id="cidade" class="eds-input" type="text" role="combobox" aria-autocomplete="list"
+      aria-expanded="false" aria-controls="cidade-lista" autocomplete="off" />
+    <input type="hidden" name="cidade" />
+    <div class="eds-combobox-popup" popover="manual">
+      <ul id="cidade-lista" class="eds-combobox-listbox" role="listbox" aria-label="Cidade">
+        <li id="cidade-1" class="eds-combobox-option" role="option" data-value="poa">Porto Alegre</li>
+        <li id="cidade-2" class="eds-combobox-option" role="option" data-value="pel">Pelotas</li>
+        <li id="cidade-3" class="eds-combobox-option" role="option" data-value="pf">Passo Fundo</li>
+        <li id="cidade-4" class="eds-combobox-option" role="option" data-value="cax">Caxias do Sul</li>
+        <li id="cidade-5" class="eds-combobox-option" role="option" data-value="pot" aria-disabled="true">Potiraguá (indisponível)</li>
+      </ul>
+      <p class="eds-combobox-empty" hidden>Nenhum resultado</p>
+      <p class="eds-combobox-loading" hidden><span class="eds-spinner eds-spinner-sm" aria-hidden="true"></span> Carregando…</p>
+    </div>
+    <span class="eds-visually-hidden" role="status"></span>
+  </div>
+</div>

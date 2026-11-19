@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  checkIife,
   checkTarball,
   formatSize,
   manifestTargets,
@@ -97,6 +98,30 @@ describe('checkTarball', () => {
   it('acusa workspace: no manifest empacotado', () => {
     const problems = checkTarball({ ...cssManifest, dependencies: { a: 'workspace:*' } }, cssFiles);
     expect(problems).toContain('dependência não resolvida: dependencies.a=workspace:*');
+  });
+});
+
+describe('arquivos obrigatórios e IIFE', () => {
+  it('acusa arquivo obrigatório ausente', () => {
+    const problems = checkTarball(cssManifest, cssFiles, '0.1.0', ['dist/eds-behavior.js']);
+    expect(problems).toContain('falta dist/eds-behavior.js');
+    expect(checkTarball(cssManifest, cssFiles, '0.1.0', ['dist/index.css'])).toEqual([]);
+  });
+  it('aceita script clássico com a global EDS e o auto-init', () => {
+    const source = 'var EDS=(function(e){return e})({});s.hasAttribute(`data-eds-manual`);';
+    expect(checkIife(source)).toEqual([]);
+  });
+  it('rejeita módulo ES, ausência da global e do auto-init', () => {
+    expect(checkIife('var EDS=1;data-eds-manual;export{a as b};')).toContain(
+      'IIFE contém import/export de módulo',
+    );
+    expect(checkIife('import{a}from"x";var EDS=1;data-eds-manual')).toContain(
+      'IIFE contém import/export de módulo',
+    );
+    expect(checkIife('(function(){})();data-eds-manual')).toContain(
+      'IIFE não declara a global EDS',
+    );
+    expect(checkIife('var EDS=1;')).toContain('IIFE sem o auto-init (data-eds-manual)');
   });
 });
 

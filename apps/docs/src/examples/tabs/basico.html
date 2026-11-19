@@ -1,0 +1,24 @@
+<div class="eds-tabs">
+  <div class="eds-tablist" role="tablist" aria-label="Seções do pedido">
+    <button type="button" class="eds-tab" role="tab" id="aba-resumo"
+      aria-selected="true" aria-controls="painel-resumo" tabindex="0">Resumo</button>
+    <button type="button" class="eds-tab" role="tab" id="aba-itens"
+      aria-selected="false" aria-controls="painel-itens" tabindex="-1">Itens</button>
+    <button type="button" class="eds-tab" role="tab" id="aba-historico"
+      aria-selected="false" aria-controls="painel-historico" tabindex="-1">Histórico</button>
+    <button type="button" class="eds-tab" role="tab" id="aba-anexos"
+      aria-selected="false" aria-controls="painel-anexos" aria-disabled="true" tabindex="-1">Anexos</button>
+  </div>
+  <div class="eds-tabpanel" role="tabpanel" id="painel-resumo" aria-labelledby="aba-resumo" tabindex="0">
+    <p>Pedido 1042 · Cliente Exemplo Ltda · 3 itens.</p>
+  </div>
+  <div class="eds-tabpanel" role="tabpanel" id="painel-itens" aria-labelledby="aba-itens" tabindex="0" hidden>
+    <p>Caderno A5, caneta azul e pasta suspensa.</p>
+  </div>
+  <div class="eds-tabpanel" role="tabpanel" id="painel-historico" aria-labelledby="aba-historico" tabindex="0" hidden>
+    <p>Criado em 10/03, aprovado em 11/03.</p>
+  </div>
+  <div class="eds-tabpanel" role="tabpanel" id="painel-anexos" aria-labelledby="aba-anexos" tabindex="0" hidden>
+    <p>Sem anexos.</p>
+  </div>
+</div>

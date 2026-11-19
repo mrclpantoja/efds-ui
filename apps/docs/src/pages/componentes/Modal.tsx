@@ -1,10 +1,10 @@
 import { Alert, Stack } from '@eds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
-import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
 import { Section } from '../../components/Section';
 import { UseCases } from '../../components/UseCases';
+import { toHref } from '../../router';
 import Confirmacao from '../../examples/modal/confirmacao';
 import confirmacaoHtml from '../../examples/modal/confirmacao.html?raw';
 import confirmacaoSource from '../../examples/modal/confirmacao.tsx?raw';
@@ -38,24 +38,28 @@ export default function ModalPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="Preview em HTML">
-          No HTML, o diálogo só é modal quando aberto com <code>showModal()</code>; isso exige um
-          pouco de JavaScript, por isso o código HTML de cada exemplo aparece em bloco estático, sem
-          preview. O preview vivo é o do React, onde <code>open</code> e <code>onClose</code> cuidam
-          disso.
+        <Alert variant="info" title="HTML: precisa do @eds-ui/behavior">
+          <p>
+            No HTML, o diálogo só é modal quando aberto com <code>showModal()</code>. O pacote{' '}
+            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> faz isso por atributos:{' '}
+            <code>data-eds-open=&quot;ID&quot;</code> no botão que abre, <code>data-eds-close</code>{' '}
+            em quem fecha e <code>data-eds-backdrop=&quot;static&quot;</code> para o clique fora não
+            fechar. Sem ele, chame <code>showModal()</code> você mesmo. O preview HTML abaixo está
+            ligado a ele; no React, <code>open</code> e <code>onClose</code> cuidam de tudo.
+          </p>
         </Alert>
         <Example
           title="Confirmação"
           description="Modal pequeno, sem formulário. O foco inicial vai para Cancelar (ação segura)."
+          html={confirmacaoHtml}
           react={{ Component: Confirmacao, source: confirmacaoSource }}
         />
-        <CodeBlock code={confirmacaoHtml} label="Código HTML: confirmação" />
         <Example
           title="Formulário"
           description="Os botões do rodapé usam form= para pertencer ao formulário do corpo. O primeiro campo recebe o foco inicial; o backdrop não fecha, para não perder dados."
+          html={formularioHtml}
           react={{ Component: Formulario, source: formularioSource }}
         />
-        <CodeBlock code={formularioHtml} label="Código HTML: formulário" />
         <Example
           title="Grande, com corpo rolável"
           description="Cabeçalho e rodapé ficam visíveis enquanto o corpo rola. Quando há rolagem, o corpo vira uma região focável por teclado."

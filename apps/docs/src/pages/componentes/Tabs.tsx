@@ -1,10 +1,11 @@
 import { Alert } from '@eds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
-import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
 import { Section } from '../../components/Section';
 import { UseCases } from '../../components/UseCases';
+import { toHref } from '../../router';
+import basicoHtml from '../../examples/tabs/basico.html?raw';
 import Basico from '../../examples/tabs/basico';
 import basicoSource from '../../examples/tabs/basico.tsx?raw';
 import Controlado from '../../examples/tabs/controlado';
@@ -13,24 +14,6 @@ import Indisponivel from '../../examples/tabs/indisponivel';
 import indisponivelSource from '../../examples/tabs/indisponivel.tsx?raw';
 import LarguraTotal from '../../examples/tabs/largura-total';
 import larguraTotalSource from '../../examples/tabs/largura-total.tsx?raw';
-
-/**
- * Contrato de markup. Não é um exemplo vivo: sem JavaScript as abas não respondem ao teclado,
- * e o core não promete o padrão tablist sem ele (ver comportamento.md).
- */
-const markup = `<div class="eds-tabs">
-  <div class="eds-tablist" role="tablist" aria-label="Seções do pedido">
-    <button type="button" class="eds-tab" role="tab" id="aba-resumo"
-      aria-selected="true" aria-controls="painel-resumo" tabindex="0">Resumo</button>
-    <button type="button" class="eds-tab" role="tab" id="aba-itens"
-      aria-selected="false" aria-controls="painel-itens" tabindex="-1">Itens</button>
-    <button type="button" class="eds-tab" role="tab" id="aba-anexos"
-      aria-selected="false" aria-controls="painel-anexos" aria-disabled="true" tabindex="-1">Anexos</button>
-  </div>
-  <div class="eds-tabpanel" role="tabpanel" id="painel-resumo" aria-labelledby="aba-resumo" tabindex="0">…</div>
-  <div class="eds-tabpanel" role="tabpanel" id="painel-itens" aria-labelledby="aba-itens" tabindex="0" hidden>…</div>
-  <div class="eds-tabpanel" role="tabpanel" id="painel-anexos" aria-labelledby="aba-anexos" tabindex="0" hidden>…</div>
-</div>`;
 
 export default function TabsPage() {
   return (
@@ -55,7 +38,8 @@ export default function TabsPage() {
       <Section title="Exemplos">
         <Example
           title="Básico"
-          description="Não controlado: defaultValue define a aba inicial. Setas, Home e End navegam."
+          description="Não controlado: defaultValue define a aba inicial. Setas, Home e End navegam. No HTML, o @eds-ui/behavior liga o mesmo markup (a aba Anexos é indisponível)."
+          html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
         />
         <Example
@@ -75,19 +59,18 @@ export default function TabsPage() {
         />
       </Section>
 
-      <Section title="Markup HTML">
-        <Alert variant="warning" title="Exige JavaScript">
+      <Section title="HTML puro">
+        <Alert variant="info" title="No HTML, o comportamento vem do @eds-ui/behavior">
           <p>
-            O CSS só estiliza. Roving tabindex, setas, Home/End e a troca de painéis são JavaScript.
-            Em HTML puro, sem esse comportamento, não use o padrão tablist: prefira links ou seções
-            comuns. Por isso esta página não traz um exemplo HTML interativo.
+            O CSS só estiliza. Roving tabindex, setas, Home/End e a troca de painéis são JavaScript:
+            carregue o <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a>, que detecta{' '}
+            <code>.eds-tabs</code> pelo próprio markup (<code>role</code>,{' '}
+            <code>aria-selected</code> e <code>aria-controls</code>), sem atributo extra. O estado
+            inicial vem de <code>aria-selected</code> e <code>aria-disabled</code>; a troca dispara{' '}
+            <code>eds:tabs-change</code> em <code>.eds-tabs</code>. Sem o pacote, não use o padrão
+            tablist: prefira links ou seções comuns.
           </p>
         </Alert>
-        <p>
-          Este é o contrato de markup que o React emite; o estado vem de <code>aria-selected</code>{' '}
-          e <code>aria-disabled</code>.
-        </p>
-        <CodeBlock code={markup} label="Markup HTML de Tabs" />
       </Section>
 
       <Section title="API React">

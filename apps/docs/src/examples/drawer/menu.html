@@ -1,4 +1,4 @@
-<button type="button" class="eds-button eds-button-tertiary" id="abrir-menu">Menu</button>
+<button type="button" class="eds-button eds-button-tertiary" data-eds-open="drawer-menu">Menu</button>
 
 <dialog class="eds-drawer eds-drawer-start" id="drawer-menu" aria-labelledby="drawer-menu-t">
   <header class="eds-drawer-header">
@@ -19,9 +19,3 @@
     </ul>
   </div>
 </dialog>
-
-<script>
-  document.getElementById('abrir-menu').addEventListener('click', () => {
-    document.getElementById('drawer-menu').showModal();
-  });
-</script>

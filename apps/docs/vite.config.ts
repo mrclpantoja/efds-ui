@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      '@eds-ui/behavior': fromSource('../../packages/behavior/src/index.ts'),
       '@eds-ui/react': fromSource('../../packages/react/src/index.ts'),
       '@eds-ui/icons': fromSource('../../packages/icons/src/index.ts'),
     },

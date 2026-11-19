@@ -1,0 +1,117 @@
+/* PageLoader: carregamento que bloqueia a tela. <dialog> aberto com showModal(): o top layer
+   deixa o resto da página inerte e o JS impede o Esc (cancel). Sem caixa: o conteúdo flutua no
+   centro sobre um ::backdrop desfocado e esmaecido.
+   Markup:
+     <dialog class="eds-page-loader" aria-labelledby="t" aria-describedby="d">
+       <span class="eds-spinner eds-spinner-lg" aria-hidden="true"></span>
+       <p class="eds-page-loader-title" id="t">Carregando…</p>
+       <p class="eds-page-loader-text" id="d">Aguarde um instante.</p>
+     </dialog>
+   Estado: [open]. O Spinner já trata prefers-reduced-motion. */
+@layer eds.components {
+  .eds-page-loader {
+    --_loader-veil: 70%;
+    --_loader-blur: 0.5rem;
+    --_loader-width: 22rem;
+
+    box-sizing: border-box;
+    inline-size: fit-content;
+    max-inline-size: min(var(--_loader-width), calc(100% - 2 * var(--eds-space-4)));
+    margin: auto;
+    padding: var(--eds-space-5);
+    border: 0;
+    background: transparent;
+    color: var(--eds-color-text-primary);
+    text-align: center;
+    overflow: visible;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--eds-space-2);
+    opacity: 0;
+    transition:
+      opacity var(--eds-motion-duration-base) var(--eds-motion-easing-standard),
+      display var(--eds-motion-duration-base) allow-discrete,
+      overlay var(--eds-motion-duration-base) allow-discrete;
+
+    /* Só recebe foco programático e não há nada a acionar nele. */
+    &:focus {
+      outline: none;
+    }
+
+    &[open] {
+      display: flex;
+      opacity: 1;
+    }
+
+    @starting-style {
+      &[open] {
+        opacity: 0;
+      }
+    }
+
+    &::backdrop {
+      background: color-mix(in srgb, var(--eds-color-bg-surface) var(--_loader-veil), transparent);
+      backdrop-filter: blur(var(--_loader-blur));
+      opacity: 0;
+      transition:
+        opacity var(--eds-motion-duration-base) var(--eds-motion-easing-standard),
+        display var(--eds-motion-duration-base) allow-discrete,
+        overlay var(--eds-motion-duration-base) allow-discrete;
+    }
+
+    &[open]::backdrop {
+      opacity: 1;
+    }
+
+    @starting-style {
+      &[open]::backdrop {
+        opacity: 0;
+      }
+    }
+  }
+
+  .eds-page-loader > .eds-spinner {
+    margin-block-end: var(--eds-space-2);
+  }
+
+  .eds-page-loader-title {
+    margin: 0;
+    font-size: var(--eds-font-size-h4);
+    line-height: var(--eds-line-height-h4);
+    font-weight: var(--eds-font-weight-semibold);
+    color: var(--eds-color-text-primary);
+  }
+
+  .eds-page-loader-text {
+    margin: 0;
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    color: var(--eds-color-text-secondary);
+  }
+
+  /* Sem backdrop-filter, só o véu: mais opaco para o conteúdo de trás não competir. */
+  @supports not (backdrop-filter: blur(1px)) {
+    .eds-page-loader {
+      --_loader-veil: 92%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-page-loader,
+    .eds-page-loader::backdrop {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-page-loader::backdrop {
+      background: Canvas;
+      opacity: 0.9;
+    }
+
+    .eds-page-loader-title,
+    .eds-page-loader-text {
+      color: CanvasText;
+    }
+  }
+}

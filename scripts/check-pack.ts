@@ -11,10 +11,12 @@ import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } f
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import process from 'node:process';
-import { checkTarball, formatSize, type PackManifest } from './pack/check.ts';
+import { checkIife, checkTarball, formatSize, type PackManifest } from './pack/check.ts';
 
 const root = join(import.meta.dirname, '..');
-const PACKAGES = ['core', 'themes', 'react', 'icons'];
+const PACKAGES = ['core', 'themes', 'react', 'icons', 'behavior'];
+/** Arquivos que o tarball precisa ter além dos alvos do manifest. */
+const REQUIRED: Record<string, string[]> = { behavior: ['dist/eds-behavior.js'] };
 const EXPECTED_VERSION = '0.1.0';
 
 function run(command: string, args: string[], cwd: string): string {
@@ -71,7 +73,11 @@ try {
       manifest,
       files.map((f) => f.path),
       EXPECTED_VERSION,
+      REQUIRED[pkg],
     );
+    if (pkg === 'behavior') {
+      problems.push(...checkIife(readFileSync(join(base, 'dist', 'eds-behavior.js'), 'utf8')));
+    }
 
     const total = files.reduce((sum, f) => sum + f.size, 0);
     console.log(

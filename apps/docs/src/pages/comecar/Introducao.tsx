@@ -12,6 +12,10 @@ const packages = [
     text: 'Os eixos de aparência (tema, modo, densidade e forma), aplicados por atributos data-*.',
   },
   {
+    name: '@eds-ui/behavior',
+    text: 'Comportamento em JavaScript puro, sem dependências, para quem usa só HTML (PHP, Java, .NET, Vue, Angular): Tabs, Modal, Toast, Table, Combobox e o PageLoader.',
+  },
+  {
     name: '@eds-ui/react',
     text: 'Wrappers React sobre as classes do core: API pequena, acessibilidade forçada nos tipos.',
   },
@@ -70,8 +74,9 @@ export default function Introducao() {
         </Grid>
         <p>
           A dependência vai em um só sentido: <code>core</code> ← <code>themes</code>, e{' '}
-          <code>core</code> ← <code>react</code>. Quem usa só HTML precisa apenas do core e dos
-          temas.
+          <code>core</code> ← <code>react</code>. O <code>behavior</code> não depende de ninguém
+          (nem do core: o CSS é do consumidor). Quem usa só HTML precisa do core e dos temas, e do{' '}
+          <code>behavior</code> se quiser Tabs, Modal, Toast e os demais comportamentos.
         </p>
       </Section>
 
@@ -85,6 +90,10 @@ export default function Introducao() {
             <a href={toHref('/comecar/uso-com-html')}>Uso com HTML</a> ou{' '}
             <a href={toHref('/comecar/uso-com-react')}>Uso com React</a>: o primeiro componente na
             tela.
+          </li>
+          <li>
+            <a href={toHref('/comecar/comportamento')}>Comportamento (JS)</a>: o pacote para quem
+            usa só HTML, com PHP, Java ou outro servidor.
           </li>
           <li>
             <a href={toHref('/fundamentos/temas-e-eixos')}>Temas e eixos</a>: como mudar a aparência

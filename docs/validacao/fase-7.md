@@ -99,6 +99,63 @@ Rota: `#/componentes/combobox`. (R) (C) (S)
 | 14  | Role a página ou estreite a janela com a lista aberta.            | Popup acompanha o campo; vai para cima se não cabe embaixo.                                                                                             | [ ] ok / [ ] falhou |
 | 15  | Combobox dentro de Modal (se houver): Esc com a lista aberta.     | Fecha só a lista, **não o modal**.                                                                                                                      | [ ] ok / [ ] falhou |
 
+### 2.1b FileInput (cerca de 5 min)
+
+Rota: `#/componentes/file-input`. (R) (C) (S)
+
+| #   | O que fazer                  | Esperado                                                                                                                                              | Resultado           |
+| --- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| 1   | Tab até o campo.             | Fala o rótulo, "botão" de escolher arquivo e a descrição (dica de formato/tamanho). Foco visível.                                                     | [ ] ok / [ ] falhou |
+| 2   | Enter ou Espaço.             | Abre o seletor de arquivos do Windows. Cancele com Esc: foco volta ao campo.                                                                          | [ ] ok / [ ] falhou |
+| 3   | Escolha um arquivo fictício. | O nome do arquivo é mostrado e falado ao voltar o foco. O texto nativo ("Nenhum arquivo...") segue o idioma do navegador: anote só se ficar ilegível. | [ ] ok / [ ] falhou |
+| 4   | Exemplo com erro.            | Fala "inválido" e a mensagem de erro como descrição; erro também visível por ícone/texto, não só cor.                                                 | [ ] ok / [ ] falhou |
+| 5   | Exemplo desabilitado.        | Falado como "indisponível"; Tab não entra; aparência distinta sem depender de cor.                                                                    | [ ] ok / [ ] falhou |
+
+### 2.1c FileUpload (cerca de 15 min)
+
+Rota: `#/componentes/file-upload`. (R) (C) (S) Prepare no Explorador do Windows uma pasta de teste com: 3 arquivos pequenos fictícios de tipo permitido, 1 arquivo maior que o limite do exemplo, 1 de tipo não permitido (ex.: `.exe` renomeado ou `.zip`) e uma cópia de um dos pequenos (mesmo nome). Deixe o Explorador ao lado do navegador.
+
+| #   | O que fazer                                                                                                           | Esperado                                                                                                                                                                                 | Resultado           |
+| --- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| 1   | Tab até a dropzone.                                                                                                   | Fala o nome e a descrição (formatos, tamanho, limite). Anel de foco visível na dropzone.                                                                                                 | [ ] ok / [ ] falhou |
+| 2   | Enter; depois Espaço.                                                                                                 | Cada um abre o seletor de arquivos. Escolha 2 arquivos: a lista mostra os dois e o NVDA fala "{nome} adicionado" (uma fala por arquivo ou um resumo, sem repetir).                       | [ ] ok / [ ] falhou |
+| 3   | **Arraste** 3 arquivos válidos do Explorador para a dropzone.                                                         | A área muda de aparência ao arrastar (sem depender só de cor); ao soltar, os 3 entram na lista e são anunciados.                                                                         | [ ] ok / [ ] falhou |
+| 4   | Arraste o arquivo grande demais.                                                                                      | Não entra como válido; mostra erro por arquivo; fala "arquivo maior que o permitido" (texto equivalente).                                                                                | [ ] ok / [ ] falhou |
+| 5   | Arraste o arquivo de tipo errado.                                                                                     | Fala "tipo não permitido"; não entra na lista de envio.                                                                                                                                  | [ ] ok / [ ] falhou |
+| 6   | Arraste de novo um arquivo já adicionado (mesmo nome).                                                                | Fala "já foi adicionado"; lista sem duplicata.                                                                                                                                           | [ ] ok / [ ] falhou |
+| 7   | Exceda o limite de quantidade (exemplo com limite).                                                                   | Fala o aviso de limite; os que passam do limite não entram.                                                                                                                              | [ ] ok / [ ] falhou |
+| 8   | Anote: os anúncios saem na região de status sem repetir e sem silêncio?                                               | **Validar**: uma fala por evento, na ordem; nada de fala duplicada ao adicionar vários de uma vez.                                                                                       | [ ] ok / [ ] falhou |
+| 9   | Exemplo desabilitado: arraste um arquivo para a área.                                                                 | **Nada acontece e o navegador NÃO abre o arquivo** na aba. Se o arquivo abrir, é falha bloqueante (perde-se a página).                                                                   | [ ] ok / [ ] falhou |
+| 10  | Solte um arquivo fora da dropzone (em qualquer parte da página).                                                      | Comportamento padrão do navegador, mas sem erro de script (console F12 limpo). Anote o que ocorreu.                                                                                      | [ ] ok / [ ] falhou |
+| 11  | Tab até "Remover" de um item no meio; Enter.                                                                          | O item sai, o NVDA fala "{nome} removido", e **o foco vai para o próximo** item/Remover (no último, o anterior; sem itens, a dropzone). Nunca para o `body`.                             | [ ] ok / [ ] falhou |
+| 12  | Botões "Remover": o nome falado identifica o arquivo?                                                                 | "Remover {nome do arquivo}", não só "Remover".                                                                                                                                           | [ ] ok / [ ] falhou |
+| 13  | Modo **imediato** (aba React do exemplo imediato): adicione arquivos.                                                 | Barra de progresso visível, **mas o NVDA não fala o percentual continuamente**; fala só início e conclusão ("enviado").                                                                  | [ ] ok / [ ] falhou |
+| 14  | No exemplo imediato (aba React), envie um arquivo com “erro” no nome: falha na 1ª tentativa.                          | Item mostra erro por ícone e texto; o botão "Tentar de novo {nome}" fala o nome; ao ativar, reenvia.                                                                                     | [ ] ok / [ ] falhou |
+| 15  | Com envio em andamento, tente enviar o formulário.                                                                    | Bloqueado; fala "Aguarde o envio dos arquivos."; o foco vai a um ponto lógico (dropzone ou resumo).                                                                                      | [ ] ok / [ ] falhou |
+| 16  | Com um arquivo falhado pendente, tente enviar o formulário.                                                           | Também bloqueado, com mensagem que diz o que fazer (tentar de novo ou remover).                                                                                                          | [ ] ok / [ ] falhou |
+| 17  | Largura 320px, arquivo de nome muito longo.                                                                           | Nome quebra em até 2 linhas (com reticências depois), sem rolagem horizontal; botão Remover continua visível e com alvo de 24px ou mais.                                                 | [ ] ok / [ ] falhou |
+| 18  | **Opcional**: formulário real contra servidor PHP/Java local, `name="documentos[]"`, `enctype="multipart/form-data"`. | O servidor recebe todos os arquivos adicionados (e só eles; os removidos não vão). Em Firefox, confira que `input.files` foi preenchido (via `DataTransfer`). Use só arquivos fictícios. | [ ] ok / [ ] falhou |
+
+### 2.1d MultiSelect (cerca de 12 min)
+
+Rota: `#/componentes/multi-select`. (R) (C) (S)
+
+| #   | O que fazer                                                               | Esperado                                                                                                                                                  | Resultado           |
+| --- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| 1   | Tab até o campo; ↓ para abrir.                                            | Fala rótulo, "caixa de combinação" e "recolhido/expandido"; lista abre; foco permanece no campo.                                                          | [ ] ok / [ ] falhou |
+| 2   | ↓ e ↑ pelas opções.                                                       | Fala a opção a cada seta (como no Combobox, `aria-activedescendant`) com seu estado (selecionada ou não).                                                 | [ ] ok / [ ] falhou |
+| 3   | Enter numa opção.                                                         | Alterna a seleção e **mantém a lista aberta**. Fala "{opção} selecionado" e a contagem ("2 selecionados"). Enter de novo: "removido".                     | [ ] ok / [ ] falhou |
+| 4   | **Validar** anúncios: "selecionado"/"removido" e contagem.                | Uma fala por ação, sem duplicar e sem silêncio.                                                                                                           | [ ] ok / [ ] falhou |
+| 5   | Digite texto para filtrar; Enter.                                         | Filtra, fala "N resultados disponíveis" após pausa; Enter seleciona a destacada; o texto é limpo ou mantido conforme o exemplo (anote).                   | [ ] ok / [ ] falhou |
+| 6   | Com o texto vazio, Backspace.                                             | Remove a última etiqueta e fala "{opção} removido". Com texto, Backspace só apaga letra.                                                                  | [ ] ok / [ ] falhou |
+| 7   | Tab a partir do campo.                                                    | Passa pelos botões "Remover {opção}" de cada etiqueta, um por parada, com nome completo. Enter remove e o foco vai a um ponto lógico.                     | [ ] ok / [ ] falhou |
+| 8   | Em navegação (setas), leia as etiquetas selecionadas.                     | São anunciadas como **lista** ("lista com N itens"). **Repita no Firefox** (as etiquetas usam `display: contents`, que pode perder a semântica de lista). | [ ] ok / [ ] falhou |
+| 9   | Exemplo com limite: selecione até o limite e tente mais um.               | Fala "Limite de N itens atingido."; a opção extra não entra; opções restantes ficam indisponíveis ou ignoradas.                                           | [ ] ok / [ ] falhou |
+| 10  | Exemplo obrigatório: envie sem selecionar.                                | Não envia; fala "obrigatório"/"inválido" e a mensagem de erro; foco no campo.                                                                             | [ ] ok / [ ] falhou |
+| 11  | Dentro de modal (se houver): Esc com a lista aberta; Esc com ela fechada. | 1º Esc fecha só a lista; o 2º fecha o modal.                                                                                                              | [ ] ok / [ ] falhou |
+| 12  | Tab com a lista aberta; clique numa opção com o mouse.                    | Tab fecha sem alterar a seleção; clique alterna e o foco permanece no campo.                                                                              | [ ] ok / [ ] falhou |
+| 13  | Largura 320px com muitas etiquetas.                                       | Etiquetas quebram de linha; sem rolagem horizontal; foco não fica coberto.                                                                                | [ ] ok / [ ] falhou |
+
 ### 2.2 PageLoader (cerca de 8 min)
 
 Rota: `#/componentes/page-loader`. (C)
@@ -218,18 +275,21 @@ Rota: `#/formulario` (playground). (R) (C)
 
 Sem leitor de tela (só teclado e olhos), em `#/componentes/modal`, `#/componentes/combobox` e `#/listagem`. Marque `ok`, `X` (falhou, com modelo da seção 6) ou `-` (não testado).
 
-| Verificação                                                                         | Chrome | Edge | Firefox | Safari (opc.) |
-| ----------------------------------------------------------------------------------- | ------ | ---- | ------- | ------------- |
-| Modal: abre, Tab preso, Esc fecha, foco volta ao gatilho                            |        |      |         |               |
-| Dropdown e Combobox: popup sobre tudo, posição certa, Esc fecha                     |        |      |         |               |
-| Foco visível em todos os controles (anel nítido, não cortado)                       |        |      |         |               |
-| Aparência de Switch, Radio, Checkbox e Select (sem quebra)                          |        |      |         |               |
-| Tabs: ← → Home End                                                                  |        |      |         |               |
-| Tooltip da Sidebar compacta (Firefox: limitação conhecida, só anote)                |        |      |         |               |
-| Tema `green` e modo escuro mudam sem recarregar; a aparência persiste ao recarregar |        |      |         |               |
-| Linha selecionada (barra lateral, `:has()`) e Grid responsivo ao contêiner          |        |      |         |               |
-| Toast: canto inferior, não cobre o foco                                             |        |      |         |               |
-| PageLoader: diálogo modal aparece e bloqueia a página                               |        |      |         |               |
+| Verificação                                                                                                              | Chrome | Edge | Firefox | Safari (opc.) |
+| ------------------------------------------------------------------------------------------------------------------------ | ------ | ---- | ------- | ------------- |
+| Modal: abre, Tab preso, Esc fecha, foco volta ao gatilho                                                                 |        |      |         |               |
+| Dropdown e Combobox: popup sobre tudo, posição certa, Esc fecha                                                          |        |      |         |               |
+| Foco visível em todos os controles (anel nítido, não cortado)                                                            |        |      |         |               |
+| Aparência de Switch, Radio, Checkbox e Select (sem quebra)                                                               |        |      |         |               |
+| Tabs: ← → Home End                                                                                                       |        |      |         |               |
+| FileUpload: arrastar arquivos do Explorador, listar, remover (Firefox: drag-and-drop e `input.files` via `DataTransfer`) |        |      |         |               |
+| FileInput: escolher arquivo, nome mostrado, foco visível                                                                 |        |      |         |               |
+| MultiSelect: Enter alterna e mantém aberta, Backspace remove, etiquetas como lista (Firefox: `display: contents`)        |        |      |         |               |
+| Tooltip da Sidebar compacta (Firefox: limitação conhecida, só anote)                                                     |        |      |         |               |
+| Tema `green` e modo escuro mudam sem recarregar; a aparência persiste ao recarregar                                      |        |      |         |               |
+| Linha selecionada (barra lateral, `:has()`) e Grid responsivo ao contêiner                                               |        |      |         |               |
+| Toast: canto inferior, não cobre o foco                                                                                  |        |      |         |               |
+| PageLoader: diálogo modal aparece e bloqueia a página                                                                    |        |      |         |               |
 
 ## 4. Alto contraste, animação reduzida, zoom e 320px (cerca de 20 min)
 
@@ -247,6 +307,8 @@ Ligue um tema de contraste (seção 1.3). Em Edge ou Chrome e em Firefox, em cad
 - [ ] Desabilitado se distingue de habilitado; Switch ligado × desligado se distingue.
 - [ ] Badge, Alert e Toast: severidade legível pelo texto/ícone.
 - [ ] Skeleton e Spinner visíveis.
+- [ ] FileInput e FileUpload: dropzone com borda visível, foco e estado de arrasto distinguíveis; erro por arquivo e barra de progresso legíveis; desabilitado distinguível.
+- [ ] MultiSelect: etiquetas com borda, botão "Remover" visível e com foco; opção destacada e opção selecionada distinguíveis sem cor.
 - [ ] Backdrop do Modal/Drawer não esconde o conteúdo do diálogo.
 
 ### 4.2 Animação reduzida (`prefers-reduced-motion`)
@@ -306,6 +368,6 @@ Copie o bloco para cada falha. Use apenas os dados fictícios do site; nunca col
 
 ### Critério de saída da Fase 7
 
-- Nenhum item **bloqueante** aberto nas áreas 2.1 a 2.8 com NVDA + Firefox.
+- Nenhum item **bloqueante** aberto nas áreas 2.1 a 2.8 (incluindo 2.1b a 2.1d) com NVDA + Firefox.
 - Os pontos marcados "Validar" (toast danger duplicado, reanúncio de toasts ao abrir/fechar modal, anúncio do PageLoader, `aria-activedescendant` do Combobox, status de ordenação da tabela, reabertura de modal) têm resultado registrado, mesmo quando aceitável, para atualizar `docs/architecture/comportamento.md`.
 - Alto contraste, animação reduzida, zoom 200% e 320px sem perda de conteúdo.

@@ -16,6 +16,11 @@
      </div>
    Estados por atributo: input[aria-expanded], option[aria-selected="true"] (destacada),
    option[data-current] (escolhida), option[aria-disabled="true"], popup[aria-busy="true"].
+   Múltiplo (.eds-combobox-multiple): o campo é .eds-combobox-control (aparência do Input) com as
+   etiquetas (.eds-combobox-tags > .eds-combobox-tag) e o .eds-combobox-input dentro. Na listbox
+   com aria-multiselectable="true", aria-selected = escolhida (checkbox visual) e data-active =
+   destaque do teclado/ponteiro (fundo + barra inicial). Tamanhos do múltiplo: .eds-combobox-sm/-lg
+   no .eds-combobox. Estados do campo vêm do input: [aria-invalid], [data-valid], :disabled.
    Posição (definida pelo JS, em px, coordenadas da viewport): --_combobox-x (borda esquerda do
    campo), --_combobox-y (borda inferior do campo; com data-placement="top", a borda superior) e
    --_combobox-width (largura do campo). */
@@ -24,6 +29,7 @@
     --_combobox-arrow: var(--eds-color-text-secondary);
     --_combobox-arrow-size: 0.3125rem;
     --_combobox-padding-x: var(--eds-space-3);
+    --_combobox-control-height: var(--eds-control-height-md);
 
     position: relative;
     display: block;
@@ -57,13 +63,26 @@
       transition: rotate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
     }
 
-    &:has(> [aria-expanded='true'])::after {
+    &:has(> [aria-expanded='true'], .eds-combobox-input[aria-expanded='true'])::after {
       rotate: 180deg;
     }
 
-    &:has(> :disabled) {
+    &:has(> :disabled, .eds-combobox-input:disabled) {
       --_combobox-arrow: var(--eds-color-text-muted);
     }
+  }
+
+  .eds-combobox-sm {
+    --_combobox-control-height: var(--eds-control-height-sm);
+  }
+
+  .eds-combobox-lg {
+    --_combobox-control-height: var(--eds-control-height-lg);
+  }
+
+  /* Múltiplo: o indicador acompanha a primeira linha do campo, que cresce com as etiquetas. */
+  .eds-combobox-multiple::after {
+    inset-block-start: calc(var(--_combobox-control-height) / 2);
   }
 
   .eds-combobox-popup {
@@ -142,7 +161,8 @@
     /* Destacada pelo teclado ou ponteiro (aria-activedescendant + aria-selected). O tom de
        fundo sozinho não chega a 3:1 (1.4.11): barra inicial em action-primary, como a linha
        selecionada da Table. */
-    &[aria-selected='true'] {
+    &[aria-selected='true']:where(:not([aria-multiselectable='true'] *)),
+    &[data-active] {
       background: var(--eds-color-bg-subtle);
 
       &::before {
@@ -186,6 +206,244 @@
     }
   }
 
+  /* ---- Múltiplo ---- */
+
+  /* Campo: aparência do Input; cresce quando as etiquetas quebram de linha. */
+  .eds-combobox-control {
+    --_control-radius: var(--eds-radius-md);
+    --_control-bg: var(--eds-color-bg-surface);
+    --_control-border: var(--eds-color-border-strong);
+    --_control-fg: var(--eds-color-text-primary);
+    --_tag-height: 1.5rem;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--_combobox-control-height);
+    padding-block: calc(var(--eds-space-1) / 2);
+    padding-inline: var(--_combobox-padding-x)
+      calc(var(--_combobox-padding-x) * 2 + var(--_combobox-arrow-size) * 2);
+    border: 1px solid var(--_control-border);
+    border-radius: var(--_control-radius);
+    background: var(--_control-bg);
+    color: var(--_control-fg);
+    cursor: text;
+    transition: border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &:hover:not(
+        :has(
+          .eds-combobox-input:disabled,
+          .eds-combobox-input[aria-invalid='true'],
+          .eds-combobox-input[data-valid='true']
+        )
+      ) {
+      --_control-border: var(--eds-color-text-muted);
+    }
+
+    /* Campos de texto mostram foco também no clique. */
+    &:focus-within {
+      --_control-border: var(--eds-color-action-primary);
+    }
+
+    /* Anel no campo só com o foco no input: com o foco no × de uma etiqueta, o anel é do botão. */
+    &:has(.eds-combobox-input:focus) {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 0;
+    }
+
+    &:has(.eds-combobox-input[data-valid='true']) {
+      --_control-border: var(--eds-color-status-success-text);
+    }
+
+    &:has(.eds-combobox-input[aria-invalid='true']) {
+      --_control-border: var(--eds-color-status-danger);
+    }
+
+    &:has(.eds-combobox-input:disabled) {
+      --_control-bg: var(--eds-color-bg-subtle);
+      --_control-border: var(--eds-color-border-default);
+      --_control-fg: var(--eds-color-text-muted);
+
+      cursor: not-allowed;
+    }
+  }
+
+  /* A lista fica no fluxo do campo: as etiquetas quebram junto com o input. */
+  .eds-combobox-tags {
+    display: contents;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .eds-combobox-tag {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    min-block-size: var(--_tag-height);
+    padding-inline-start: var(--eds-space-2);
+    border-radius: var(--eds-radius-sm);
+    background: var(--eds-color-bg-subtle);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    cursor: default;
+
+    /* Nome longo: reticências. */
+    & > span {
+      min-inline-size: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  /* Desabilitado: o fundo do campo já é bg-subtle; a etiqueta volta à superfície. */
+  .eds-combobox-control:has(.eds-combobox-input:disabled) .eds-combobox-tag {
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-muted);
+  }
+
+  /* Botão quadrado; o × é desenhado em CSS (botão vazio) ou vem de um <svg> filho. */
+  .eds-combobox-tag-remove {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_tag-height);
+    block-size: var(--_tag-height);
+    margin: 0;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: var(--eds-color-text-secondary);
+    font: inherit;
+    cursor: pointer;
+    transition:
+      border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &:not(:has(> svg))::before {
+      content: '';
+      inline-size: 0.625rem;
+      block-size: 0.625rem;
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 3l10 10M13 3L3 13' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    }
+
+    & > svg {
+      inline-size: 0.75rem;
+      block-size: 0.75rem;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: var(--eds-color-border-strong);
+      color: var(--eds-color-text-primary);
+    }
+
+    &:focus-visible {
+      outline-offset: 0;
+    }
+
+    &:disabled {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  /* Input interno: sem borda e com o resto da linha; o foco aparece no campo (:focus-within). */
+  .eds-combobox-input {
+    flex: 1 1 6rem;
+    box-sizing: border-box;
+    min-inline-size: 6rem;
+    min-block-size: var(--_tag-height);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    text-overflow: ellipsis;
+    outline: 0;
+
+    &::placeholder {
+      color: var(--eds-color-text-muted);
+      opacity: 1;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  /* Opção de lista múltipla: checkbox visual à esquerda (aria-selected = escolhida). O destaque
+     usa data-active (regras de fundo + barra acima). */
+  .eds-combobox-listbox[aria-multiselectable='true'] .eds-combobox-option {
+    --_option-check-size: 1.125rem;
+    --_option-check-bg: var(--eds-color-bg-surface);
+    --_option-check-border: var(--eds-color-border-strong);
+
+    padding-inline-start: calc(var(--eds-space-3) * 2 + var(--_option-check-size));
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-inline-start: var(--eds-space-3);
+      inset-block-start: 50%;
+      box-sizing: border-box;
+      inline-size: var(--_option-check-size);
+      block-size: var(--_option-check-size);
+      border: 1px solid var(--_option-check-border);
+      border-radius: min(var(--eds-radius-sm), var(--eds-space-1));
+      background: var(--_option-check-bg);
+      translate: 0 -50%;
+    }
+
+    &:hover:not([aria-disabled='true']) {
+      --_option-check-border: var(--eds-color-text-muted);
+    }
+
+    /* Sobre o fundo do destaque (bg-subtle) a borda strong cai abaixo de 3:1. */
+    &[data-active] {
+      --_option-check-border: var(--eds-color-text-muted);
+    }
+
+    /* Marcada: caixa de ação com o traço vazado (máscara), como o checkbox do core. */
+    &[aria-selected='true'] {
+      --_option-check-bg: var(--eds-color-action-primary);
+      --_option-check-border: var(--eds-color-action-primary);
+
+      font-weight: var(--eds-font-weight-medium);
+
+      &::after {
+        mask:
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+            center / contain no-repeat,
+          linear-gradient(currentColor 0 0);
+        mask-composite: exclude;
+      }
+    }
+
+    &[aria-disabled='true'] {
+      --_option-check-border: var(--eds-color-border-default);
+    }
+  }
+
   .eds-combobox-empty,
   .eds-combobox-loading {
     display: flex;
@@ -210,7 +468,9 @@
 
   @media (prefers-reduced-motion: reduce) {
     .eds-combobox::after,
-    .eds-combobox-popup {
+    .eds-combobox-popup,
+    .eds-combobox-control,
+    .eds-combobox-tag-remove {
       transition: none;
     }
   }
@@ -224,13 +484,15 @@
       border-color: CanvasText;
     }
 
-    .eds-combobox-option[aria-selected='true'] {
+    .eds-combobox-option[aria-selected='true']:where(:not([aria-multiselectable='true'] *)),
+    .eds-combobox-option[data-active] {
       background: Highlight;
       color: HighlightText;
       forced-color-adjust: none;
     }
 
-    .eds-combobox-option[aria-selected='true']::before {
+    .eds-combobox-option[aria-selected='true']:where(:not([aria-multiselectable='true'] *))::before,
+    .eds-combobox-option[data-active]::before {
       background: currentColor;
     }
 
@@ -240,6 +502,48 @@
 
     .eds-combobox-option[aria-disabled='true'] {
       color: GrayText;
+    }
+
+    .eds-combobox-control {
+      --_control-bg: Canvas;
+      --_control-border: ButtonText;
+      --_control-fg: CanvasText;
+    }
+
+    .eds-combobox-control:focus-within {
+      outline-color: Highlight;
+    }
+
+    .eds-combobox-control:has(.eds-combobox-input:disabled) {
+      --_control-border: GrayText;
+      --_control-fg: GrayText;
+    }
+
+    .eds-combobox-tag {
+      border: 1px solid CanvasText;
+      color: CanvasText;
+    }
+
+    .eds-combobox-tag-remove {
+      color: ButtonText;
+    }
+
+    .eds-combobox-listbox[aria-multiselectable='true'] .eds-combobox-option {
+      --_option-check-bg: Canvas;
+      --_option-check-border: ButtonText;
+
+      &[aria-selected='true'] {
+        --_option-check-bg: Highlight;
+        --_option-check-border: Highlight;
+      }
+
+      &[data-active] {
+        --_option-check-border: HighlightText;
+      }
+
+      &[data-active][aria-selected='true'] {
+        --_option-check-bg: HighlightText;
+      }
     }
   }
 }

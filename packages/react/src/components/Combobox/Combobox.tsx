@@ -14,17 +14,24 @@ import {
 } from 'react';
 import { cx } from '../../utils/cx';
 import { FieldContext, useControlAttrs } from '../../internal/field-context';
+import { useAnnouncer } from '../../internal/announcer';
 import { mergeRefs } from '../../internal/refs-d';
 import { useControllable } from '../../internal/useControllable';
+import {
+  LOADING_STATUS_DELAY_MS,
+  STATUS_DELAY_MS,
+  defaultStatus,
+  filterOptions,
+  usePopupPosition,
+  useScrollActiveIntoView,
+  type ComboboxFilter,
+  type ComboboxOption,
+} from '../../internal/combobox-shared';
 import { Spinner } from '../Spinner';
 
 export type ComboboxSize = 'sm' | 'md' | 'lg';
 
-export interface ComboboxOption {
-  value: string;
-  label: string;
-  disabled?: boolean;
-}
+export type { ComboboxOption };
 
 export interface ComboboxProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -44,7 +51,7 @@ export interface ComboboxProps extends Omit<
    * Filtro local ("contém", sem diferenciar maiúsculas e acentos). `false` quando o consumidor já
    * filtra; função para filtro próprio. Padrão: `true`.
    */
-  filter?: boolean | ((option: ComboboxOption, text: string) => boolean);
+  filter?: ComboboxFilter;
   /** Busca em andamento: mostra o texto de carregamento e `aria-busy` no popup. */
   loading?: boolean;
   /** Padrão: "Nenhum resultado". */
@@ -78,30 +85,6 @@ export interface ComboboxProps extends Omit<
   invalid?: boolean;
   /** Sucesso: `data-valid="true"`. */
   valid?: boolean;
-}
-
-const normalize = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-
-const defaultStatus = (count: number) =>
-  count === 0
-    ? 'Nenhum resultado.'
-    : count === 1
-      ? '1 resultado disponível.'
-      : `${count} resultados disponíveis.`;
-
-const STATUS_DELAY_MS = 500;
-const LOADING_STATUS_DELAY_MS = 400;
-
-/** `showPopover`/`hidePopover` sem quebrar onde a Popover API não existe. */
-function setPopoverOpen(el: HTMLElement | null, open: boolean) {
-  if (!el) return;
-  try {
-    const shown = el.matches(':popover-open');
-    if (open && !shown) el.showPopover();
-    else if (!open && shown) el.hidePopover();
-  } catch {
-    /* sem Popover API (ex.: jsdom) */
-  }
 }
 
 /**
@@ -170,7 +153,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
   const [dirty, setDirty] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
-  const [status, setStatus] = useState('');
+  const { text: status, announce, set: setStatus } = useAnnouncer();
 
   const selectionStatus = useRef('');
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -188,12 +171,10 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
     }
   }, [selectedLabel, known]);
 
-  const visible = useMemo(() => {
-    if (filter === false || !dirty || text === '') return options;
-    if (typeof filter === 'function') return options.filter((o) => filter(o, text));
-    const q = normalize(text);
-    return options.filter((o) => normalize(o.label).includes(q));
-  }, [options, filter, dirty, text]);
+  const visible = useMemo(
+    () => filterOptions(options, filter, text, dirty),
+    [options, filter, dirty, text],
+  );
 
   const hasError = error != null && error !== false;
   const showError = open && !loading && hasError;
@@ -231,39 +212,10 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
   };
 
   // Popover + posição (recalculada em scroll e resize).
-  useEffect(() => {
-    const popup = popupRef.current;
-    setPopoverOpen(popup, expanded);
-    if (!expanded || !popup) return;
-    const place = () => {
-      const input = inputRef.current;
-      if (!input) return;
-      const rect = input.getBoundingClientRect();
-      const height = popup.offsetHeight;
-      const below = window.innerHeight - rect.bottom;
-      const onTop = height > 0 && below < height && rect.top > below;
-      popup.style.setProperty('--_combobox-x', `${rect.left}px`);
-      popup.style.setProperty('--_combobox-y', `${onTop ? rect.top : rect.bottom}px`);
-      popup.style.setProperty('--_combobox-width', `${rect.width}px`);
-      if (onTop) popup.setAttribute('data-placement', 'top');
-      else popup.removeAttribute('data-placement');
-    };
-    place();
-    window.addEventListener('scroll', place, true);
-    window.addEventListener('resize', place);
-    return () => {
-      window.removeEventListener('scroll', place, true);
-      window.removeEventListener('resize', place);
-    };
-  }, [expanded, visible.length, loading]);
+  usePopupPosition(popupRef, inputRef, expanded, `${visible.length}-${loading}`);
 
   // Rola até a opção destacada.
-  useEffect(() => {
-    if (activeIndex < 0) return;
-    document
-      .getElementById(`${generated}-opt-${activeIndex}`)
-      ?.scrollIntoView?.({ block: 'nearest' });
-  }, [activeIndex, generated]);
+  useScrollActiveIntoView(activeIndex >= 0 ? optionId(activeIndex) : undefined);
 
   // Status para leitor de tela: só ao abrir/filtrar, com debounce (setas não anunciam).
   const count = visible.length;
@@ -273,7 +225,8 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
   loadingStatusRef.current = loadingStatus;
   useEffect(() => {
     if (!open) {
-      setStatus(selectionStatus.current);
+      if (selectionStatus.current) announce(selectionStatus.current);
+      else setStatus('');
       selectionStatus.current = '';
       return;
     }
@@ -284,7 +237,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
     }
     const timer = setTimeout(() => setStatus(statusRef.current(count)), STATUS_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [open, loading, count, text]);
+  }, [open, loading, count, text, announce, setStatus]);
 
   // Texto sem opção escolhida: o formulário não envia e o navegador mostra a mensagem.
   const unresolved = !freeText && text !== '' && value === '';

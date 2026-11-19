@@ -26,6 +26,9 @@ import AppShellPage from './pages/componentes/AppShell';
 import BadgePage from './pages/componentes/Badge';
 import BreadcrumbPage from './pages/componentes/Breadcrumb';
 import ComboboxPage from './pages/componentes/Combobox';
+import FileInputPage from './pages/componentes/FileInput';
+import FileUploadPage from './pages/componentes/FileUpload';
+import MultiSelectPage from './pages/componentes/MultiSelect';
 import PageLoaderPage from './pages/componentes/PageLoader';
 import ButtonGroupPage from './pages/componentes/ButtonGroup';
 import CardPage from './pages/componentes/Card';
@@ -125,8 +128,26 @@ export const routes: readonly DocRoute[] = [
   { path: '/componentes/dropdown', title: 'Dropdown', section: 'componentes', page: DropdownPage },
   { path: '/componentes/field', title: 'Field', section: 'componentes', page: FieldPage },
   { path: '/componentes/fieldset', title: 'Fieldset', section: 'componentes', page: FieldsetPage },
+  {
+    path: '/componentes/file-input',
+    title: 'File Input',
+    section: 'componentes',
+    page: FileInputPage,
+  },
+  {
+    path: '/componentes/file-upload',
+    title: 'File Upload',
+    section: 'componentes',
+    page: FileUploadPage,
+  },
   { path: '/componentes/input', title: 'Input', section: 'componentes', page: InputPage },
   { path: '/componentes/modal', title: 'Modal', section: 'componentes', page: ModalPage },
+  {
+    path: '/componentes/multi-select',
+    title: 'Multi Select',
+    section: 'componentes',
+    page: MultiSelectPage,
+  },
   { path: '/componentes/navbar', title: 'Navbar', section: 'componentes', page: NavbarPage },
   {
     path: '/componentes/page-loader',

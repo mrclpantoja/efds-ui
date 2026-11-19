@@ -1,0 +1,22 @@
+<form action="#" onsubmit="event.preventDefault()">
+  <div class="eds-field">
+    <label class="eds-label" for="reg" data-required>Regiões de atuação</label>
+    <div class="eds-combobox eds-combobox-multiple" data-eds-multiple data-eds-name="regioes[]">
+      <div class="eds-combobox-control">
+        <ul class="eds-combobox-tags" aria-label="Regiões selecionadas" hidden></ul>
+        <input id="reg" class="eds-combobox-input" type="text" role="combobox" aria-autocomplete="list"
+          aria-required="true" aria-expanded="false" aria-controls="reg-lista" autocomplete="off" />
+      </div>
+      <div class="eds-combobox-popup" popover="manual">
+        <ul id="reg-lista" class="eds-combobox-listbox" role="listbox" aria-multiselectable="true" aria-label="Regiões">
+          <li id="reg-1" class="eds-combobox-option" role="option" aria-selected="false" data-value="norte">Norte</li>
+          <li id="reg-2" class="eds-combobox-option" role="option" aria-selected="false" data-value="sul">Sul</li>
+          <li id="reg-3" class="eds-combobox-option" role="option" aria-selected="false" data-value="serra">Serra</li>
+        </ul>
+        <p class="eds-combobox-empty" hidden>Nenhum resultado</p>
+      </div>
+      <span class="eds-visually-hidden" role="status"></span>
+    </div>
+  </div>
+  <button type="submit" class="eds-button eds-button-primary">Salvar</button>
+</form>

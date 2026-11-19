@@ -1,0 +1,372 @@
+/* FileUpload (arrastar e soltar). Sem JS o <label for> abre o seletor nativo e o form envia o input.
+   Markup:
+     <div class="eds-upload" data-eds-upload>
+       <input id="docs" class="eds-upload-input" type="file" multiple aria-labelledby="..." />
+       <label class="eds-upload-dropzone" for="docs">
+         <svg aria-hidden="true" focusable="false">...</svg>
+         <span class="eds-upload-title">Arraste aqui ou <span class="eds-upload-link">escolha</span></span>
+         <span class="eds-upload-hint">PDF, até 5 MB</span>
+       </label>
+       <ul class="eds-upload-list" aria-label="Arquivos selecionados">
+         <li class="eds-upload-item" data-state="ready|uploading|done|error">
+           <svg class="eds-upload-item-icon" aria-hidden="true" focusable="false">...</svg>
+           <div class="eds-upload-item-body">
+             <span class="eds-upload-item-name">contrato.pdf</span>
+             <span class="eds-upload-item-meta">1,2 MB · Enviando 45%</span>
+             <progress class="eds-upload-progress" max="100" value="45" aria-label="..."></progress>
+           </div>
+           <button class="eds-button eds-button-ghost eds-button-icon eds-button-sm">...</button>
+         </li>
+       </ul>
+       <span class="eds-visually-hidden" role="status"></span>
+     </div>
+   Estados por atributo: .eds-upload[data-dragover], input[aria-invalid="true"], input:disabled,
+   item[data-state]. O ícone de estado (erro/enviado) é desenhado pelo CSS no meta, ao lado do
+   texto (a cor nunca é o único sinal). Variante de uma linha: .eds-upload-compact. */
+@layer eds.components {
+  .eds-upload {
+    --_upload-border: var(--eds-color-border-strong);
+    --_upload-border-style: dashed;
+    --_upload-bg: var(--eds-color-bg-surface);
+    --_upload-icon: var(--eds-color-text-secondary);
+    --_upload-hint: var(--eds-color-text-muted);
+    --_upload-link: var(--eds-color-action-primary);
+    --_upload-cursor: pointer;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-3);
+    inline-size: 100%;
+    min-inline-size: 0;
+
+    /* Oculto, mas focável e dentro do fluxo do form (o foco aparece na dropzone, abaixo). */
+    & > .eds-upload-input {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      inline-size: 1px;
+      block-size: 1px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Hover do ponteiro: borda text-muted, como o Input. */
+    &:not([data-dragover]):not(:has(.eds-upload-input:disabled, [aria-invalid='true'])):has(
+        .eds-upload-dropzone:hover
+      ) {
+      --_upload-border: var(--eds-color-text-muted);
+    }
+
+    /* Arrastando sobre a área: borda de ação contínua e fundo suave (não só cor). */
+    &[data-dragover] {
+      --_upload-border: var(--eds-color-action-primary);
+      --_upload-border-style: solid;
+      --_upload-bg: var(--eds-color-action-primary-subtle);
+      --_upload-hint: var(--eds-color-text-secondary);
+    }
+
+    &:has(.eds-upload-input[aria-invalid='true']) {
+      --_upload-border: var(--eds-color-status-danger-text);
+    }
+
+    &:has(.eds-upload-input:disabled) {
+      --_upload-border: var(--eds-color-border-default);
+      --_upload-bg: var(--eds-color-bg-subtle);
+      --_upload-icon: var(--eds-color-text-muted);
+      --_upload-link: var(--eds-color-text-muted);
+      --_upload-cursor: not-allowed;
+    }
+
+    /* Foco do input oculto aparece na dropzone. */
+    &:has(.eds-upload-input:focus-visible) .eds-upload-dropzone {
+      border-color: var(--eds-color-action-primary);
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: var(--eds-focus-ring-offset);
+    }
+  }
+
+  .eds-upload-dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--eds-space-2);
+    box-sizing: border-box;
+    min-block-size: 8rem;
+    padding: var(--eds-space-5);
+    border: 1px var(--_upload-border-style) var(--_upload-border);
+    border-radius: var(--eds-radius-md);
+    background: var(--_upload-bg);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    text-align: center;
+    cursor: var(--_upload-cursor);
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    & > svg {
+      flex: none;
+      inline-size: 2rem;
+      block-size: 2rem;
+      color: var(--_upload-icon);
+    }
+  }
+
+  .eds-upload:has(.eds-upload-input:disabled) .eds-upload-dropzone {
+    color: var(--eds-color-text-muted);
+  }
+
+  .eds-upload-title {
+    font-weight: var(--eds-font-weight-medium);
+  }
+
+  .eds-upload-link {
+    color: var(--_upload-link);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .eds-upload-hint {
+    color: var(--_upload-hint);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+  }
+
+  /* Uma linha: ícone + texto à esquerda. */
+  .eds-upload-compact .eds-upload-dropzone {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: var(--eds-space-1) var(--eds-space-3);
+    min-block-size: var(--eds-control-height-lg);
+    padding-block: var(--eds-space-2);
+    padding-inline: var(--eds-space-4);
+    text-align: start;
+
+    & > svg {
+      inline-size: 1.25rem;
+      block-size: 1.25rem;
+    }
+  }
+
+  /* Lista de arquivos */
+  .eds-upload-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .eds-upload-item {
+    --_item-border: var(--eds-color-border-default);
+    --_item-meta: var(--eds-color-text-secondary);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-3);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--eds-space-3);
+    border: 1px solid var(--_item-border);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+
+    &[data-state='done'] {
+      --_item-meta: var(--eds-color-status-success-text);
+      --_item-meta-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm3.2-8.3-3.7 4-2.7-2.6 1-1 1.7 1.6 2.7-3 1 1Z'/%3E%3C/svg%3E");
+    }
+
+    &[data-state='error'] {
+      --_item-border: var(--eds-color-status-danger-text);
+      --_item-meta: var(--eds-color-status-danger-text);
+      --_item-meta-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 4.5h1.5v4.5h-1.5V4.5Zm0 5.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+    }
+
+    /* Botões de ação (remover, tentar de novo) não encolhem abaixo do alvo mínimo. */
+    & > .eds-button {
+      flex: none;
+    }
+
+    /* Em contêiner estreito as ações descem para a linha de baixo, à direita. */
+    & > .eds-upload-item-body + .eds-button {
+      margin-inline-start: auto;
+    }
+  }
+
+  /* Alinhado à linha do nome (ambos de 20px), não ao centro do corpo com a barra de progresso. */
+  .eds-upload-item-icon {
+    flex: none;
+    align-self: flex-start;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    color: var(--eds-color-text-secondary);
+  }
+
+  .eds-upload-item-body {
+    display: flex;
+    flex: 1 1 6rem;
+    flex-direction: column;
+    gap: var(--eds-space-1);
+    min-inline-size: 0;
+  }
+
+  /* Nome longo: uma linha com reticências. */
+  /* Até duas linhas com quebra em qualquer ponto: nomes que diferem só no fim (versão,
+     extensão) continuam distinguíveis em telas estreitas (sem `title`). */
+  .eds-upload-item-name {
+    display: -webkit-box;
+    overflow: hidden;
+    font-weight: var(--eds-font-weight-medium);
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .eds-upload-item-meta {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--eds-space-1);
+    color: var(--_item-meta);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+
+    /* Ícone de estado (enviado/erro): a cor nunca é o único sinal. */
+    &::before {
+      content: '';
+      flex: none;
+      display: block;
+      inline-size: 1em;
+      block-size: 1em;
+      margin-block-start: calc((var(--eds-line-height-small) - 1em) / 2);
+      background-color: currentColor;
+      mask: var(--_item-meta-icon) center / contain no-repeat;
+    }
+  }
+
+  /* Ícone vindo do markup (<svg> dentro do meta): substitui o desenhado em CSS. */
+  .eds-upload-item-meta > svg {
+    flex: none;
+    inline-size: 1em;
+    block-size: 1em;
+    margin-block-start: calc((var(--eds-line-height-small) - 1em) / 2);
+    color: inherit;
+  }
+
+  .eds-upload-item-meta:has(> svg)::before {
+    display: none;
+  }
+
+  .eds-upload-item:not([data-state='done'], [data-state='error']) .eds-upload-item-meta::before {
+    display: none;
+  }
+
+  /* <progress> com tokens: trilho bg-subtle, valor action-primary. */
+  .eds-upload-progress {
+    appearance: none;
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 0.5rem;
+    margin-block-start: var(--eds-space-1);
+    border: 1px solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-full);
+    background: var(--eds-color-bg-subtle);
+    color: var(--eds-color-action-primary);
+    overflow: hidden;
+
+    &::-webkit-progress-bar {
+      background: var(--eds-color-bg-subtle);
+    }
+
+    &::-webkit-progress-value {
+      border-radius: var(--eds-radius-full);
+      background: var(--eds-color-action-primary);
+    }
+
+    &::-moz-progress-bar {
+      border-radius: var(--eds-radius-full);
+      background: var(--eds-color-action-primary);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-upload-dropzone {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-upload {
+      --_upload-border: CanvasText;
+      --_upload-bg: Canvas;
+      --_upload-icon: CanvasText;
+      --_upload-hint: CanvasText;
+      --_upload-link: LinkText;
+    }
+
+    .eds-upload[data-dragover] {
+      --_upload-border: Highlight;
+    }
+
+    .eds-upload:has(.eds-upload-input:disabled) {
+      --_upload-border: GrayText;
+      --_upload-icon: GrayText;
+      --_upload-link: GrayText;
+    }
+
+    .eds-upload:has(.eds-upload-input:disabled) .eds-upload-dropzone {
+      color: GrayText;
+    }
+
+    .eds-upload:has(.eds-upload-input:focus-visible) .eds-upload-dropzone {
+      outline-color: Highlight;
+    }
+
+    .eds-upload-item {
+      --_item-border: CanvasText;
+    }
+
+    .eds-upload-item-icon {
+      color: CanvasText;
+    }
+
+    .eds-upload-item-meta {
+      color: CanvasText;
+    }
+
+    .eds-upload-item-meta::before {
+      background-color: CanvasText;
+    }
+
+    .eds-upload-progress {
+      forced-color-adjust: none;
+      border-color: CanvasText;
+      background: Canvas;
+
+      &::-webkit-progress-bar {
+        background: Canvas;
+      }
+
+      &::-webkit-progress-value,
+      &::-moz-progress-bar {
+        background: Highlight;
+      }
+    }
+  }
+}

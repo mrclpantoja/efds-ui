@@ -9,6 +9,7 @@ import { initSidebar, sidebarBehavior, sidebarCollapseBehavior } from './compone
 import { initTable, tableBehavior } from './components/table';
 import { initTabs, tabsBehavior } from './components/tabs';
 import { initToast, toast } from './components/toast';
+import { initUpload, uploadBehavior } from './components/upload';
 
 export interface BehaviorOptions {
   /** Textos (pt-BR por padrão) trocados por idioma. */
@@ -40,6 +41,7 @@ export function init(root: ParentNode = document, options?: BehaviorOptions): ()
       sidebarBehavior,
       sidebarCollapseBehavior,
       comboboxBehavior,
+      uploadBehavior,
     ]),
     initToast(),
     initLoader(),
@@ -73,6 +75,7 @@ export {
   initTable,
   initTabs,
   initToast,
+  initUpload,
   loader,
   toast,
 };

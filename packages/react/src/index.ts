@@ -33,6 +33,16 @@ export { Select } from './components/Select';
 export type { SelectProps, SelectSize } from './components/Select';
 export { Combobox } from './components/Combobox';
 export type { ComboboxProps, ComboboxOption, ComboboxSize } from './components/Combobox';
+export { MultiSelect } from './components/MultiSelect';
+export type { MultiSelectProps, MultiSelectSize } from './components/MultiSelect';
+export { FileInput } from './components/FileInput';
+export type { FileInputProps, FileInputSize } from './components/FileInput';
+export { FileUpload } from './components/FileUpload';
+export type {
+  FileUploadProps,
+  FileUploadTexts,
+  FileUploadUploadOptions,
+} from './components/FileUpload';
 export { Checkbox } from './components/Checkbox';
 export type { CheckboxProps } from './components/Checkbox';
 export { Radio } from './components/Radio';

@@ -1,0 +1,128 @@
+/* FileInput (upload simples): CSS puro sobre o <input type="file"> nativo, sem JS.
+   Markup:
+     <input id="anexo" class="eds-file" type="file" name="comprovante" accept=".pdf" />
+   O botão nativo (::file-selector-button) fica colado ao início, com a aparência do Button
+   secondary (altura do campo); o nome do arquivo escolhido fica em text-secondary.
+   Estados por atributo: :focus-visible, :disabled, [aria-invalid="true"], [data-valid="true"].
+   Tamanhos: .eds-file-sm / .eds-file-lg. */
+@layer eds.components {
+  .eds-file {
+    --_file-height: var(--eds-control-height-md);
+    --_file-radius: var(--eds-radius-md);
+    --_file-border-width: 1px;
+    --_file-button-padding-x: var(--eds-space-4);
+    --_file-bg: var(--eds-color-bg-surface);
+    --_file-fg: var(--eds-color-text-secondary);
+    --_file-border: var(--eds-color-border-strong);
+    --_file-button-bg: var(--eds-color-bg-surface);
+    --_file-button-bg-hover: var(--eds-color-bg-subtle);
+    --_file-button-bg-active: color-mix(
+      in srgb,
+      var(--eds-color-bg-subtle),
+      var(--eds-color-text-primary) 8%
+    );
+    --_file-button-fg: var(--eds-color-text-primary);
+
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--_file-height);
+    padding: 0;
+    border: var(--_file-border-width) solid var(--_file-border);
+    border-radius: var(--_file-radius);
+    background: var(--_file-bg);
+    color: var(--_file-fg);
+    font: inherit;
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &::file-selector-button {
+      box-sizing: border-box;
+      block-size: calc(var(--_file-height) - 2 * var(--_file-border-width));
+      margin: 0;
+      margin-inline-end: var(--eds-space-3);
+      padding-block: 0;
+      padding-inline: var(--_file-button-padding-x);
+      border: 0;
+      border-inline-end: var(--_file-border-width) solid var(--_file-border);
+      background: var(--_file-button-bg);
+      color: var(--_file-button-fg);
+      font: inherit;
+      font-weight: var(--eds-font-weight-medium);
+      cursor: pointer;
+      transition: background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+
+    &:hover:not(:disabled)::file-selector-button {
+      background: var(--_file-button-bg-hover);
+    }
+
+    &:active:not(:disabled)::file-selector-button {
+      background: var(--_file-button-bg-active);
+    }
+
+    /* Hover escurece a borda para text-muted, como o Input. */
+    &:hover:not(:disabled, [aria-invalid='true'], [data-valid='true']) {
+      --_file-border: var(--eds-color-text-muted);
+    }
+
+    /* Foco do teclado: anel no controle inteiro (o clique não o mostra). */
+    &:focus-visible {
+      --_file-border: var(--eds-color-action-primary);
+
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 0;
+    }
+
+    &[data-valid='true'] {
+      --_file-border: var(--eds-color-status-success-text);
+    }
+
+    &[aria-invalid='true'] {
+      --_file-border: var(--eds-color-status-danger);
+    }
+
+    /* Desabilitado: padrão dos campos (bg-subtle + text-muted, sem opacity). */
+    &:disabled {
+      --_file-bg: var(--eds-color-bg-subtle);
+      --_file-fg: var(--eds-color-text-muted);
+      --_file-border: var(--eds-color-border-default);
+      --_file-button-bg: transparent;
+      --_file-button-fg: var(--eds-color-text-muted);
+
+      cursor: not-allowed;
+
+      &::file-selector-button {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .eds-file-sm {
+    --_file-height: var(--eds-control-height-sm);
+    --_file-button-padding-x: var(--eds-space-3);
+  }
+
+  .eds-file-lg {
+    --_file-height: var(--eds-control-height-lg);
+    --_file-button-padding-x: var(--eds-space-5);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-file,
+    .eds-file::file-selector-button {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-file:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

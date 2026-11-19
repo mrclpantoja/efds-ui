@@ -1,5 +1,6 @@
 import { format, getMessages } from '../core/config';
 import {
+  closeIcon,
   emit,
   ensureId,
   hidePopover,
@@ -9,6 +10,7 @@ import {
   uid,
 } from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
+import { createAnnouncer } from '../core/status';
 
 export interface ComboboxOption {
   value: string;
@@ -44,6 +46,13 @@ export const comboboxBehavior: Behavior = {
     const source = root.getAttribute('data-eds-source');
     const minChars = Number(root.getAttribute('data-eds-min-chars') ?? DEFAULT_MIN_CHARS);
     const emptyText = empty?.textContent ?? '';
+    // Modo múltiplo (MultiSelect): escolhidas em `selected`, destaque em `data-active`.
+    const multiple = root.hasAttribute('data-eds-multiple');
+    const control = root.querySelector<HTMLElement>('.eds-combobox-control');
+    const maxSelected = Number(root.getAttribute('data-eds-max-selected') ?? 0);
+    const highlightAttr = multiple ? 'data-active' : 'aria-selected';
+    const selected = new Map<string, string>();
+    const anchor = control ?? input;
 
     const ac = new AbortController();
     const { signal } = ac;
@@ -101,10 +110,10 @@ export const comboboxBehavior: Behavior = {
     };
 
     const setHighlight = (option: HTMLElement | null, scroll = true) => {
-      if (highlighted && highlighted !== option) highlighted.removeAttribute('aria-selected');
+      if (highlighted && highlighted !== option) highlighted.removeAttribute(highlightAttr);
       highlighted = option;
       if (option) {
-        option.setAttribute('aria-selected', 'true');
+        option.setAttribute(highlightAttr, multiple ? '' : 'true');
         input.setAttribute('aria-activedescendant', option.id);
         if (scroll && typeof option.scrollIntoView === 'function')
           option.scrollIntoView({ block: 'nearest' });
@@ -113,9 +122,8 @@ export const comboboxBehavior: Behavior = {
       }
     };
 
-    const announce = (text: string) => {
-      if (status) status.textContent = text;
-    };
+    const announcer = createAnnouncer(status);
+    const announce = announcer.say;
 
     const resultsText = () => {
       const m = getMessages();
@@ -146,7 +154,7 @@ export const comboboxBehavior: Behavior = {
     // ---- Posição ---------------------------------------------------------------------------
     const position = () => {
       if (!open) return;
-      const rect = input.getBoundingClientRect();
+      const rect = anchor.getBoundingClientRect();
       const height = popup.getBoundingClientRect().height;
       const below = window.innerHeight - rect.bottom;
       const above = rect.top;
@@ -203,7 +211,8 @@ export const comboboxBehavior: Behavior = {
         li.textContent = item.label;
         listbox.append(li);
       }
-      markCurrent();
+      if (multiple) syncOptions();
+      else markCurrent();
     };
 
     const setLoading = (on: boolean) => {
@@ -333,7 +342,173 @@ export const comboboxBehavior: Behavior = {
       emit(root, 'combobox-change', { value, label });
     };
 
+    // ---- Modo múltiplo -----------------------------------------------------------------------
+    const initialHiddenName =
+      root.querySelector<HTMLInputElement>('input[type="hidden"]')?.getAttribute('name') ?? '';
+    const hiddenName = (): string => {
+      const raw = root.getAttribute('data-eds-name') ?? initialHiddenName;
+      if (!raw) return '';
+      return raw.endsWith('[]') ? raw : `${raw}[]`;
+    };
+
+    const maxText = () => {
+      const m = getMessages();
+      return maxSelected === 1
+        ? m.comboMaxReachedOne
+        : format(m.comboMaxReached, { max: maxSelected });
+    };
+
+    const maxReached = () => maxSelected > 0 && selected.size >= maxSelected;
+
+    const selectionSummary = () => {
+      const m = getMessages();
+      const count = selected.size;
+      return count === 0
+        ? m.selectedNone
+        : count === 1
+          ? m.selectedOne
+          : format(m.selectedMany, { count });
+    };
+
+    /** `aria-selected` = escolhida; ao atingir o máximo, as demais ficam `aria-disabled`. */
+    function syncOptions(): void {
+      const full = maxReached();
+      for (const option of options()) {
+        const chosen = selected.has(valueOf(option));
+        option.setAttribute('aria-selected', chosen ? 'true' : 'false');
+        if (full && !chosen && option.getAttribute('aria-disabled') !== 'true') {
+          option.setAttribute('aria-disabled', 'true');
+          option.setAttribute('data-eds-max', '');
+        } else if ((!full || chosen) && option.hasAttribute('data-eds-max')) {
+          option.removeAttribute('data-eds-max');
+          option.removeAttribute('aria-disabled');
+        }
+      }
+    }
+
+    const syncMultiValidity = () => {
+      const required = input.getAttribute('aria-required') === 'true' || input.required;
+      input.setCustomValidity(
+        required && selected.size === 0 ? getMessages().comboMultiRequired : '',
+      );
+    };
+
+    const tagsList = (): HTMLElement | null => {
+      const existing = root.querySelector<HTMLElement>('.eds-combobox-tags');
+      if (existing || !control) return existing;
+      const ul = document.createElement('ul');
+      ul.className = 'eds-combobox-tags';
+      control.insertBefore(ul, input);
+      return ul;
+    };
+
+    const removeButtons = () =>
+      Array.from(root.querySelectorAll<HTMLButtonElement>('.eds-combobox-tag-remove'));
+
+    const renderTags = () => {
+      const ul = tagsList();
+      if (!ul) return;
+      ul.textContent = '';
+      ul.hidden = selected.size === 0;
+      for (const [value, label] of selected) {
+        const li = document.createElement('li');
+        li.className = 'eds-combobox-tag';
+        li.setAttribute('data-value', value);
+        const text = document.createElement('span');
+        text.textContent = label;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'eds-combobox-tag-remove';
+        button.disabled = input.disabled;
+        button.setAttribute('aria-label', format(getMessages().comboTagRemove, { label }));
+        button.append(closeIcon());
+        li.append(text, button);
+        ul.append(li);
+      }
+    };
+
+    const renderHidden = () => {
+      const name = hiddenName();
+      for (const h of root.querySelectorAll('input[type="hidden"]')) h.remove();
+      for (const value of selected.keys()) {
+        const h = document.createElement('input');
+        h.type = 'hidden';
+        h.name = name;
+        h.value = value;
+        popup.before(h);
+      }
+    };
+
+    const commitMultiple = () => {
+      renderHidden();
+      renderTags();
+      syncOptions();
+      syncMultiValidity();
+      root.dispatchEvent(new Event('input', { bubbles: true }));
+      root.dispatchEvent(new Event('change', { bubbles: true }));
+      emit(root, 'combobox-change', {
+        values: [...selected.keys()],
+        labels: [...selected.values()],
+      });
+    };
+
+    const toggle = (value: string, label: string): boolean => {
+      const m = getMessages();
+      if (selected.has(value)) {
+        selected.delete(value);
+        commitMultiple();
+        announce(`${format(m.comboMultiRemoved, { label })} ${selectionSummary()}`);
+        return true;
+      }
+      if (maxReached()) {
+        announce(maxText());
+        return false;
+      }
+      selected.set(value, label);
+      commitMultiple();
+      const limit = maxReached() ? ` ${maxText()}` : '';
+      announce(`${format(m.comboMultiSelected, { label })} ${selectionSummary()}${limit}`);
+      return true;
+    };
+
+    const clearText = () => {
+      input.value = '';
+      if (!source) {
+        filterLocal('');
+        refreshEmpty();
+      }
+    };
+
+    const selectMultiple = (option: HTMLElement) => {
+      if (option.hasAttribute('data-eds-max')) {
+        announce(maxText());
+        return;
+      }
+      if (option.getAttribute('aria-disabled') === 'true') return;
+      toggle(valueOf(option), labelOf(option));
+      clearText();
+      if (!open) openPopup();
+      position();
+    };
+
+    const removeFromTag = (button: HTMLButtonElement) => {
+      const li = button.closest<HTMLElement>('.eds-combobox-tag');
+      const value = li?.getAttribute('data-value');
+      if (value === null || value === undefined || !selected.has(value)) return;
+      const buttons = removeButtons();
+      const index = buttons.indexOf(button);
+      toggle(value, selected.get(value) ?? value);
+      const remaining = removeButtons();
+      // Próximo botão de remover (mesma posição); senão o input.
+      const next = remaining[index] ?? null;
+      (next ?? input).focus();
+    };
+
     const select = (option: HTMLElement) => {
+      if (multiple) {
+        selectMultiple(option);
+        return;
+      }
       if (option.getAttribute('aria-disabled') === 'true') return;
       const label = labelOf(option);
       input.value = label;
@@ -357,7 +532,7 @@ export const comboboxBehavior: Behavior = {
       if (source && options().length === 0 && !errored) return false;
       if (!source) {
         const chosen = options().find((o) => o.hasAttribute('data-current'));
-        filterLocal(chosen && labelOf(chosen) === input.value ? '' : input.value);
+        filterLocal(!multiple && chosen && labelOf(chosen) === input.value ? '' : input.value);
         refreshEmpty();
       }
       openPopup();
@@ -369,14 +544,16 @@ export const comboboxBehavior: Behavior = {
     input.addEventListener(
       'input',
       () => {
-        if (freeText) {
+        if (multiple) {
+          // O texto é só busca: as escolhas ficam nas etiquetas.
+        } else if (freeText) {
           // Texto livre: o hidden acompanha o que foi digitado.
           commit(input.value, input.value);
         } else if (currentValue !== '') {
           // Editar o texto depois de escolher desfaz a escolha.
           commit('', '');
         }
-        syncValidity();
+        if (!multiple) syncValidity();
         setHighlight(null);
         search();
       },
@@ -431,9 +608,19 @@ export const comboboxBehavior: Behavior = {
               event.preventDefault();
               event.stopPropagation();
               input.value = '';
-              if (currentValue !== '') commit('', '');
-              syncValidity();
+              // Múltiplo: limpa só o texto, nunca as etiquetas.
+              if (!multiple) {
+                if (currentValue !== '') commit('', '');
+                syncValidity();
+              }
               if (!source) filterLocal('');
+            }
+            break;
+          case 'Backspace':
+            if (multiple && input.value === '' && selected.size > 0) {
+              event.preventDefault();
+              const last = [...selected.entries()].pop();
+              if (last) toggle(last[0], last[1]);
             }
             break;
           case 'Tab':
@@ -485,16 +672,60 @@ export const comboboxBehavior: Behavior = {
       { signal },
     );
 
-    // Estado inicial: valor do hidden -> texto e marca de "escolhida".
-    if (currentValue !== '') {
+    let disabledObserver: MutationObserver | null = null;
+    if (multiple) {
+      disabledObserver = new MutationObserver(() => {
+        for (const button of removeButtons()) button.disabled = input.disabled;
+      });
+      disabledObserver.observe(input, { attributes: true, attributeFilter: ['disabled'] });
+      listbox.setAttribute('aria-multiselectable', 'true');
+      control?.addEventListener(
+        'click',
+        (event) => {
+          const target = event.target as Element;
+          const button = target.closest<HTMLButtonElement>('.eds-combobox-tag-remove');
+          if (button) {
+            if (!input.disabled) removeFromTag(button);
+          } else if (!input.disabled && target !== input) input.focus();
+        },
+        { signal },
+      );
+    }
+
+    if (multiple) {
+      // Estado inicial: hidden(s) com valor, depois opções marcadas; rótulo da opção, da etiqueta
+      // existente (mesma posição) ou o próprio valor.
+      const tagLabels = Array.from(root.querySelectorAll('.eds-combobox-tag > span')).map((s) =>
+        (s.textContent ?? '').trim(),
+      );
+      const initial = Array.from(root.querySelectorAll<HTMLInputElement>('input[type="hidden"]'))
+        .map((h) => h.value)
+        .filter((v) => v !== '');
+      for (const option of options()) {
+        if (option.getAttribute('aria-selected') === 'true' && !initial.includes(valueOf(option))) {
+          initial.push(valueOf(option));
+        }
+      }
+      initial.forEach((value, index) => {
+        const option = options().find((o) => valueOf(o) === value);
+        selected.set(value, option ? labelOf(option) : (tagLabels[index] ?? value));
+      });
+      renderHidden();
+      renderTags();
+      syncOptions();
+      syncMultiValidity();
+    } else if (currentValue !== '') {
+      // Estado inicial: valor do hidden -> texto e marca de "escolhida".
       markCurrent();
       const chosen = options().find((o) => o.hasAttribute('data-current'));
       if (chosen && input.value === '') input.value = labelOf(chosen);
     }
     if (safeMatches(popup, ':popover-open')) hidePopover(popup);
-    syncValidity();
+    if (!multiple) syncValidity();
 
     return () => {
+      disabledObserver?.disconnect();
+      announcer.dispose();
       input.setCustomValidity('');
       ac.abort();
       abortRemote();

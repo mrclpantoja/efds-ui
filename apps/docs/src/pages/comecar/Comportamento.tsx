@@ -108,6 +108,7 @@ configure({
   messages: {
     toastClose: 'Close notification',
     comboNoResults: 'No results.',
+    uploadRetry: 'Try again',
     loaderTitle: 'Loading…',
     loaderText: 'Please wait.',
   },
@@ -126,8 +127,8 @@ export default function Comportamento() {
     <>
       <p className="eds-text-body-lg">
         O CSS do core estiliza; o que o CSS e a plataforma não entregam (abrir um Modal, trocar
-        Tabs, ordenar uma Table, filtrar um Combobox, o carregamento de página) vem do{' '}
-        <code>@eds-ui/behavior</code>: JavaScript puro, <strong>zero dependências</strong>, para
+        Tabs, ordenar uma Table, filtrar um Combobox, enviar arquivos, o carregamento de página) vem
+        do <code>@eds-ui/behavior</code>: JavaScript puro, <strong>zero dependências</strong>, para
         quem usa só HTML (PHP, Java, .NET, Vue, Angular). Quem usa React não precisa dele:{' '}
         <a href={toHref('/comecar/uso-com-react')}>@eds-ui/react</a> já traz o mesmo comportamento.
       </p>
@@ -251,6 +252,35 @@ export default function Comportamento() {
               ),
             },
             {
+              name: 'data-eds-multiple / data-eds-name / data-eds-max-selected',
+              effect: (
+                <>
+                  No <code>.eds-combobox</code>: seleção múltipla, nome dos hidden e limite.{' '}
+                  <a href={toHref('/componentes/multi-select')}>MultiSelect</a>.
+                </>
+              ),
+            },
+            {
+              name: 'data-eds-upload',
+              effect: (
+                <>
+                  No <code>.eds-upload</code>: liga o{' '}
+                  <a href={toHref('/componentes/file-upload')}>FileUpload</a>. Com{' '}
+                  <code>data-eds-max-size</code> (bytes) e <code>data-eds-max-files</code>.
+                </>
+              ),
+            },
+            {
+              name: 'data-eds-upload-url / data-eds-upload-field',
+              effect: (
+                <>
+                  Modo imediato do FileUpload: endereço do POST de cada arquivo e nome do campo
+                  multipart (padrão <code>file</code>). A resposta JSON <code>{'{ "id" }'}</code>{' '}
+                  vira um hidden.
+                </>
+              ),
+            },
+            {
               name: 'data-eds-loader',
               effect: (
                 <>
@@ -304,9 +334,11 @@ export default function Comportamento() {
           Os componentes avisam o que aconteceu por <code>CustomEvent</code> com prefixo{' '}
           <code>eds:</code> (<code>eds:tabs-change</code>, <code>eds:modal-open</code>,{' '}
           <code>eds:sort</code>, <code>eds:select-change</code>, <code>eds:combobox-change</code>,{' '}
-          <code>eds:dismiss</code>, <code>eds:toast-close</code>, <code>eds:loader-show</code>,{' '}
-          <code>eds:loader-hide</code>, <code>eds:sidebar-collapse</code>). Todos fazem bubble;{' '}
-          <code>eds:sort</code> e <code>eds:dismiss</code> são canceláveis.
+          <code>eds:upload-change</code>, <code>eds:upload-progress</code>,{' '}
+          <code>eds:upload-complete</code>, <code>eds:upload-error</code>, <code>eds:dismiss</code>,{' '}
+          <code>eds:toast-close</code>, <code>eds:loader-show</code>, <code>eds:loader-hide</code>,{' '}
+          <code>eds:sidebar-collapse</code>). Todos fazem bubble; <code>eds:sort</code> e{' '}
+          <code>eds:dismiss</code> são canceláveis.
         </p>
         <CodeBlock code={eventos} label="Código JavaScript: eventos" />
       </Section>

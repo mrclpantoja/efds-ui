@@ -48,7 +48,11 @@ export default function ComboboxPage() {
             (nativo, sem JavaScript) ou <a href={toHref('/componentes/radio')}>Radio</a>.
           </>,
           'Para texto livre com sugestões (e-mail, endereço): o Combobox exige uma opção da lista.',
-          'Para seleção múltipla: ainda não existe; use Checkbox em um Fieldset.',
+          <>
+            Para escolher várias opções: use{' '}
+            <a href={toHref('/componentes/multi-select')}>MultiSelect</a> (este mesmo campo com
+            etiquetas) ou, para poucas, Checkbox em um Fieldset.
+          </>,
         ]}
       />
 

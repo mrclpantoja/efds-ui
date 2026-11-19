@@ -1,0 +1,22 @@
+<div class="eds-field">
+  <label class="eds-label" for="lim">Filiais (até 2)</label>
+  <div class="eds-combobox eds-combobox-multiple" data-eds-multiple data-eds-name="filiais[]" data-eds-max-selected="2">
+    <div class="eds-combobox-control">
+      <ul class="eds-combobox-tags" aria-label="Filiais selecionadas" hidden></ul>
+      <input id="lim" class="eds-combobox-input" type="text" role="combobox" aria-autocomplete="list"
+        aria-expanded="false" aria-controls="lim-lista" autocomplete="off" />
+    </div>
+    <div class="eds-combobox-popup" popover="manual">
+      <ul id="lim-lista" class="eds-combobox-listbox" role="listbox" aria-multiselectable="true" aria-label="Filiais">
+        <li id="lim-1" class="eds-combobox-option" role="option" aria-selected="false" data-value="poa">Porto Alegre</li>
+        <li id="lim-2" class="eds-combobox-option" role="option" aria-selected="false" data-value="pel">Pelotas</li>
+        <li id="lim-3" class="eds-combobox-option" role="option" aria-selected="false" data-value="pf">Passo Fundo</li>
+        <li id="lim-4" class="eds-combobox-option" role="option" aria-selected="false" data-value="cax">Caxias do Sul</li>
+        <li id="lim-5" class="eds-combobox-option" role="option" aria-selected="false" data-value="sm">Santa Maria</li>
+      </ul>
+      <p class="eds-combobox-empty" hidden>Nenhum resultado</p>
+      <p class="eds-combobox-loading" hidden><span class="eds-spinner eds-spinner-sm" aria-hidden="true"></span> Carregando…</p>
+    </div>
+    <span class="eds-visually-hidden" role="status"></span>
+  </div>
+</div>

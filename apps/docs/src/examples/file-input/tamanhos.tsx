@@ -1,0 +1,17 @@
+import { Field, FileInput, Stack } from '@eds-ui/react';
+
+export default function Tamanhos() {
+  return (
+    <Stack direction="row" wrap gap={3}>
+      <Field label="Pequeno">
+        <FileInput size="sm" />
+      </Field>
+      <Field label="Médio (padrão)">
+        <FileInput />
+      </Field>
+      <Field label="Grande">
+        <FileInput size="lg" />
+      </Field>
+    </Stack>
+  );
+}

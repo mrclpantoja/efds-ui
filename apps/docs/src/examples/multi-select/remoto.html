@@ -1,0 +1,17 @@
+<div class="eds-field">
+  <label class="eds-label" for="clientes">Clientes</label>
+  <div class="eds-combobox eds-combobox-multiple" data-eds-multiple data-eds-name="clientes[]"
+    data-eds-source="/clientes/busca" data-eds-min-chars="2">
+    <div class="eds-combobox-control">
+      <ul class="eds-combobox-tags" aria-label="Clientes selecionados" hidden></ul>
+      <input id="clientes" class="eds-combobox-input" type="text" role="combobox" aria-autocomplete="list"
+        aria-expanded="false" aria-controls="clientes-lista" autocomplete="off" />
+    </div>
+    <div class="eds-combobox-popup" popover="manual">
+      <ul id="clientes-lista" class="eds-combobox-listbox" role="listbox" aria-multiselectable="true" aria-label="Clientes"></ul>
+      <p class="eds-combobox-empty" hidden>Nenhum cliente encontrado</p>
+      <p class="eds-combobox-loading" hidden><span class="eds-spinner eds-spinner-sm" aria-hidden="true"></span> Carregando…</p>
+    </div>
+    <span class="eds-visually-hidden" role="status"></span>
+  </div>
+</div>

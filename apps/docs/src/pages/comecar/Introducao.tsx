@@ -13,7 +13,7 @@ const packages = [
   },
   {
     name: '@eds-ui/behavior',
-    text: 'Comportamento em JavaScript puro, sem dependências, para quem usa só HTML (PHP, Java, .NET, Vue, Angular): Tabs, Modal, Toast, Table, Combobox e o PageLoader.',
+    text: 'Comportamento em JavaScript puro, sem dependências, para quem usa só HTML (PHP, Java, .NET, Vue, Angular): Tabs, Modal, Toast, Table, Combobox, FileUpload e o PageLoader.',
   },
   {
     name: '@eds-ui/react',

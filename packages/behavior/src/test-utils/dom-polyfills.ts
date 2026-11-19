@@ -102,3 +102,39 @@ export function installDomPolyfills(): () => void {
 
 /** Deixa os microtasks (eventos `toggle`, MutationObserver) e timers de 0 ms correrem. */
 export const flush = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
+
+/** `DataTransfer` mínimo (jsdom não tem): `items.add(file)` e `files` (array com `item`). */
+export function installDataTransferPolyfill(): () => void {
+  const target = globalThis as unknown as { DataTransfer?: unknown };
+  const original = target.DataTransfer;
+  class FakeDataTransfer {
+    private list: File[] = [];
+    readonly items = {
+      add: (file: File) => {
+        this.list.push(file);
+      },
+    };
+    get files(): File[] & { item: (index: number) => File | null } {
+      const files = [...this.list] as File[] & { item: (index: number) => File | null };
+      files.item = (index) => files[index] ?? null;
+      return files;
+    }
+  }
+  target.DataTransfer = FakeDataTransfer;
+  return () => {
+    target.DataTransfer = original;
+  };
+}
+
+/** Simula a escolha de arquivos no seletor: troca `input.files` (gravável) e dispara `change`. */
+export function pickFiles(input: HTMLInputElement, files: File[]): void {
+  let current: unknown = files;
+  Object.defineProperty(input, 'files', {
+    configurable: true,
+    get: () => current,
+    set: (value: unknown) => {
+      current = value;
+    },
+  });
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+}

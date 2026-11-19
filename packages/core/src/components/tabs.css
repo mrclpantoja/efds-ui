@@ -90,4 +90,21 @@
       outline-offset: calc(var(--eds-focus-ring-width) * -1);
     }
   }
+
+  /* Alto contraste: as cores de ação viram cor de sistema; a sublinha da aba ativa precisa
+     de cor própria (Highlight) e as demais ficam sem sublinha (Canvas). */
+  @media (forced-colors: active) {
+    .eds-tab {
+      --_tab-indicator: Canvas;
+
+      &[aria-selected='true'] {
+        --_tab-indicator: Highlight;
+      }
+
+      &:disabled,
+      &[aria-disabled='true'] {
+        --_tab-fg: GrayText;
+      }
+    }
+  }
 }

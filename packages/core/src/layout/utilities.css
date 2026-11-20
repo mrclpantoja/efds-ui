@@ -10,6 +10,15 @@
  */
 /* prettier-ignore */
 @layer eds.utilities {
+  /* O atributo hidden sempre esconde, também em componentes que declaram display
+     (ex.: .eds-button é flex). Fica na camada mais alta; until-found segue o navegador. */
+  [hidden]:not([hidden='until-found']) {
+    display: none;
+  }
+
+  /* Empurra o item para o fim da linha (ex.: Avançar sozinho quando Voltar está oculto). */
+  .eds-push-end { margin-inline-start: auto; }
+
   .eds-gap-0 { --_gap: 0; }
   .eds-gap-1 { --_gap: var(--eds-space-1); }
   .eds-gap-2 { --_gap: var(--eds-space-2); }

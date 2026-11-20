@@ -1,0 +1,68 @@
+<!-- Behavior: [data-eds-filter-bar] no form (ver basico.html). "Mais filtros" é um <details>: em contêiner
+     largo (>= 48rem) os campos extras ficam sempre visíveis e o resumo some; em estreito é recolhível e
+     o contador (.eds-filter-bar-count) diz quantos extras estão preenchidos (o JS atualiza o texto).
+     Os chips mostram o rótulo do campo + o texto da opção escolhida. -->
+<form class="eds-filter-bar" role="search" aria-label="Filtrar contratos" data-eds-filter-bar method="get" action="#/componentes/filter-bar">
+  <div class="eds-filter-bar-fields">
+    <div class="eds-field eds-filter-bar-search">
+      <label class="eds-label" for="fbc-busca">Buscar</label>
+      <input class="eds-input" id="fbc-busca" name="busca" type="search" placeholder="Número ou fornecedor" autocomplete="off" />
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="fbc-situacao">Situação</label>
+      <select class="eds-select" id="fbc-situacao" name="situacao">
+        <option value="">Todas</option>
+        <option value="vigente" selected>Vigente</option>
+        <option value="encerrado">Encerrado</option>
+        <option value="suspenso">Suspenso</option>
+      </select>
+    </div>
+  </div>
+  <div class="eds-filter-bar-actions">
+    <button type="submit" class="eds-button eds-button-primary">Filtrar</button>
+    <button type="reset" class="eds-button eds-button-secondary">Limpar</button>
+  </div>
+  <details class="eds-filter-bar-more" open>
+    <summary>Mais filtros <span class="eds-filter-bar-count">(2)</span></summary>
+    <div class="eds-field">
+      <label class="eds-label" for="fbc-categoria">Categoria</label>
+      <select class="eds-select" id="fbc-categoria" name="categoria">
+        <option value="">Todas</option>
+        <option value="servicos" selected>Serviços</option>
+        <option value="materiais">Materiais</option>
+        <option value="obras">Obras</option>
+      </select>
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="fbc-de">Assinado a partir de</label>
+      <input class="eds-input" id="fbc-de" name="de" type="date" value="2026-03-01" />
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="fbc-ate">Assinado até</label>
+      <input class="eds-input" id="fbc-ate" name="ate" type="date" />
+    </div>
+  </details>
+  <ul class="eds-filter-chips" aria-label="Filtros ativos">
+    <li>
+      <button type="button" class="eds-chip" data-eds-filter-remove="situacao">
+        Situação: Vigente
+        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+        <span class="eds-visually-hidden"> — remover</span>
+      </button>
+    </li>
+    <li>
+      <button type="button" class="eds-chip" data-eds-filter-remove="categoria">
+        Categoria: Serviços
+        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+        <span class="eds-visually-hidden"> — remover</span>
+      </button>
+    </li>
+    <li>
+      <button type="button" class="eds-chip" data-eds-filter-remove="de">
+        Assinado a partir de: 01/03/2026
+        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+        <span class="eds-visually-hidden"> — remover</span>
+      </button>
+    </li>
+  </ul>
+</form>

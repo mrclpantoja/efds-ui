@@ -21,6 +21,10 @@ export default defineConfig({
         replacement: fromSource('../../packages/behavior/src/export-entry.ts'),
       },
       {
+        find: '@eds-ui/behavior/balloon',
+        replacement: fromSource('../../packages/behavior/src/balloon-entry.ts'),
+      },
+      {
         find: '@eds-ui/behavior/mask',
         replacement: fromSource('../../packages/behavior/src/mask-entry.ts'),
       },

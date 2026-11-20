@@ -84,7 +84,7 @@
 
     /* Hover discreto (só com ponteiro real), nunca no estado vazio. */
     @media (hover: hover) {
-      & tbody tr:hover:not(:has(.eds-table-empty)) {
+      & tbody tr:hover:not(:has(.eds-table-empty), .eds-table-loading) {
         background: color-mix(in srgb, var(--eds-color-bg-subtle) 60%, var(--eds-color-bg-surface));
       }
     }
@@ -237,6 +237,11 @@
 
     &:active {
       background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 14%);
+
+      /* O ícone muted não alcança 3:1 sobre o fundo pressionado no escuro. */
+      & > svg {
+        color: var(--eds-color-text-secondary);
+      }
     }
   }
 
@@ -377,6 +382,58 @@
 
   .eds-card > .eds-table-toolbar {
     padding-block-start: var(--_card-padding);
+  }
+
+  /* Carregando: <table aria-busy="true">. Duas formas, que podem ser combinadas:
+     - linhas Skeleton: <tr class="eds-table-loading"><td><span class="eds-skeleton eds-skeleton-text" aria-hidden="true"></span></td>…</tr>
+       (mesmas colunas e altura de uma linha de dados: sem layout shift);
+     - recarga sobre dados já exibidos: o tbody fica esmaecido e um .eds-table-overlay (Spinner + texto,
+       role="status") cobre toda a área rolável do wrap. Dentro dele, .eds-table-overlay-box centraliza o
+       conteúdo. No HTML puro, ponha `inert` na <table> junto com a sobreposição. */
+  .eds-table[aria-busy='true'] tbody tr:not(.eds-table-loading) {
+    opacity: 0.55;
+  }
+
+  .eds-table-loading :is(td, th) > .eds-skeleton {
+    inline-size: 100%;
+    min-inline-size: var(--eds-space-9);
+  }
+
+  .eds-table-loading > :nth-child(3n + 1) > .eds-skeleton {
+    inline-size: 70%;
+  }
+
+  /* A sobreposição ocupa a mesma célula da tabela (grade de uma célula): o véu cobre toda a área
+     rolável, não só o que está visível. O Spinner (.eds-table-overlay-box) é sticky e fica no
+     centro da área visível mesmo com a tabela rolada (percentuais de sticky usam o scrollport). */
+  .eds-table-wrap:has(> .eds-table-overlay) {
+    display: grid;
+
+    > .eds-table,
+    > .eds-table-overlay {
+      grid-area: 1 / 1;
+    }
+  }
+
+  .eds-table-overlay {
+    z-index: var(--eds-z-sticky);
+    background: color-mix(in srgb, var(--eds-color-bg-surface) 70%, transparent);
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+  }
+
+  .eds-table-overlay-box {
+    position: sticky;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--eds-space-2);
+    inline-size: max-content;
+    max-inline-size: 100%;
+    translate: -50% -50%;
   }
 
   @media (forced-colors: active) {

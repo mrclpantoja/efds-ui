@@ -1,0 +1,293 @@
+/* Stepper: indicador de etapas de um processo (cadastro, assistente/wizard).
+   Markup:
+     <ol class="eds-stepper [eds-stepper-vertical]" aria-label="Etapas do cadastro">
+       <li class="eds-stepper-item" data-state="complete">
+         <span class="eds-stepper-marker" aria-hidden="true"></span>
+         <span class="eds-stepper-label">Dados<span class="eds-visually-hidden"> (concluída)</span></span>
+       </li>
+       <li class="eds-stepper-item" data-state="current" aria-current="step">
+         <span class="eds-stepper-marker" aria-hidden="true"></span>
+         <span class="eds-stepper-label">Endereço</span>
+         <span class="eds-stepper-summary">Etapa 2 de 4</span>
+       </li>
+       <li class="eds-stepper-item" data-state="upcoming">…</li>
+       <li class="eds-stepper-item" data-state="error">…</li>
+     </ol>
+   - Estado: data-state="complete|current|upcoming|error" (+ aria-current="step" na atual).
+     Nunca só por cor: número (upcoming/current), check (complete) e "!" (error) vêm do marcador,
+     gerados por CSS (contador). Um <svg> dentro do marcador substitui o glifo gerado.
+     O estado dito em voz (concluída, com erro) vai em texto .eds-visually-hidden no rótulo.
+   - Etapa concluída clicável (voltar): o rótulo é um <button> ou <a> com .eds-stepper-label.
+   - O <ol> é um container de largura (eds-stepper): abaixo de 36rem a versão horizontal mostra só
+     a etapa atual e o .eds-stepper-summary ("Etapa 2 de 4", dentro do item atual). O contêiner
+     precisa de largura própria (bloco ou item de grid), não de uma coluna flex que encolhe ao conteúdo. */
+@layer eds.components {
+  .eds-stepper {
+    --_stepper-marker-size: calc(var(--eds-icon-size-lg) + var(--eds-space-1));
+    --_stepper-gap: var(--eds-space-2);
+
+    container: eds-stepper / inline-size;
+    counter-reset: eds-step;
+    display: flex;
+    align-items: center;
+    gap: var(--_stepper-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-stepper-item {
+    --_step-marker-bg: var(--eds-color-bg-surface);
+    --_step-marker-fg: var(--eds-color-text-secondary);
+    --_step-marker-border: var(--eds-color-border-strong);
+    --_step-label-fg: var(--eds-color-text-secondary);
+    --_step-label-weight: var(--eds-font-weight-medium);
+    --_step-line: var(--eds-color-border-default);
+
+    counter-increment: eds-step;
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: var(--_stepper-gap);
+    min-inline-size: 0;
+
+    /* Conector até a próxima etapa (decorativo). */
+    &:not(:last-child) {
+      flex: 1 1 auto;
+
+      &::after {
+        content: '';
+        flex: 1 1 var(--eds-space-5);
+        min-inline-size: var(--eds-space-4);
+        block-size: var(--eds-border-width-strong);
+        margin-inline-start: var(--eds-space-1);
+        border-radius: var(--eds-radius-sm);
+        background: var(--_step-line);
+      }
+    }
+
+    &[data-state='current'],
+    &[aria-current='step'] {
+      --_step-marker-bg: var(--eds-color-action-primary);
+      --_step-marker-fg: var(--eds-color-text-on-action);
+      --_step-marker-border: var(--eds-color-action-primary);
+      --_step-label-fg: var(--eds-color-text-primary);
+      --_step-label-weight: var(--eds-font-weight-semibold);
+    }
+
+    &[data-state='complete'] {
+      --_step-marker-bg: var(--eds-color-action-primary-subtle);
+      --_step-marker-fg: var(--eds-color-action-primary);
+      --_step-marker-border: var(--eds-color-action-primary);
+      --_step-label-fg: var(--eds-color-text-primary);
+      --_step-line: var(--eds-color-action-primary);
+    }
+
+    &[data-state='error'] {
+      --_step-marker-bg: var(--eds-color-status-danger-subtle);
+      --_step-marker-fg: var(--eds-color-status-danger-text);
+      --_step-marker-border: var(--eds-color-status-danger);
+      --_step-label-fg: var(--eds-color-status-danger-text);
+    }
+  }
+
+  .eds-stepper-marker {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_stepper-marker-size);
+    block-size: var(--_stepper-marker-size);
+    border: var(--eds-border-width-strong) solid var(--_step-marker-border);
+    border-radius: 50%;
+    background: var(--_step-marker-bg);
+    color: var(--_step-marker-fg);
+    font-size: var(--eds-font-size-small);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+
+    /* Número da etapa; o texto alternativo vazio o tira da fala (a posição já vem da lista). */
+    &::before {
+      content: counter(eds-step) / '';
+    }
+
+    & > svg {
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+    }
+
+    &:has(> svg)::before {
+      display: none;
+    }
+  }
+
+  /* Concluída: check desenhado com bordas (herda a cor do marcador). */
+  .eds-stepper-item[data-state='complete'] > .eds-stepper-marker:not(:has(> svg))::before {
+    content: '' / '';
+    inline-size: 0.3125rem;
+    block-size: 0.625rem;
+    border-inline-end: var(--eds-border-width-strong) solid currentColor;
+    border-block-end: var(--eds-border-width-strong) solid currentColor;
+    translate: 0 -10%;
+    rotate: 45deg;
+  }
+
+  /* Com erro: exclamação (além da cor). */
+  .eds-stepper-item[data-state='error'] > .eds-stepper-marker::before {
+    content: '!' / '';
+  }
+
+  .eds-stepper-label {
+    min-inline-size: 0;
+    color: var(--_step-label-fg);
+    font-size: var(--eds-font-size-label);
+    font-weight: var(--_step-label-weight);
+    line-height: var(--eds-line-height-label);
+    overflow-wrap: anywhere;
+  }
+
+  /* Etapa clicável (concluída que permite voltar): botão ou link com a cara do rótulo. */
+  :is(button, a).eds-stepper-label {
+    box-sizing: border-box;
+    min-block-size: var(--eds-control-height-sm);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--eds-color-text-primary);
+      text-decoration: underline;
+    }
+
+    &:active {
+      color: var(--eds-color-text-primary);
+      text-decoration: underline;
+      text-decoration-thickness: calc(var(--eds-border-width) * 2);
+    }
+  }
+
+  /* Resumo para contêiner estreito; escondido quando todas as etapas cabem. */
+  .eds-stepper-summary {
+    display: none;
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    white-space: nowrap;
+  }
+
+  /* ---- Vertical: marcador à esquerda, conector descendo por baixo dele ---- */
+
+  .eds-stepper-vertical {
+    --_stepper-gap: var(--eds-space-3);
+
+    flex-direction: column;
+    align-items: stretch;
+
+    & > .eds-stepper-item {
+      display: grid;
+      grid-template-columns: var(--_stepper-marker-size) minmax(0, 1fr);
+      align-items: center;
+      column-gap: var(--_stepper-gap);
+
+      &:not(:last-child) {
+        flex: none;
+
+        &::after {
+          grid-column: 1;
+          grid-row: 2;
+          justify-self: center;
+          inline-size: var(--eds-border-width-strong);
+          block-size: auto;
+          min-block-size: var(--eds-space-5);
+          min-inline-size: 0;
+          margin-block: var(--eds-space-1);
+          margin-inline-start: 0;
+        }
+      }
+
+      & > .eds-stepper-marker {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      & > .eds-stepper-label {
+        grid-column: 2;
+        grid-row: 1;
+      }
+    }
+
+    & .eds-stepper-summary {
+      display: none;
+    }
+  }
+
+  /* ---- Estreito: só a etapa atual + "Etapa N de M" ---- */
+
+  @container eds-stepper (inline-size < 36rem) {
+    .eds-stepper:not(.eds-stepper-vertical) {
+      /* visibility (e não display:none): o item sem caixa não conta no counter e o marcador da
+         etapa atual mostraria 1. Fora do fluxo, sem tamanho, fora do foco e da árvore. */
+      & > .eds-stepper-item:not([data-state='current'], [aria-current='step']) {
+        position: absolute;
+        inline-size: 0;
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+      }
+
+      & > .eds-stepper-item:is([data-state='current'], [aria-current='step']) {
+        flex: 1 1 auto;
+
+        &::after {
+          display: none;
+        }
+
+        & > .eds-stepper-label {
+          flex: 1 1 auto;
+        }
+
+        & > .eds-stepper-summary {
+          display: block;
+        }
+      }
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-stepper-item {
+      --_step-marker-bg: Canvas;
+      --_step-marker-fg: CanvasText;
+      --_step-marker-border: ButtonText;
+      --_step-label-fg: CanvasText;
+      --_step-line: GrayText;
+
+      &[data-state='current'],
+      &[aria-current='step'] {
+        --_step-marker-bg: Highlight;
+        --_step-marker-fg: HighlightText;
+        --_step-marker-border: Highlight;
+      }
+
+      &[data-state='complete'] {
+        --_step-marker-border: Highlight;
+        --_step-marker-fg: Highlight;
+        --_step-line: Highlight;
+      }
+
+      &[data-state='error'] {
+        --_step-marker-border: CanvasText;
+        --_step-marker-fg: CanvasText;
+      }
+    }
+
+    .eds-stepper-summary {
+      color: CanvasText;
+    }
+  }
+}

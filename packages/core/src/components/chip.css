@@ -1,0 +1,124 @@
+/* Chip: rótulo compacto, normalmente removível (filtro ativo) ou alternável (aria-pressed).
+   Embrião da Tag: a aparência vive aqui e é reaproveitada.
+   Markup:
+     <button type="button" class="eds-chip">Situação: Ativo
+       <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+       <span class="eds-visually-hidden"> — remover</span>
+     </button>
+     <span class="eds-chip">Somente leitura</span>
+   - Interativo só quando for <button>, <a href> ou [role=button]; <span> é estático (sem hover).
+   - Alternável: aria-pressed="true" pinta o fundo de ação suave e a borda de ação (além da cor,
+     a borda mais forte e o peso do texto marcam o estado).
+   - Alvo de toque: altura de control-height-sm (acima dos 24px de WCAG 2.5.8).
+   - Lista de chips: <ul class="eds-chip-list"> (ou .eds-filter-chips na barra de filtros). */
+@layer eds.components {
+  .eds-chip {
+    --_chip-bg: var(--eds-color-bg-subtle);
+    --_chip-fg: var(--eds-color-text-primary);
+    --_chip-border: var(--eds-color-border-default);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    min-block-size: var(--eds-control-height-sm);
+    margin: 0;
+    padding-inline: var(--eds-space-3);
+    border: var(--eds-border-width) solid var(--_chip-border);
+    border-radius: var(--eds-radius-sm);
+    background: var(--_chip-bg);
+    color: var(--_chip-fg);
+    font-family: inherit;
+    font-size: var(--eds-font-size-label);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-label);
+    text-align: start;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    &:is(button, a[href], [role='button']) {
+      cursor: pointer;
+
+      &:hover:not(:disabled, [aria-disabled='true']) {
+        --_chip-border: var(--eds-color-border-strong);
+      }
+
+      &:active:not(:disabled, [aria-disabled='true']) {
+        --_chip-bg: color-mix(
+          in srgb,
+          var(--eds-color-bg-subtle),
+          var(--eds-color-text-primary) 8%
+        );
+        --_chip-border: var(--eds-color-border-strong);
+      }
+    }
+
+    &[aria-pressed='true'] {
+      --_chip-bg: var(--eds-color-action-primary-subtle);
+      --_chip-fg: var(--eds-color-action-primary);
+      --_chip-border: var(--eds-color-action-primary);
+
+      font-weight: var(--eds-font-weight-semibold);
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      --_chip-bg: var(--eds-color-bg-subtle);
+      --_chip-fg: var(--eds-color-text-muted);
+      --_chip-border: var(--eds-color-border-default);
+
+      cursor: not-allowed;
+    }
+  }
+
+  .eds-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-chip {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-chip {
+      --_chip-bg: ButtonFace;
+      --_chip-fg: ButtonText;
+      --_chip-border: ButtonText;
+
+      &[aria-pressed='true'] {
+        --_chip-bg: Highlight;
+        --_chip-fg: HighlightText;
+        --_chip-border: Highlight;
+      }
+
+      &:disabled,
+      &[aria-disabled='true'] {
+        --_chip-fg: GrayText;
+        --_chip-border: GrayText;
+      }
+    }
+  }
+}

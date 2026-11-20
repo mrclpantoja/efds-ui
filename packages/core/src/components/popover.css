@@ -1,0 +1,119 @@
+/* Popover: painel flutuante com conteúdo e ações (diferente do Tooltip, pode ter botões e links).
+   Markup:
+     <button class="eds-button" popovertarget="pp1" aria-expanded="false" data-eds-popover>Detalhes</button>
+     <div class="eds-popover" id="pp1" popover role="dialog" aria-labelledby="pp1-t">
+       <h2 class="eds-popover-title" id="pp1-t">Título</h2>
+       <p>Texto</p>
+       <div class="eds-popover-actions"><button class="eds-button eds-button-sm">Entendi</button></div>
+     </div>
+   popover="auto": fechar com clique fora e Esc é nativo (light dismiss); o JS só posiciona,
+   sincroniza aria-expanded e devolve o foco ao gatilho. Sem JS ele abre e fecha, mas fica na
+   posição do UA.
+   Posição (definida pelo JS, px, coordenadas da viewport): --_popover-x / --_popover-y = canto
+   superior do painel já calculado e limitado à viewport (inclui a folga em relação ao gatilho);
+   data-placement="top|bottom|start|end" só escolhe a direção da animação de entrada. */
+@layer eds.components {
+  .eds-popover {
+    --_popover-x: 0px;
+    --_popover-y: 0px;
+    --_popover-shift: var(--eds-space-1);
+    --_popover-from: 0 calc(var(--_popover-shift) * -1);
+
+    position: fixed;
+    inset: auto;
+
+    /* Coordenadas da viewport vindas do JS: por isso left/top físicos. */
+    left: var(--_popover-x);
+    top: var(--_popover-y);
+    box-sizing: border-box;
+    inline-size: max-content;
+    min-inline-size: 0;
+    max-inline-size: min(var(--eds-layout-dialog-sm), calc(100dvw - var(--eds-space-5)));
+    max-block-size: min(calc(var(--eds-space-9) * 6), 80dvh);
+    margin: 0;
+    padding: var(--eds-inset-md);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-lg);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    box-shadow: var(--eds-shadow-md);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    overflow: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    translate: var(--_popover-from);
+    transition:
+      opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      translate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      display var(--eds-motion-duration-fast) allow-discrete,
+      overlay var(--eds-motion-duration-fast) allow-discrete;
+
+    &:popover-open {
+      display: flex;
+      flex-direction: column;
+      gap: var(--eds-space-2);
+      opacity: 1;
+      translate: 0 0;
+    }
+
+    /* Entra vindo do lado oposto ao do gatilho. */
+    &[data-placement='top'] {
+      --_popover-from: 0 var(--_popover-shift);
+    }
+
+    &[data-placement='start'] {
+      --_popover-from: var(--_popover-shift) 0;
+
+      &:dir(rtl) {
+        --_popover-from: calc(var(--_popover-shift) * -1) 0;
+      }
+    }
+
+    &[data-placement='end'] {
+      --_popover-from: calc(var(--_popover-shift) * -1) 0;
+
+      &:dir(rtl) {
+        --_popover-from: var(--_popover-shift) 0;
+      }
+    }
+
+    & > :where(p, ul, ol) {
+      margin: 0;
+    }
+  }
+
+  @starting-style {
+    .eds-popover:popover-open {
+      opacity: 0;
+      translate: var(--_popover-from);
+    }
+  }
+
+  .eds-popover-title {
+    margin: 0;
+    font-size: var(--eds-font-size-body-lg);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: var(--eds-line-height-body-lg);
+  }
+
+  .eds-popover-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--eds-space-2);
+    margin-block-start: var(--eds-space-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-popover {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-popover {
+      border-color: CanvasText;
+    }
+  }
+}

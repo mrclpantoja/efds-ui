@@ -1,0 +1,34 @@
+<!-- Behavior: [data-eds-filter-bar] no form. Sem JS o envio por GET continua funcionando. Com JS: monta os
+     chips a partir dos campos preenchidos (rótulo do campo + texto da opção), remover um chip limpa o
+     campo e envia, Limpar zera e envia, o foco depois de remover vai ao próximo chip ou ao primeiro
+     campo. Evento: eds:filter-change (detail com os valores). Aqui os chips já vêm no HTML do servidor. -->
+<form class="eds-filter-bar" role="search" aria-label="Filtrar pedidos" data-eds-filter-bar method="get" action="#/componentes/filter-bar">
+  <div class="eds-filter-bar-fields">
+    <div class="eds-field eds-filter-bar-search">
+      <label class="eds-label" for="fb-busca">Buscar</label>
+      <input class="eds-input" id="fb-busca" name="busca" type="search" placeholder="Código ou cliente" autocomplete="off" />
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="fb-situacao">Situação</label>
+      <select class="eds-select" id="fb-situacao" name="situacao">
+        <option value="">Todas</option>
+        <option value="ativo" selected>Ativo</option>
+        <option value="pendente">Pendente</option>
+        <option value="cancelado">Cancelado</option>
+      </select>
+    </div>
+  </div>
+  <div class="eds-filter-bar-actions">
+    <button type="submit" class="eds-button eds-button-primary">Filtrar</button>
+    <button type="reset" class="eds-button eds-button-secondary">Limpar</button>
+  </div>
+  <ul class="eds-filter-chips" aria-label="Filtros ativos">
+    <li>
+      <button type="button" class="eds-chip" data-eds-filter-remove="situacao">
+        Situação: Ativo
+        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+        <span class="eds-visually-hidden"> — remover</span>
+      </button>
+    </li>
+  </ul>
+</form>

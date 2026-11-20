@@ -1,0 +1,20 @@
+<!-- Vertical: .eds-stepper-vertical. Etapa com erro: data-state="error" + texto oculto "(com erro)".
+     Etapa concluída clicável (voltar): o rótulo é um <button class="eds-stepper-label">. -->
+<ol class="eds-stepper eds-stepper-vertical" aria-label="Andamento da solicitação">
+  <li class="eds-stepper-item" data-state="complete">
+    <span class="eds-stepper-marker" aria-hidden="true"></span>
+    <button type="button" class="eds-stepper-label">Solicitação enviada<span class="eds-visually-hidden"> (concluída)</span></button>
+  </li>
+  <li class="eds-stepper-item" data-state="error">
+    <span class="eds-stepper-marker" aria-hidden="true"></span>
+    <span class="eds-stepper-label">Documentos<span class="eds-visually-hidden"> (com erro)</span></span>
+  </li>
+  <li class="eds-stepper-item" data-state="current" aria-current="step">
+    <span class="eds-stepper-marker" aria-hidden="true"></span>
+    <span class="eds-stepper-label">Análise</span>
+  </li>
+  <li class="eds-stepper-item" data-state="upcoming">
+    <span class="eds-stepper-marker" aria-hidden="true"></span>
+    <span class="eds-stepper-label">Conclusão</span>
+  </li>
+</ol>

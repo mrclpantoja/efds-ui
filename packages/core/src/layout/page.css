@@ -1,0 +1,130 @@
+/*
+ * Page — estrutura de uma página de conteúdo: cabeçalho, barra de ferramentas, corpo e rodapé.
+ *
+ *   <div class="eds-page">
+ *     <header class="eds-page-header [eds-page-header-sticky]">
+ *       <nav class="eds-breadcrumb">…</nav>
+ *       <div class="eds-page-heading">
+ *         <h1 class="eds-page-title">Pedidos</h1>
+ *         <p class="eds-page-description">…</p>
+ *         <div class="eds-page-meta">…badges…</div>        (opcional)
+ *       </div>
+ *       <div class="eds-page-actions">…botões…</div>
+ *     </header>
+ *     <div class="eds-page-toolbar">…barra de filtros…</div>
+ *     <div class="eds-page-body">…tabela, cards…</div>
+ *     <footer class="eds-page-footer">…paginação…</footer>
+ *   </div>
+ *
+ * - A página é um container de largura (eds-page): título e ações ficam na mesma linha quando cabem;
+ *   abaixo de 40rem as ações descem para a linha seguinte.
+ * - O espaçamento entre as partes é --eds-inset-lg (acompanha a densidade).
+ * - .eds-page-header-sticky fixa o cabeçalho no topo da área de rolagem. Cuidado com WCAG 2.4.11: o
+ *   cabeçalho pode cobrir o foco; se ele for alto, prefira não fixar em telas baixas.
+ */
+@layer eds.layout {
+  .eds-page {
+    --_page-gap: var(--eds-inset-lg);
+
+    container: eds-page / inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: var(--_page-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+  }
+
+  .eds-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--eds-space-3) var(--eds-inset-md);
+    min-inline-size: 0;
+
+    /* A trilha ocupa a primeira linha sozinha. */
+    & > .eds-breadcrumb {
+      flex: 1 1 100%;
+    }
+  }
+
+  .eds-page-heading {
+    display: flex;
+    flex: 1 1 20rem;
+    flex-direction: column;
+    gap: var(--eds-space-1);
+    min-inline-size: 0;
+  }
+
+  .eds-page-title {
+    margin: 0;
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-h1);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: var(--eds-line-height-h1);
+    overflow-wrap: anywhere;
+  }
+
+  .eds-page-description {
+    max-inline-size: 65ch;
+    margin: 0;
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+  }
+
+  .eds-page-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2);
+    margin-block-start: var(--eds-space-1);
+  }
+
+  .eds-page-actions {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--eds-space-2);
+    min-inline-size: 0;
+  }
+
+  .eds-page-toolbar {
+    min-inline-size: 0;
+  }
+
+  .eds-page-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_page-gap);
+    min-inline-size: 0;
+  }
+
+  .eds-page-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-3);
+    min-inline-size: 0;
+  }
+
+  .eds-page-header-sticky {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--eds-z-sticky);
+    padding-block: var(--eds-space-3);
+    border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+    background: var(--eds-color-bg-page);
+  }
+
+  /* Estreito: título em cima, ações abaixo ocupando a linha. */
+  @container eds-page (inline-size < 40rem) {
+    .eds-page-actions {
+      flex: 1 1 100%;
+      justify-content: flex-start;
+    }
+  }
+}

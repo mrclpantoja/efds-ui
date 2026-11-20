@@ -243,6 +243,9 @@ describe('DialogProvider / useDialog', () => {
     expect(document.querySelectorAll('dialog')).toHaveLength(1);
     await user.click(screen.getByRole('button', { name: 'Confirmar' }));
     await waitFor(() => expect(dialog()).toHaveTextContent('Terceiro'));
+    // O foco inicial vem de um efeito, depois do commit: com a máquina carregada, o texto já
+    // aparece antes de o campo ter o foco, e o Enter cairia no vazio. Espera o foco.
+    await waitFor(() => expect(screen.getByRole('textbox')).toHaveFocus());
     await user.keyboard('{Enter}');
     await waitFor(() => expect(order).toEqual(['a', 'b:true', 'c:v']));
     // O foco volta ao elemento de antes da primeira chamada.

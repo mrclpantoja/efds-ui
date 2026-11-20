@@ -8,6 +8,11 @@ import { UseCases } from '../../components/UseCases';
 import Basica from '../../examples/table/basica';
 import basicaHtml from '../../examples/table/basica.html?raw';
 import basicaSource from '../../examples/table/basica.tsx?raw';
+import Carregando from '../../examples/table/carregando';
+import carregandoHtml from '../../examples/table/carregando.html?raw';
+import carregandoSource from '../../examples/table/carregando.tsx?raw';
+import ExcluirDesfazer from '../../examples/table/excluir-desfazer';
+import excluirDesfazerSource from '../../examples/table/excluir-desfazer.tsx?raw';
 import Exportar from '../../examples/table/exportar';
 import exportarHtml from '../../examples/table/exportar.html?raw';
 import exportarSource from '../../examples/table/exportar.tsx?raw';
@@ -135,6 +140,39 @@ export default function TablePage() {
           }
           html={filtroHtml}
           react={{ Component: Filtro, source: filtroSource }}
+        />
+        <Example
+          title="Carregando"
+          description={
+            <>
+              <code>loading</code> põe <code>aria-busy=&quot;true&quot;</code> na tabela e anuncia{' '}
+              <code>texts.loading</code> em uma região <code>role=&quot;status&quot;</code> que já
+              existia (uma região que nasce preenchida não é lida). As linhas Skeleton (
+              <code>&lt;TableLoadingRows&gt;</code>) mantêm colunas e altura, sem salto de layout.
+              Para recarregar sobre dados já exibidos, deixe as linhas reais (ficam esmaecidas) e
+              use <code>loadingOverlay</code>, que acrescenta o Spinner, cobre toda a área rolável
+              do wrap (não só o que está visível) e deixa o conteúdo da tabela <code>inert</code>: o
+              foco não entra em controles cobertos e, ao terminar, volta a quem o tinha. No HTML, o
+              mesmo markup: <code>aria-busy</code>, <code>tr.eds-table-loading</code> e{' '}
+              <code>.eds-table-overlay</code> (com <code>.eds-table-overlay-box</code> dentro). No
+              HTML puro, quem escreve a página põe o atributo <code>inert</code> na{' '}
+              <code>&lt;table&gt;</code> junto com a sobreposição e o tira ao terminar.
+            </>
+          }
+          html={carregandoHtml}
+          react={{ Component: Carregando, source: carregandoSource }}
+        />
+        <Example
+          title="Excluir linha com Desfazer"
+          description={
+            <>
+              Padrão sem API nova: a linha some na hora e o Toast com <code>action</code> oferece
+              &quot;Desfazer&quot; por 8 segundos, sem pedir confirmação para um ato reversível. Só
+              confirme (diálogo) o que não tem volta. A exclusão no servidor deve esperar o prazo do
+              desfazer, ou ser revertida por ele. Exige o <code>ToastProvider</code> na raiz do app.
+            </>
+          }
+          react={{ Component: ExcluirDesfazer, source: excluirDesfazerSource }}
         />
         <Example
           title="Tabela vazia"
@@ -364,6 +402,26 @@ export default function TablePage() {
                   sozinha.
                 </>
               ),
+            },
+            {
+              name: 'loading',
+              type: 'boolean',
+              description: (
+                <>
+                  Carregando: <code>aria-busy</code> e anúncio de <code>texts.loading</code>.
+                </>
+              ),
+            },
+            {
+              name: 'loadingOverlay',
+              type: 'boolean',
+              default: 'false',
+              description: 'Com loading, acrescenta a sobreposição com Spinner (recarga).',
+            },
+            {
+              name: 'TableLoadingRows: columns, rows, numeric',
+              type: 'number, number, number[]',
+              description: 'Linhas Skeleton (tr.eds-table-loading); rows padrão 3.',
             },
             {
               name: 'texts',

@@ -17,6 +17,11 @@ import { initToast } from './components/toast';
 import { uploadBehavior } from './components/upload';
 import { sortableBehavior } from './components/sortable';
 import { treeBehavior } from './components/tree';
+import { accordionBehavior } from './components/accordion';
+import { filterBarBehavior } from './components/filter-bar';
+import { popoverBehavior } from './components/popover';
+import { tooltipBehavior } from './components/tooltip';
+import { wizardBehavior } from './components/wizard';
 import { configure, type BehaviorOptions } from './setup';
 
 /**
@@ -48,6 +53,12 @@ export function initWith(
       // Sortable e Tree
       sortableBehavior,
       treeBehavior,
+      // Onda B
+      accordionBehavior,
+      tooltipBehavior,
+      popoverBehavior,
+      wizardBehavior,
+      filterBarBehavior,
       // Os que só entram na compilação completa (exportação e máscara)
       ...extra,
     ]),

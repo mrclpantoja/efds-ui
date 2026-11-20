@@ -148,7 +148,7 @@ export default function Comportamento() {
       <Section title="Instalar">
         <p>
           O pacote tem duas saídas: um <strong>script clássico</strong> (
-          <code>eds-behavior.js</code>, para <code>&lt;script src&gt;</code>, cerca de 47 kB com
+          <code>eds-behavior.js</code>, para <code>&lt;script src&gt;</code>, cerca de 54 kB com
           gzip) e um <strong>módulo ESM</strong> tree-shakeable. O visual continua vindo do{' '}
           <code>@eds-ui/core</code>: o pacote não carrega CSS.
         </p>
@@ -170,7 +170,7 @@ export default function Comportamento() {
           Quem não usa a exportação de tabelas nem a máscara de entrada pode carregar{' '}
           <code>eds-behavior-core.js</code>: é o mesmo script (mesmo <code>window.EDS</code>, mesmos
           atributos e a mesma configuração pela tag) sem o exportador CSV/Excel/JSON/PDF e sem a
-          máscara: cerca de 35 kB com gzip, contra 47 kB do completo. Nele,{' '}
+          máscara: cerca de 41 kB com gzip, contra 54 kB do completo. Nele,{' '}
           <code>data-eds-export</code> e <code>data-eds-mask</code> não fazem nada. O{' '}
           <code>eds-behavior.js</code> segue completo.
         </p>

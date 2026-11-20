@@ -8,6 +8,7 @@ export {
   TableEmpty,
   TableToolbar,
   TableFooter,
+  TableLoadingRows,
 } from './Table';
 export type {
   TableProps,
@@ -19,6 +20,7 @@ export type {
   TableEmptyProps,
   TableToolbarProps,
   TableFooterProps,
+  TableLoadingRowsProps,
   TableSort,
   TableSortDirection,
   TableSortState,

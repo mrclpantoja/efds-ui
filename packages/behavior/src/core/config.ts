@@ -167,6 +167,21 @@ export interface Messages {
   exportDoneOne: string;
   exportEmpty: string;
   exportFailed: string;
+  // Wizard: `{current}`, `{total}`, `{title}`; sufixos ocultos das etapas do Stepper
+  wizardStep: string;
+  wizardStepComplete: string;
+  wizardStepError: string;
+  wizardStepUntitled: string;
+  wizardSummary: string;
+  // Barra de filtros: `{label}`, `{count}`
+  filterChips: string;
+  filterRemove: string;
+  filterRemoved: string;
+  filterCleared: string;
+  filterCountNone: string;
+  filterCountOne: string;
+  filterCountMany: string;
+  filterMoreCount: string;
 }
 
 export const defaultMessages: Messages = {
@@ -322,6 +337,21 @@ export const defaultMessages: Messages = {
   exportDoneOne: 'Arquivo {name} gerado (1 linha).',
   exportEmpty: 'Não há linhas para exportar.',
   exportFailed: 'Não foi possível gerar o arquivo.',
+  // Wizard
+  wizardStep: 'Etapa {current} de {total}: {title}.',
+  wizardStepComplete: ' (concluída)',
+  wizardStepError: ' (com erro)',
+  wizardStepUntitled: 'sem título',
+  wizardSummary: 'Etapa {current} de {total}',
+  // Barra de filtros
+  filterChips: 'Filtros ativos',
+  filterRemove: ' — remover',
+  filterRemoved: 'Filtro removido: {label}.',
+  filterCleared: 'Filtros removidos.',
+  filterCountNone: 'Nenhum filtro ativo.',
+  filterCountOne: '1 filtro ativo.',
+  filterCountMany: '{count} filtros ativos.',
+  filterMoreCount: '({count})',
 };
 
 export const DEFAULT_LOCALE = 'pt-BR';

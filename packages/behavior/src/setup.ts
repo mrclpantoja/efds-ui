@@ -23,6 +23,12 @@ import { initUpload } from './components/upload';
 // Sortable e Tree
 import { initSortable } from './components/sortable';
 import { initTree } from './components/tree';
+// Onda B
+import { initAccordion } from './components/accordion';
+import { initFilterBar } from './components/filter-bar';
+import { initPopover } from './components/popover';
+import { initTooltip } from './components/tooltip';
+import { initWizard } from './components/wizard';
 
 export interface BehaviorOptions {
   /**
@@ -64,6 +70,8 @@ export type { DialogInputType, DialogOptions, DialogVariant } from './components
 export type { ComboboxOption } from './components/combobox';
 export type { SortDirection } from './components/table';
 export type { TreeChangeAction, TreeNodeData } from './components/tree';
+export type { FilterChange } from './components/filter-bar';
+export type { Placement } from './core/position';
 export {
   initAlert,
   initButtonBusy,
@@ -85,6 +93,12 @@ export {
   // Sortable e Tree
   initSortable,
   initTree,
+  // Onda B
+  initAccordion,
+  initFilterBar,
+  initPopover,
+  initTooltip,
+  initWizard,
   loader,
   toast,
 };

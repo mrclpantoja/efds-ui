@@ -49,6 +49,7 @@ Vitest + Testing Library + `user-event` + matchers do jest-dom (já no setup do 
 | Alert, Toast, Badge, Spinner, Skeleton                                                              | pronto | B/C  |
 | Table, Pagination, EmptyState                                                                       | pronto | D    |
 | TableExport (exportar CSV, Excel, JSON, PDF)                                                        | pronto | H    |
+| Accordion, Tooltip, Popover, Stepper, Wizard, Stat (+ StatGrid), FilterBar, Page (+ partes)         | pronto | B2   |
 
 Ícones (`@eds-ui/icons`): 18 prontos (busca, filtro, mais, editar, excluir, 4 chevrons, fechar, check, setas, menu, sino, usuário, download, adicionar). Demais sob demanda.
 
@@ -134,3 +135,14 @@ Vitest + Testing Library + `user-event` + matchers do jest-dom (já no setup do 
 - **Colar**: tratado em `onPaste` (sem o corte do `maxlength`); o valor entra pelo setter nativo e um evento `input` faz o React chamar `onChange`. Um `onPaste` do autor com `preventDefault` cancela a colagem.
 - **`unmask`**: com `name`, o visível perde o `name` e o componente devolve um fragmento com um `<input type="hidden">` (`name`, `form` e `disabled` do campo) com o valor limpo. A `ref` continua apontando para o campo visível. Um `reset` do formulário refaz o valor limpo.
 - **Limitações**: composição de IME não é mascarada até terminar; `maxlength` cheio impede inserir no meio, como em qualquer campo.
+
+## Notas de comportamento (onda B)
+
+- **Accordion/AccordionItem**: `<details name>`; `exclusive` gera o `name` com `useId`. `open`/`defaultOpen`/`onOpenChange` (o `toggle` nativo é a fonte da verdade, então o fechamento por outro item do grupo também avisa). `disabled` = `aria-disabled` no `<summary>` + `preventDefault` no clique.
+- **Tooltip**: renderiza o gatilho clonado (`aria-describedby`, `data-eds-tooltip="<lado>"`) e, logo depois, o `.eds-tooltip[popover=manual]`; um efeito chama o `tooltipBehavior.bind` do `@eds-ui/behavior/balloon` no `previousElementSibling` (mesmo código do HTML: atraso, Esc, pairável, posição). O gatilho precisa repassar `aria-describedby` e `data-*` ao DOM.
+- **Popover**: gatilho clonado (`popoverTarget`, `aria-expanded`, `data-eds-popover="<lado>"`), painel `popover="auto"` logo depois, `popoverBehavior.bind` no efeito. O tipo exige `title` **ou** `aria-label`. `actions` aceita função `({ popoverId }) => ReactNode` (botão Fechar nativo). `open` controlado usa `showPopover`/`hidePopover`; `onOpenChange` vem do `toggle`. Não chame `init` sobre ele.
+- **Stepper/Wizard**: `Stepper` deriva estados de `current` (`steps[i].state` sobrescreve), marcador vazio (CSS), `.eds-stepper-summary` só no item atual, `onStepClick` troca o rótulo concluído por `<button class="eds-stepper-label">`. `Wizard` (form `noValidate`) mantém todos os painéis montados, valida o painel nativamente (`validate` extra), foca o `<h3>` da etapa nova, anuncia por `useAnnouncer`, "Avançar" é `type=submit` (Enter avança) e "Concluir" na última; `onComplete(FormData)` impede o envio nativo. Um painel anterior inválido no envio final reabre e vira `error`.
+- **Stat/StatGrid**: `.eds-card.eds-stat` + `data-trend`/`data-tone`, seta svg desenhada para cima, direção em texto oculto (`texts.up/down/flat`), `loading` com Skeleton + `role=status`. Sem prop `icon` (o CSS tem `.eds-stat-icon`, mas a API fica mínima).
+- **FilterBar**: controlado (`active` com `onRemove`, `onSubmit`, `onClear`); `more` + `moreCount` montam o `<details>` "Mais filtros" com contador; depois de remover um chip o foco vai ao próximo chip ou ao primeiro campo. O `reset` nativo dispara `onClear`; `submit` é sempre impedido.
+- **Page/PageHeader/PageToolbar/PageBody/PageFooter**: só classes `.eds-page-*`; `sticky` documenta o risco de 2.4.11 (`scroll-padding-block-start` é do consumidor). As telas de referência do playground usam `PageHeader` (todas), `FilterBar` (Listagem) e `StatGrid` (Dashboard).
+- **Table `loading`**: `aria-busy` na tabela + região `role=status` presente desde que `loading` é definida (texto só ao carregar, `texts.loading`); `loadingOverlay` acrescenta `.eds-table-overlay` com Spinner; `TableLoadingRows` emite `tr.eds-table-loading` com Skeleton. Corpo de Modal/Drawer rolável focável já vinha de `useScrollRegion` (onda A).

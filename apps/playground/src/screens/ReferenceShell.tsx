@@ -9,10 +9,11 @@ import {
   Button,
   Container,
   NavbarActions,
+  Page,
+  PageHeader,
   Sidebar,
   SidebarItem,
   SidebarSection,
-  Stack,
 } from '@eds-ui/react';
 import {
   ArrowLeftIcon,
@@ -90,7 +91,7 @@ export function ReferenceShell({
   width = 'xl',
   children,
 }: ReferenceShellProps) {
-  const titleRef = useRef<HTMLHeadingElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     document.title = `${title} · eDS.ui`;
@@ -99,7 +100,12 @@ export function ReferenceShell({
   useEffect(() => {
     if (!shellState.navigated) return;
     shellState.navigated = false;
-    titleRef.current?.focus();
+    // SPA: o foco vai ao h1 para o leitor de tela perceber a nova "página".
+    const heading = headerRef.current?.querySelector('h1');
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus();
+    }
   }, []);
 
   return (
@@ -149,33 +155,28 @@ export function ReferenceShell({
       }
     >
       <Container size={width === 'lg' ? 'lg' : 'xl'}>
-        <Stack gap={5}>
-          <Stack gap={2}>
-            <Breadcrumb>
-              {breadcrumb.map((crumb) => (
-                <BreadcrumbItem
-                  key={crumb.label}
-                  href={crumb.href}
-                  current={crumb.href === undefined}
-                >
-                  {crumb.label}
-                </BreadcrumbItem>
-              ))}
-            </Breadcrumb>
-            <Stack direction="row" wrap justify="between" gap={3}>
-              <h1 className="eds-text-h1" ref={titleRef} tabIndex={-1}>
-                {title}
-              </h1>
-              {actions ? (
-                <Stack direction="row" wrap gap={2}>
-                  {actions}
-                </Stack>
-              ) : null}
-            </Stack>
-            {description ? <p className="rs-muted">{description}</p> : null}
-          </Stack>
+        <Page>
+          <PageHeader
+            ref={headerRef}
+            breadcrumb={
+              <Breadcrumb>
+                {breadcrumb.map((crumb) => (
+                  <BreadcrumbItem
+                    key={crumb.label}
+                    href={crumb.href}
+                    current={crumb.href === undefined}
+                  >
+                    {crumb.label}
+                  </BreadcrumbItem>
+                ))}
+              </Breadcrumb>
+            }
+            title={title}
+            description={description}
+            actions={actions}
+          />
           {children}
-        </Stack>
+        </Page>
       </Container>
     </AppShell>
   );

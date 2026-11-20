@@ -12,6 +12,17 @@
 import type { ComponentType } from 'react';
 import ButtonPage from './pages/componentes/Button';
 import TabsPage from './pages/componentes/Tabs';
+import AcessibilidadePage from './pages/comecar/Acessibilidade';
+import EventosPage from './pages/comecar/Eventos';
+import ExportacaoPage from './pages/comecar/Exportacao';
+import MascaraPage from './pages/comecar/Mascara';
+import AccordionPage from './pages/componentes/Accordion';
+import FilterBarPage from './pages/componentes/FilterBar';
+import PageHeaderPage from './pages/componentes/PageHeader';
+import PopoverPage from './pages/componentes/Popover';
+import StatPage from './pages/componentes/Stat';
+import StepperPage from './pages/componentes/Stepper';
+import TooltipPage from './pages/componentes/Tooltip';
 import Comportamento from './pages/comecar/Comportamento';
 import Instalacao from './pages/comecar/Instalacao';
 import Introducao from './pages/comecar/Introducao';
@@ -89,6 +100,25 @@ export const routes: readonly DocRoute[] = [
     section: 'comecar',
     page: Comportamento,
   },
+  {
+    path: '/comecar/eventos',
+    title: 'Referência de eventos',
+    section: 'comecar',
+    page: EventosPage,
+  },
+  { path: '/comecar/mascara', title: 'Máscara de entrada', section: 'comecar', page: MascaraPage },
+  {
+    path: '/comecar/exportacao',
+    title: 'Exportação de tabelas',
+    section: 'comecar',
+    page: ExportacaoPage,
+  },
+  {
+    path: '/comecar/acessibilidade',
+    title: 'Acessibilidade',
+    section: 'comecar',
+    page: AcessibilidadePage,
+  },
 
   // Fundamentos
   { path: '/fundamentos/tokens', title: 'Tokens', section: 'fundamentos', page: Tokens },
@@ -108,6 +138,12 @@ export const routes: readonly DocRoute[] = [
   { path: '/fundamentos/icones', title: 'Ícones', section: 'fundamentos', page: Icones },
 
   // Componentes (ordem alfabética; Pagination e Empty State são partes do Table)
+  {
+    path: '/componentes/accordion',
+    title: 'Accordion',
+    section: 'componentes',
+    page: AccordionPage,
+  },
   { path: '/componentes/alert', title: 'Alert', section: 'componentes', page: AlertPage },
   {
     path: '/componentes/app-shell',
@@ -127,6 +163,12 @@ export const routes: readonly DocRoute[] = [
     section: 'componentes',
     page: TreePage,
   },
+  {
+    path: '/componentes/filter-bar',
+    title: 'Barra de filtros',
+    section: 'componentes',
+    page: FilterBarPage,
+  },
   { path: '/componentes/badge', title: 'Badge', section: 'componentes', page: BadgePage },
   {
     path: '/componentes/breadcrumb',
@@ -142,6 +184,12 @@ export const routes: readonly DocRoute[] = [
     page: ButtonGroupPage,
   },
   { path: '/componentes/card', title: 'Card', section: 'componentes', page: CardPage },
+  {
+    path: '/componentes/page-header',
+    title: 'Cabeçalho de página',
+    section: 'componentes',
+    page: PageHeaderPage,
+  },
   { path: '/componentes/checkbox', title: 'Checkbox', section: 'componentes', page: CheckboxPage },
   {
     path: '/componentes/combobox',
@@ -189,6 +237,7 @@ export const routes: readonly DocRoute[] = [
     section: 'componentes',
     page: FileUploadPage,
   },
+  { path: '/componentes/stat', title: 'Indicador (Stat)', section: 'componentes', page: StatPage },
   { path: '/componentes/input', title: 'Input', section: 'componentes', page: InputPage },
   { path: '/componentes/modal', title: 'Modal', section: 'componentes', page: ModalPage },
   {
@@ -204,6 +253,7 @@ export const routes: readonly DocRoute[] = [
     section: 'componentes',
     page: PageLoaderPage,
   },
+  { path: '/componentes/popover', title: 'Popover', section: 'componentes', page: PopoverPage },
   { path: '/componentes/radio', title: 'Radio', section: 'componentes', page: RadioPage },
   { path: '/componentes/select', title: 'Select', section: 'componentes', page: SelectPage },
   { path: '/componentes/sidebar', title: 'Sidebar', section: 'componentes', page: SidebarPage },
@@ -223,8 +273,15 @@ export const routes: readonly DocRoute[] = [
     section: 'componentes',
     page: EmptyStatePage,
   },
+  {
+    path: '/componentes/stepper',
+    title: 'Stepper e Wizard',
+    section: 'componentes',
+    page: StepperPage,
+  },
   { path: '/componentes/tabs', title: 'Tabs', section: 'componentes', page: TabsPage },
   { path: '/componentes/textarea', title: 'Textarea', section: 'componentes', page: TextareaPage },
+  { path: '/componentes/tooltip', title: 'Tooltip', section: 'componentes', page: TooltipPage },
   { path: '/componentes/toast', title: 'Toast', section: 'componentes', page: ToastPage },
 ];
 

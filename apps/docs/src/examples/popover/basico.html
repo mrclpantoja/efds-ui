@@ -1,0 +1,19 @@
+<!-- Behavior: [data-eds-popover] no gatilho. O popover="auto" é nativo (clique fora e Esc fecham);
+     o JS posiciona (--_popover-x/-y, data-placement), sincroniza aria-expanded e devolve o foco
+     ao gatilho ao fechar. Eventos: eds:popover-open e eds:popover-close.
+     Placement inicial opcional: data-eds-popover="bottom" (top|bottom|start|end). -->
+<div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+  <button type="button" class="eds-button eds-button-secondary" popovertarget="pp-detalhes"
+    aria-expanded="false" data-eds-popover>
+    Detalhes do pedido
+  </button>
+  <div class="eds-popover" id="pp-detalhes" popover role="dialog" aria-labelledby="pp-detalhes-t">
+    <h2 class="eds-popover-title" id="pp-detalhes-t">Pedido PED-0001</h2>
+    <p>Cliente: Atelier Exemplo. Total de R$ 1.280,50, em 3 itens.</p>
+    <p>Previsão de entrega em 28/11.</p>
+    <div class="eds-popover-actions">
+      <button type="button" class="eds-button eds-button-secondary eds-button-sm" popovertarget="pp-detalhes" popovertargetaction="hide">Fechar</button>
+      <a class="eds-button eds-button-primary eds-button-sm" href="#/componentes/popover">Abrir pedido</a>
+    </div>
+  </div>
+</div>

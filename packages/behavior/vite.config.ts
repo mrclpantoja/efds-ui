@@ -9,6 +9,7 @@ export default defineConfig({
         index: 'src/index.ts',
         'export-entry': 'src/export-entry.ts',
         'mask-entry': 'src/mask-entry.ts',
+        'balloon-entry': 'src/balloon-entry.ts',
         // Um gerador por formato, para o @eds-ui/react carregar sob demanda.
         'export/formats/csv': 'src/export/formats/csv.ts',
         'export/formats/json': 'src/export/formats/json.ts',

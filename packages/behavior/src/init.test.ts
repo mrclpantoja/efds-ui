@@ -93,4 +93,31 @@ describe('init', () => {
     expect(document.getElementById('s')).toHaveTextContent('Sorted by Name, ascending.');
     destroy();
   });
+
+  it('liga tooltip, popover, wizard e barra de filtros (onda B) e usa os textos configurados', async () => {
+    configure({
+      messages: { wizardStep: 'Step {current} of {total}: {title}.', filterRemove: ' - remove' },
+    });
+    document.body.innerHTML = `
+      <button id="tb" aria-describedby="tt" data-eds-tooltip>x</button>
+      <span class="eds-tooltip" id="tt" role="tooltip" popover="manual">dica</span>
+      <button id="pb" popovertarget="pp" aria-expanded="false" data-eds-popover>p</button>
+      <div id="pp" popover>conteúdo</div>
+      <form id="wz" data-eds-wizard>
+        <section data-eds-wizard-step><h2>Um</h2></section>
+        <section data-eds-wizard-step hidden><h2>Dois</h2></section>
+        <button type="button" data-eds-wizard-next id="nx">Próximo</button>
+      </form>
+      <form id="fb" data-eds-filter-bar><label for="q">Busca</label><input id="q" name="q" value="a" /></form>`;
+    const destroy = init(document);
+    await flush();
+    expect(document.getElementById('pb')).toHaveAttribute('aria-expanded', 'false');
+    document.getElementById('pb')?.click();
+    await flush();
+    expect(document.getElementById('pb')).toHaveAttribute('aria-expanded', 'true');
+    document.getElementById('nx')?.click();
+    expect(document.querySelector('#wz [role="status"]')).toHaveTextContent('Step 2 of 2: Dois.');
+    expect(document.querySelector('#fb .eds-chip')).toHaveTextContent('Busca: a - remove');
+    destroy();
+  });
 });

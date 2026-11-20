@@ -60,4 +60,24 @@ describe('select somente leitura (HTML)', () => {
     expect(event.defaultPrevented).toBe(true);
     expect(document.activeElement).toBe(ro);
   });
+
+  it('cancela o fim do toque e o pointerdown para a lista nativa não abrir', () => {
+    const ro = document.getElementById('ro') as HTMLSelectElement;
+    const rw = document.getElementById('rw') as HTMLSelectElement;
+    const touch = (el: Element) => {
+      const event = new Event('touchend', { bubbles: true, cancelable: true });
+      el.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    const pointer = (el: Element) => {
+      const event = new Event('pointerdown', { bubbles: true, cancelable: true });
+      el.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    expect(touch(ro)).toBe(true);
+    expect(document.activeElement).toBe(ro);
+    expect(pointer(ro)).toBe(true);
+    expect(touch(rw)).toBe(false);
+    expect(pointer(rw)).toBe(false);
+  });
 });

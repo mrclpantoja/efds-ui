@@ -34,8 +34,17 @@ export function initSelectReadonly(root: ParentNode = document): () => void {
   const onMouseDown = (event: Event) => {
     const select = readonlySelect(event);
     if (!select) return;
+    // `pointerdown` e `mousedown` cobrem mouse e caneta; o touch fica no `touchend`.
     // Sem abrir a lista, mas com foco (o preventDefault do mousedown tira o foco: devolve-o).
     event.preventDefault();
+    select.focus();
+  };
+  // Toque: o seletor nativo abre no fim do toque (ou no clique sintetizado). Cancelar o
+  // `touchend` impede a lista de piscar; o `touchstart` fica livre para não travar a rolagem.
+  const onTouchEnd = (event: Event) => {
+    const select = readonlySelect(event);
+    if (!select) return;
+    if (event.cancelable) event.preventDefault();
     select.focus();
   };
   const onKeyDown = (event: Event) => {
@@ -55,12 +64,16 @@ export function initSelectReadonly(root: ParentNode = document): () => void {
     }
   };
   target.addEventListener('focusin', onFocusIn, true);
+  target.addEventListener('pointerdown', onMouseDown, true);
   target.addEventListener('mousedown', onMouseDown, true);
+  target.addEventListener('touchend', onTouchEnd, { capture: true, passive: false });
   target.addEventListener('keydown', onKeyDown, true);
   target.addEventListener('change', onChange, true);
   return () => {
     target.removeEventListener('focusin', onFocusIn, true);
+    target.removeEventListener('pointerdown', onMouseDown, true);
     target.removeEventListener('mousedown', onMouseDown, true);
+    target.removeEventListener('touchend', onTouchEnd, true);
     target.removeEventListener('keydown', onKeyDown, true);
     target.removeEventListener('change', onChange, true);
   };

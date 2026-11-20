@@ -1,16 +1,16 @@
-import { useMemo, useRef, useState, type FormEvent } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import {
   Badge,
   Button,
   Checkbox,
-  Drawer,
   Dropdown,
   DropdownItem,
   DropdownSeparator,
   EmptyState,
   Field,
-  Fieldset,
+  FilterBar,
+  MultiSelect,
   Input,
   Modal,
   Pagination,
@@ -32,7 +32,6 @@ import {
   CopyIcon,
   DownloadIcon,
   EditIcon,
-  FilterIcon,
   MoreVerticalIcon,
   PlusIcon,
   SearchIcon,
@@ -132,8 +131,8 @@ function ListagemTela() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [pending, setPending] = useState<Cliente[]>([]);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [drawerKey, setDrawerKey] = useState(0);
+  // Valores dos campos da barra de filtros; `filtros` guarda o que foi aplicado (os chips).
+  const [draft, setDraft] = useState({ situacoes: [] as Situacao[], segmento: '' });
   const [acao, setAcao] = useState<{ tipo: Acao; limpouSelecao: boolean }>({
     tipo: 'nenhuma',
     limpouSelecao: false,
@@ -144,7 +143,6 @@ function ListagemTela() {
   const allRef = useRef<HTMLInputElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
   const deleteRef = useRef<HTMLDialogElement>(null);
-  const firstFilterRef = useRef<HTMLInputElement>(null);
 
   const filtrados = useMemo(() => {
     const termo = normalizar(busca.trim());
@@ -232,10 +230,15 @@ function ListagemTela() {
     setAcao({ tipo: 'pagina', limpouSelecao: false });
   };
 
-  const clearSearch = () => {
+  const limpar = () => {
     setBusca('');
+    setDraft({ situacoes: [] as Situacao[], segmento: '' });
     setFiltros(semFiltros);
     resetView();
+  };
+
+  const clearSearch = () => {
+    limpar();
     searchRef.current?.focus();
   };
 
@@ -280,22 +283,43 @@ function ListagemTela() {
     });
   };
 
-  const openFilters = () => {
-    // Remonta o formulário com os filtros aplicados antes de abrir (o foco inicial depende disso).
-    setDrawerKey((k) => k + 1);
-    setFiltersOpen(true);
-  };
-
-  const applyFilters = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const aplicarFiltros = () => {
     setFiltros({
-      situacoes: data.getAll('situacao').map(String) as Situacao[],
-      segmento: String(data.get('segmento') ?? ''),
+      situacoes: draft.situacoes,
+      segmento: draft.segmento,
     });
     resetView();
-    setFiltersOpen(false);
   };
+
+  // Cada situação aplicada é um chip; remover um tira só aquele valor.
+  const removerSituacao = (valor: Situacao) => {
+    setDraft((d) => ({ ...d, situacoes: d.situacoes.filter((s) => s !== valor) }));
+    setFiltros((f) => ({ ...f, situacoes: f.situacoes.filter((s) => s !== valor) }));
+    resetView();
+  };
+
+  const removerSegmento = () => {
+    setDraft((d) => ({ ...d, segmento: '' }));
+    setFiltros((f) => ({ ...f, segmento: '' }));
+    resetView();
+  };
+
+  const chips = [
+    ...filtros.situacoes.map((s) => ({
+      key: `situacao-${s}`,
+      label: `Situação: ${situacoes[s].label}`,
+      onRemove: () => removerSituacao(s),
+    })),
+    ...(filtros.segmento
+      ? [
+          {
+            key: 'segmento',
+            label: `Segmento: ${filtros.segmento}`,
+            onRemove: removerSegmento,
+          },
+        ]
+      : []),
+  ];
 
   const exportar = (n: number) =>
     show({
@@ -323,52 +347,59 @@ function ListagemTela() {
         <h2 id="lst-tabela-t" className="eds-visually-hidden">
           Lista de clientes
         </h2>
-        <TableToolbar>
-          {/*
-            Busca + Filtros sempre na mesma linha (sem wrap): a busca cede espaço, o botão não.
-            O grupo cresce com a barra e Exportar quebra para baixo quando não couber.
-          */}
-          <Stack direction="row" gap={2} className="eds-stack-grow">
-            <div className="eds-stack-grow">
-              <label className="eds-visually-hidden" htmlFor="lst-busca">
-                Buscar clientes
-              </label>
-              <Input
-                ref={searchRef}
-                id="lst-busca"
-                type="search"
-                placeholder="Buscar por nome ou código"
-                autoComplete="off"
-                value={busca}
-                onChange={(event) => {
-                  setBusca(event.target.value);
-                  resetView();
-                }}
-              />
-            </div>
-            <Button onClick={openFilters}>
-              <FilterIcon />
-              Filtros{' '}
-              {activeFilters > 0 ? (
-                <Badge variant="info">
-                  {activeFilters}
-                  <span className="eds-visually-hidden">
-                    {activeFilters === 1 ? ' filtro ativo' : ' filtros ativos'}
-                  </span>
-                </Badge>
-              ) : null}
-            </Button>
-          </Stack>
-          {/* Com seleção, só o Exportar da barra em massa fica (evita dois "Exportar"). */}
-          {selected.size === 0 ? (
-            <Stack direction="row" gap={2}>
+        <FilterBar
+          aria-label="Filtrar clientes"
+          active={chips}
+          onSubmit={aplicarFiltros}
+          onClear={limpar}
+        >
+          <Field label="Buscar" className="eds-filter-bar-search">
+            <Input
+              ref={searchRef}
+              type="search"
+              placeholder="Buscar por nome ou código"
+              autoComplete="off"
+              value={busca}
+              onChange={(event) => {
+                setBusca(event.target.value);
+                resetView();
+              }}
+            />
+          </Field>
+          <Field label="Situação">
+            <MultiSelect
+              placeholder="Todas"
+              options={(Object.keys(situacoes) as Situacao[]).map((s) => ({
+                value: s,
+                label: situacoes[s].label,
+              }))}
+              value={draft.situacoes}
+              onChange={(values) => setDraft((d) => ({ ...d, situacoes: values as Situacao[] }))}
+            />
+          </Field>
+          <Field label="Segmento">
+            <Select
+              value={draft.segmento}
+              onChange={(event) => setDraft((d) => ({ ...d, segmento: event.target.value }))}
+            >
+              <option value="">Todos</option>
+              {segmentos.map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </Select>
+          </Field>
+        </FilterBar>
+        {/* Com seleção, só o Exportar da barra em massa fica (evita dois "Exportar"). */}
+        {selected.size === 0 ? (
+          <TableToolbar>
+            <Stack direction="row" gap={2} className="eds-push-end">
               <Button onClick={() => exportar(filtrados.length)}>
                 <DownloadIcon />
                 Exportar
               </Button>
             </Stack>
-          ) : null}
-        </TableToolbar>
+          </TableToolbar>
+        ) : null}
 
         {/* Ação em massa: linha própria, só com seleção. O sólido danger fica no Modal. */}
         {selected.size > 0 ? (
@@ -520,57 +551,6 @@ function ListagemTela() {
           Esta ação não pode ser desfeita.
         </p>
       </Modal>
-
-      <Drawer
-        open={filtersOpen}
-        onClose={() => setFiltersOpen(false)}
-        title="Filtros"
-        initialFocus={firstFilterRef}
-        footer={
-          <>
-            <Button
-              variant="tertiary"
-              onClick={() => {
-                setFiltros(semFiltros);
-                resetView();
-                setFiltersOpen(false);
-              }}
-            >
-              Limpar filtros
-            </Button>
-            <Button onClick={() => setFiltersOpen(false)}>Cancelar</Button>
-            <Button type="submit" form="lst-fil-f" variant="primary">
-              Aplicar
-            </Button>
-          </>
-        }
-      >
-        <form key={drawerKey} id="lst-fil-f" onSubmit={applyFilters}>
-          <Stack gap={5}>
-            <Fieldset legend="Situação">
-              {(Object.keys(situacoes) as Situacao[]).map((s, i) => (
-                <Checkbox
-                  key={s}
-                  ref={i === 0 ? firstFilterRef : undefined}
-                  name="situacao"
-                  value={s}
-                  defaultChecked={filtros.situacoes.includes(s)}
-                >
-                  {situacoes[s].label}
-                </Checkbox>
-              ))}
-            </Fieldset>
-            <Field label="Segmento">
-              <Select name="segmento" defaultValue={filtros.segmento}>
-                <option value="">Todos</option>
-                {segmentos.map((s) => (
-                  <option key={s}>{s}</option>
-                ))}
-              </Select>
-            </Field>
-          </Stack>
-        </form>
-      </Drawer>
     </ReferenceShell>
   );
 }

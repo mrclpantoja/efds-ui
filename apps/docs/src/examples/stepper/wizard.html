@@ -1,0 +1,62 @@
+<!-- Behavior: [data-eds-wizard] no form. Painéis [data-eds-wizard-step] (os demais ficam hidden),
+     botões [data-eds-wizard-prev] e [data-eds-wizard-next]. Antes de avançar valida os campos do
+     painel atual (checkValidity + reportValidity no primeiro inválido); depois move o foco ao título
+     do painel novo, anuncia "Etapa 2 de 3: Endereço." e atualiza o stepper (data-state, aria-current,
+     .eds-stepper-summary). Eventos: eds:wizard-beforechange (cancelável, detail {from,to}) e
+     eds:wizard-change. Etapas concluídas voltam por clique no botão do rótulo. -->
+<form class="eds-stack eds-gap-5" data-eds-wizard novalidate>
+  <ol class="eds-stepper" aria-label="Etapas do cadastro">
+    <li class="eds-stepper-item" data-state="current" aria-current="step">
+      <span class="eds-stepper-marker" aria-hidden="true"></span>
+      <span class="eds-stepper-label">Dados</span>
+      <span class="eds-stepper-summary">Etapa 1 de 3</span>
+    </li>
+    <li class="eds-stepper-item" data-state="upcoming">
+      <span class="eds-stepper-marker" aria-hidden="true"></span>
+      <span class="eds-stepper-label">Endereço</span>
+    </li>
+    <li class="eds-stepper-item" data-state="upcoming">
+      <span class="eds-stepper-marker" aria-hidden="true"></span>
+      <span class="eds-stepper-label">Confirmação</span>
+    </li>
+  </ol>
+
+  <section data-eds-wizard-step aria-labelledby="wz-t1">
+    <h3 class="eds-text-h4" id="wz-t1" tabindex="-1">Dados</h3>
+    <div class="eds-stack eds-gap-3">
+      <div class="eds-field">
+        <label class="eds-label" for="wz-nome">Nome completo</label>
+        <input class="eds-input" id="wz-nome" name="nome" type="text" required autocomplete="off" />
+      </div>
+      <div class="eds-field">
+        <label class="eds-label" for="wz-email">E-mail</label>
+        <input class="eds-input" id="wz-email" name="email" type="email" required autocomplete="off" />
+      </div>
+    </div>
+  </section>
+
+  <section data-eds-wizard-step aria-labelledby="wz-t2" hidden>
+    <h3 class="eds-text-h4" id="wz-t2" tabindex="-1">Endereço</h3>
+    <div class="eds-stack eds-gap-3">
+      <div class="eds-field">
+        <label class="eds-label" for="wz-rua">Logradouro</label>
+        <input class="eds-input" id="wz-rua" name="logradouro" type="text" required autocomplete="off" />
+      </div>
+      <div class="eds-field">
+        <label class="eds-label" for="wz-cidade">Cidade</label>
+        <input class="eds-input" id="wz-cidade" name="cidade" type="text" required autocomplete="off" />
+      </div>
+    </div>
+  </section>
+
+  <section data-eds-wizard-step aria-labelledby="wz-t3" hidden>
+    <h3 class="eds-text-h4" id="wz-t3" tabindex="-1">Confirmação</h3>
+    <p>Revise os dados informados e conclua o cadastro.</p>
+  </section>
+
+  <div class="eds-stack eds-stack-row eds-stack-justify-between eds-stack-wrap eds-gap-2">
+    <button type="button" class="eds-button eds-button-secondary" data-eds-wizard-prev>Voltar</button>
+    <button type="button" class="eds-button eds-button-primary eds-push-end" data-eds-wizard-next>Avançar</button>
+    <button type="submit" class="eds-button eds-button-primary eds-push-end" data-eds-wizard-finish hidden>Concluir</button>
+  </div>
+</form>

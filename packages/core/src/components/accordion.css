@@ -1,0 +1,147 @@
+/* Accordion: seções recolhíveis, sem JavaScript (o <details> nativo faz o trabalho).
+   Markup:
+     <div class="eds-accordion [eds-accordion-flush]">
+       <details class="eds-accordion-item" name="faq">
+         <summary class="eds-accordion-trigger">Pergunta</summary>
+         <div class="eds-accordion-panel">Conteúdo</div>
+       </details>
+     </div>
+   - Só um aberto por vez: o mesmo `name` em todos os <details> do grupo (comportamento nativo).
+   - Estado vem do atributo [open]; o chevron gira por CSS (decorativo, sem imagem).
+   - .eds-accordion-flush: sem borda externa nem raio; só linhas entre os itens.
+   - Item desabilitado: aria-disabled="true" no summary (o <details> não tem disabled). */
+@layer eds.components {
+  .eds-accordion {
+    --_accordion-radius: var(--eds-radius-md);
+    --_accordion-border: var(--eds-border-width) solid var(--eds-color-border-default);
+
+    box-sizing: border-box;
+    min-inline-size: 0;
+    border: var(--_accordion-border);
+    border-radius: var(--_accordion-radius);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+
+    /* Recorta o fundo do hover nos cantos; o anel de foco é desenhado por dentro. */
+    overflow: clip;
+  }
+
+  .eds-accordion-flush {
+    --_accordion-radius: 0;
+
+    border: 0;
+    background: transparent;
+
+    & > .eds-accordion-item:last-child {
+      border-block-end: var(--_accordion-border);
+    }
+  }
+
+  .eds-accordion-item + .eds-accordion-item {
+    border-block-start: var(--_accordion-border);
+  }
+
+  .eds-accordion-trigger {
+    --_trigger-bg: transparent;
+    --_trigger-fg: var(--eds-color-text-primary);
+    --_chevron-size: 0.5rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-3);
+    box-sizing: border-box;
+    min-block-size: var(--eds-control-height-lg);
+    padding-block: var(--eds-space-2);
+    padding-inline: var(--eds-inset-md);
+    background: var(--_trigger-bg);
+    color: var(--_trigger-fg);
+    font-size: var(--eds-font-size-body);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-body);
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    /* Chevron: dois lados de um quadrado girado (herda a cor do texto). */
+    &::after {
+      content: '';
+      flex: none;
+      box-sizing: border-box;
+      inline-size: var(--_chevron-size);
+      block-size: var(--_chevron-size);
+      border-inline-end: var(--eds-border-width-strong) solid currentColor;
+      border-block-end: var(--eds-border-width-strong) solid currentColor;
+      translate: 0 -25%;
+      rotate: 45deg;
+      transition: rotate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+
+    &:hover {
+      --_trigger-bg: var(--eds-color-bg-subtle);
+    }
+
+    &:active {
+      --_trigger-bg: color-mix(
+        in srgb,
+        var(--eds-color-bg-subtle),
+        var(--eds-color-text-primary) 8%
+      );
+    }
+
+    /* Anel por dentro: o contêiner recorta (overflow) e cortaria um anel externo. */
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+
+    &[aria-disabled='true'] {
+      --_trigger-bg: transparent;
+      --_trigger-fg: var(--eds-color-text-muted);
+
+      cursor: not-allowed;
+    }
+  }
+
+  .eds-accordion-item[open] > .eds-accordion-trigger::after {
+    translate: 0 25%;
+    rotate: -135deg;
+  }
+
+  .eds-accordion-panel {
+    padding-block: 0 var(--eds-inset-md);
+    padding-inline: var(--eds-inset-md);
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+
+    & > :first-child {
+      margin-block-start: 0;
+    }
+
+    & > :last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-accordion-trigger,
+    .eds-accordion-trigger::after {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-accordion-trigger {
+      color: ButtonText;
+
+      &[aria-disabled='true'] {
+        color: GrayText;
+      }
+    }
+  }
+}

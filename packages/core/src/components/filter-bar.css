@@ -1,0 +1,195 @@
+/* Barra de filtros: busca + filtros em linha, "Mais filtros" e chips dos filtros ativos.
+   Markup:
+     <form class="eds-filter-bar" role="search" aria-label="Filtrar pedidos" data-eds-filter-bar>
+       <div class="eds-filter-bar-fields">
+         <div class="eds-field eds-filter-bar-search">…busca…</div>
+         <div class="eds-field">…filtro…</div>
+       </div>
+       <details class="eds-filter-bar-more">
+         <summary>Mais filtros <span class="eds-filter-bar-count">(2)</span></summary>
+         <div class="eds-field">…</div> …
+       </details>
+       <div class="eds-filter-bar-actions"><button type="submit">Filtrar</button><button type="reset">Limpar</button></div>
+       <ul class="eds-filter-chips" aria-label="Filtros ativos">
+         <li><button type="button" class="eds-chip" data-eds-filter-remove="situacao">…</button></li>
+       </ul>
+     </form>
+   - O formulário é um container de largura (eds-filter-bar): os campos quebram de linha pela
+     largura dele, não pela da viewport. Sem JS o envio por GET continua funcionando.
+   - "Mais filtros": a partir de 48rem de largura os campos extras ficam sempre visíveis (o resumo some;
+     precisa de ::details-content, senão o resumo permanece e o bloco continua recolhível).
+     Abaixo disso é um <details> comum; .eds-filter-bar-count mostra quantos extras estão preenchidos.
+   - Alinhamento: os controles se alinham pela base (rótulos acima), ações na mesma linha quando cabem. */
+@layer eds.components {
+  .eds-filter-bar {
+    container: eds-filter-bar / inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--eds-space-3);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  .eds-filter-bar-fields {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--eds-space-3);
+    min-inline-size: 0;
+
+    & > * {
+      flex: 1 1 12rem;
+      min-inline-size: 0;
+    }
+
+    & > .eds-filter-bar-search {
+      flex: 2 1 16rem;
+    }
+  }
+
+  .eds-filter-bar-actions {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2);
+  }
+
+  /* ---- Mais filtros ---- */
+
+  .eds-filter-bar-more {
+    flex: 1 1 100%;
+    min-inline-size: 0;
+
+    & > summary {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--eds-space-2);
+      box-sizing: border-box;
+      min-block-size: var(--eds-control-height-sm);
+      padding-inline: var(--eds-space-2);
+      margin-inline-start: calc(var(--eds-space-2) * -1);
+      border-radius: var(--eds-radius-sm);
+      color: var(--eds-color-text-secondary);
+      font-size: var(--eds-font-size-label);
+      font-weight: var(--eds-font-weight-medium);
+      line-height: var(--eds-line-height-label);
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      /* Chevron (gira aberto), igual ao do Accordion. */
+      &::before {
+        content: '';
+        flex: none;
+        box-sizing: border-box;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-inline-end: var(--eds-border-width-strong) solid currentColor;
+        border-block-end: var(--eds-border-width-strong) solid currentColor;
+        translate: 0 -25%;
+        rotate: 45deg;
+        transition: rotate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+      }
+
+      &:hover {
+        background: var(--eds-color-bg-subtle);
+        color: var(--eds-color-text-primary);
+      }
+
+      &:active {
+        background: color-mix(
+          in srgb,
+          var(--eds-color-bg-subtle),
+          var(--eds-color-text-primary) 8%
+        );
+        color: var(--eds-color-text-primary);
+      }
+    }
+
+    &[open] > summary::before {
+      translate: 0 25%;
+      rotate: -135deg;
+    }
+
+    /* Campos extras: um abaixo do outro quando o bloco é recolhível. */
+    & > :not(summary) {
+      margin-block-start: var(--eds-space-3);
+    }
+  }
+
+  .eds-filter-bar-count {
+    color: var(--eds-color-action-primary);
+    font-weight: var(--eds-font-weight-semibold);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Largo: os extras sempre à vista, em linha, sem o resumo. Só onde ::details-content existe. */
+  @supports selector(::details-content) {
+    @container eds-filter-bar (inline-size >= 48rem) {
+      .eds-filter-bar-more {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: var(--eds-space-3);
+
+        &::details-content {
+          display: contents;
+          content-visibility: visible;
+        }
+
+        & > summary {
+          display: none;
+        }
+
+        & > :not(summary) {
+          flex: 1 1 12rem;
+          margin-block-start: 0;
+        }
+      }
+    }
+  }
+
+  /* ---- Chips dos filtros ativos ---- */
+
+  .eds-filter-chips {
+    display: flex;
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    /* Sem filtros ativos, a lista não ocupa linha. */
+    &:not(:has(> li)),
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  /* Estreito: ações e botões ocupam a largura toda (alvo grande no toque). */
+  @container eds-filter-bar (inline-size < 32rem) {
+    .eds-filter-bar-actions {
+      flex: 1 1 100%;
+
+      & > * {
+        flex: 1 1 auto;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-filter-bar-more > summary::before {
+      transition: none;
+    }
+  }
+}

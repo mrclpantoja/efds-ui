@@ -1,0 +1,26 @@
+<!-- Behavior: [data-eds-tooltip] no gatilho liga o tooltip apontado por aria-describedby
+     (hover com atraso de 300 ms e foco; Esc fecha; o ponteiro pode passar ao tooltip).
+     O JS posiciona por --_tooltip-x/-y e data-placement (top|bottom|start|end); o placement
+     inicial pode ser pedido com data-eds-tooltip="bottom". Só texto, nunca interativo.
+     Botão só de ícone: o nome acessível segue no aria-label; o tooltip repete a dica. -->
+<div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+  <button type="button" class="eds-button eds-button-ghost eds-button-icon" aria-label="Editar pedido"
+    aria-describedby="tt-editar" data-eds-tooltip>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+      <path d="M4 20h4L19 9l-4-4L4 16v4zM13 7l4 4" />
+    </svg>
+  </button>
+  <span class="eds-tooltip" id="tt-editar" role="tooltip" popover="manual">Editar pedido</span>
+
+  <button type="button" class="eds-button eds-button-secondary" aria-describedby="tt-salvar" data-eds-tooltip>
+    Salvar rascunho
+  </button>
+  <span class="eds-tooltip" id="tt-salvar" role="tooltip" popover="manual">
+    O rascunho fica guardado por 30 dias e não notifica ninguém.
+  </span>
+
+  <button type="button" class="eds-button eds-button-secondary" aria-describedby="tt-baixo" data-eds-tooltip="bottom">
+    Dica abaixo
+  </button>
+  <span class="eds-tooltip" id="tt-baixo" role="tooltip" popover="manual">Aparece abaixo do botão</span>
+</div>

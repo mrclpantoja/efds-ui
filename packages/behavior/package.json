@@ -40,6 +40,11 @@
       "types": "./dist/mask-entry.d.ts",
       "default": "./dist/mask-entry.js"
     },
+    "./balloon": {
+      "development": "./src/balloon-entry.ts",
+      "types": "./dist/balloon-entry.d.ts",
+      "default": "./dist/balloon-entry.js"
+    },
     "./eds-behavior.js": "./dist/eds-behavior.js",
     "./eds-behavior-core.js": "./dist/eds-behavior-core.js"
   },

@@ -71,7 +71,14 @@ function HtmlPreview({ html }: { html: string }) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return undefined;
-    return init(el, { loader: { mode: 'manual' } });
+    const stop = init(el, { loader: { mode: 'manual' } });
+    // Os formulários dos exemplos nunca navegam (a documentação é uma SPA sem servidor).
+    const block = (event: Event) => event.preventDefault();
+    el.addEventListener('submit', block);
+    return () => {
+      el.removeEventListener('submit', block);
+      stop();
+    };
   }, [scoped]);
   // O HTML vem de arquivos do próprio repositório (?raw), nunca de entrada do usuário.
   return <div ref={ref} className="docs-preview" dangerouslySetInnerHTML={{ __html: scoped }} />;

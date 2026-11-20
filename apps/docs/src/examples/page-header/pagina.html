@@ -1,0 +1,94 @@
+<!-- Layout de página completo: cabeçalho, indicadores, barra de filtros (toolbar), corpo e rodapé (paginação).
+     Só CSS; behavior aparece nos componentes internos (data-eds-filter-bar, tabela, paginação). -->
+<div class="eds-page">
+  <header class="eds-page-header">
+    <nav class="eds-breadcrumb" aria-label="Trilha">
+      <ol class="eds-breadcrumb-list">
+        <li class="eds-breadcrumb-item"><a href="#/componentes/page-header">Início</a></li>
+        <li class="eds-breadcrumb-item"><span aria-current="page">Pedidos</span></li>
+      </ol>
+    </nav>
+    <div class="eds-page-heading">
+      <h1 class="eds-page-title">Pedidos</h1>
+      <p class="eds-page-description">Acompanhe os pedidos recebidos e o andamento de cada um.</p>
+    </div>
+    <div class="eds-page-actions">
+      <button type="button" class="eds-button eds-button-secondary">Exportar</button>
+      <button type="button" class="eds-button eds-button-primary">Novo pedido</button>
+    </div>
+  </header>
+
+  <div class="eds-stat-grid">
+    <div class="eds-card eds-stat">
+      <p class="eds-stat-label">Pedidos no mês</p>
+      <p class="eds-stat-value">1.284</p>
+      <p class="eds-stat-delta" data-trend="up" data-tone="positive">
+        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" /></svg>
+        <span class="eds-visually-hidden">Aumento de</span> 12,4%
+      </p>
+    </div>
+    <div class="eds-card eds-stat">
+      <p class="eds-stat-label">Em atraso</p>
+      <p class="eds-stat-value">37</p>
+      <p class="eds-stat-delta" data-trend="flat" data-tone="neutral">
+        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" /></svg>
+        <span class="eds-visually-hidden">Sem variação,</span> 0%
+      </p>
+    </div>
+  </div>
+
+  <div class="eds-page-toolbar">
+    <form class="eds-filter-bar" role="search" aria-label="Filtrar pedidos" data-eds-filter-bar method="get" action="#/componentes/page-header">
+      <div class="eds-filter-bar-fields">
+        <div class="eds-field eds-filter-bar-search">
+          <label class="eds-label" for="pg-busca">Buscar</label>
+          <input class="eds-input" id="pg-busca" name="busca" type="search" placeholder="Código ou cliente" autocomplete="off" />
+        </div>
+        <div class="eds-field">
+          <label class="eds-label" for="pg-situacao">Situação</label>
+          <select class="eds-select" id="pg-situacao" name="situacao">
+            <option value="">Todas</option>
+            <option value="ativo">Ativo</option>
+            <option value="pendente">Pendente</option>
+          </select>
+        </div>
+      </div>
+      <div class="eds-filter-bar-actions">
+        <button type="submit" class="eds-button eds-button-primary">Filtrar</button>
+        <button type="reset" class="eds-button eds-button-secondary">Limpar</button>
+      </div>
+      <ul class="eds-filter-chips" aria-label="Filtros ativos"></ul>
+    </form>
+  </div>
+
+  <div class="eds-page-body">
+    <div class="eds-table-wrap">
+      <table class="eds-table">
+        <caption class="eds-table-caption eds-visually-hidden">Pedidos recentes</caption>
+        <thead>
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Cliente</th>
+            <th scope="col" class="eds-table-num">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>PED-0001</td><td>Atelier Exemplo</td><td class="eds-table-num">R$ 1.280,50</td></tr>
+          <tr><td>PED-0002</td><td>Comércio Modelo</td><td class="eds-table-num">R$ 459,00</td></tr>
+          <tr><td>PED-0003</td><td>Oficina Fictícia</td><td class="eds-table-num">R$ 2.015,90</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="eds-page-footer">
+    <p class="eds-text-small">1–3 de 248</p>
+    <nav class="eds-pagination" aria-label="Paginação">
+      <ul class="eds-pagination-list">
+        <li><button type="button" class="eds-pagination-item" aria-label="Página 1" aria-current="page">1</button></li>
+        <li><button type="button" class="eds-pagination-item" aria-label="Página 2">2</button></li>
+        <li><button type="button" class="eds-pagination-item" aria-label="Página 3">3</button></li>
+      </ul>
+    </nav>
+  </footer>
+</div>

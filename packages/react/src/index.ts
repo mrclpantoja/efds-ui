@@ -144,6 +144,7 @@ export {
   TableEmpty,
   TableToolbar,
   TableFooter,
+  TableLoadingRows,
   sortTableData,
   filterTableData,
   useTableFilter,
@@ -158,6 +159,7 @@ export type {
   TableEmptyProps,
   TableToolbarProps,
   TableFooterProps,
+  TableLoadingRowsProps,
   TableSort,
   TableSortDirection,
   TableSortState,
@@ -173,6 +175,37 @@ export { Pagination } from './components/Pagination';
 export type { PaginationProps, PaginationTexts } from './components/Pagination';
 export { EmptyState } from './components/EmptyState';
 export type { EmptyStateProps } from './components/EmptyState';
+
+// Onda B
+export { Accordion, AccordionItem } from './components/Accordion';
+export type { AccordionProps, AccordionItemProps } from './components/Accordion';
+export { Tooltip } from './components/Tooltip';
+export type { TooltipProps, TooltipPlacement } from './components/Tooltip';
+export { Popover } from './components/Popover';
+export type { PopoverProps, PopoverPlacement } from './components/Popover';
+export { Stepper } from './components/Stepper';
+export type { StepperProps, StepperStep, StepperTexts, StepState } from './components/Stepper';
+export { Wizard } from './components/Wizard';
+export type { WizardProps, WizardStep, WizardTexts } from './components/Wizard';
+export { Stat, StatGrid } from './components/Stat';
+export type {
+  StatProps,
+  StatGridProps,
+  StatTrend,
+  StatTone,
+  StatTexts,
+  StatGridTexts,
+} from './components/Stat';
+export { FilterBar } from './components/FilterBar';
+export type { FilterBarProps, FilterBarTexts, ActiveFilter } from './components/FilterBar';
+export { Page, PageHeader, PageToolbar, PageBody, PageFooter } from './components/Page';
+export type {
+  PageProps,
+  PageHeaderProps,
+  PageToolbarProps,
+  PageBodyProps,
+  PageFooterProps,
+} from './components/Page';
 
 // Overlays e interativos
 export { Modal } from './components/Modal';

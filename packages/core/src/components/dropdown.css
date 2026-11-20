@@ -89,6 +89,11 @@
 
     &:active:not(:disabled, [aria-disabled='true']) {
       background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
+
+      /* O ícone muted fica abaixo de 3:1 sobre o fundo pressionado no escuro. */
+      & > svg {
+        color: var(--eds-color-text-secondary);
+      }
     }
 
     /* Anel por dentro, para o overflow do menu não cortá-lo. */

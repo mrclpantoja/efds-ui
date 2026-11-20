@@ -1,0 +1,136 @@
+/* Tooltip: dica curta, só texto, nunca interativa (WCAG 1.4.13: dispensável com Esc,
+   alcançável pelo ponteiro e persistente enquanto o gatilho tem hover/foco).
+   Markup:
+     <button class="eds-button" aria-describedby="tt1" data-eds-tooltip>Salvar</button>
+     <span class="eds-tooltip" id="tt1" role="tooltip" popover="manual">Salvar rascunho</span>
+   Mostrar/ocultar, atraso e Esc são do JS (popover="manual"); sem JS o tooltip fica oculto
+   (o texto continua no aria-describedby ou no aria-label do gatilho).
+   Posição (definida pelo JS, px, coordenadas da viewport): --_tooltip-x / --_tooltip-y = ponto no
+   centro da borda do gatilho voltada ao tooltip; data-placement="top|bottom|start|end" diz de que
+   lado o tooltip fica (start/end seguem a direção do texto; o JS entrega o x já na borda certa).
+   O CSS alinha o tooltip a esse ponto e deixa --_tooltip-offset de folga; uma ponte transparente
+   cobre a folga para o ponteiro poder passar do gatilho ao tooltip sem fechá-lo. */
+@layer eds.components {
+  .eds-tooltip {
+    --_tooltip-x: 0px;
+    --_tooltip-y: 0px;
+
+    /* Empurrão no eixo transversal (px) para o balão não sair da viewport; vem do JS. */
+    --_tooltip-dx: 0px;
+    --_tooltip-dy: 0px;
+    --_tooltip-offset: var(--eds-space-2);
+    --_tooltip-bg: var(--eds-color-text-primary);
+    --_tooltip-fg: var(--eds-color-bg-surface);
+
+    /* O UA define display:none para popover fechado; só declaramos display no aberto. */
+    position: fixed;
+    inset: auto;
+
+    /* Coordenadas da viewport vindas do JS: por isso left/top físicos. */
+    left: var(--_tooltip-x);
+    top: var(--_tooltip-y);
+    box-sizing: border-box;
+    max-inline-size: min(20rem, calc(100dvw - var(--eds-space-4)));
+    margin: 0;
+    padding-block: var(--eds-space-1);
+    padding-inline: var(--eds-space-2);
+    border: var(--eds-border-width) solid transparent;
+    border-radius: var(--eds-radius-sm);
+    background: var(--_tooltip-bg);
+    color: var(--_tooltip-fg);
+    box-shadow: var(--eds-shadow-md);
+    font-size: var(--eds-font-size-small);
+    font-weight: var(--eds-font-weight-regular);
+    line-height: var(--eds-line-height-small);
+    overflow-wrap: anywhere;
+    /* O UA põe overflow:auto em [popover]; a ponte ::before fica fora da caixa. */
+    overflow: visible;
+    opacity: 0;
+
+    /* Sem placement: acima, centralizado (igual a data-placement="top"). */
+    translate: calc(-50% + var(--_tooltip-dx)) calc(-100% - var(--_tooltip-offset));
+    transition:
+      opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      display var(--eds-motion-duration-fast) allow-discrete,
+      overlay var(--eds-motion-duration-fast) allow-discrete;
+
+    &:popover-open {
+      display: block;
+      opacity: 1;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+    }
+
+    &[data-placement='top'] {
+      translate: calc(-50% + var(--_tooltip-dx)) calc(-100% - var(--_tooltip-offset));
+
+      &::before {
+        inset-inline: 0;
+        inset-block-start: 100%;
+        block-size: var(--_tooltip-offset);
+      }
+    }
+
+    &[data-placement='bottom'] {
+      translate: calc(-50% + var(--_tooltip-dx)) var(--_tooltip-offset);
+
+      &::before {
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: var(--_tooltip-offset);
+      }
+    }
+
+    &[data-placement='start'] {
+      translate: calc(-100% - var(--_tooltip-offset)) calc(-50% + var(--_tooltip-dy));
+
+      &::before {
+        inset-block: 0;
+        inset-inline-start: 100%;
+        inline-size: var(--_tooltip-offset);
+      }
+
+      &:dir(rtl) {
+        translate: var(--_tooltip-offset) calc(-50% + var(--_tooltip-dy));
+      }
+    }
+
+    &[data-placement='end'] {
+      translate: var(--_tooltip-offset) calc(-50% + var(--_tooltip-dy));
+
+      &::before {
+        inset-block: 0;
+        inset-inline-end: 100%;
+        inline-size: var(--_tooltip-offset);
+      }
+
+      &:dir(rtl) {
+        translate: calc(-100% - var(--_tooltip-offset)) calc(-50% + var(--_tooltip-dy));
+      }
+    }
+  }
+
+  @starting-style {
+    .eds-tooltip:popover-open {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-tooltip {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-tooltip {
+      --_tooltip-bg: Canvas;
+      --_tooltip-fg: CanvasText;
+
+      border-color: CanvasText;
+    }
+  }
+}

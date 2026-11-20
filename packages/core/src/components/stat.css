@@ -1,0 +1,133 @@
+/* Stat (card de indicador / KPI): um número em destaque, seu rótulo e a variação.
+   Markup (sem superfície própria: combine com .eds-card quando quiser borda e fundo):
+     <div class="eds-card eds-stat">
+       <p class="eds-stat-label">Pedidos no mês</p>
+       <p class="eds-stat-value">1.284</p>
+       <p class="eds-stat-delta" data-trend="up" data-tone="positive">
+         <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">…seta para cima…</svg>
+         <span class="eds-visually-hidden">Aumento de</span> 12,4%
+         <span class="eds-stat-meta">vs. mês anterior</span>
+       </p>
+     </div>
+   - O valor usa algarismos tabulares; use <h2>/<h3> no .eds-stat-value se a página precisar de estrutura.
+   - data-trend = direção (up | down | flat): o CSS gira a seta do markup (desenhada para cima:
+     down = 180deg, flat = 90deg), então a direção nunca depende só de cor.
+   - data-tone = leitura do resultado (positive | negative | warning | neutral): cor via status-*-text.
+     Subir pode ser ruim (ex.: inadimplência): por isso trend e tone são independentes.
+   - Carregando: aria-busy="true" no .eds-stat com .eds-skeleton dentro do rótulo, do valor e da variação.
+   - .eds-stat-grid: grade que responde à largura do próprio contêiner (1 → 2 → 4 colunas). */
+@layer eds.components {
+  .eds-stat {
+    --_stat-gap: var(--eds-space-1);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_stat-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--eds-inset-md);
+    color: var(--eds-color-text-primary);
+
+    & > :where(p, h2, h3, h4) {
+      margin: 0;
+    }
+  }
+
+  .eds-stat-label {
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-label);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-label);
+  }
+
+  .eds-stat-value {
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-h2);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: var(--eds-line-height-h2);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  .eds-stat-delta {
+    --_delta-fg: var(--eds-color-text-secondary);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--eds-space-1);
+    color: var(--_delta-fg);
+    font-size: var(--eds-font-size-label);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-label);
+    font-variant-numeric: tabular-nums;
+
+    & > svg {
+      flex: none;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    &[data-trend='down'] > svg {
+      rotate: 180deg;
+    }
+
+    &[data-trend='flat'] > svg {
+      rotate: 90deg;
+    }
+
+    &[data-tone='positive'] {
+      --_delta-fg: var(--eds-color-status-success-text);
+    }
+
+    &[data-tone='negative'] {
+      --_delta-fg: var(--eds-color-status-danger-text);
+    }
+
+    &[data-tone='warning'] {
+      --_delta-fg: var(--eds-color-status-warning-text);
+    }
+  }
+
+  .eds-stat-meta {
+    color: var(--eds-color-text-muted);
+    font-weight: var(--eds-font-weight-regular);
+  }
+
+  /* Ícone opcional ao lado do rótulo (ex.: <svg class="eds-stat-icon">). */
+  .eds-stat-icon {
+    flex: none;
+    inline-size: var(--eds-icon-size-md);
+    block-size: var(--eds-icon-size-md);
+    color: var(--eds-color-text-muted);
+  }
+
+  /* Carregando: os blocos Skeleton ocupam a largura de um valor típico (sem layout shift). */
+  .eds-stat[aria-busy='true'] {
+    & .eds-stat-label > .eds-skeleton {
+      inline-size: 50%;
+    }
+
+    & .eds-stat-value > .eds-skeleton {
+      inline-size: 35%;
+    }
+
+    & .eds-stat-delta > .eds-skeleton {
+      inline-size: 60%;
+    }
+  }
+
+  /* Grade: colunas pela largura do próprio contêiner. A coluna mínima faz 1 → 2 → 4 sem
+     @media; o grid existe aqui e não em .eds-grid porque o indicador não segue as 12 colunas. */
+  .eds-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: var(--eds-inset-md);
+    min-inline-size: 0;
+  }
+}

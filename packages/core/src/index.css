@@ -12,6 +12,7 @@
 @import './layout/stack.css';
 @import './layout/utilities.css';
 @import './layout/app.css';
+@import './layout/page.css';
 
 /* Componentes — Actions */
 @import './components/button.css';
@@ -38,12 +39,16 @@
 @import './components/alert-dialog.css';
 @import './components/sortable.css';
 @import './components/tree.css';
+@import './components/accordion.css';
+@import './components/tooltip.css';
+@import './components/popover.css';
 
 /* Componentes — Navigation */
 @import './components/navbar.css';
 @import './components/sidebar.css';
 @import './components/tabs.css';
 @import './components/breadcrumb.css';
+@import './components/stepper.css';
 
 /* Componentes — Feedback */
 @import './components/alert.css';
@@ -52,6 +57,9 @@
 @import './components/spinner.css';
 @import './components/skeleton.css';
 @import './components/page-loader.css';
+@import './components/chip.css';
+@import './components/stat.css';
+@import './components/filter-bar.css';
 
 /* Data */
 @import './components/table.css';

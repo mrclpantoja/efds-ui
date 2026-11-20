@@ -8,8 +8,9 @@ import {
   CardHeader,
   CardTitle,
   Grid,
-  GridItem,
   Stack,
+  Stat,
+  StatGrid,
   Table,
   TableBody,
   TableCell,
@@ -17,20 +18,13 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@eds-ui/react';
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  DownloadIcon,
-  PlusIcon,
-  UserPlusIcon,
-  UsersIcon,
-} from '@eds-ui/icons';
+import { DownloadIcon, PlusIcon, UserPlusIcon, UsersIcon } from '@eds-ui/icons';
 import { formatarData, moeda } from './data';
 import { ReferenceShell } from './ReferenceShell';
 
 /**
- * KPIs fictícios. Nada depende só da cor: o sentido do valor vai no sinal e na seta; se é bom
- * ou ruim, num texto oculto (", melhora" / ", piora") além da cor do Badge.
+ * KPIs fictícios (`Stat`). Nada depende só da cor: o sentido do valor vai na seta e no texto; se é bom
+ * ou ruim, vem da cor do tom (positivo/negativo) e do texto da variação.
  */
 const kpis = [
   { label: 'Receita do mês', value: 'R$ 184,3 mil', delta: '+8,2%', up: true, good: true },
@@ -123,31 +117,19 @@ export function Dashboard() {
         <h2 id="dash-kpis-t" className="eds-visually-hidden">
           Indicadores do mês
         </h2>
-        <Grid as="ul">
+        <StatGrid>
           {kpis.map((kpi) => (
-            <GridItem key={kpi.label} as="li" span={6} spanMd={3}>
-              <Card>
-                <CardBody>
-                  <Stack gap={2}>
-                    <p className="eds-text-label rs-muted">{kpi.label}</p>
-                    {/* h3: com 2 colunas desde 320px, o valor precisa caber em ~100px sem partir o número. */}
-                    <p className="eds-text-h3">{kpi.value}</p>
-                    <Stack direction="row" wrap gap={2} className="eds-text-small">
-                      <Badge variant={kpi.good ? 'success' : 'danger'}>
-                        {kpi.up ? <ArrowUpIcon /> : <ArrowDownIcon />}
-                        {kpi.delta}
-                        <span className="eds-visually-hidden">
-                          {kpi.good ? ', melhora' : ', piora'}
-                        </span>
-                      </Badge>
-                      <span className="rs-muted">vs. mês anterior</span>
-                    </Stack>
-                  </Stack>
-                </CardBody>
-              </Card>
-            </GridItem>
+            <Stat
+              key={kpi.label}
+              label={kpi.label}
+              value={kpi.value}
+              delta={kpi.delta.replace(/^[+−]/, '')}
+              trend={kpi.up ? 'up' : 'down'}
+              tone={kpi.good ? 'positive' : 'negative'}
+              meta="vs. mês anterior"
+            />
           ))}
-        </Grid>
+        </StatGrid>
       </Stack>
 
       <Grid>

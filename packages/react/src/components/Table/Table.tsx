@@ -19,6 +19,8 @@ import { useAnnouncer } from '../../internal/announcer';
 import { SortGlyph } from '../../internal/glyphs-d';
 import { mergeRefs } from '../../internal/refs-d';
 import { useScrollRegion } from '../../internal/useScrollRegion';
+import { Spinner } from '../Spinner';
+import { Skeleton } from '../Skeleton';
 
 export type TableSortDirection = 'ascending' | 'descending';
 
@@ -31,9 +33,12 @@ export interface TableSortState {
 export interface TableTexts {
   /** Anúncio ao ordenar (leitor de tela). Padrão: "Ordenado por {coluna}, crescente.". */
   sortedBy: (column: string, direction: TableSortDirection) => string;
+  /** Anúncio ao começar a carregar (`loading`). Padrão: "Carregando". */
+  loading: string;
 }
 
 const defaultTableTexts: TableTexts = {
+  loading: 'Carregando',
   sortedBy: (column, direction) => {
     const m = getMessages();
     return format(m.sortedBy, {
@@ -75,6 +80,14 @@ export interface TableProps extends Omit<HTMLAttributes<HTMLTableElement>, 'chil
    * `useTableFilter`. A ordenação é anunciada pela própria Table.
    */
   status?: string;
+  /**
+   * Carregando: `aria-busy` na tabela (as linhas reais ficam esmaecidas) e anúncio `texts.loading`
+   * numa região `role="status"` que existe desde o início, para o leitor de tela ler a mudança.
+   * Use `<TableLoadingRows>` no `<TableBody>` para as linhas Skeleton.
+   */
+  loading?: boolean;
+  /** Com `loading`, acrescenta a sobreposição com Spinner (recarga sobre dados já exibidos). */
+  loadingOverlay?: boolean;
   /** Textos internos (padrões em pt-BR). */
   texts?: Partial<TableTexts>;
   /** `<TableHead>`, `<TableBody>`. */
@@ -95,6 +108,8 @@ export const Table = forwardRef<HTMLTableElement, TableProps>(function Table(
     sort,
     onSortChange,
     status,
+    loading,
+    loadingOverlay = false,
     texts,
     className,
     children,
@@ -129,14 +144,33 @@ export const Table = forwardRef<HTMLTableElement, TableProps>(function Table(
     if (status) announce(status);
   }, [status, announce]);
   const innerWrap = useRef<HTMLDivElement>(null);
+  const innerTable = useRef<HTMLTableElement>(null);
   useScrollRegion(innerWrap, captionId);
+  // Sobreposição de carregamento: o conteúdo da tabela fica `inert` (o foco não entra em controles
+  // cobertos) e, ao sair, o foco volta ao elemento que o tinha, se ainda existir.
+  const covered = loading === true && loadingOverlay;
+  useEffect(() => {
+    const table = innerTable.current;
+    if (!covered || !table) return undefined;
+    const focused = table.ownerDocument.activeElement;
+    const restore = focused instanceof HTMLElement && table.contains(focused) ? focused : null;
+    table.setAttribute('inert', '');
+    return () => {
+      table.removeAttribute('inert');
+      const active = table.ownerDocument.activeElement;
+      if (restore?.isConnected && (!active || active === table.ownerDocument.body)) {
+        restore.focus({ preventScroll: true });
+      }
+    };
+  }, [covered]);
   return (
     <TableContext.Provider value={context}>
       <div ref={mergeRefs(innerWrap, wrapRef)} className={cx('eds-table-wrap', wrapClassName)}>
         <table
           {...rest}
-          ref={ref}
+          ref={mergeRefs(innerTable, ref)}
           className={cx('eds-table', sticky && 'eds-table-sticky', className)}
+          aria-busy={loading || undefined}
         >
           <caption
             id={captionId}
@@ -146,6 +180,18 @@ export const Table = forwardRef<HTMLTableElement, TableProps>(function Table(
           </caption>
           {children}
         </table>
+        {loading !== undefined && (
+          <span className="eds-visually-hidden" role="status">
+            {loading ? t.loading : ''}
+          </span>
+        )}
+        {covered && (
+          <div className="eds-table-overlay">
+            <div className="eds-table-overlay-box">
+              <Spinner decorative />
+            </div>
+          </div>
+        )}
       </div>
       {onSortChange !== undefined || status !== undefined ? (
         <div role="status" className="eds-visually-hidden">
@@ -172,6 +218,32 @@ export const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
   },
 );
 TableBody.displayName = 'TableBody';
+
+export interface TableLoadingRowsProps {
+  /** Número de colunas da tabela. */
+  columns: number;
+  /** Linhas Skeleton. Padrão: 3. */
+  rows?: number;
+  /** Índices (a partir de 0) das colunas numéricas, alinhadas à direita. */
+  numeric?: readonly number[];
+}
+
+/** Linhas Skeleton (`tr.eds-table-loading`) com a altura de uma linha de dados, sem layout shift. */
+export function TableLoadingRows({ columns, rows = 3, numeric = [] }: TableLoadingRowsProps) {
+  return (
+    <>
+      {Array.from({ length: rows }, (_, r) => (
+        <tr key={r} className="eds-table-loading">
+          {Array.from({ length: columns }, (_, c) => (
+            <td key={c} className={numeric.includes(c) ? 'eds-table-num' : undefined}>
+              <Skeleton variant="text" />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
+  );
+}
 
 export type TableRowProps = HTMLAttributes<HTMLTableRowElement>;
 export const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(

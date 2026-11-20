@@ -100,7 +100,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - `configure({ locale })` (padrão `pt-BR`) e `resetLocale()`: collator da Table, nomes de mês e dia do calendário e exportador (ordem da data, separadores, formato de data do XLSX e `/Lang` do PDF); `ExportOptions.locale`. `Messages.dateLocale` removida.
 - `readonly` em Combobox, MultiSelect, DatePicker e DateRangePicker: não abrem a lista nem mudam o valor (também por colagem); `aria-readonly`.
 - Desempenho: auto-init com um seletor combinado por nó adicionado, e na remoção só os elementos ligados dentro dos nós removidos; Table com texto normalizado por linha em cache no filtro, cada valor interpretado uma vez e reinserção numa só operação na ordenação; Combobox com rótulos normalizados em cache, espera de 80 ms acima de 200 opções e reposicionamento no máximo uma vez por quadro; Tree com renumeração e JSON uma vez por lote e itens visíveis em cache; PageLoader sem criar objetos em chamadas excluídas. Tetos práticos documentados (Table ~1.000 linhas, Tree ~2.000 nós, Combobox local ~500 opções).
-- Novo `dist/eds-behavior-core.js`: o mesmo `window.EDS` sem o exportador e sem a máscara (~35 kB com gzip, contra ~48 kB do `eds-behavior.js`, que segue completo).
+- Novo `dist/eds-behavior-core.js`: o mesmo `window.EDS` sem o exportador e sem a máscara (~41 kB com gzip, contra ~54 kB do `eds-behavior.js` completo, medidos após a onda B).
 - Subentradas `@eds-ui/behavior/export/{csv,json,xlsx,pdf}` (`exportFile(dados, opções)`) para carregar um formato sob demanda; `@eds-ui/behavior/export` continua igual.
 
 **@eds-ui/react**
@@ -117,3 +117,45 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - `<select aria-readonly="true">` em HTML puro passa a ser de fato somente leitura (`initSelectReadonly` no behavior: a lista não abre e a escolha não muda; o campo segue focável e vai no envio).
 - Impressão: botões sólidos, caixas marcadas, chaves ligadas e o dia escolhido do calendário imprimem o fundo (`print-color-adjust: exact`), sem rótulo branco sobre papel branco.
 - Documentação: página Ícones com nome acessível nos botões de copiar ("React: copiar importação de X") e duas colunas a 320 px.
+
+### Lista de melhorias, onda B (componentes de tela)
+
+**@eds-ui/core**
+
+- Accordion (`<details>` nativo, grupo exclusivo por `name`, variante `-flush`, item desabilitado por `aria-disabled`).
+- Tooltip e Popover (`popover` nativo, posicionados pelo JS via `--_tooltip-x/-y` e `--_popover-x/-y` com `data-placement`; ponte para o ponteiro passar ao tooltip).
+- Stepper (marcadores numerados por CSS counter, check e "!" por estado, vertical, etapa clicável, resumo "Etapa N de M" em contêiner estreito).
+- Stat e StatGrid (indicadores com tendência e tom independentes, estado carregando com Skeleton; usar com `.eds-card`).
+- Barra de filtros com `.eds-chip` (contêiner, "Mais filtros" em `<details>` que fica sempre aberto em contêiner largo onde há `::details-content`).
+- Page, PageHeader, toolbar, body e footer (`.eds-page`, ações descem abaixo de 40rem, cabeçalho opcionalmente fixo).
+- Table carregando (`aria-busy`, `.eds-table-loading`, `.eds-table-overlay`).
+- O `:active` do item de Dropdown e da ordenação da Table não usa mais ícone muted sobre o fundo pressionado (ficava abaixo de 3:1 no escuro). Sem tokens novos.
+- `[hidden]` passa a vencer o `display` dos componentes (regra na camada `eds.utilities`); antes um `<button class="eds-button" hidden>` continuava visível.
+
+**@eds-ui/behavior**
+
+- Novos comportamentos no `init` e nos dois IIFE: Tooltip (`data-eds-tooltip`, WCAG 1.4.13: hover com atraso de 300 ms, foco, Esc dispensa sem fechar o diálogo em volta, pairável), Popover (`data-eds-popover`: posição, `aria-expanded`, foco de volta ao gatilho, `eds:popover-open` e `eds:popover-close`), Wizard (`form[data-eds-wizard]`: validação por painel, foco no título da etapa, anúncio "Etapa 2 de 4: Endereço.", atualiza o `.eds-stepper`, `eds:wizard-beforechange` cancelável e `eds:wizard-change`), Barra de filtros (`form[data-eds-filter-bar]`: chips dos campos aplicados, remover, limpar de verdade, contador de "Mais filtros", `eds:filter-change`) e Accordion (item `aria-disabled` não alterna).
+- Select somente leitura no toque também bloqueia `pointerdown` e `touchend`.
+- Subcaminho `@eds-ui/behavior/balloon` (posicionamento de Tooltip e Popover, usado pelo React). Textos novos em `configure({ messages })`: `wizard*` e `filter*`.
+
+**@eds-ui/react**
+
+- Novos componentes: `Accordion` e `AccordionItem`, `Tooltip`, `Popover`, `Stepper`, `Wizard`, `Stat` e `StatGrid`, `FilterBar`, `Page`, `PageHeader`, `PageToolbar`, `PageBody`, `PageFooter`. Tooltip e Popover usam o mesmo código do behavior.
+- `Table` ganha `loading` (`aria-busy` e anúncio `texts.loading`), `loadingOverlay` e `TableLoadingRows`.
+
+**Documentação e playground**
+
+- Páginas Accordion, Tooltip, Popover, Stepper e Wizard, Indicador (Stat), Barra de filtros, Cabeçalho de página, Máscara de entrada, Exportação de tabelas, Referência de eventos e Acessibilidade; Table com exemplos de carregamento e "Excluir linha + Desfazer" (Toast `action`).
+- Telas de referência: Listagem com `FilterBar`, Dashboard com `StatGrid`, as três com `PageHeader`.
+
+**Revisão de UX da onda B**
+
+- Tooltip: só aparece com foco visível (clique e toque não o prendem) e fica dentro da viewport no eixo transversal (`--_tooltip-dx/-dy`).
+- Stepper em contêiner estreito: o marcador da etapa atual mostra o número certo (os itens ocultos seguem contando, fora do foco e da árvore).
+- Popover com `role="dialog"` (não modal), para o `aria-labelledby` valer.
+- Wizard alinha Avançar e Concluir ao fim com o utilitário novo `.eds-push-end`.
+- Página Acessibilidade: cabeçalho fixo exige `scroll-padding-block-start` do app (o core só reserva espaço para toasts).
+- Wizard (behavior e React): campos inválidos ao avançar ou concluir mostram erro persistente e associado (`aria-invalid`, `p.eds-error` por `aria-describedby`, mensagem nativa ou `data-eds-error`); foco no primeiro inválido; o erro some ao corrigir; sem balão nativo (WCAG 3.3.1/3.3.3).
+- `StatGrid` anuncia o carregamento num único `role="status"` (`texts.loading`, `texts.loaded`); o `Stat` isolado mantém o próprio.
+- Table `loadingOverlay`: a sobreposição cobre toda a área rolável, a tabela fica `inert` enquanto carrega e o foco volta ao sair; classe nova `.eds-table-overlay-box` (centraliza o Spinner na área visível). No HTML puro, ponha `inert` na `<table>`.
+- Playground: o filtro de Situação da Listagem volta a ser de seleção múltipla, com um chip por valor.

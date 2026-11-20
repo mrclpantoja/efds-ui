@@ -1,0 +1,174 @@
+<!-- Behavior: [data-eds-agenda] (navegação do mês). Botões [data-eds-agenda-prev], [data-eds-agenda-next] e
+     [data-eds-agenda-today]; o título tem aria-live="polite" e muda com o mês. "+N mais" abre um Popover
+     (popovertarget). Os nomes de mês e de dia seguem o locale do DatePicker. Em contêiner estreito (< 40rem)
+     a grade vira lista por dia. Eventos: eds:agenda-month-change e eds:agenda-event-click. Sem arrastar eventos. -->
+<section class="eds-agenda" aria-labelledby="ag-titulo" data-eds-agenda data-eds-agenda-month="2026-03">
+  <header class="eds-agenda-header">
+    <h2 class="eds-agenda-title" id="ag-titulo" aria-live="polite">Março de 2026</h2>
+    <div class="eds-agenda-nav">
+      <button type="button" class="eds-button eds-button-secondary eds-button-sm" data-eds-agenda-today>Hoje</button>
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Mês anterior" data-eds-agenda-prev>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+      </button>
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Próximo mês" data-eds-agenda-next>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
+    </div>
+  </header>
+  <table class="eds-agenda-grid">
+    <caption class="eds-visually-hidden">Agenda de março de 2026</caption>
+    <thead>
+      <tr>
+        <th scope="col"><abbr title="domingo">Dom</abbr></th>
+        <th scope="col"><abbr title="segunda-feira">Seg</abbr></th>
+        <th scope="col"><abbr title="terça-feira">Ter</abbr></th>
+        <th scope="col"><abbr title="quarta-feira">Qua</abbr></th>
+        <th scope="col"><abbr title="quinta-feira">Qui</abbr></th>
+        <th scope="col"><abbr title="sexta-feira">Sex</abbr></th>
+        <th scope="col"><abbr title="sábado">Sáb</abbr></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">domingo</span><time class="eds-agenda-date" datetime="2026-03-01">1</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">segunda-feira</span><time class="eds-agenda-date" datetime="2026-03-02">2</time></div>
+          <ul class="eds-agenda-events">
+            <li><a class="eds-agenda-event" href="#/agenda/1" data-tone="info"><span class="eds-agenda-event-time">09:00</span><span class="eds-agenda-event-title">Reunião de equipe</span></a></li>
+          </ul>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">terça-feira</span><time class="eds-agenda-date" datetime="2026-03-03">3</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quarta-feira</span><time class="eds-agenda-date" datetime="2026-03-04">4</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quinta-feira</span><time class="eds-agenda-date" datetime="2026-03-05">5</time></div>
+          <ul class="eds-agenda-events">
+            <li><a class="eds-agenda-event" href="#/agenda/2" data-tone="success"><span class="eds-agenda-event-time">14:30</span><span class="eds-agenda-event-title">Entrega do relatório</span></a></li>
+          </ul>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sexta-feira</span><time class="eds-agenda-date" datetime="2026-03-06">6</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sábado</span><time class="eds-agenda-date" datetime="2026-03-07">7</time></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">domingo</span><time class="eds-agenda-date" datetime="2026-03-08">8</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">segunda-feira</span><time class="eds-agenda-date" datetime="2026-03-09">9</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">terça-feira</span><time class="eds-agenda-date" datetime="2026-03-10">10</time></div>
+          <ul class="eds-agenda-events">
+            <li><a class="eds-agenda-event" href="#/agenda/3" data-tone="warning"><span class="eds-agenda-event-time">10:00</span><span class="eds-agenda-event-title">Revisão de contrato</span></a></li>
+          </ul>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quarta-feira</span><time class="eds-agenda-date" datetime="2026-03-11">11</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quinta-feira</span><time class="eds-agenda-date" datetime="2026-03-12">12</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sexta-feira</span><time class="eds-agenda-date" datetime="2026-03-13">13</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sábado</span><time class="eds-agenda-date" datetime="2026-03-14">14</time></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">domingo</span><time class="eds-agenda-date" datetime="2026-03-15">15</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">segunda-feira</span><time class="eds-agenda-date" datetime="2026-03-16">16</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">terça-feira</span><time class="eds-agenda-date" datetime="2026-03-17">17</time></div>
+        </td>
+        <td class="eds-agenda-day" aria-current="date">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quarta-feira</span><time class="eds-agenda-date" datetime="2026-03-18">18</time><span class="eds-agenda-today">Hoje</span></div>
+          <ul class="eds-agenda-events">
+            <li><a class="eds-agenda-event" href="#/agenda/4" data-tone="info"><span class="eds-agenda-event-time">08:30</span><span class="eds-agenda-event-title">Alinhamento semanal</span></a></li>
+            <li><a class="eds-agenda-event" href="#/agenda/5"><span class="eds-agenda-event-time">11:00</span><span class="eds-agenda-event-title">Planejamento do trimestre</span></a></li>
+            <li><button type="button" class="eds-agenda-more" popovertarget="ag-mais-18" data-eds-popover="bottom" aria-haspopup="dialog" aria-label="2 mais eventos em quarta-feira, 18 de março">+2 mais</button></li>
+          </ul>
+          <div class="eds-popover" id="ag-mais-18" popover role="dialog" aria-labelledby="ag-mais-18-t" data-eds-popover>
+            <h3 class="eds-popover-title" id="ag-mais-18-t">Quarta-feira, 18 de março</h3>
+            <ul class="eds-agenda-events">
+              <li><a class="eds-agenda-event" href="#/agenda/6" data-tone="danger"><span class="eds-agenda-event-time">15:00</span><span class="eds-agenda-event-title">Prazo de entrega</span></a></li>
+              <li><a class="eds-agenda-event" href="#/agenda/7" data-tone="neutral"><span class="eds-agenda-event-time">17:00</span><span class="eds-agenda-event-title">Encerramento do dia</span></a></li>
+            </ul>
+          </div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quinta-feira</span><time class="eds-agenda-date" datetime="2026-03-19">19</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sexta-feira</span><time class="eds-agenda-date" datetime="2026-03-20">20</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sábado</span><time class="eds-agenda-date" datetime="2026-03-21">21</time></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">domingo</span><time class="eds-agenda-date" datetime="2026-03-22">22</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">segunda-feira</span><time class="eds-agenda-date" datetime="2026-03-23">23</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">terça-feira</span><time class="eds-agenda-date" datetime="2026-03-24">24</time></div>
+          <ul class="eds-agenda-events">
+            <li><a class="eds-agenda-event" href="#/agenda/8" data-tone="success"><span class="eds-agenda-event-time">09:30</span><span class="eds-agenda-event-title">Treinamento</span></a></li>
+          </ul>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quarta-feira</span><time class="eds-agenda-date" datetime="2026-03-25">25</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quinta-feira</span><time class="eds-agenda-date" datetime="2026-03-26">26</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sexta-feira</span><time class="eds-agenda-date" datetime="2026-03-27">27</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sábado</span><time class="eds-agenda-date" datetime="2026-03-28">28</time></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">domingo</span><time class="eds-agenda-date" datetime="2026-03-29">29</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">segunda-feira</span><time class="eds-agenda-date" datetime="2026-03-30">30</time></div>
+        </td>
+        <td class="eds-agenda-day">
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">terça-feira</span><time class="eds-agenda-date" datetime="2026-03-31">31</time></div>
+        </td>
+        <td class="eds-agenda-day" data-outside>
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quarta-feira</span><time class="eds-agenda-date" datetime="2026-04-01">1</time></div>
+        </td>
+        <td class="eds-agenda-day" data-outside>
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">quinta-feira</span><time class="eds-agenda-date" datetime="2026-04-02">2</time></div>
+        </td>
+        <td class="eds-agenda-day" data-outside>
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sexta-feira</span><time class="eds-agenda-date" datetime="2026-04-03">3</time></div>
+        </td>
+        <td class="eds-agenda-day" data-outside>
+          <div class="eds-agenda-day-head"><span class="eds-agenda-weekday">sábado</span><time class="eds-agenda-date" datetime="2026-04-04">4</time></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="eds-agenda-empty">Nenhum evento neste mês.</p>
+</section>

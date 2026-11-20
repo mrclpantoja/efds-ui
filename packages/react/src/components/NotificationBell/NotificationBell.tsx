@@ -121,18 +121,26 @@ export function NotificationBell({
       >
         <div className="eds-notifications-header">
           <h2 className="eds-popover-title">{t.title}</h2>
-          {count > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                onReadAll?.();
-                announce(t.allRead);
-              }}
-            >
-              {t.markAllRead}
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={count === 0}
+            onClick={(event) => {
+              const button = event.currentTarget;
+              const panel = button.closest<HTMLElement>('.eds-popover');
+              onReadAll?.();
+              announce(t.allRead);
+              // O botão fica desabilitado (zero não lidas): o foco vai ao primeiro item. Se quem
+              // usa o componente não zerou a contagem, o botão segue ativo e o foco fica onde está.
+              setTimeout(() => {
+                if (button.disabled) {
+                  panel?.querySelector<HTMLElement>('.eds-notification-link')?.focus();
+                }
+              }, 0);
+            }}
+          >
+            {t.markAllRead}
+          </Button>
         </div>
         {items.length > 0 ? (
           <ul className="eds-notifications-list">

@@ -1,0 +1,57 @@
+<!-- Behavior: dialog[data-eds-command] (padrão APG combobox com listbox; o foco fica no campo).
+     data-eds-command-shortcut="mod+k" (padrão; "off" desliga) abre a paleta; [data-eds-open="cmd"] também.
+     Itens: .eds-command-item[role=option] com data-value, data-href e data-keywords; grupos em role="group".
+     data-eds-command-recent="5" liga os Recentes (só ids em localStorage; ausente = desligado).
+     Setas movem, Enter escolhe, Esc fecha e o foco volta a quem abriu. Evento: eds:command-select. -->
+<button type="button" class="eds-button eds-button-secondary" data-eds-open="cmd">
+  Buscar
+  <kbd class="eds-command-shortcut">Ctrl K</kbd>
+</button>
+
+<dialog class="eds-modal eds-command" id="cmd" data-eds-command data-eds-command-shortcut="mod+k" data-eds-command-recent="5" aria-label="Busca global">
+  <div class="eds-command-search">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+    <input class="eds-command-input" type="text" role="combobox" aria-expanded="true" aria-controls="cmd-lista" aria-autocomplete="list" autocomplete="off" aria-label="Buscar páginas e ações" placeholder="Buscar páginas e ações" />
+  </div>
+  <div class="eds-command-list" id="cmd-lista" role="listbox" aria-label="Resultados">
+    <div class="eds-command-group" role="group" aria-labelledby="cmd-g-paginas">
+      <div class="eds-command-group-label" id="cmd-g-paginas">Páginas</div>
+      <div class="eds-command-item" role="option" id="cmd-i-1" data-value="pedidos" data-href="#/pedidos" data-keywords="vendas compras">
+        <svg class="eds-command-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" /><path d="M9 8h6M9 12h6" /></svg>
+        <span class="eds-command-label">Pedidos</span>
+        <span class="eds-command-description">Listagem e filtros</span>
+        <kbd class="eds-command-shortcut">G P</kbd>
+      </div>
+      <div class="eds-command-item" role="option" id="cmd-i-2" data-value="clientes" data-href="#/clientes">
+        <svg class="eds-command-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0116 0" /></svg>
+        <span class="eds-command-label">Clientes</span>
+        <span class="eds-command-description">Cadastro de clientes</span>
+      </div>
+      <div class="eds-command-item" role="option" id="cmd-i-3" data-value="relatorios" data-href="#/relatorios">
+        <svg class="eds-command-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" /></svg>
+        <span class="eds-command-label">Relatórios</span>
+        <span class="eds-command-description">Indicadores do mês</span>
+      </div>
+    </div>
+    <div class="eds-command-group" role="group" aria-labelledby="cmd-g-acoes">
+      <div class="eds-command-group-label" id="cmd-g-acoes">Ações</div>
+      <div class="eds-command-item" role="option" id="cmd-i-4" data-value="novo-pedido" data-href="#/pedidos/novo" data-keywords="criar adicionar">
+        <svg class="eds-command-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" /></svg>
+        <span class="eds-command-label">Novo pedido</span>
+        <kbd class="eds-command-shortcut">N</kbd>
+      </div>
+      <div class="eds-command-item" role="option" id="cmd-i-5" data-value="tema" aria-disabled="true">
+        <svg class="eds-command-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2" /></svg>
+        <span class="eds-command-label">Alternar tema</span>
+        <span class="eds-command-description">Indisponível</span>
+      </div>
+    </div>
+  </div>
+  <p class="eds-command-empty" hidden>Nada encontrado para a busca.</p>
+  <span class="eds-visually-hidden" role="status"></span>
+  <footer class="eds-command-footer">
+    <span><kbd>↑</kbd> <kbd>↓</kbd> navegar</span>
+    <span><kbd>Enter</kbd> abrir</span>
+    <span><kbd>Esc</kbd> fechar</span>
+  </footer>
+</dialog>

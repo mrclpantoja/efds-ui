@@ -1,0 +1,25 @@
+<!-- Sem JS do pacote. Ícone antes do texto; só ícone: o texto vai em .eds-visually-hidden (é o nome do rádio). -->
+<div class="eds-stack eds-gap-4">
+  <fieldset class="eds-segmented">
+    <legend>Exibir como</legend>
+    <label>
+      <input type="radio" name="exibir" value="lista" checked />
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Lista
+    </label>
+    <label>
+      <input type="radio" name="exibir" value="grade" />
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>Grade
+    </label>
+  </fieldset>
+  <fieldset class="eds-segmented">
+    <legend>Alinhamento</legend>
+    <label>
+      <input type="radio" name="alinhar" value="inicio" checked />
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h10M4 18h14" /></svg><span class="eds-visually-hidden">Alinhar ao início</span>
+    </label>
+    <label>
+      <input type="radio" name="alinhar" value="centro" />
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M7 12h10M5 18h14" /></svg><span class="eds-visually-hidden">Centralizar</span>
+    </label>
+  </fieldset>
+</div>

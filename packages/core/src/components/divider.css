@@ -1,0 +1,75 @@
+/* Divider: separador de conteúdo.
+   Markup:
+     <hr class="eds-divider" />                                     (horizontal; <hr> já é role=separator)
+     <span class="eds-divider eds-divider-vertical" role="separator" aria-orientation="vertical"></span>
+     <div class="eds-divider"><span class="eds-divider-label">ou</span></div>   (com rótulo)
+   - <hr> basta para separar partes de uma página; o vertical em <span> precisa de role="separator" e
+     aria-orientation="vertical". Se o separador for só visual, use aria-hidden="true" no lugar do role.
+   - Com rótulo, o elemento não leva role: o texto ("ou") é lido no fluxo, e as duas linhas ficam
+     ocultas do leitor porque são pseudoelementos.
+   - O vertical estica à altura da linha (use dentro de .eds-stack-row ou de um flex); altura mínima
+     de 1em. .eds-divider-strong usa a borda forte (separação de seções).
+   - Sem margem própria: o espaço vem do gap do contêiner (.eds-stack). */
+@layer eds.components {
+  .eds-divider {
+    --_divider-color: var(--eds-color-border-default);
+
+    display: block;
+    flex: none;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-block-start: var(--eds-border-width) solid var(--_divider-color);
+    background: none;
+    color: var(--eds-color-text-secondary);
+    overflow: visible;
+  }
+
+  .eds-divider-strong {
+    --_divider-color: var(--eds-color-border-strong);
+  }
+
+  .eds-divider-vertical {
+    display: inline-block;
+    align-self: stretch;
+    inline-size: 0;
+    block-size: auto;
+    min-block-size: 1em;
+    border-block-start: 0;
+    border-inline-start: var(--eds-border-width) solid var(--_divider-color);
+  }
+
+  /* Rótulo: linha, texto, linha. */
+  .eds-divider:has(> .eds-divider-label) {
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-3);
+    block-size: auto;
+    border-block-start: 0;
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1 1 0;
+      border-block-start: var(--eds-border-width) solid var(--_divider-color);
+    }
+  }
+
+  .eds-divider-label {
+    flex: none;
+    max-inline-size: 80%;
+    font-size: var(--eds-font-size-small);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-small);
+    overflow-wrap: anywhere;
+  }
+
+  @media (forced-colors: active) {
+    .eds-divider {
+      --_divider-color: CanvasText;
+    }
+  }
+}

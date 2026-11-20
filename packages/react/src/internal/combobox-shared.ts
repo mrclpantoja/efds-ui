@@ -49,13 +49,15 @@ export function setPopoverOpen(el: HTMLElement | null, open: boolean) {
 /**
  * Abre/fecha o popover e o posiciona sob (ou sobre) o `anchor` por `--_combobox-x/-y/-width`
  * (único estilo inline permitido: só posição). Recalcula em scroll e resize; `layoutKey` refaz o
- * cálculo quando o conteúdo muda de altura.
+ * cálculo quando o conteúdo muda de altura. `prefix` troca o nome das variáveis (`--_<prefix>-x/-y/-width`),
+ * para o TimePicker reaproveitar a mesma conta.
  */
 export function usePopupPosition(
   popupRef: RefObject<HTMLElement | null>,
   anchorRef: RefObject<HTMLElement | null>,
   expanded: boolean,
   layoutKey: string | number,
+  prefix = 'combobox',
 ) {
   useEffect(() => {
     const popup = popupRef.current;
@@ -68,9 +70,9 @@ export function usePopupPosition(
       const height = popup.offsetHeight;
       const below = window.innerHeight - rect.bottom;
       const onTop = height > 0 && below < height && rect.top > below;
-      popup.style.setProperty('--_combobox-x', `${rect.left}px`);
-      popup.style.setProperty('--_combobox-y', `${onTop ? rect.top : rect.bottom}px`);
-      popup.style.setProperty('--_combobox-width', `${rect.width}px`);
+      popup.style.setProperty(`--_${prefix}-x`, `${rect.left}px`);
+      popup.style.setProperty(`--_${prefix}-y`, `${onTop ? rect.top : rect.bottom}px`);
+      popup.style.setProperty(`--_${prefix}-width`, `${rect.width}px`);
       if (onTop) popup.setAttribute('data-placement', 'top');
       else popup.removeAttribute('data-placement');
     };
@@ -81,7 +83,7 @@ export function usePopupPosition(
       window.removeEventListener('scroll', place, true);
       window.removeEventListener('resize', place);
     };
-  }, [popupRef, anchorRef, expanded, layoutKey]);
+  }, [popupRef, anchorRef, expanded, layoutKey, prefix]);
 }
 
 /** Rola até a opção destacada. */

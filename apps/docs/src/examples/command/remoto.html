@@ -1,0 +1,22 @@
+<!-- Behavior: dialog[data-eds-command] com fonte remota. data-eds-source="/api/busca?q=" recebe a busca no fim
+     da URL e devolve [{value,label,description?,group?,href?,shortcut?}]; data-eds-min-chars atrasa a
+     consulta. Aqui os itens locais vêm de um JSON no próprio HTML (script[data-eds-command-items]).
+     Evento: eds:command-select. Abaixo do mínimo de caracteres aparecem os itens locais (JSON); a partir dele, os resultados da fonte. -->
+<button type="button" class="eds-button eds-button-secondary" data-eds-open="cmd-remoto">Busca global</button>
+
+<dialog class="eds-modal eds-command" id="cmd-remoto" data-eds-command data-eds-command-shortcut="off" data-eds-source="/busca?q=" data-eds-min-chars="2" aria-label="Busca global">
+  <div class="eds-command-search">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+    <input class="eds-command-input" type="text" role="combobox" aria-expanded="true" aria-controls="cmd-remoto-lista" aria-autocomplete="list" autocomplete="off" aria-label="Buscar em todo o sistema" placeholder="Buscar em todo o sistema" />
+  </div>
+  <div class="eds-command-list" id="cmd-remoto-lista" role="listbox" aria-label="Resultados"></div>
+  <p class="eds-command-empty" hidden>Nada encontrado para a busca.</p>
+  <span class="eds-visually-hidden" role="status"></span>
+  <script type="application/json" data-eds-command-items>
+    [
+      { "value": "inicio", "label": "Início", "group": "Páginas", "href": "#/inicio" },
+      { "value": "pedidos", "label": "Pedidos", "group": "Páginas", "href": "#/pedidos", "description": "Listagem e filtros" },
+      { "value": "novo", "label": "Novo pedido", "group": "Ações", "href": "#/pedidos/novo", "shortcut": "N" }
+    ]
+  </script>
+</dialog>

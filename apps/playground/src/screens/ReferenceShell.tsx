@@ -4,6 +4,8 @@ import {
   AppShell,
   AppShellHeader,
   AppShellNavToggle,
+  Avatar,
+  Banner,
   Breadcrumb,
   BreadcrumbItem,
   Button,
@@ -15,14 +17,7 @@ import {
   SidebarItem,
   SidebarSection,
 } from '@eds-ui/react';
-import {
-  ArrowLeftIcon,
-  BellIcon,
-  DashboardIcon,
-  UserIcon,
-  UserPlusIcon,
-  UsersIcon,
-} from '@eds-ui/icons';
+import { ArrowLeftIcon, BellIcon, DashboardIcon, UserPlusIcon, UsersIcon } from '@eds-ui/icons';
 
 export type ScreenId = 'dashboard' | 'listagem' | 'formulario';
 
@@ -140,6 +135,11 @@ export function ReferenceShell({
           </SidebarSection>
         </Sidebar>
       }
+      banner={
+        <Banner aria-label="Aviso do ambiente" tone="warning">
+          <strong>Ambiente de homologação.</strong> Os dados desta aplicação são fictícios.
+        </Banner>
+      }
       header={
         <AppShellHeader>
           <AppShellNavToggle />
@@ -148,7 +148,7 @@ export function ReferenceShell({
               <BellIcon />
             </Button>
             <Button variant="ghost" iconOnly aria-label="Conta de Ana Exemplo">
-              <UserIcon />
+              <Avatar name="Ana Exemplo" size="sm" decorative />
             </Button>
           </NavbarActions>
         </AppShellHeader>

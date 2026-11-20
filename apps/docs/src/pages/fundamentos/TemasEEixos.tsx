@@ -209,6 +209,31 @@ export default function TemasEEixos() {
         </ul>
       </Section>
 
+      <Section title="Contraste aumentado (prefers-contrast)">
+        <p>
+          Quem pede mais contraste ao sistema operacional (<code>prefers-contrast: more</code>)
+          recebe o reforço sem escolher nada e sem trocar de componente: a mudança mora no base e
+          nos tokens, não em cada componente.
+        </p>
+        <ul className="docs-list">
+          <li>
+            Bordas passam para <code>border-strong</code> e o foco ganha um anel mais espesso (3px).
+          </li>
+          <li>
+            O texto <code>text-muted</code> sobe para <code>text-secondary</code>.
+          </li>
+          <li>
+            Fundos sutis (Badge, Tag, Avatar, Banner) ganham uma borda na cor do texto, para o
+            limite do elemento não depender só do tom do fundo.
+          </li>
+          <li>
+            <code>prefers-contrast: less</code> não muda nada. Funciona nos cinco temas e nos dois
+            modos; teste no Windows em Configurações, Acessibilidade, Temas de contraste, ou
+            emulando a mídia nas ferramentas do navegador.
+          </li>
+        </ul>
+      </Section>
+
       <Section title="Acessibilidade">
         <ul className="docs-list">
           <li>

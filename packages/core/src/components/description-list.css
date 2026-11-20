@@ -1,0 +1,123 @@
+/* DescriptionList: pares rótulo/valor de um registro (dados de um pedido, perfil, ficha).
+   Markup (HTML semântico: <dl> com <div> agrupando <dt> e <dd>):
+     <dl class="eds-description-list eds-description-list-cols-2">
+       <div><dt>Número</dt><dd>PED-0001</dd></div>
+       <div><dt>Situação</dt><dd><span class="eds-badge eds-badge-success">Pago</span></dd></div>
+       <div><dt>Observação</dt>
+         <dd><span class="eds-description-empty" aria-hidden="true">—</span>
+             <span class="eds-visually-hidden">não informado</span></dd></div>
+     </dl>
+   - Colunas: .eds-description-list-cols-2 e -cols-3 são o máximo; a lista usa menos quando o
+     contêiner é estreito (cada coluna tem no mínimo 14rem), sem media query e sem JS. Padrão: 1.
+   - .eds-description-list-horizontal: rótulo à esquerda e valor à direita em cada linha; abaixo de
+     28rem de largura do próprio contêiner volta a empilhar. Pensada para 1 coluna.
+   - .eds-description-list-divided: linha separadora entre os itens (1 coluna).
+   - .eds-description-list-striped: listras alternadas (1 coluna).
+   - Valor vazio: "—" em .eds-description-empty (aria-hidden) + texto oculto "não informado": o
+     leitor de tela lê o motivo, não o travessão.
+   - Valores longos quebram (overflow-wrap); o <dd> aceita badge, link, botão de copiar etc. */
+@layer eds.components {
+  .eds-description-list {
+    --_dl-cols: 1;
+    --_dl-gap: var(--eds-space-4);
+    --_dl-col-min: 14rem;
+    --_dl-term-width: 10rem;
+
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(
+        min(
+          100%,
+          max(
+            var(--_dl-col-min),
+            calc((100% - (var(--_dl-cols) - 1) * var(--_dl-gap)) / var(--_dl-cols))
+          )
+        ),
+        1fr
+      )
+    );
+    gap: var(--_dl-gap) var(--eds-space-5);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    color: var(--eds-color-text-primary);
+
+    & > div {
+      display: grid;
+      align-content: start;
+      gap: var(--eds-space-1);
+      min-inline-size: 0;
+      break-inside: avoid;
+    }
+
+    & dt {
+      color: var(--eds-color-text-secondary);
+      font-size: var(--eds-font-size-label);
+      font-weight: var(--eds-font-weight-medium);
+      line-height: var(--eds-line-height-label);
+    }
+
+    & dd {
+      min-inline-size: 0;
+      margin: 0;
+      font-size: var(--eds-font-size-body);
+      line-height: var(--eds-line-height-body);
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .eds-description-list-cols-2 {
+    --_dl-cols: 2;
+  }
+
+  .eds-description-list-cols-3 {
+    --_dl-cols: 3;
+  }
+
+  .eds-description-empty {
+    color: var(--eds-color-text-muted);
+  }
+
+  /* Horizontal: o contêiner próprio decide quando há largura para duas colunas por linha. */
+  .eds-description-list-horizontal {
+    container: eds-description-list / inline-size;
+  }
+
+  @container eds-description-list (min-width: 28rem) {
+    .eds-description-list-horizontal > div {
+      grid-template-columns: minmax(0, var(--_dl-term-width)) minmax(0, 1fr);
+      align-items: baseline;
+      column-gap: var(--eds-space-4);
+    }
+  }
+
+  .eds-description-list-divided,
+  .eds-description-list-striped {
+    row-gap: 0;
+
+    & > div {
+      padding-block: var(--eds-space-3);
+    }
+  }
+
+  .eds-description-list-divided > div:not(:last-child) {
+    border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+  }
+
+  .eds-description-list-striped > div {
+    padding-inline: var(--eds-space-3);
+    border-radius: var(--eds-radius-sm);
+
+    &:nth-child(odd) {
+      background: var(--eds-color-bg-subtle);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-description-list-striped > div:nth-child(odd) {
+      border: var(--eds-border-width) solid CanvasText;
+    }
+  }
+}

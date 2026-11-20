@@ -90,6 +90,14 @@
     --_badge-line-height: var(--eds-line-height-label);
   }
 
+  /* Mais contraste: fundo suave sozinho some; o Badge ganha borda na cor do texto. */
+  @media (prefers-contrast: more) {
+    .eds-badge:not(.eds-badge-dot) {
+      outline: var(--eds-border-width) solid currentColor;
+      outline-offset: calc(var(--eds-border-width) * -1);
+    }
+  }
+
   @media (forced-colors: active) {
     .eds-badge:not(.eds-badge-dot) {
       border: var(--eds-border-width) solid currentColor;

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { installPopoverStyle } from '../../test-utils/dom-polyfills';
 import { NotificationBell, type NotificationItem } from './NotificationBell';
 
 const initial: NotificationItem[] = [
@@ -22,6 +23,10 @@ function Harness({ list = initial }: { list?: NotificationItem[] }) {
     />
   );
 }
+
+beforeAll(() => {
+  installPopoverStyle();
+});
 
 describe('NotificationBell', () => {
   it('o sino leva a contagem no nome, e o selo é decorativo', () => {
@@ -62,7 +67,8 @@ describe('NotificationBell', () => {
     const bell = screen.getByRole('button', { name: 'Notificações, nenhuma não lida' });
     expect(bell.querySelector('.eds-notifications-count')).toHaveAttribute('hidden');
     expect(await screen.findByRole('status')).toHaveTextContent('Todas as notificações');
-    expect(screen.queryByText('Marcar todas como lidas')).toBeNull();
+    expect(screen.getByText('Marcar todas como lidas', { selector: 'button' })).toBeDisabled();
+    await waitFor(() => expect(document.activeElement).toHaveClass('eds-notification-link'));
   });
 
   it('sem itens mostra o estado vazio; selo limita a 99+', () => {

@@ -1,0 +1,293 @@
+/* Paleta de comandos / busca global: um Modal com campo de busca e lista de resultados.
+   Soma-se ao modal.css (carregue os dois): .eds-command só reposiciona o diálogo e desenha o interior.
+   Markup (o JS completa o que faltar; padrão APG combobox com listbox, foco sempre no campo):
+     <button type="button" class="eds-button" data-eds-open="cmd">Buscar <kbd>Ctrl K</kbd></button>
+     <dialog class="eds-modal eds-command" id="cmd" data-eds-command aria-label="Busca global">
+       <div class="eds-command-search">
+         <svg aria-hidden="true" focusable="false">…</svg>
+         <input class="eds-command-input" role="combobox" aria-expanded="true" aria-controls="cmd-list"
+           aria-autocomplete="list" autocomplete="off" aria-label="Buscar" placeholder="Buscar páginas e ações" />
+       </div>
+       <div class="eds-command-list" id="cmd-list" role="listbox" aria-label="Resultados">
+         <div class="eds-command-group" role="group" aria-labelledby="cmd-g1">
+           <div class="eds-command-group-label" id="cmd-g1">Páginas</div>
+           <div class="eds-command-item" role="option" id="cmd-i1" data-value="pedidos" data-href="/pedidos">
+             <svg class="eds-command-icon" aria-hidden="true" focusable="false">…</svg>
+             <span class="eds-command-label">Pedidos</span>
+             <span class="eds-command-description">Listagem e filtros</span>
+             <kbd class="eds-command-shortcut">G P</kbd>
+           </div>
+         </div>
+       </div>
+       <p class="eds-command-empty" hidden>Nada encontrado</p>
+       <span class="eds-visually-hidden" role="status"></span>
+       <footer class="eds-command-footer">…dicas com <kbd>…</kbd>…</footer>   (opcional)
+     </dialog>
+   Estados por atributo: option[aria-selected="true"] (destacada pelo teclado/ponteiro: fundo +
+   barra inicial, como o Combobox), option[aria-disabled="true"], .eds-command-empty[hidden],
+   .eds-command[aria-busy="true"] (lista esmaecida enquanto a fonte remota responde).
+   Os atalhos e as dicas de teclado somem em ponteiro de toque (não há teclado físico). */
+@layer eds.components {
+  .eds-command {
+    --_modal-width: var(--eds-layout-dialog-md);
+    --_command-offset: min(12dvh, var(--eds-space-9));
+
+    /* Alinhado ao topo (o modal comum é centrado): a lista cresce para baixo sem pular o campo. */
+    margin-block: var(--_command-offset) auto;
+    max-block-size: min(
+      calc(var(--eds-space-9) * 8),
+      calc(100dvh - var(--_command-offset) - var(--_modal-gutter))
+    );
+  }
+
+  .eds-command-search {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--eds-space-3);
+    padding: var(--eds-space-1) var(--eds-inset-md);
+    border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--eds-icon-size-md);
+      block-size: var(--eds-icon-size-md);
+      fill: none;
+      stroke: var(--eds-color-text-secondary);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* O campo não tem borda própria: o foco aparece na faixa toda (anel por dentro). */
+    &:has(.eds-command-input:focus-visible) {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+  }
+
+  .eds-command-input {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: var(--eds-control-height-lg);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--eds-color-text-primary);
+    font: inherit;
+    font-size: var(--eds-font-size-body-lg);
+    line-height: var(--eds-line-height-body-lg);
+    text-overflow: ellipsis;
+    outline: 0;
+
+    &::placeholder {
+      color: var(--eds-color-text-muted);
+      opacity: 1;
+    }
+  }
+
+  /* A lista rola sozinha; o campo e o rodapé ficam fixos. */
+  .eds-command-list {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    margin: 0;
+    padding: var(--eds-space-2);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .eds-command[aria-busy='true'] .eds-command-list {
+    opacity: 0.6;
+  }
+
+  .eds-command-group + .eds-command-group {
+    margin-block-start: var(--eds-space-2);
+  }
+
+  .eds-command-group-label {
+    padding: var(--eds-space-1) var(--eds-space-3);
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-small);
+  }
+
+  .eds-command-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-3);
+    box-sizing: border-box;
+    min-block-size: var(--eds-space-7);
+    padding-block: var(--eds-space-1);
+    padding-inline: var(--eds-space-3);
+    border-radius: var(--eds-radius-sm);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    cursor: pointer;
+
+    &:hover:not([aria-disabled='true']) {
+      background: var(--eds-color-bg-subtle);
+    }
+
+    /* O fundo sozinho não chega a 3:1 (1.4.11): barra inicial em action-primary, como no Combobox. */
+    &[aria-selected='true'] {
+      background: var(--eds-color-bg-subtle);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block: var(--eds-space-2);
+        inline-size: 0.125rem;
+        border-radius: var(--eds-radius-sm);
+        background: var(--eds-color-action-primary);
+      }
+    }
+
+    &[aria-disabled='true'] {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .eds-command-icon {
+    flex: none;
+    inline-size: var(--eds-icon-size-md);
+    block-size: var(--eds-icon-size-md);
+    fill: none;
+    stroke: var(--eds-color-text-secondary);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .eds-command-label {
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    overflow: hidden;
+    font-weight: var(--eds-font-weight-medium);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .eds-command-description {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    overflow: hidden;
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .eds-command-item[aria-disabled='true'] .eds-command-description,
+  .eds-command-item[aria-disabled='true'] .eds-command-icon {
+    color: inherit;
+    stroke: currentColor;
+  }
+
+  /* Atalho do item e dicas do rodapé: <kbd> com aparência de tecla. */
+  .eds-command-shortcut,
+  .eds-command-footer :where(kbd) {
+    flex: none;
+    box-sizing: border-box;
+    min-inline-size: var(--eds-icon-size-md);
+    margin-inline-start: auto;
+    padding-inline: var(--eds-space-1);
+    border: var(--eds-border-width) solid var(--eds-color-border-strong);
+    border-radius: var(--eds-radius-sm);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-secondary);
+    font-family: var(--eds-font-family-code);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-label);
+    text-align: center;
+  }
+
+  .eds-command-empty,
+  .eds-command-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--eds-space-2);
+    margin: 0;
+    padding: var(--eds-space-6) var(--eds-inset-md);
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-body);
+    text-align: center;
+  }
+
+  .eds-command-empty[hidden],
+  .eds-command-loading[hidden] {
+    display: none;
+  }
+
+  .eds-command-footer {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-1) var(--eds-space-4);
+    padding: var(--eds-space-2) var(--eds-inset-md);
+    border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+
+    & :where(kbd) {
+      margin-inline-start: 0;
+    }
+  }
+
+  /* Toque: 16px evita o zoom do iOS; sem teclado físico, atalhos e dicas só ocupam espaço. */
+  @media (pointer: coarse) {
+    .eds-command-input {
+      font-size: 1rem;
+    }
+
+    .eds-command-item {
+      min-block-size: var(--eds-target-min);
+    }
+
+    .eds-command-shortcut,
+    .eds-command-footer {
+      display: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-command-item[aria-selected='true'] {
+      background: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+
+      &::before {
+        background: currentColor;
+      }
+
+      & .eds-command-icon {
+        stroke: currentColor;
+      }
+
+      & .eds-command-description {
+        color: inherit;
+      }
+    }
+
+    .eds-command-item[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+}

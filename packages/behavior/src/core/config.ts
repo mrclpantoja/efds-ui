@@ -247,6 +247,31 @@ export interface Messages {
   sessionMinute: string;
   sessionMinutes: string;
   sessionAnd: string;
+  // Paleta de comandos: `{query}`
+  commandTitle: string;
+  commandSearch: string;
+  commandRecent: string;
+  commandEmpty: string;
+  commandError: string;
+  // Agenda: `{count}`, `{date}`, `{title}`
+  agendaMore: string;
+  agendaMoreLabel: string;
+  agendaMoreTitle: string;
+  agendaToday: string;
+  agendaEmpty: string;
+  agendaGrid: string;
+  agendaEventAllDay: string;
+  // TimePicker: `{label}`, `{value}`, `{min}`, `{max}`, `{time}`
+  timeChoose: string;
+  timeList: string;
+  timeCurrent: string;
+  timeSelected: string;
+  timeBetween: string;
+  timeFrom: string;
+  timeUntil: string;
+  timeEmpty: string;
+  // Banner
+  bannerClose: string;
 }
 
 export const defaultMessages: Messages = {
@@ -483,6 +508,31 @@ export const defaultMessages: Messages = {
   sessionMinute: '{count} minuto',
   sessionMinutes: '{count} minutos',
   sessionAnd: ' e ',
+  // Paleta de comandos
+  commandTitle: 'Paleta de comandos',
+  commandSearch: 'Buscar comandos e páginas',
+  commandRecent: 'Recentes',
+  commandEmpty: 'Nenhum resultado para "{query}".',
+  commandError: 'Não foi possível carregar os comandos.',
+  // Agenda
+  agendaMore: '+{count} mais',
+  agendaMoreLabel: '{count} mais eventos em {date}',
+  agendaMoreTitle: 'Eventos de {date}',
+  agendaToday: 'Hoje',
+  agendaEmpty: 'Nenhum evento neste mês.',
+  agendaGrid: 'Agenda de {title}',
+  agendaEventAllDay: 'dia inteiro',
+  // TimePicker
+  timeChoose: 'Escolher horário',
+  timeList: 'Horários',
+  timeCurrent: '{label}. Atual: {value}',
+  timeSelected: 'Horário selecionado: {time}.',
+  timeBetween: 'Escolha um horário entre {min} e {max}.',
+  timeFrom: 'Escolha um horário a partir de {min}.',
+  timeUntil: 'Escolha um horário até {max}.',
+  timeEmpty: 'Nenhum horário disponível.',
+  // Banner
+  bannerClose: 'Fechar aviso',
 };
 
 export const DEFAULT_LOCALE = 'pt-BR';

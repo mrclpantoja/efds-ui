@@ -6,6 +6,7 @@ import {
   resetCepUrl,
   resetLocale,
   resetMessages,
+  defaultMessages,
   setCepUrl,
   setLocale,
   setMessages,
@@ -42,6 +43,10 @@ import { initNumber } from './components/number';
 import { initLookup } from './components/lookup';
 import { initOtp } from './components/otp';
 import { initPassword } from './components/password';
+// Onda D
+import { initAvatar } from './components/avatar';
+import { initBanner } from './components/banner';
+import { initTimepicker } from './components/timepicker';
 
 export interface BehaviorOptions {
   /**
@@ -75,7 +80,7 @@ export function configure(options: BehaviorOptions): void {
   setCepUrl(options.cepUrl);
 }
 
-export { resetCepUrl, resetLocale, resetMessages };
+export { defaultMessages, resetCepUrl, resetLocale, resetMessages };
 // Onda C (página e feedback)
 export { session, initSession } from './components/session';
 export { markClean } from './components/dirty-guard';
@@ -92,6 +97,8 @@ export type { ToastOptions, ToastVariant } from './components/toast';
 export { alert, confirm, prompt } from './components/dialogs';
 export type { DialogInputType, DialogOptions, DialogVariant } from './components/dialogs';
 export type { ComboboxOption } from './components/combobox';
+// Onda D
+export { avatarInitials, avatarTone } from './components/avatar';
 export type { SortDirection } from './components/table';
 export type { TreeChangeAction, TreeNodeData } from './components/tree';
 export type { FilterChange } from './components/filter-bar';
@@ -128,6 +135,10 @@ export {
   initNumber,
   initOtp,
   initPassword,
+  // Onda D
+  initAvatar,
+  initBanner,
+  initTimepicker,
   loader,
   toast,
 };

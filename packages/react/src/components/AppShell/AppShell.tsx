@@ -35,6 +35,8 @@ export interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
   sidebar?: ReactNode;
   /** Slot do `<AppShellHeader>`. */
   header?: ReactNode;
+  /** Slot do `<Banner>` de sistema: ocupa uma linha acima da sidebar e do cabeçalho. */
+  banner?: ReactNode;
   /** Conteúdo da página (dentro do único `<main>`). */
   children?: ReactNode;
   /** Textos internos (padrões em pt-BR): `skipLink` ("Pular para o conteúdo"). */
@@ -58,6 +60,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
   {
     sidebar,
     header,
+    banner,
     children,
     texts,
     mainId: mainIdProp,
@@ -97,6 +100,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
         <a ref={skipRef} className="eds-skip-link" href={`#${mainId}`} onClick={skip}>
           {mergeTexts({ skipLink: 'Pular para o conteúdo' }, texts).skipLink}
         </a>
+        {banner}
         <SidebarSlotContext.Provider value>{sidebar}</SidebarSlotContext.Provider>
         {header}
         <main

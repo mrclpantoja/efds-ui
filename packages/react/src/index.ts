@@ -346,3 +346,43 @@ export type {
 } from './components/SessionTimeout';
 export { useUnsavedChanges } from './components/UnsavedChanges';
 export type { UnsavedChangesOptions, UnsavedChangesTexts } from './components/UnsavedChanges';
+
+// Onda D
+export { Avatar, AvatarGroup } from './components/Avatar';
+export type {
+  AvatarProps,
+  AvatarSize,
+  AvatarStatus,
+  AvatarTexts,
+  AvatarTone,
+  AvatarGroupProps,
+  AvatarGroupTexts,
+} from './components/Avatar';
+export { Tag } from './components/Tag';
+export type { TagProps, TagTexts, TagTone } from './components/Tag';
+export { Divider } from './components/Divider';
+export type { DividerProps } from './components/Divider';
+export { SegmentedControl } from './components/SegmentedControl';
+export type {
+  SegmentedControlProps,
+  SegmentedOption,
+  SegmentedSize,
+} from './components/SegmentedControl';
+export { DescriptionList } from './components/DescriptionList';
+export type {
+  DescriptionItem,
+  DescriptionListProps,
+  DescriptionListTexts,
+} from './components/DescriptionList';
+export { Banner } from './components/Banner';
+export type { BannerProps, BannerTexts, BannerTone } from './components/Banner';
+export { TimePicker } from './components/TimePicker';
+export type { TimePickerProps, TimePickerSize, TimePickerTexts } from './components/TimePicker';
+export { CommandPalette } from './components/CommandPalette';
+export type {
+  CommandPaletteItem,
+  CommandPaletteProps,
+  CommandPaletteTexts,
+} from './components/CommandPalette';
+export { Agenda } from './components/Agenda';
+export type { AgendaEvent, AgendaProps, AgendaTexts, AgendaTone } from './components/Agenda';

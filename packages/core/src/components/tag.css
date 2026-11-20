@@ -1,0 +1,189 @@
+/* Tag: rótulo de classificação (área, categoria, marcador), com tom e remoção opcional.
+   Markup:
+     <span class="eds-tag" data-tone="info">Financeiro</span>
+     <span class="eds-tag">Prioridade alta
+       <button type="button" class="eds-tag-remove" aria-label="Remover Prioridade alta"></button>
+     </span>
+   Tag x Badge x Chip:
+     Badge = estado de um registro (Pago, Atrasado), pequeno e sem borda; vem do sistema.
+     Tag   = classificação livre, muitas vezes escolhida pelo usuário; estática, removível ou não.
+     Chip  = controle: filtro ativo ou alternável (botão); aparência irmã, mas interativo.
+   - Tom: data-tone="neutral|accent|info|success|warning|danger" (neutral é o padrão). Fundo -subtle
+     e texto -text já medidos (>= 4.5:1 nos 5 temas e nos 2 modos); o texto é quem informa.
+   - A Tag não é interativa: sem hover, sem cursor de clique. Só o botão .eds-tag-remove recebe foco;
+     ele precisa de aria-label "Remover X" (o ícone × é desenhado em CSS quando o botão está vazio).
+   - Alvo: o botão de remover tem 24px (WCAG 2.5.8) e 32px em ponteiro de toque.
+   - Lista: <ul class="eds-tag-list"> com <li><span class="eds-tag">…</span></li>.
+   - Pode somar-se ao .eds-chip (<span class="eds-chip eds-tag">): a Tag assume a altura e o tamanho. */
+@layer eds.components {
+  .eds-tag {
+    --_tag-bg: var(--eds-color-bg-subtle);
+    --_tag-fg: var(--eds-color-text-primary);
+    --_tag-border: var(--eds-color-border-default);
+    --_tag-target: var(--eds-icon-size-lg);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    min-block-size: calc(var(--_tag-target) + 2 * var(--eds-border-width));
+    margin: 0;
+    padding-inline: var(--eds-space-2);
+    border: var(--eds-border-width) solid var(--_tag-border);
+    border-radius: var(--eds-radius-sm);
+    background: var(--_tag-bg);
+    color: var(--_tag-fg);
+    font-family: inherit;
+    font-size: var(--eds-font-size-small);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-small);
+    text-align: start;
+    overflow-wrap: anywhere;
+    cursor: default;
+    vertical-align: middle;
+
+    & > svg {
+      flex: none;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* O botão encosta na borda final: o alvo de 24px fica dentro da altura da tag. */
+    &:has(> .eds-tag-remove) {
+      padding-inline-end: 0;
+    }
+
+    &[data-tone='accent'] {
+      --_tag-bg: var(--eds-color-action-primary-subtle);
+      --_tag-fg: var(--eds-color-action-primary);
+      --_tag-border: color-mix(in srgb, var(--eds-color-action-primary) 30%, transparent);
+    }
+
+    &[data-tone='info'] {
+      --_tag-bg: var(--eds-color-status-info-subtle);
+      --_tag-fg: var(--eds-color-status-info-text);
+      --_tag-border: color-mix(in srgb, var(--eds-color-status-info-text) 30%, transparent);
+    }
+
+    &[data-tone='success'] {
+      --_tag-bg: var(--eds-color-status-success-subtle);
+      --_tag-fg: var(--eds-color-status-success-text);
+      --_tag-border: color-mix(in srgb, var(--eds-color-status-success-text) 30%, transparent);
+    }
+
+    &[data-tone='warning'] {
+      --_tag-bg: var(--eds-color-status-warning-subtle);
+      --_tag-fg: var(--eds-color-status-warning-text);
+      --_tag-border: color-mix(in srgb, var(--eds-color-status-warning-text) 30%, transparent);
+    }
+
+    &[data-tone='danger'] {
+      --_tag-bg: var(--eds-color-status-danger-subtle);
+      --_tag-fg: var(--eds-color-status-danger-text);
+      --_tag-border: color-mix(in srgb, var(--eds-color-status-danger-text) 30%, transparent);
+    }
+  }
+
+  /* Botão quadrado; o × vem de um <svg> filho ou é desenhado em CSS (botão vazio). */
+  .eds-tag-remove {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_tag-target);
+    block-size: var(--_tag-target);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &:empty::before {
+      content: '';
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    }
+
+    & > svg {
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background: color-mix(in srgb, currentColor 14%, transparent);
+    }
+
+    &:focus-visible {
+      outline-offset: 0;
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .eds-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Toque: o botão de remover sobe para a altura de um controle pequeno. */
+  @media (pointer: coarse) {
+    .eds-tag:has(> .eds-tag-remove) {
+      --_tag-target: var(--eds-control-height-sm);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-tag-remove {
+      transition: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    .eds-tag:is([data-tone], :not([data-tone])) {
+      --_tag-border: currentColor;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-tag:is([data-tone], :not([data-tone])) {
+      --_tag-bg: Canvas;
+      --_tag-fg: CanvasText;
+      --_tag-border: CanvasText;
+    }
+
+    .eds-tag-remove {
+      color: ButtonText;
+    }
+
+    .eds-tag-remove:disabled,
+    .eds-tag-remove[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+}

@@ -159,6 +159,35 @@ const eventos: Record<string, readonly Evento[]> = {
       detail: '{ action, node, parent, index, id, label, tree }: tree é o JSON da árvore.',
     },
   ],
+  'Onda D: busca, agenda, horário e aviso': [
+    {
+      name: 'eds:command-select',
+      on: 'dialog[data-eds-command]',
+      cancelable: true,
+      detail:
+        '{ value, label, href, item }: o item escolhido. Sem cancelar, um item com href navega.',
+    },
+    {
+      name: 'eds:agenda-month-change',
+      on: '.eds-agenda',
+      detail: '{ year, month, from, to }: mês de 1 a 12 e o período visível (aaaa-mm-dd).',
+    },
+    {
+      name: 'eds:agenda-event-click',
+      on: '.eds-agenda',
+      detail: '{ id, title, date, item }: o evento (link ou botão) acionado.',
+    },
+    {
+      name: 'eds:time-change',
+      on: '.eds-timepicker',
+      detail: '{ value, minutes }: HH:MM (vazio se não há horário válido) e minutos desde 00:00.',
+    },
+    {
+      name: 'eds:banner-close',
+      on: '.eds-banner',
+      detail: '{ id }: o id de data-eds-banner (ou null).',
+    },
+  ],
 };
 
 export default function EventosPage() {

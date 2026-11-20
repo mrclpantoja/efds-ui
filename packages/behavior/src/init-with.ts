@@ -27,6 +27,10 @@ import { lookupBehavior } from './components/lookup';
 import { numberBehavior } from './components/number';
 import { otpBehavior } from './components/otp';
 import { passwordBehavior } from './components/password';
+// Onda D
+import { avatarBehavior } from './components/avatar';
+import { bannerBehavior } from './components/banner';
+import { timepickerBehavior } from './components/timepicker';
 import { conditionalBehavior } from './components/conditional';
 import { copyBehavior } from './components/copy';
 import { dirtyGuardBehavior } from './components/dirty-guard';
@@ -78,6 +82,10 @@ export function initWith(
       notificationsBehavior,
       dirtyGuardBehavior,
       conditionalBehavior,
+      // Onda D
+      avatarBehavior,
+      bannerBehavior,
+      timepickerBehavior,
       // Os que só entram na compilação completa (exportação, máscara, CEP e formatadores)
       ...extra,
     ]),

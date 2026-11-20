@@ -1,0 +1,179 @@
+/* SegmentedControl: escolha única entre poucas opções, em faixa (Dia / Semana / Mês). Sem JS: são
+   rádios nativos, então as setas, o Tab em grupo e o envio no form são do navegador.
+   Markup:
+     <fieldset class="eds-segmented">
+       <legend>Período</legend>
+       <label><input type="radio" name="periodo" value="dia" checked />Dia</label>
+       <label><input type="radio" name="periodo" value="semana" />Semana</label>
+       <label><input type="radio" name="periodo" value="mes" />Mês</label>
+     </fieldset>
+   - Selecionada: fundo de ação, texto sobre a ação e peso semibold (não só cor). O rádio fica
+     transparente sobre o rótulo inteiro: o foco aparece como anel no segmento.
+   - Tamanhos: padrão (control-height-md) e .eds-segmented-sm. .eds-segmented-fill ocupa a largura toda
+     com segmentos iguais.
+   - Ícone opcional: <svg> antes do texto; só ícone: texto em <span class="eds-visually-hidden">.
+   - A <legend> é o nome do grupo e aparece acima da faixa; esconda com .eds-visually-hidden se o
+     contexto já nomear. Desabilitado: :disabled no input (um ou todos pelo fieldset[disabled]).
+   - Para 5 opções ou mais, ou textos longos, prefira Select ou Tabs. */
+@layer eds.components {
+  .eds-segmented {
+    --_seg-height: var(--eds-control-height-md);
+    --_seg-radius: var(--eds-radius-md);
+
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    /* A legenda fica acima da faixa: num fieldset flex ela segue como legenda renderizada,
+       fora do contêiner flex dos segmentos. */
+    & > legend {
+      margin-block-end: var(--eds-space-1);
+      padding: 0;
+      color: var(--eds-color-text-primary);
+      font-size: var(--eds-font-size-label);
+      font-weight: var(--eds-font-weight-medium);
+      line-height: var(--eds-line-height-label);
+    }
+
+    & > label {
+      --_seg-bg: var(--eds-color-bg-surface);
+      --_seg-fg: var(--eds-color-text-secondary);
+      --_seg-border: var(--eds-color-border-strong);
+
+      position: relative;
+      display: inline-flex;
+      flex: 0 1 auto;
+      align-items: center;
+      justify-content: center;
+      gap: var(--eds-space-2);
+      box-sizing: border-box;
+      min-block-size: var(--_seg-height);
+      padding-inline: var(--eds-space-3);
+      border: var(--eds-border-width) solid var(--_seg-border);
+      background: var(--_seg-bg);
+      color: var(--_seg-fg);
+      font-size: var(--eds-font-size-body);
+      font-weight: var(--eds-font-weight-medium);
+      line-height: var(--eds-line-height-body);
+      text-align: center;
+      cursor: pointer;
+      transition:
+        background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+        color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+      /* Segmentos emendados: a borda é compartilhada; só as pontas têm raio. */
+      & + label {
+        margin-inline-start: calc(var(--eds-border-width) * -1);
+      }
+
+      &:first-of-type {
+        border-start-start-radius: var(--_seg-radius);
+        border-end-start-radius: var(--_seg-radius);
+      }
+
+      &:last-of-type {
+        border-start-end-radius: var(--_seg-radius);
+        border-end-end-radius: var(--_seg-radius);
+      }
+
+      & > svg {
+        flex: none;
+        inline-size: var(--eds-icon-size-sm);
+        block-size: var(--eds-icon-size-sm);
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* O rádio cobre o rótulo: clique e toque acertam o segmento todo; some visualmente. */
+      & > input {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        margin: 0;
+        opacity: 0;
+        cursor: inherit;
+      }
+
+      &:hover:has(> input:not(:checked, :disabled)) {
+        --_seg-bg: var(--eds-color-bg-subtle);
+        --_seg-fg: var(--eds-color-text-primary);
+      }
+
+      &:has(> input:checked) {
+        --_seg-bg: var(--eds-color-action-primary);
+        --_seg-fg: var(--eds-color-text-on-action);
+        --_seg-border: var(--eds-color-action-primary);
+
+        z-index: var(--eds-z-raised);
+        font-weight: var(--eds-font-weight-semibold);
+      }
+
+      &:has(> input:focus-visible) {
+        z-index: var(--eds-z-raised);
+        outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+        outline-offset: var(--eds-focus-ring-offset);
+      }
+
+      &:has(> input:disabled) {
+        --_seg-bg: var(--eds-color-bg-subtle);
+        --_seg-fg: var(--eds-color-text-muted);
+        --_seg-border: var(--eds-color-border-default);
+
+        cursor: not-allowed;
+      }
+
+      &:has(> input:disabled:checked) {
+        --_seg-bg: var(--eds-color-border-strong);
+        --_seg-fg: var(--eds-color-bg-surface);
+        --_seg-border: var(--eds-color-border-strong);
+      }
+    }
+  }
+
+  .eds-segmented-sm {
+    --_seg-height: var(--eds-control-height-sm);
+  }
+
+  .eds-segmented-fill {
+    display: flex;
+    inline-size: 100%;
+
+    & > label {
+      flex: 1 1 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-segmented > label {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-segmented > label {
+      --_seg-bg: ButtonFace;
+      --_seg-fg: ButtonText;
+      --_seg-border: ButtonText;
+
+      &:has(> input:checked) {
+        --_seg-bg: Highlight;
+        --_seg-fg: HighlightText;
+        --_seg-border: Highlight;
+      }
+
+      &:has(> input:disabled) {
+        --_seg-fg: GrayText;
+        --_seg-border: GrayText;
+      }
+    }
+  }
+}

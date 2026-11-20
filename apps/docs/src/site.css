@@ -22,8 +22,9 @@
   max-inline-size: 72ch;
 }
 
-/* Links do texto corrido: o reset do core herda a cor do pai. */
-.eds-app-main :is(p, li, td) a:not(.eds-button) {
+/* Links do texto corrido: o reset do core herda a cor do pai. Links de componentes (.eds-*: botão,
+   evento da agenda, tag, item de lista) mantêm a cor do próprio componente. */
+.eds-app-main :is(p, li, td) a:not([class*='eds-']) {
   color: var(--eds-color-action-primary);
   text-underline-offset: 0.2em;
 }

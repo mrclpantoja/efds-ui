@@ -8,6 +8,9 @@ import { initMask, maskBehavior } from './components/mask';
 import { cepBehavior, initCep } from './components/cep';
 import { formatBehavior, initFormat } from './components/format';
 import { themeColorBehavior } from './components/theme-color';
+// Onda D: paleta de comandos e agenda (só na compilação completa)
+import { agendaBehavior, initAgenda } from './components/agenda';
+import { commandBehavior, initCommand } from './components/command';
 
 export * from './setup';
 
@@ -22,6 +25,8 @@ export function init(root: ParentNode = document, options?: BehaviorOptions): ()
     cepBehavior,
     formatBehavior,
     themeColorBehavior,
+    commandBehavior,
+    agendaBehavior,
   ]);
 }
 
@@ -66,3 +71,7 @@ export type { PasswordCheck, PasswordLevel, PasswordRuleId } from './core/fields
 // Onda C: tema por cor da organização
 export { createTheme, applyTheme, contrastRatio, normalizeHex } from './theme/create-theme';
 export type { ContrastCheck, ThemeOptions, ThemeResult, ThemeStep } from './theme/create-theme';
+// Onda D: paleta de comandos e agenda
+export { initAgenda, initCommand };
+export type { AgendaEvent, AgendaTone } from './components/agenda';
+export type { CommandItem } from './components/command';

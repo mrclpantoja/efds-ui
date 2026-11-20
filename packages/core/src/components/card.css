@@ -44,12 +44,14 @@
     transition:
       border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
       box-shadow var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+  }
 
-    /* Controles dentro do card ficam acima do link esticado. */
-    & :is(a, button, input, select, textarea, summary):not(.eds-card-link) {
-      position: relative;
-      z-index: var(--eds-z-raised);
-    }
+  /* Controles dentro do card ficam acima do link esticado. Especificidade zero (:where): o
+     position:relative só vale onde o componente não define o seu (o botão absoluto do DatePicker,
+     o rádio do SegmentedControl e o × da Tag continuam como são). */
+  :where(.eds-card :is(a, button, input, select, textarea, summary):not(.eds-card-link)) {
+    position: relative;
+    z-index: var(--eds-z-raised);
   }
 
   .eds-card-header {

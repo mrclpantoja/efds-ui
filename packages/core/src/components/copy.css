@@ -31,8 +31,16 @@
     }
   }
 
+  /* Largura mínima: "Copiar" -> "Copiado" não pode empurrar o que vem ao lado do botão. 8ch cobre
+     as duas palavras (pt, en e es) na fonte do botão; rótulos mais longos ("Copiar link") já são
+     maiores que isso. O rótulo oculto de botão só com ícone fica de fora. */
   .eds-copy-label {
     white-space: nowrap;
+
+    &:not(.eds-visually-hidden) {
+      min-inline-size: 8ch;
+      text-align: center;
+    }
   }
 
   @media (forced-colors: active) {

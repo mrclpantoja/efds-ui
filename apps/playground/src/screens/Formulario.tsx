@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Checkbox,
+  DescriptionList,
   Field,
   Fieldset,
   Grid,
@@ -134,6 +135,7 @@ export function Formulario() {
   const [erros, setErros] = useState<Erros>({});
   const [resumo, setResumo] = useState<[string, string][]>([]);
   const [salvo, setSalvo] = useState(false);
+  const [dados, setDados] = useState<Record<string, string>>({});
   const [enviado, setEnviado] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
@@ -144,7 +146,16 @@ export function Formulario() {
     const campos = Object.keys(rotulos).flatMap((k): [string, string][] =>
       encontrados[k] ? [[k, encontrados[k]]] : [],
     );
+    const form = new FormData(event.currentTarget);
+    const texto = (name: string) => String(form.get(name) ?? '').trim();
     flushSync(() => {
+      setDados({
+        razao: texto('razao'),
+        fantasia: texto('fantasia'),
+        segmento: texto('segmento'),
+        cidade: texto('cidade'),
+        uf: texto('uf'),
+      });
       setEnviado(true);
       setErros(encontrados);
       setResumo(campos);
@@ -217,6 +228,15 @@ export function Formulario() {
           <p>
             Nenhum dado foi enviado. <a href="#/listagem">Voltar para a lista de clientes</a>
           </p>
+          <DescriptionList
+            columns={2}
+            items={[
+              { label: 'Razão social', value: dados.razao },
+              { label: 'Nome fantasia', value: dados.fantasia },
+              { label: 'Segmento', value: dados.segmento },
+              { label: 'Cidade', value: dados.cidade ? `${dados.cidade}/${dados.uf}` : '' },
+            ]}
+          />
         </Alert>
       ) : null}
 

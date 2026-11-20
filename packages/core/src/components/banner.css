@@ -1,0 +1,151 @@
+/* Banner de sistema: faixa de largura total no topo da aplicação (manutenção, ambiente de homologação,
+   aviso legal). Diferente do Alert, que vive dentro do conteúdo, e do Toast, que some sozinho.
+   Markup:
+     <div class="eds-banner eds-banner-warning" role="region" aria-label="Aviso do sistema"
+       data-eds-banner="manutencao-0412">
+       <p class="eds-banner-text"><strong>Manutenção programada.</strong> O sistema ficará indisponível no sábado, das 22h às 23h.</p>
+       <div class="eds-banner-actions"><a class="eds-button eds-button-secondary eds-button-sm" href="…">Saiba mais</a></div>
+       <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close"
+         aria-label="Fechar aviso" data-eds-banner-close>…svg…</button>                  (opcional)
+     </div>
+   - Tons: .eds-banner-info (padrão), -success, -warning, -danger, -neutral. O ícone é decorativo
+     (máscara em ::before); o texto deve dizer a natureza ("Manutenção", "Ambiente de homologação").
+   - Conteúdo estático: role="region" + aria-label. Banner inserido depois do carregamento, ou que
+     muda: role="status" (ou role="alert" só para falha crítica) no lugar de region.
+   - Não cobre o conteúdo: não é fixo nem sticky, ocupa o seu lugar no fluxo e empurra o resto
+     (WCAG 2.4.11). No app shell, como primeiro filho de .eds-app, ocupa uma linha acima da sidebar
+     e do cabeçalho (a grade ganha a área "banner"); fechado ([hidden]) devolve o espaço.
+   - O botão fechar só existe se o aviso puder ser dispensado; o JS lembra o id (data-eds-banner)
+     no localStorage, e data-eds-banner-remember="off" desliga isso. */
+@layer eds.components {
+  .eds-banner {
+    --_banner-bg: var(--eds-color-status-info-subtle);
+    --_banner-fg: var(--eds-color-status-info-text);
+    --_banner-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 7h1.5v4.75h-1.5V7Zm0-2.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2) var(--eds-space-3);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: calc(var(--eds-control-height-sm) + 2 * var(--eds-space-1));
+    padding: var(--eds-space-1) var(--eds-inset-md);
+    border-block-end: var(--eds-border-width) solid
+      color-mix(in srgb, var(--_banner-fg) 30%, transparent);
+    background: var(--_banner-bg);
+    color: var(--_banner-fg);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+
+    &::before {
+      content: '';
+      flex: none;
+      inline-size: var(--eds-icon-size-md);
+      block-size: var(--eds-icon-size-md);
+      background-color: currentColor;
+      mask: var(--_banner-icon) center / var(--eds-icon-size-sm) no-repeat;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .eds-banner-text {
+    flex: 1 1 16rem;
+    min-inline-size: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+
+    & strong {
+      font-weight: var(--eds-font-weight-semibold);
+    }
+
+    & a {
+      color: inherit;
+      font-weight: var(--eds-font-weight-medium);
+      text-decoration: underline;
+    }
+  }
+
+  .eds-banner-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--eds-space-2);
+  }
+
+  /* Botão fechar: ghost sm na cor do aviso (a cor de ação não foi medida sobre estes fundos). */
+  .eds-banner .eds-banner-close {
+    --_button-fg: var(--_banner-fg);
+    --_button-bg-hover: color-mix(in srgb, var(--_banner-fg) 14%, transparent);
+    --_button-bg-active: color-mix(in srgb, var(--_banner-fg) 14%, transparent);
+
+    margin-inline-start: auto;
+  }
+
+  .eds-banner-info {
+    --_banner-bg: var(--eds-color-status-info-subtle);
+    --_banner-fg: var(--eds-color-status-info-text);
+  }
+
+  .eds-banner-success {
+    --_banner-bg: var(--eds-color-status-success-subtle);
+    --_banner-fg: var(--eds-color-status-success-text);
+    --_banner-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm3.2-8.3-3.7 4-2.7-2.6 1-1 1.7 1.6 2.7-3 1 1Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-banner-warning {
+    --_banner-bg: var(--eds-color-status-warning-subtle);
+    --_banner-fg: var(--eds-color-status-warning-text);
+    --_banner-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M7.13 2.25a1 1 0 0 1 1.74 0l6 10.5a1 1 0 0 1-.87 1.5H2a1 1 0 0 1-.87-1.5l6-10.5ZM7.25 6v3.5h1.5V6h-1.5Zm0 4.75v1.5h1.5v-1.5h-1.5Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-banner-danger {
+    --_banner-bg: var(--eds-color-status-danger-subtle);
+    --_banner-fg: var(--eds-color-status-danger-text);
+    --_banner-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 4.5h1.5v4.5h-1.5V4.5Zm0 5.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-banner-neutral {
+    --_banner-bg: var(--eds-color-bg-subtle);
+    --_banner-fg: var(--eds-color-text-primary);
+  }
+
+  /* App shell: o aviso é o primeiro filho de .eds-app e ocupa a linha de cima, sobre a sidebar e o
+     cabeçalho. A grade do shell (eds.layout) ganha a área "banner"; fechado ([hidden]) a linha
+     colapsa e o resto fica como estava. */
+  .eds-app:has(> .eds-banner) {
+    grid-template:
+      'banner banner' auto
+      'sidebar header' auto
+      'sidebar main' minmax(0, 1fr)
+      / auto minmax(0, 1fr);
+  }
+
+  .eds-app > .eds-banner {
+    grid-area: banner;
+  }
+
+  @media print {
+    .eds-banner-close {
+      display: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    .eds-banner {
+      border-block-end-color: currentColor;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-banner {
+      border-block-end-color: CanvasText;
+
+      &::before {
+        background-color: CanvasText;
+      }
+    }
+  }
+}

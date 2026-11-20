@@ -206,3 +206,41 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - `.eds-input-group` recorta os cantos (`overflow: clip`); o "Tentar de novo" do CEP fica junto da mensagem; o OTP de exemplo liga a ajuda ao grupo.
 - Tema por cor: relatório segue o modo claro/escuro, deixa de ser região viva, diz "ajustada" (não "escurecida") e checa o acento sobre o cinza 800 do escuro.
 - Documentação: o botão Copiar dos exemplos voltou a achar o alvo; tamanhos do IIFE atualizados (`eds-behavior.js` ~222 kB / 72 kB gzip, `eds-behavior-core.js` ~178 kB / 56 kB gzip).
+
+### Lista de melhorias, onda D (complementos)
+
+**@eds-ui/core**
+
+- Avatar e AvatarGroup (tons `.eds-avatar-tone-1..6` com contraste AA nos 5 temas e 2 modos, mínimo 4,79:1; status com forma além da cor), Tag (`.eds-tag` com `data-tone` e remoção), Divider (horizontal, vertical e com rótulo).
+- Paleta de comandos (`.eds-command` sobre o Modal), Agenda mensal (grade que vira lista por dia em contêiner estreito), TimePicker (lista de horários no padrão combobox; `type=time` nativo estilizado), SegmentedControl (rádios nativos), DescriptionList (colunas por contêiner, horizontal, divided, striped) e Banner de sistema (área própria no app shell).
+- `.eds-copy` reserva largura mínima para o botão não se deslocar ao virar "Copiado".
+- `prefers-contrast: more`: Badge, Tag, Avatar e Banner ganham borda legível (o ajuste de tokens já existia em `base/accessibility.css`).
+- Correção: controles dentro de `.eds-card` não perdem mais o `position` próprio (o botão do DatePicker num Card ficava fora do lugar).
+
+**@eds-ui/behavior**
+
+- Paleta de comandos (`data-eds-command`): Ctrl/Cmd+K configurável (`data-eds-command-shortcut`, `off` desliga), padrão APG combobox/listbox, grupos, itens da marcação, JSON ou fonte remota, "Recentes" opcional (só ids em localStorage), `eds:command-select` cancelável. Só no IIFE completo.
+- Agenda mensal (`data-eds-agenda`): navegação por mês, "+N mais" com Popover, eventos por JSON ou fonte remota (`{from}`/`{to}`), `eds:agenda-month-change` e `eds:agenda-event-click`. Só no IIFE completo.
+- TimePicker (`data-eds-timepicker`): máscara hh:mm própria, lista de horários (`data-eds-time-step`, `-min`, `-max`), valor `HH:MM` em hidden, `eds:time-change`.
+- Banner (`data-eds-banner`): fechar com lembrança por id em localStorage (desligável por `data-eds-banner-remember="off"`), `eds:banner-close`.
+- Avatar: tom pelo hash do nome quando o autor não define; iniciais por `data-name`; `avatarTone` e `avatarInitials` exportados.
+- Notificações: "Marcar todas como lidas" fica `disabled` sem não lidas.
+- Idiomas: `defaultMessages` exportado como modelo de tradução; página "Idiomas e textos" lista as chaves. Sem pacotes de idioma prontos (dependem de revisão de falante nativo).
+- Tamanhos após a onda D: `eds-behavior.js` ~251 kB (81 kB gzip), `eds-behavior-core.js` ~189 kB (59 kB gzip).
+
+**@eds-ui/react**
+
+- `Avatar`, `AvatarGroup` (`aria-label` obrigatório), `Tag`, `Divider`, `SegmentedControl`, `DescriptionList`, `Banner`, `TimePicker`, `CommandPalette` e `Agenda`; `AppShell` ganha o slot `banner`; `NotificationBell` com "Marcar todas" desabilitado sem não lidas.
+
+**Documentação e playground**
+
+- Páginas dos 9 componentes novos, "Idiomas e textos" e a seção "Contraste aumentado" em Temas e eixos; Badge × Tag × Chip na página Tag.
+- Playground: Avatar no cabeçalho, Banner de homologação no topo das três telas e DescriptionList no resumo do formulário.
+
+**Revisão de UX da onda D**
+
+- Agenda: o nome acessível do "+N mais" contém o texto visível (WCAG 2.5.3); o hover dos eventos sublinha o título em vez de escurecer o fundo (contraste ≥ 4,5:1); o "+N mais" da grade escrita pelo servidor passa a ser posicionado; exemplo novo "Grade montada pelo JS".
+- TimePicker (behavior e React): o cursor fica no fim ao digitar "9" (vira "09").
+- Paleta de comandos anuncia "Carregando…" na busca remota.
+- Banner: o foco, ao fechar, pula candidatos que não aceitam foco. NotificationBell (React) só move o foco se "Marcar todas" ficou desabilitado.
+- Documentação: filtro de Idiomas anuncia a contagem e tem estado vazio; exemplo de Tag removível devolve o foco; correções de exemplos (link em `li`/`td` pintado pelo site, `name` de rádio repetido no Segmented, lembrança do Banner escondendo o exemplo, ajuda do TimePicker sem `aria-describedby`).

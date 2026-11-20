@@ -1,0 +1,30 @@
+<!-- Behavior: [data-eds-agenda] com os eventos num <script type="application/json" data-eds-agenda-events>.
+     O JS monta a grade do mês (table, th scope="col", legenda oculta, hoje com aria-current="date" e o
+     "+N mais" com Popover) e refaz a cada troca de mês. Sem o script e sem data-eds-source, o JS não reescreve
+     uma grade escrita pelo servidor (veja "Mês com eventos"). Cada evento: { id, title, date, end?, time?,
+     href?, tone? } com datas aaaa-mm-dd. Dados fictícios. -->
+<section class="eds-agenda" aria-labelledby="ag-din-titulo" data-eds-agenda data-eds-agenda-month="2026-03" data-eds-max-events="3">
+  <header class="eds-agenda-header">
+    <h2 class="eds-agenda-title" id="ag-din-titulo" aria-live="polite">Março de 2026</h2>
+    <div class="eds-agenda-nav">
+      <button type="button" class="eds-button eds-button-secondary eds-button-sm" data-eds-agenda-today>Hoje</button>
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Mês anterior" data-eds-agenda-prev>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+      </button>
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Próximo mês" data-eds-agenda-next>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
+    </div>
+  </header>
+  <script type="application/json" data-eds-agenda-events>
+    [
+      { "id": "a1", "title": "Reunião de equipe", "date": "2026-03-04", "time": "09:00", "tone": "info" },
+      { "id": "a2", "title": "Entrega do relatório", "date": "2026-03-04", "time": "14:00" },
+      { "id": "a3", "title": "Revisão de contrato", "date": "2026-03-04", "time": "16:00", "tone": "warning" },
+      { "id": "a4", "title": "Treinamento", "date": "2026-03-04", "tone": "success" },
+      { "id": "a5", "title": "Congresso", "date": "2026-03-18", "end": "2026-03-20", "tone": "neutral" },
+      { "id": "a6", "title": "Fechamento do mês", "date": "2026-03-31", "time": "17:00", "tone": "danger" },
+      { "id": "a7", "title": "Planejamento de abril", "date": "2026-04-02", "time": "10:00", "tone": "info" }
+    ]
+  </script>
+</section>

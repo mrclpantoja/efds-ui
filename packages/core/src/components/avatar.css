@@ -1,0 +1,236 @@
+/* Avatar (monograma ou foto) e grupo de avatares.
+   Markup:
+     <span class="eds-avatar eds-avatar-tone-1" role="img" aria-label="Ana Exemplo">AE</span>
+     <span class="eds-avatar"><img src="…" alt="" /></span>   (foto; as iniciais ficam por baixo de fallback)
+     <span class="eds-avatar eds-avatar-tone-3" aria-hidden="true">BT</span> Bruno Teste   (decorativo: o nome está ao lado)
+   - Tamanhos: .eds-avatar-sm (32) · padrão (40) · .eds-avatar-lg (48). A forma segue data-shape
+     (raio lg); .eds-avatar-circle força círculo.
+   - Cor: .eds-avatar-tone-1..6, escolhida pelo autor, pelo JS ou pelo React a partir do nome
+     (hash do nome módulo 6, mais 1), para a mesma pessoa ter sempre a mesma cor. Sem classe de
+     tom: cinza suave. Todos os tons passam AA (>= 4.5:1) nos 5 temas e nos 2 modos:
+       1 ação (sólido: action-primary + text-on-action; acompanha o tema)
+       2 sucesso · 3 atenção · 4 perigo · 5 informação (fundo -subtle + texto -text)
+       6 neutro sólido (text-secondary + bg-surface)
+   - Foto: <img alt=""> dentro do avatar (a imagem é decorativa; o nome vai em aria-label do avatar
+     ou no texto ao lado). Se a imagem não carregar, as iniciais escritas antes dela aparecem.
+   - Status: .eds-avatar-status[data-status="online|busy|away|offline"] dentro do avatar. A cor não
+     é a única pista: online = ponto cheio, busy = ponto com traço, away/offline = anel vazio
+     (away na cor de atenção). Para leitor de tela o avatar com role="img" carrega o status no
+     aria-label ("Ana Exemplo, online"); sem role, escreva o texto em .eds-visually-hidden dentro do status.
+   - Interativo (a[href], button, [role=button]): hover e foco mostram anel; o foco usa o anel global.
+   - Grupo: .eds-avatar-group (role="group" + aria-label) com avatares sobrepostos; o excedente é
+     <span class="eds-avatar eds-avatar-more" role="img" aria-label="Mais 3 pessoas">+3</span>. */
+@layer eds.components {
+  .eds-avatar {
+    --_avatar-size: var(--eds-space-7);
+    --_avatar-font-size: var(--eds-font-size-label);
+    --_avatar-radius: var(--eds-radius-lg);
+    --_avatar-bg: var(--eds-color-bg-subtle);
+    --_avatar-fg: var(--eds-color-text-secondary);
+    --_avatar-border: var(--eds-color-border-default);
+    --_avatar-ring: 0;
+    --_avatar-ring-color: var(--eds-color-bg-surface);
+
+    position: relative;
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_avatar-size);
+    block-size: var(--_avatar-size);
+    margin: 0;
+    padding: 0;
+    border: var(--eds-border-width) solid var(--_avatar-border);
+    border-radius: var(--_avatar-radius);
+    background: var(--_avatar-bg);
+    box-shadow: 0 0 0 var(--_avatar-ring) var(--_avatar-ring-color);
+    color: var(--_avatar-fg);
+    font-family: inherit;
+    font-size: var(--_avatar-font-size);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+
+    /* Foto por cima das iniciais; cobre a borda e herda o raio. */
+    & > img {
+      position: absolute;
+      inset: calc(var(--eds-border-width) * -1);
+      inline-size: calc(100% + 2 * var(--eds-border-width));
+      block-size: calc(100% + 2 * var(--eds-border-width));
+      max-inline-size: none;
+      border-radius: inherit;
+      object-fit: cover;
+    }
+
+    &:is(a[href], button, [role='button']) {
+      cursor: pointer;
+
+      &:hover {
+        --_avatar-ring: var(--eds-border-width-strong);
+        --_avatar-ring-color: var(--eds-color-border-strong);
+      }
+    }
+  }
+
+  .eds-avatar-sm {
+    --_avatar-size: var(--eds-space-6);
+    --_avatar-font-size: var(--eds-font-size-small);
+  }
+
+  .eds-avatar-lg {
+    --_avatar-size: var(--eds-space-8);
+    --_avatar-font-size: var(--eds-font-size-body-lg);
+  }
+
+  .eds-avatar-circle {
+    --_avatar-radius: var(--eds-radius-full);
+  }
+
+  /* Tons: só reatribuem fundo, texto e borda. */
+  .eds-avatar-tone-1 {
+    --_avatar-bg: var(--eds-color-action-primary);
+    --_avatar-fg: var(--eds-color-text-on-action);
+    --_avatar-border: transparent;
+  }
+
+  .eds-avatar-tone-2 {
+    --_avatar-bg: var(--eds-color-status-success-subtle);
+    --_avatar-fg: var(--eds-color-status-success-text);
+    --_avatar-border: color-mix(in srgb, var(--eds-color-status-success-text) 30%, transparent);
+  }
+
+  .eds-avatar-tone-3 {
+    --_avatar-bg: var(--eds-color-status-warning-subtle);
+    --_avatar-fg: var(--eds-color-status-warning-text);
+    --_avatar-border: color-mix(in srgb, var(--eds-color-status-warning-text) 30%, transparent);
+  }
+
+  .eds-avatar-tone-4 {
+    --_avatar-bg: var(--eds-color-status-danger-subtle);
+    --_avatar-fg: var(--eds-color-status-danger-text);
+    --_avatar-border: color-mix(in srgb, var(--eds-color-status-danger-text) 30%, transparent);
+  }
+
+  .eds-avatar-tone-5 {
+    --_avatar-bg: var(--eds-color-status-info-subtle);
+    --_avatar-fg: var(--eds-color-status-info-text);
+    --_avatar-border: color-mix(in srgb, var(--eds-color-status-info-text) 30%, transparent);
+  }
+
+  .eds-avatar-tone-6 {
+    --_avatar-bg: var(--eds-color-text-secondary);
+    --_avatar-fg: var(--eds-color-bg-surface);
+    --_avatar-border: transparent;
+  }
+
+  /* "+3" do grupo: neutro, com a borda legível. */
+  .eds-avatar-more {
+    --_avatar-bg: var(--eds-color-bg-surface);
+    --_avatar-fg: var(--eds-color-text-secondary);
+    --_avatar-border: var(--eds-color-border-strong);
+
+    text-transform: none;
+  }
+
+  /* ---- Status ---- */
+
+  .eds-avatar-status {
+    --_status-size: max(var(--eds-space-3), calc(var(--_avatar-size) * 0.3));
+    --_status-color: var(--eds-color-status-success-text);
+
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-end: 0;
+    box-sizing: border-box;
+    inline-size: var(--_status-size);
+    block-size: var(--_status-size);
+    border: var(--eds-border-width-strong) solid var(--eds-color-bg-surface);
+    border-radius: var(--eds-radius-full);
+    background: var(--_status-color);
+
+    &[data-status='busy'] {
+      --_status-color: var(--eds-color-status-danger-text);
+
+      /* Traço central: ocupado se distingue de online sem depender da cor. */
+      &::after {
+        content: '';
+        position: absolute;
+        inset-inline: 15%;
+        inset-block-start: calc(50% - var(--eds-border-width) / 2);
+        block-size: var(--eds-border-width);
+        background: var(--eds-color-bg-surface);
+      }
+    }
+
+    /* Anel vazio: ausente e offline. */
+    &[data-status='away'],
+    &[data-status='offline'] {
+      background: radial-gradient(
+        circle,
+        var(--eds-color-bg-surface) 40%,
+        var(--_status-color) calc(40% + 1px)
+      );
+    }
+
+    &[data-status='away'] {
+      --_status-color: var(--eds-color-status-warning-text);
+    }
+
+    &[data-status='offline'] {
+      --_status-color: var(--eds-color-text-muted);
+    }
+  }
+
+  /* ---- Grupo ---- */
+
+  .eds-avatar-group {
+    display: inline-flex;
+    align-items: center;
+    isolation: isolate;
+    margin: 0;
+    padding: 0;
+
+    & > .eds-avatar {
+      --_avatar-ring: var(--eds-border-width-strong);
+    }
+
+    & > .eds-avatar + .eds-avatar {
+      margin-inline-start: calc(var(--_avatar-size) * -0.25);
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    .eds-avatar:not(.eds-avatar-tone-1, .eds-avatar-tone-6) {
+      --_avatar-border: var(--_avatar-fg);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-avatar {
+      border: var(--eds-border-width) solid CanvasText;
+      forced-color-adjust: none;
+      background: Canvas;
+      color: CanvasText;
+    }
+
+    .eds-avatar-status {
+      forced-color-adjust: none;
+      border-color: Canvas;
+      background: CanvasText;
+
+      &[data-status='away'],
+      &[data-status='offline'] {
+        background: radial-gradient(circle, Canvas 40%, CanvasText calc(40% + 1px));
+      }
+
+      &[data-status='busy']::after {
+        background: Canvas;
+      }
+    }
+  }
+}

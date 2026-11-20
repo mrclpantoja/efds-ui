@@ -1,0 +1,387 @@
+/* Agenda mensal: grade de um mês com os eventos de cada dia. Em contêiner estreito vira lista por dia.
+   Markup:
+     <section class="eds-agenda" aria-labelledby="ag-t" data-eds-agenda>
+       <header class="eds-agenda-header">
+         <h2 class="eds-agenda-title" id="ag-t" aria-live="polite">Março de 2026</h2>
+         <div class="eds-agenda-nav">
+           <button type="button" class="eds-button eds-button-secondary eds-button-sm" data-eds-agenda-today>Hoje</button>
+           <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm"
+             aria-label="Mês anterior" data-eds-agenda-prev>…</button>
+           <button … aria-label="Próximo mês" data-eds-agenda-next>…</button>
+         </div>
+       </header>
+       <table class="eds-agenda-grid">
+         <caption class="eds-visually-hidden">Agenda de março de 2026</caption>
+         <thead><tr><th scope="col"><abbr title="domingo">Dom</abbr></th> … </tr></thead>
+         <tbody><tr>
+           <td class="eds-agenda-day" aria-current="date">           (hoje; fora do mês: data-outside)
+             <div class="eds-agenda-day-head">
+               <span class="eds-agenda-weekday">quarta-feira</span>
+               <time class="eds-agenda-date" datetime="2026-03-18">18</time>
+               <span class="eds-agenda-today">Hoje</span>
+             </div>
+             <ul class="eds-agenda-events">
+               <li><a class="eds-agenda-event" href="…" data-tone="info">
+                 <span class="eds-agenda-event-time">09:00</span>
+                 <span class="eds-agenda-event-title">Reunião de equipe</span></a></li>
+               <li><button type="button" class="eds-agenda-more" popovertarget="mais-18">+2 mais</button></li>
+             </ul>
+           </td>
+       </tr></tbody></table>
+       <p class="eds-agenda-empty">Nenhum evento neste mês.</p>
+     </section>
+   - A grade responde ao contêiner (container query em 40rem), não à viewport. Em contêiner estreito
+     o cabeçalho de dias da semana some e cada célula vira um bloco: só entram dias com evento e o
+     dia de hoje; o nome do dia da semana (.eds-agenda-weekday) e "Hoje" (.eds-agenda-today) ficam
+     visíveis; na grade larga os dois ficam fora da tela/da árvore (a coluna já diz o dia).
+   - Hoje = aria-current="date" na célula: círculo de ação no número (texto "Hoje" cobre o leitor de tela).
+   - Evento: <a> ou <button> com data-tone="accent|info|success|warning|danger|neutral" (padrão accent).
+     O horário e o título vão em spans; o título é truncado com reticências.
+   - Estados: [aria-busy="true"] no .eds-agenda (esmaece a grade), td[data-outside] (dia de outro mês).
+   - .eds-agenda-empty só aparece em contêiner estreito e sem nenhum evento (a grade vazia já é clara). */
+@layer eds.components {
+  .eds-agenda {
+    container: eds-agenda / inline-size;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-3);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    color: var(--eds-color-text-primary);
+
+    &[aria-busy='true'] .eds-agenda-grid {
+      opacity: 0.6;
+    }
+  }
+
+  .eds-agenda-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-2) var(--eds-space-3);
+  }
+
+  .eds-agenda-title {
+    margin: 0;
+    font-size: var(--eds-font-size-h3);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: var(--eds-line-height-h3);
+  }
+
+  .eds-agenda-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+  }
+
+  .eds-agenda-grid {
+    inline-size: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+
+    & :where(abbr) {
+      text-decoration: none;
+    }
+
+    & > thead th {
+      padding: var(--eds-space-2);
+      border: var(--eds-border-width) solid var(--eds-color-border-default);
+      background: var(--eds-color-bg-subtle);
+      color: var(--eds-color-text-secondary);
+      font-size: var(--eds-font-size-label);
+      font-weight: var(--eds-font-weight-medium);
+      line-height: var(--eds-line-height-label);
+      text-align: start;
+    }
+  }
+
+  .eds-agenda-day {
+    --_agenda-day-min: calc(var(--eds-space-9) * 1.5);
+
+    box-sizing: border-box;
+    min-inline-size: 0;
+    block-size: var(--_agenda-day-min);
+    padding: var(--eds-space-1);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    background: var(--eds-color-bg-surface);
+    vertical-align: top;
+
+    &[data-outside] {
+      background: var(--eds-color-bg-subtle);
+      color: var(--eds-color-text-muted);
+    }
+  }
+
+  .eds-agenda-day-head {
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-2);
+    margin-block-end: var(--eds-space-1);
+  }
+
+  .eds-agenda-date {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    min-inline-size: var(--eds-icon-size-lg);
+    min-block-size: var(--eds-icon-size-lg);
+    padding-inline: var(--eds-space-1);
+    border-radius: var(--eds-radius-full);
+    font-size: var(--eds-font-size-label);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-label);
+  }
+
+  /* Hoje: círculo de ação (o texto "Hoje" garante a informação sem a cor). */
+  .eds-agenda-day[aria-current='date'] .eds-agenda-date {
+    background: var(--eds-color-action-primary);
+    color: var(--eds-color-text-on-action);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  /* Na grade larga a coluna já informa o dia da semana; "Hoje" fica só para o leitor de tela. */
+  .eds-agenda-weekday {
+    display: none;
+  }
+
+  .eds-agenda-today {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .eds-agenda-events {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-0-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-agenda-event {
+    --_event-bg: var(--eds-color-action-primary-subtle);
+    --_event-fg: var(--eds-color-action-primary);
+    --_event-bar: var(--eds-color-action-primary);
+
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: var(--eds-icon-size-lg);
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--eds-space-1) var(--eds-space-2);
+    border: 0;
+    border-inline-start: calc(var(--eds-border-width-strong) * 1.5) solid var(--_event-bar);
+    border-radius: var(--eds-radius-sm);
+    background: var(--_event-bg);
+    color: var(--_event-fg);
+    font: inherit;
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    text-align: start;
+    text-decoration: none;
+    transition: background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &:is(a[href], button) {
+      cursor: pointer;
+
+      /* Hover sem escurecer o fundo: a mistura de 12% derrubava o contraste de success, warning e
+         accent para ~4,0:1 (< 4,5:1). O sublinhado do título marca o hover sem custo de contraste. */
+      &:hover .eds-agenda-event-title {
+        text-decoration: underline;
+      }
+    }
+
+    &:focus-visible {
+      outline-offset: 0;
+    }
+
+    &[data-tone='neutral'] {
+      --_event-bg: var(--eds-color-bg-subtle);
+      --_event-fg: var(--eds-color-text-primary);
+      --_event-bar: var(--eds-color-text-secondary);
+    }
+
+    &[data-tone='info'] {
+      --_event-bg: var(--eds-color-status-info-subtle);
+      --_event-fg: var(--eds-color-status-info-text);
+      --_event-bar: var(--eds-color-status-info-text);
+    }
+
+    &[data-tone='success'] {
+      --_event-bg: var(--eds-color-status-success-subtle);
+      --_event-fg: var(--eds-color-status-success-text);
+      --_event-bar: var(--eds-color-status-success-text);
+    }
+
+    &[data-tone='warning'] {
+      --_event-bg: var(--eds-color-status-warning-subtle);
+      --_event-fg: var(--eds-color-status-warning-text);
+      --_event-bar: var(--eds-color-status-warning-text);
+    }
+
+    &[data-tone='danger'] {
+      --_event-bg: var(--eds-color-status-danger-subtle);
+      --_event-fg: var(--eds-color-status-danger-text);
+      --_event-bar: var(--eds-color-status-danger-text);
+    }
+  }
+
+  .eds-agenda-event-time {
+    flex: none;
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-agenda-event-title {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* "+2 mais": abre um Popover com os outros eventos do dia. */
+  .eds-agenda-more {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: var(--eds-icon-size-lg);
+    margin: 0;
+    padding-inline: var(--eds-space-1);
+    border: 0;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: var(--eds-color-text-secondary);
+    font: inherit;
+    font-size: var(--eds-font-size-small);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-small);
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--eds-color-text-primary);
+    }
+
+    &:focus-visible {
+      outline-offset: 0;
+    }
+  }
+
+  .eds-agenda-empty {
+    display: none;
+    margin: 0;
+    padding: var(--eds-space-6) var(--eds-inset-md);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    color: var(--eds-color-text-secondary);
+    text-align: center;
+  }
+
+  /* Contêiner estreito: lista por dia. A tabela perde o layout de tabela (cada dia é um bloco). */
+  @container eds-agenda (max-width: 40rem) {
+    .eds-agenda-grid,
+    .eds-agenda-grid > tbody,
+    .eds-agenda-grid > tbody > tr,
+    .eds-agenda-day {
+      display: block;
+      block-size: auto;
+    }
+
+    .eds-agenda-grid > thead {
+      display: none;
+    }
+
+    .eds-agenda-grid > tbody {
+      border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
+    }
+
+    .eds-agenda-day {
+      padding: var(--eds-space-3);
+      border-width: 0;
+      border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+    }
+
+    /* Só dias com evento e o dia de hoje; os do mês vizinho ficam de fora. */
+    .eds-agenda-day:not(:has(.eds-agenda-event, .eds-agenda-more), [aria-current='date']),
+    .eds-agenda-day[data-outside] {
+      display: none;
+    }
+
+    .eds-agenda-weekday {
+      display: inline;
+      color: var(--eds-color-text-secondary);
+      font-size: var(--eds-font-size-label);
+      line-height: var(--eds-line-height-label);
+    }
+
+    .eds-agenda-day-head {
+      margin-block-end: var(--eds-space-2);
+    }
+
+    .eds-agenda-today {
+      position: static;
+      inline-size: auto;
+      block-size: auto;
+      margin: 0;
+      overflow: visible;
+      clip-path: none;
+      color: var(--eds-color-action-primary);
+      font-size: var(--eds-font-size-label);
+      font-weight: var(--eds-font-weight-semibold);
+    }
+
+    .eds-agenda-event,
+    .eds-agenda-more {
+      min-block-size: var(--eds-control-height-md);
+    }
+
+    .eds-agenda-event {
+      padding-inline: var(--eds-space-2);
+    }
+
+    .eds-agenda:not(:has(.eds-agenda-event, .eds-agenda-more)) .eds-agenda-empty {
+      display: block;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-agenda-event {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-agenda-event {
+      --_event-bg: Canvas;
+      --_event-fg: LinkText;
+      --_event-bar: Highlight;
+
+      border: var(--eds-border-width) solid CanvasText;
+      border-inline-start-color: Highlight;
+    }
+
+    .eds-agenda-day[aria-current='date'] .eds-agenda-date {
+      background: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    .eds-agenda-day[data-outside] {
+      color: GrayText;
+    }
+  }
+}

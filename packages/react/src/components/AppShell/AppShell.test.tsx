@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { AppShell, AppShellHeader, AppShellNavToggle } from './AppShell';
 import { useAppShell } from './context';
 import { Sidebar, SidebarItem } from '../Sidebar/Sidebar';
+import { Banner } from '../Banner';
 
 function Probe() {
   const { navOpen, mainId } = useAppShell();
@@ -12,6 +13,15 @@ function Probe() {
 }
 
 describe('AppShell', () => {
+  it('o slot banner entra como filho direto do .eds-app, antes da sidebar e do header', () => {
+    const { container } = render(
+      <AppShell banner={<Banner aria-label="Ambiente">Homologação</Banner>}>x</AppShell>,
+    );
+    const app = container.querySelector('.eds-app') as HTMLElement;
+    expect(app.querySelector(':scope > .eds-banner')).toHaveTextContent('Homologação');
+    expect(screen.getByRole('region', { name: 'Ambiente' })).toBeInTheDocument();
+  });
+
   it('monta a grade do core com um único main, skip link e slots', () => {
     const ref = createRef<HTMLDivElement>();
     const mainRef = createRef<HTMLElement>();

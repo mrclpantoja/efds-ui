@@ -66,6 +66,21 @@ describe('notificações', () => {
     );
   });
 
+  it('"marcar todas" fica desabilitado sem não lidas e o foco não se perde', () => {
+    expect($('all')).not.toBeDisabled();
+    $('all').focus();
+    $('all').click();
+    expect($('all')).toBeDisabled();
+    expect(document.activeElement).toBe($('a').querySelector('a'));
+  });
+
+  it('já nasce desabilitado quando nada está não lido', () => {
+    destroy();
+    document.body.innerHTML = html.replace(/ data-unread="true"/g, '');
+    destroy = initNotifications(document);
+    expect($('all')).toBeDisabled();
+  });
+
   it('limita o selo a 99+', () => {
     destroy();
     const list = $('n').querySelector('ul') as HTMLElement;

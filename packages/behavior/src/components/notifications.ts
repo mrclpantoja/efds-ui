@@ -21,7 +21,8 @@ function unreadOf(panel: HTMLElement): HTMLElement[] {
  * - `[data-eds-notifications-read-all]` marca todos;
  * - o botão que abre (`[popovertarget]`) ganha o nome "Notificações, N não lidas" e o
  *   `.eds-notifications-count` dentro dele mostra N (`hidden` em 0; 99+ acima de 99);
- * - sem itens, o `.eds-notifications-empty` aparece.
+ * - sem itens, o `.eds-notifications-empty` aparece;
+ * - o botão "marcar todas" fica `disabled` quando não há não lidas.
  * Eventos no painel: `eds:notifications-read` (`detail { id, unread }`, `id` de `data-id`) e
  * `eds:notifications-read-all` (`detail { unread }`).
  */
@@ -57,6 +58,12 @@ export const notificationsBehavior: Behavior = {
         }
       }
       if (empty) empty.hidden = panel.querySelector(ITEM) !== null;
+      // "Marcar todas como lidas" sem nada a marcar fica desabilitado.
+      for (const all of panel.querySelectorAll<HTMLButtonElement>(
+        'button[data-eds-notifications-read-all]',
+      )) {
+        all.disabled = count === 0;
+      }
       return count;
     };
 
@@ -70,7 +77,17 @@ export const notificationsBehavior: Behavior = {
       if (all && panel.contains(all)) {
         const pending = unreadOf(panel);
         for (const item of pending) markRead(item);
+        const hadFocus = doc.activeElement === all;
         const unread = render();
+        // O botão acabou de ficar desabilitado: o foco vai ao primeiro item (senão se perderia).
+        if (hadFocus && all instanceof HTMLButtonElement && all.disabled) {
+          const next = panel.querySelector<HTMLElement>(`${ITEM} a, ${ITEM} button`);
+          if (next) next.focus();
+          else {
+            panel.tabIndex = -1;
+            panel.focus();
+          }
+        }
         if (pending.length > 0) announce(pm('notificationsAllRead'));
         emit(panel, 'notifications-read-all', { unread });
         return;

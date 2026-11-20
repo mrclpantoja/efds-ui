@@ -1,0 +1,285 @@
+/* TimePicker: campo hh:mm com a máscara "hora" e uma lista de horários (padrão APG combobox com listbox).
+   Sem JS, para escolher o horário use o campo nativo: <input type="time" class="eds-input"> (estilizado
+   em input.css, com o mesmo tamanho, foco e estados do Input).
+   Markup:
+     <div class="eds-timepicker" data-eds-timepicker data-eds-time-step="15" data-eds-min="08:00" data-eds-max="18:00">
+       <input class="eds-input eds-timepicker-input" type="text" data-eds-mask="hora" inputmode="numeric"
+         maxlength="5" placeholder="hh:mm" role="combobox" aria-haspopup="listbox" aria-expanded="false"
+         aria-controls="hora-lista" autocomplete="off" />
+       <button type="button" class="eds-timepicker-toggle" aria-label="Escolher horário"
+         aria-haspopup="listbox" aria-expanded="false" aria-controls="hora-lista" tabindex="-1">[svg opcional]</button>
+       <input type="hidden" name="inicio" />
+       <div class="eds-timepicker-popup" popover="manual">
+         <ul class="eds-timepicker-listbox" id="hora-lista" role="listbox" aria-label="Horários">
+           <li class="eds-timepicker-option" role="option" id="hora-1" data-value="08:00">08:00</li> …
+         </ul>
+       </div>
+       <span class="eds-visually-hidden" role="status"></span>
+     </div>
+   Estados por atributo: option[aria-selected="true"] (destacada pelo teclado/ponteiro: fundo + barra
+   inicial), option[data-current] (escolhida: check), option[aria-disabled="true"]. Estados do campo
+   vêm do input: [aria-invalid], [data-valid], :disabled, [readonly] (o botão acompanha).
+   Posição (definida pelo JS, em px, coordenadas da viewport): --_timepicker-x (borda inicial do
+   campo), --_timepicker-y (borda inferior do campo; com data-placement="top", a borda superior) e
+   --_timepicker-width (largura do campo). Tamanhos: .eds-input-sm/-lg no input. */
+@layer eds.components {
+  .eds-timepicker {
+    --_tp-height: var(--eds-control-height-md);
+    --_tp-toggle-size: min(1.75rem, calc(var(--_tp-height) - 0.5rem));
+    --_tp-toggle-inset: var(--eds-space-1);
+    --_tp-toggle-fg: var(--eds-color-text-secondary);
+
+    position: relative;
+    display: block;
+    inline-size: 100%;
+
+    &:has(> .eds-input-sm) {
+      --_tp-height: var(--eds-control-height-sm);
+    }
+
+    &:has(> .eds-input-lg) {
+      --_tp-height: var(--eds-control-height-lg);
+      --_tp-toggle-size: var(--eds-icon-size-xl);
+    }
+
+    /* Reserva o espaço do botão; os algarismos têm largura fixa (as colunas de horário alinham). */
+    & > .eds-input {
+      padding-inline-end: calc(var(--_tp-toggle-size) + var(--_tp-toggle-inset) * 2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    &:has(> .eds-input:disabled, > .eds-input[readonly]) {
+      --_tp-toggle-fg: var(--eds-color-text-muted);
+    }
+  }
+
+  .eds-timepicker-toggle {
+    position: absolute;
+    inset-inline-end: var(--_tp-toggle-inset);
+    inset-block-start: 50%;
+    display: inline-grid;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_tp-toggle-size);
+    block-size: var(--_tp-toggle-size);
+    margin: 0;
+    padding: 0;
+    border: var(--eds-border-width) solid transparent;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: var(--_tp-toggle-fg);
+    font: inherit;
+    translate: 0 -50%;
+    cursor: pointer;
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    /* Relógio desenhado por máscara; um <svg> filho o substitui. */
+    &:not(:has(> svg))::before {
+      content: '';
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='5.75' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3Cpath d='M8 4.75V8l2.25 1.5' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    }
+
+    & > svg {
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true']),
+    &[aria-expanded='true'] {
+      background: var(--eds-color-action-primary-subtle);
+      color: var(--eds-color-action-primary);
+    }
+
+    &:focus-visible {
+      outline-offset: 0;
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  /* Somente leitura: o botão não reage ao ponteiro (o JS não abre a lista). */
+  .eds-timepicker:has(> .eds-input[readonly]) .eds-timepicker-toggle {
+    cursor: default;
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background: transparent;
+      color: var(--_tp-toggle-fg);
+    }
+  }
+
+  .eds-timepicker-popup {
+    --_timepicker-x: 0px;
+    --_timepicker-y: 0px;
+    --_timepicker-width: 8rem;
+    --_timepicker-offset: var(--eds-space-1);
+    --_timepicker-max-height: calc(var(--eds-space-7) * 6 + 2 * var(--eds-space-1));
+
+    /* O UA define display:none para popover fechado; só declaramos display no aberto. */
+    box-sizing: border-box;
+    inline-size: max(var(--_timepicker-width), 7rem);
+    max-block-size: min(var(--_timepicker-max-height), 80dvh);
+    margin: 0;
+    padding: var(--eds-space-1);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    box-shadow: var(--eds-shadow-md);
+    overflow: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    transition:
+      opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      display var(--eds-motion-duration-fast) allow-discrete,
+      overlay var(--eds-motion-duration-fast) allow-discrete;
+
+    /* Coordenadas da viewport vindas do JS: por isso inset físico (left/top), não lógico. */
+    position: fixed;
+    inset: auto;
+    left: var(--_timepicker-x);
+    top: calc(var(--_timepicker-y) + var(--_timepicker-offset));
+
+    &:popover-open {
+      display: block;
+      opacity: 1;
+    }
+
+    &[data-placement='top'] {
+      top: calc(var(--_timepicker-y) - var(--_timepicker-offset));
+      translate: 0 -100%;
+    }
+  }
+
+  @starting-style {
+    .eds-timepicker-popup:popover-open {
+      opacity: 0;
+    }
+  }
+
+  .eds-timepicker-listbox {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-timepicker-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: var(--eds-space-7);
+    padding-inline: var(--eds-space-3);
+    border-radius: var(--eds-radius-sm);
+    font-size: var(--eds-font-size-body);
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+
+    &:hover:not([aria-disabled='true']) {
+      background: var(--eds-color-bg-subtle);
+    }
+
+    /* Destacada (aria-activedescendant + aria-selected): o fundo sozinho não chega a 3:1 (1.4.11),
+       então vai uma barra inicial em action-primary, como no Combobox. */
+    &[aria-selected='true'] {
+      background: var(--eds-color-bg-subtle);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block: var(--eds-space-2);
+        inline-size: 0.125rem;
+        border-radius: var(--eds-radius-sm);
+        background: var(--eds-color-action-primary);
+      }
+    }
+
+    /* Escolhida: check à direita (não depende só de cor). */
+    &[data-current] {
+      padding-inline-end: calc(var(--eds-space-3) * 2 + 0.5rem);
+      font-weight: var(--eds-font-weight-medium);
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset-inline-end: var(--eds-space-3);
+        inset-block-start: 50%;
+        inline-size: 0.3125rem;
+        block-size: 0.625rem;
+        border-inline-end: 0.125rem solid var(--eds-color-action-primary);
+        border-block-end: 0.125rem solid var(--eds-color-action-primary);
+        translate: 0 -65%;
+        rotate: 45deg;
+      }
+    }
+
+    &[aria-disabled='true'] {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-timepicker-toggle,
+    .eds-timepicker-popup {
+      transition: none;
+    }
+  }
+
+  /* Toque: a opção vira alvo de toque (o campo já usa 16px, por ser um .eds-input). */
+  @media (pointer: coarse) {
+    .eds-timepicker-option {
+      min-block-size: var(--eds-target-min);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-timepicker {
+      --_tp-toggle-fg: ButtonText;
+    }
+
+    .eds-timepicker:has(> .eds-input:disabled) {
+      --_tp-toggle-fg: GrayText;
+    }
+
+    .eds-timepicker-toggle[aria-expanded='true'] {
+      border-color: Highlight;
+    }
+
+    .eds-timepicker-popup {
+      border-color: CanvasText;
+    }
+
+    .eds-timepicker-option[aria-selected='true'] {
+      background: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+
+      &::before {
+        background: currentColor;
+      }
+    }
+
+    .eds-timepicker-option[data-current]::after {
+      border-color: currentColor;
+    }
+
+    .eds-timepicker-option[aria-disabled='true'] {
+      color: GrayText;
+    }
+  }
+}

@@ -84,6 +84,17 @@ import InputGroupPage from './pages/componentes/InputGroup';
 import LookupPage from './pages/componentes/Lookup';
 import OtpPage from './pages/componentes/Otp';
 import PasswordPage from './pages/componentes/Password';
+// Onda D
+import AgendaPage from './pages/componentes/Agenda';
+import AvatarPage from './pages/componentes/Avatar';
+import BannerPage from './pages/componentes/Banner';
+import CommandPage from './pages/componentes/Command';
+import DescriptionListPage from './pages/componentes/DescriptionList';
+import DividerPage from './pages/componentes/Divider';
+import SegmentedPage from './pages/componentes/Segmented';
+import TagPage from './pages/componentes/Tag';
+import TimePickerPage from './pages/componentes/TimePicker';
+import IdiomasPage from './pages/comecar/Idiomas';
 
 export type SectionId = 'comecar' | 'fundamentos' | 'componentes';
 
@@ -134,6 +145,7 @@ export const routes: readonly DocRoute[] = [
     section: 'comecar',
     page: ExportacaoPage,
   },
+  { path: '/comecar/idiomas', title: 'Idiomas e textos', section: 'comecar', page: IdiomasPage },
   {
     path: '/comecar/acessibilidade',
     title: 'Acessibilidade',
@@ -358,6 +370,36 @@ export const routes: readonly DocRoute[] = [
     section: 'componentes',
     page: ConditionalPage,
   },
+  // Onda D
+  { path: '/componentes/avatar', title: 'Avatar', section: 'componentes', page: AvatarPage },
+  { path: '/componentes/tag', title: 'Tag', section: 'componentes', page: TagPage },
+  { path: '/componentes/divider', title: 'Divider', section: 'componentes', page: DividerPage },
+  {
+    path: '/componentes/command',
+    title: 'Paleta de comandos',
+    section: 'componentes',
+    page: CommandPage,
+  },
+  { path: '/componentes/agenda', title: 'Agenda', section: 'componentes', page: AgendaPage },
+  {
+    path: '/componentes/time-picker',
+    title: 'Time Picker',
+    section: 'componentes',
+    page: TimePickerPage,
+  },
+  {
+    path: '/componentes/segmented',
+    title: 'Controle segmentado',
+    section: 'componentes',
+    page: SegmentedPage,
+  },
+  {
+    path: '/componentes/description-list',
+    title: 'Lista de descrição',
+    section: 'componentes',
+    page: DescriptionListPage,
+  },
+  { path: '/componentes/banner', title: 'Banner', section: 'componentes', page: BannerPage },
   { path: '/componentes/tabs', title: 'Tabs', section: 'componentes', page: TabsPage },
   { path: '/componentes/textarea', title: 'Textarea', section: 'componentes', page: TextareaPage },
   { path: '/componentes/tooltip', title: 'Tooltip', section: 'componentes', page: TooltipPage },

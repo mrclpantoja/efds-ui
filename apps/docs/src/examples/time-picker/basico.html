@@ -1,0 +1,23 @@
+<!-- Behavior: [data-eds-timepicker] (combobox APG com listbox; o foco fica no campo).
+     data-eds-time-step="15" (minutos entre os horários), data-eds-min="08:00" e data-eds-max="18:00" (HH:MM).
+     O JS aplica a máscara hh:mm; o valor HH:MM vai no input hidden. Setas movem, Enter escolhe,
+     Esc fecha. Evento: eds:time-change (detail.value). Sem JS, use <input type="time" class="eds-input"> (ver "Nativo"). -->
+<div class="eds-field">
+  <label class="eds-label" for="hora-inicio">Início</label>
+  <div class="eds-timepicker" data-eds-timepicker data-eds-time-step="15" data-eds-min="08:00" data-eds-max="18:00">
+    <input id="hora-inicio" class="eds-input eds-timepicker-input" type="text" inputmode="numeric" maxlength="5" placeholder="hh:mm" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="hora-inicio-lista" aria-describedby="hora-inicio-ajuda" autocomplete="off" />
+    <button type="button" class="eds-timepicker-toggle" aria-label="Escolher horário" aria-haspopup="listbox" aria-expanded="false" aria-controls="hora-inicio-lista" tabindex="-1"></button>
+    <input type="hidden" name="inicio" />
+    <div class="eds-timepicker-popup" popover="manual">
+      <ul class="eds-timepicker-listbox" id="hora-inicio-lista" role="listbox" aria-label="Horários de início">
+        <li class="eds-timepicker-option" role="option" id="hora-inicio-1" data-value="08:00">08:00</li>
+        <li class="eds-timepicker-option" role="option" id="hora-inicio-2" data-value="08:15">08:15</li>
+        <li class="eds-timepicker-option" role="option" id="hora-inicio-3" data-value="08:30">08:30</li>
+        <li class="eds-timepicker-option" role="option" id="hora-inicio-4" data-value="08:45">08:45</li>
+        <li class="eds-timepicker-option" role="option" id="hora-inicio-5" data-value="09:00">09:00</li>
+      </ul>
+    </div>
+    <span class="eds-visually-hidden" role="status"></span>
+  </div>
+  <p class="eds-helper" id="hora-inicio-ajuda">Das 08:00 às 18:00, de 15 em 15 minutos.</p>
+</div>

@@ -2,7 +2,7 @@
 
 Componentes React do eDS.ui. São wrappers finos: montam as classes `.eds-*` do `@eds-ui/core` e os atributos HTML/ARIA. Não têm identidade visual própria nem CSS.
 
-> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: licença e escopo `@eds-ui/` estão pendentes. A API pode mudar até a 1.0.
+> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: o escopo `@eds-ui` ainda será verificado. Licença MIT. A API pode mudar até a 1.0.
 
 ## Instalação
 

@@ -2,7 +2,7 @@
   "name": "@eds-ui/core",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "description": "CSS puro do eDS.ui: tokens, base, layout e componentes.",
   "keywords": [

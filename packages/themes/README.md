@@ -2,7 +2,7 @@
 
 Temas e eixos do eDS.ui: `theme`, `mode`, `density` e `shape`. Alteram apenas tokens, nunca componentes. Depende de `@eds-ui/core`.
 
-> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: licença e escopo `@eds-ui` estão pendentes. A API pode mudar até a 1.0.
+> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: o escopo `@eds-ui` ainda será verificado. Licença MIT. A API pode mudar até a 1.0.
 
 ## Instalação
 

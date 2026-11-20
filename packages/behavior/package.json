@@ -2,7 +2,7 @@
   "name": "@eds-ui/behavior",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "description": "Comportamento interativo do eDS.ui em JavaScript puro, para quem usa só HTML (PHP, Java, .NET, Vue, Angular).",
   "keywords": [

@@ -2,7 +2,7 @@
 
 Comportamento interativo do eDS.ui em JavaScript puro (zero dependências), para quem usa só HTML: PHP, Java, .NET, Vue, Angular. O visual vem do `@eds-ui/core` (CSS); este pacote liga o que o CSS e a plataforma não entregam: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Button em carregamento (`aria-busy` não ativa por Enter/Espaço), Table (ordenação, seleção e filtro local), Sidebar, Combobox (simples e múltiplo), DatePicker e DateRangePicker (calendário próprio, máscara dd/mm/aaaa), FileUpload (arrastar e soltar, modo formulário e imediato), diálogos rápidos (`alert`, `confirm`, `prompt`) e o PageLoader automático.
 
-> Pré-lançamento (0.1.0): `private` e `UNLICENSED` até a decisão de licença e de nome/escopo `@eds-ui`.
+> Pré-lançamento (0.1.0): ainda não publicado (`private`) até a verificação do nome/escopo `@eds-ui`. Licença MIT.
 
 ## Uso por `<script>` (CDN, PHP, Java, .NET)
 

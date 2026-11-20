@@ -2,7 +2,7 @@
 
 CSS puro do eDS.ui (Empresarial Design System): tokens, base, layout e componentes. Sem JavaScript, sem dependência de runtime e sem conhecer React.
 
-> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: licença e escopo `@eds-ui` estão pendentes. A API pode mudar até a 1.0.
+> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: o escopo `@eds-ui` ainda será verificado. Licença MIT. A API pode mudar até a 1.0.
 
 ## Instalação
 

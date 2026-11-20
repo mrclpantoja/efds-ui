@@ -2,7 +2,7 @@
   "name": "@eds-ui/themes",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "description": "Temas e eixos (theme, mode, density, shape) do eDS.ui.",
   "keywords": [

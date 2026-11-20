@@ -107,3 +107,12 @@ export function watchScrollRegion(el: HTMLElement, labelledby: () => string): ()
 export function normalizeText(text: string): string {
   return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 }
+
+/** Acrescenta (`on`) ou retira o `id` de `aria-describedby`, preservando os outros. */
+export function describeBy(input: Element, id: string, on: boolean): void {
+  const tokens = (input.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
+  const rest = tokens.filter((t) => t !== id);
+  if (on) rest.push(id);
+  if (rest.length > 0) input.setAttribute('aria-describedby', rest.join(' '));
+  else input.removeAttribute('aria-describedby');
+}

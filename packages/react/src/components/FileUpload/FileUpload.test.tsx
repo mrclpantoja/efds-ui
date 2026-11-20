@@ -356,6 +356,28 @@ describe('FileUpload: modo imediato', () => {
     expect(container.querySelector('input[type="hidden"]')).toHaveValue('ok');
   });
 
+  it.each(['teclado', 'clique'] as const)(
+    'Tentar de novo por %s leva o foco ao Remover do mesmo item, não ao body',
+    async (how) => {
+      const upload = vi
+        .fn<NonNullable<FileUploadProps['upload']>>()
+        .mockRejectedValueOnce(new Error('boom'))
+        .mockImplementationOnce(() => new Promise(() => {}));
+      const { user, pick } = setup({ upload });
+      await pick(pdf('a.pdf'));
+      const retry = await screen.findByRole('button', { name: 'Tentar de novo a.pdf' });
+      if (how === 'teclado') {
+        retry.focus();
+        await user.keyboard('{Enter}');
+      } else await user.click(retry);
+      await waitFor(() =>
+        expect(screen.getByRole('listitem')).toHaveAttribute('data-state', 'uploading'),
+      );
+      expect(screen.queryByRole('button', { name: /Tentar/ })).toBeNull();
+      expect(screen.getByRole('button', { name: 'Remover a.pdf' })).toHaveFocus();
+    },
+  );
+
   it('arquivo inválido não é enviado', async () => {
     const upload = vi.fn(async () => ({ id: '1' }));
     const { pick } = setup({ upload, accept: '.pdf' });

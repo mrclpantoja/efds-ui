@@ -4,7 +4,7 @@
  * o último item leva aria-current="page" (a ou span) e destaca em text-primary.
  * Separador: ::after gerado (termina a linha em vez de iniciar a seguinte) com texto alternativo vazio, logo fora da árvore de acessibilidade.
  * Telas estreitas (decisão, sem JS): a trilha quebra em mais linhas (nenhum nível se perde e não há
- * rolagem horizontal); um único item mais largo que o contêiner ganha reticências.
+ * rolagem horizontal); um item mais largo que o contêiner quebra linha (nunca é cortado).
  */
 /* Links em text-secondary (decisão Swiss: trilha discreta, só o item atual em text-primary). */
 @layer eds.components {
@@ -39,11 +39,9 @@
     & > :is(a, span) {
       min-inline-size: 0;
       padding-block: var(--eds-space-1);
-      overflow: hidden;
       color: inherit;
       text-decoration: none;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      overflow-wrap: anywhere;
     }
 
     & > a:hover {

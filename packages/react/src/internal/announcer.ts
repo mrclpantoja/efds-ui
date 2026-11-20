@@ -15,12 +15,14 @@ export function useAnnouncer(): {
 } {
   const [text, setText] = useState('');
   const queue = useRef<string[]>([]);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Fila pendente de microtask (mesmo "tick" do behavior). Microtask, não setTimeout: abas em
+  // segundo plano atrasam timers e juntariam anúncios de ações distintas.
+  const scheduled = useRef(false);
   const reread = useRef<ReturnType<typeof setTimeout> | null>(null);
   const last = useRef('');
 
   const flush = useCallback(() => {
-    timer.current = null;
+    scheduled.current = false;
     const message = queue.current.join(' ');
     queue.current = [];
     if (message === '') return;
@@ -41,7 +43,10 @@ export function useAnnouncer(): {
     (message: string) => {
       if (message === '') return;
       queue.current.push(message);
-      if (!timer.current) timer.current = setTimeout(flush, 0);
+      if (!scheduled.current) {
+        scheduled.current = true;
+        queueMicrotask(flush);
+      }
     },
     [flush],
   );
@@ -49,16 +54,15 @@ export function useAnnouncer(): {
   const set = useCallback((next: string) => {
     last.current = next;
     queue.current = [];
-    if (timer.current) clearTimeout(timer.current);
+    scheduled.current = false;
     if (reread.current) clearTimeout(reread.current);
-    timer.current = null;
     reread.current = null;
     setText(next);
   }, []);
 
   useEffect(
     () => () => {
-      if (timer.current) clearTimeout(timer.current);
+      queue.current = [];
       if (reread.current) clearTimeout(reread.current);
     },
     [],

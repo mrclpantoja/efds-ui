@@ -16,6 +16,10 @@ export interface Messages {
   selectedNone: string;
   selectedOne: string;
   selectedMany: string;
+  /** Há linhas marcadas ocultas pelo filtro: `{count}` na busca e `{total}` no total. */
+  selectedInSearchNone: string;
+  selectedInSearchOne: string;
+  selectedInSearchMany: string;
   /** Filtro da Table: `{count}` e `{query}`. */
   tableFilterMany: string;
   tableFilterOne: string;
@@ -23,6 +27,9 @@ export interface Messages {
   tableFilterCleared: string;
   tableFilterClearedOne: string;
   tableFilterEmpty: string;
+  /** Ao limpar o filtro com seleção: `{count}` marcadas. */
+  tableFilterSelectedOne: string;
+  tableFilterSelectedMany: string;
   /** Combobox: `{count}`. */
   comboResultsMany: string;
   comboResultsOne: string;
@@ -98,6 +105,69 @@ export interface Messages {
   rangeCurrent: string;
   rangeStartLabel: string;
   rangeEndLabel: string;
+  // Diálogos rápidos
+  dialogOk: string;
+  dialogCancel: string;
+  dialogConfirm: string;
+  dialogRequired: string;
+  // Sortable: `{label}`, `{pos}`, `{total}`, `{list}`
+  sortableHelp: string;
+  sortableListDefault: string;
+  sortableGrabbed: string;
+  sortablePosition: string;
+  sortableMovedList: string;
+  sortableDropped: string;
+  sortableCancelled: string;
+  sortableNoList: string;
+  // Tree: `{label}`, `{level}`, `{pos}`, `{size}`, `{parent}`, `{count}`
+  treeLoading: string;
+  treeLoadError: string;
+  treeNodeLoadError: string;
+  treeNodeLoadErrorInline: string;
+  treeNewItem: string;
+  treeRenameLabel: string;
+  treeRenamed: string;
+  treeNameEmpty: string;
+  treeAdded: string;
+  treeDeleteTitle: string;
+  treeDeleteConfirmOne: string;
+  treeDeleteConfirmMany: string;
+  treeDeleted: string;
+  treeDeletedOneChild: string;
+  treeDeletedChildren: string;
+  treeUndoHint: string;
+  treeAddedNamed: string;
+  treeUndo: string;
+  treeRestored: string;
+  treeMoved: string;
+  treeMovedIn: string;
+  treeCannotMove: string;
+  treeDropInvalid: string;
+  treeActions: string;
+  treeMenuAddChild: string;
+  treeMenuAddSibling: string;
+  treeMenuAddParent: string;
+  treeMenuRename: string;
+  treeMenuMoveUp: string;
+  treeMenuMoveDown: string;
+  treeMenuIndent: string;
+  treeMenuOutdent: string;
+  treeMenuDelete: string;
+  // Exportação
+  /** Nome padrão do arquivo e da planilha; `Sim`/`Não` dos valores lógicos. */
+  exportFilename: string;
+  exportSheet: string;
+  exportYes: string;
+  exportNo: string;
+  /** PDF: `{date}`, `{page}`, `{total}`. */
+  exportGeneratedAt: string;
+  exportPage: string;
+  exportNoRows: string;
+  /** Status: `{name}` e `{count}`. */
+  exportDone: string;
+  exportDoneOne: string;
+  exportEmpty: string;
+  exportFailed: string;
 }
 
 export const defaultMessages: Messages = {
@@ -112,12 +182,17 @@ export const defaultMessages: Messages = {
   selectedNone: 'Nenhum item selecionado.',
   selectedOne: '1 item selecionado.',
   selectedMany: '{count} itens selecionados.',
+  selectedInSearchNone: 'Nenhum item selecionado nesta busca, {total} no total.',
+  selectedInSearchOne: '1 item selecionado nesta busca, {total} no total.',
+  selectedInSearchMany: '{count} itens selecionados nesta busca, {total} no total.',
   tableFilterMany: '{count} resultados.',
   tableFilterOne: '1 resultado.',
   tableFilterNone: 'Nenhum resultado.',
   tableFilterCleared: 'Filtro removido. {count} linhas.',
   tableFilterClearedOne: 'Filtro removido. 1 linha.',
   tableFilterEmpty: 'Nenhum resultado para "{query}".',
+  tableFilterSelectedOne: '1 selecionado.',
+  tableFilterSelectedMany: '{count} selecionados.',
   comboResultsMany: '{count} resultados disponíveis.',
   comboResultsOne: '1 resultado disponível.',
   comboNoResults: 'Nenhum resultado.',
@@ -187,6 +262,68 @@ export const defaultMessages: Messages = {
   rangeCurrent: '{label}. Atual: {start} a {end}',
   rangeStartLabel: 'início do período',
   rangeEndLabel: 'fim do período',
+  // Diálogos rápidos
+  dialogOk: 'OK',
+  dialogCancel: 'Cancelar',
+  dialogConfirm: 'Confirmar',
+  dialogRequired: 'Preencha este campo.',
+  // Sortable
+  sortableHelp: 'Espaço pega o item; setas movem; Espaço solta; Esc cancela.',
+  sortableListDefault: 'esta lista',
+  sortableGrabbed:
+    '{label} pego. Posição {pos} de {total} em {list}. Use as setas para mover, Espaço para soltar, Esc para cancelar.',
+  sortablePosition: 'Posição {pos} de {total}.',
+  sortableMovedList: 'Em {list}, posição {pos} de {total}.',
+  sortableDropped: '{label} solto na posição {pos} de {total} em {list}.',
+  sortableCancelled: 'Movimento cancelado.',
+  sortableNoList: 'Não há outra lista nessa direção.',
+  // Tree
+  treeLoading: 'Carregando…',
+  treeLoadError: 'Não foi possível carregar a árvore.',
+  treeNodeLoadError:
+    'Não foi possível carregar os itens de {label}. Pressione → para tentar de novo.',
+  treeNodeLoadErrorInline: 'Não foi possível carregar. → tenta de novo.',
+  treeNewItem: 'Novo item',
+  treeRenameLabel: 'Renomear {label}',
+  treeRenamed: 'Item renomeado: {label}.',
+  treeNameEmpty: 'O nome não pode ficar vazio. Mantido: {label}.',
+  treeAdded: 'Item adicionado: {label}. Nível {level}, posição {pos} de {size}.',
+  treeAddedNamed: 'Item adicionado: {label}.',
+  treeDeleteTitle: 'Excluir',
+  treeDeleteConfirmOne: 'Excluir "{label}" e 1 subitem?',
+  treeDeleteConfirmMany: 'Excluir "{label}" e {count} subitens?',
+  treeDeleted: 'Item excluído: {label}.',
+  treeDeletedOneChild: 'Item excluído: {label} e 1 subitem.',
+  treeDeletedChildren: 'Item excluído: {label} e {count} subitens.',
+  treeUndoHint: 'Ctrl+Z desfaz.',
+  treeUndo: 'Desfazer',
+  treeRestored: 'Item restaurado: {label}.',
+  treeMoved: '{label}: nível {level}, posição {pos} de {size}.',
+  treeMovedIn: '{label}: nível {level}, posição {pos} de {size}, dentro de {parent}.',
+  treeCannotMove: 'Não é possível mover nessa direção.',
+  treeDropInvalid: 'Não é possível soltar um item dentro dele mesmo ou de um subitem.',
+  treeActions: 'Ações de {label}',
+  treeMenuAddChild: 'Adicionar filho',
+  treeMenuAddSibling: 'Adicionar irmão',
+  treeMenuAddParent: 'Adicionar pai',
+  treeMenuRename: 'Renomear',
+  treeMenuMoveUp: 'Mover para cima',
+  treeMenuMoveDown: 'Mover para baixo',
+  treeMenuIndent: 'Avançar nível',
+  treeMenuOutdent: 'Recuar nível',
+  treeMenuDelete: 'Excluir',
+  // Exportação
+  exportFilename: 'tabela',
+  exportSheet: 'Dados',
+  exportYes: 'Sim',
+  exportNo: 'Não',
+  exportGeneratedAt: 'Gerado em {date}',
+  exportPage: 'Página {page} de {total}',
+  exportNoRows: 'Nenhum registro.',
+  exportDone: 'Arquivo {name} gerado ({count} linhas).',
+  exportDoneOne: 'Arquivo {name} gerado (1 linha).',
+  exportEmpty: 'Não há linhas para exportar.',
+  exportFailed: 'Não foi possível gerar o arquivo.',
 };
 
 let messages: Messages = { ...defaultMessages };

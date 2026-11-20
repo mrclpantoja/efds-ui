@@ -80,15 +80,26 @@ describe('tabs', () => {
     expect($('c')).toHaveAttribute('aria-selected', 'false');
   });
 
-  it('com o foco fora, o tab stop volta à aba ativa', async () => {
+  it('tabindex=0 fica sempre na aba selecionada, mesmo com o foco numa desabilitada', async () => {
     const user = userEvent.setup();
     $('a').focus();
     await user.keyboard('{ArrowRight}{ArrowRight}');
-    expect($('c')).toHaveAttribute('tabindex', '0');
-    $('c').blur();
-    await flush();
+    expect(document.activeElement).toBe($('c'));
     expect($('b')).toHaveAttribute('tabindex', '0');
     expect($('c')).toHaveAttribute('tabindex', '-1');
+    await user.keyboard('{End}');
+    expect(document.activeElement).toBe($('d'));
+    expect($('d')).toHaveAttribute('aria-selected', 'true');
+    expect($('d')).toHaveAttribute('tabindex', '0');
+    await user.keyboard('{ArrowLeft}');
+    expect(document.activeElement).toBe($('c'));
+    const tabbable = Array.from(document.querySelectorAll('[role="tab"]')).filter(
+      (tab) => (tab as HTMLElement).tabIndex === 0,
+    );
+    expect(tabbable).toEqual([$('d')]);
+    $('c').blur();
+    await flush();
+    expect($('d')).toHaveAttribute('tabindex', '0');
   });
 
   it('é ligado uma única vez e destroy desliga', async () => {

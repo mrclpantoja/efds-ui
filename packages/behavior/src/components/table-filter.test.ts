@@ -168,6 +168,38 @@ describe('filtro da table', () => {
     expect([0, 1, 2].every((i) => !box(i).checked)).toBe(true);
   });
 
+  it('seleção oculta pelo filtro: o status diz as da busca e o total; ao limpar, diz os selecionados', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const tableStatus = () =>
+      document.querySelector('.eds-table-wrap + [role="status"]') as HTMLElement;
+    await user.click(box(1));
+    await user.click(box(2));
+    expect(tableStatus()).toHaveTextContent('2 itens selecionados.');
+    await user.click(input());
+    await user.type(input(), 'clin'); // sobram r1 e r3; r2 (marcada) fica oculta
+    await vi.advanceTimersByTimeAsync(200);
+    await user.click(box(0));
+    expect(tableStatus().textContent).toBe('2 itens selecionados nesta busca, 3 no total.');
+    await user.click(box(0));
+    expect(tableStatus().textContent).toBe('1 item selecionado nesta busca, 2 no total.');
+    await user.click(box(2));
+    expect(tableStatus().textContent).toBe('Nenhum item selecionado nesta busca, 1 no total.');
+    await user.click(box(2));
+    await user.clear(input());
+    await vi.advanceTimersByTimeAsync(200);
+    expect(status()).toHaveTextContent('Filtro removido. 3 linhas. 2 selecionados.');
+    await user.click(box(2));
+    expect(tableStatus().textContent).toBe('1 item selecionado.');
+  });
+
+  it('limpar o filtro sem seleção não acrescenta nada', async () => {
+    await type('clin');
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    await user.clear(input());
+    await vi.advanceTimersByTimeAsync(200);
+    expect(status().textContent).toBe('Filtro removido. 3 linhas.');
+  });
+
   it('linhas acrescentadas depois passam pelo filtro', async () => {
     await type('clin');
     document

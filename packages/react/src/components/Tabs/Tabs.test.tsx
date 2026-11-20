@@ -91,6 +91,20 @@ describe('Tabs', () => {
     expect(tab('Informações')).toHaveAttribute('aria-selected', 'true');
   });
 
+  it('foco numa aba desabilitada não move o tab stop: tabindex 0 fica na selecionada', async () => {
+    const user = userEvent.setup();
+    render(<Example />);
+    await user.tab();
+    await user.keyboard('{End}');
+    expect(tab('Auditoria')).toHaveFocus();
+    expect(tab('Auditoria')).toHaveAttribute('tabindex', '-1');
+    expect(tab('Informações')).toHaveAttribute('tabindex', '0');
+    expect(tab('Informações')).toHaveAttribute('aria-selected', 'true');
+    await user.keyboard('{ArrowLeft}');
+    expect(tab('Histórico')).toHaveAttribute('tabindex', '0');
+    expect(tab('Auditoria')).toHaveAttribute('tabindex', '-1');
+  });
+
   it('aba indisponível é alcançável por setas, mas não ativa; clique é ignorado', async () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
@@ -101,7 +115,8 @@ describe('Tabs', () => {
     expect(tab('Auditoria')).toHaveFocus();
     expect(tab('Auditoria')).toHaveAttribute('aria-selected', 'false');
     expect(tab('Histórico')).toHaveAttribute('aria-selected', 'true');
-    expect(tab('Auditoria')).toHaveAttribute('tabindex', '0');
+    expect(tab('Auditoria')).toHaveAttribute('tabindex', '-1');
+    expect(tab('Histórico')).toHaveAttribute('tabindex', '0');
     await user.click(tab('Auditoria'));
     expect(onValueChange).not.toHaveBeenCalled();
     expect(tab('Histórico')).toHaveAttribute('aria-selected', 'true');

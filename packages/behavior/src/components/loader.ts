@@ -160,6 +160,11 @@ function ensureDialog(): HTMLDialogElement {
     dialog.setAttribute('data-eds-bound', '');
     // Esc não fecha: só o código fecha.
     dialog.addEventListener('cancel', (event) => event.preventDefault());
+    // No Chrome o segundo Esc seguido não gera `cancel` cancelável (sem ativação do usuário) e
+    // fecha o diálogo: cancelar o próprio `keydown` evita o fechamento já na origem.
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') event.preventDefault();
+    });
     // Fechamento externo (ex.: segundo Esc do Chrome, que não é cancelável): reabre.
     const target = dialog;
     dialog.addEventListener('close', () => {

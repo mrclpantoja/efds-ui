@@ -50,6 +50,68 @@ describe('combobox: ajustes da auditoria de UX (local)', () => {
     document.body.innerHTML = '';
   });
 
+  describe('erro visível (3.3.1)', () => {
+    const errorEl = () => document.querySelector<HTMLElement>('.eds-error');
+
+    it('Enter com texto que não é opção: aria-invalid, mensagem visível ligada ao campo e anúncio', async () => {
+      const user = userEvent.setup();
+      input().focus();
+      await user.keyboard('zzz{Enter}');
+      expect(input().validationMessage).toBe('Escolha uma das opções da lista.');
+      expect(input()).toHaveAttribute('aria-invalid', 'true');
+      expect(errorEl()).toHaveTextContent('Escolha uma das opções da lista.');
+      expect(errorEl()?.previousElementSibling).toBe(document.querySelector('.eds-combobox'));
+      expect(input().getAttribute('aria-describedby')?.split(' ')).toContain(errorEl()?.id);
+      expect(status()).toHaveTextContent('Escolha uma das opções da lista.');
+    });
+
+    it('blur com texto que não é opção mostra o erro; escolher uma opção válida o remove', async () => {
+      const user = userEvent.setup();
+      await user.type(input(), 'zzz');
+      await user.tab();
+      expect(errorEl()).not.toBeNull();
+      expect(input()).toHaveAttribute('aria-invalid', 'true');
+      await user.click(input());
+      await user.clear(input());
+      await user.type(input(), 'Curi');
+      await user.keyboard('{ArrowDown}{Enter}');
+      expect(hidden().value).toBe('cur');
+      expect(errorEl()).toBeNull();
+      expect(input()).not.toHaveAttribute('aria-invalid');
+      expect(input()).not.toHaveAttribute('aria-describedby');
+    });
+
+    it('limpar o texto remove o erro; vazio e sem required não acusa nada ao sair', async () => {
+      const user = userEvent.setup();
+      await user.type(input(), 'zzz');
+      await user.tab();
+      expect(errorEl()).not.toBeNull();
+      await user.click(input());
+      await user.clear(input());
+      expect(errorEl()).toBeNull();
+      await user.tab();
+      expect(errorEl()).toBeNull();
+    });
+
+    it('envio com campo obrigatório vazio mostra o erro em vez de só o balão nativo', () => {
+      input().required = true;
+      expect((document.getElementById('form') as HTMLFormElement).checkValidity()).toBe(false);
+      expect(input()).toHaveAttribute('aria-invalid', 'true');
+      expect(errorEl()?.textContent).toBe(input().validationMessage);
+      expect(errorEl()?.textContent).not.toBe('');
+    });
+
+    it('destroy remove o erro e o aria-invalid', async () => {
+      const user = userEvent.setup();
+      await user.type(input(), 'zzz');
+      await user.tab();
+      destroy();
+      expect(errorEl()).toBeNull();
+      expect(input()).not.toHaveAttribute('aria-invalid');
+      destroy = initCombobox(document);
+    });
+  });
+
   it('H: Enter com a lista aberta e sem destaque fecha e deixa o formulário seguir', async () => {
     const user = userEvent.setup();
     const onSubmit = vi.fn((e: Event) => e.preventDefault());

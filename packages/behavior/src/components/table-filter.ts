@@ -124,8 +124,17 @@ export const tableFilterBehavior: Behavior = {
       if (!user) return;
       const m = getMessages();
       if (raw === '' && lastQuery !== '') {
+        // Linhas marcadas continuam marcadas: o total volta a ser dito junto.
+        const checked = Array.from(
+          table.querySelectorAll<HTMLInputElement>('input[data-eds-select-row]'),
+        ).filter((box) => box.checked).length;
+        const selection =
+          checked === 0
+            ? ''
+            : ` ${checked === 1 ? m.tableFilterSelectedOne : format(m.tableFilterSelectedMany, { count: checked })}`;
         announcer.say(
-          count === 1 ? m.tableFilterClearedOne : format(m.tableFilterCleared, { count }),
+          (count === 1 ? m.tableFilterClearedOne : format(m.tableFilterCleared, { count })) +
+            selection,
         );
       } else if (raw !== '') {
         announcer.say(

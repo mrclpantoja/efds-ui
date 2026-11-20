@@ -66,6 +66,30 @@ const mount = (html: string) => {
   destroy = initDatepicker(document);
 };
 
+describe('datepicker: obrigatório no envio', () => {
+  it('campo vazio e required: erro visível, aria-invalid e ligação ao campo; digitar uma data o remove', async () => {
+    mount(single('', 'required'));
+    expect((document.getElementById('form') as HTMLFormElement).checkValidity()).toBe(false);
+    const error = document.querySelector<HTMLElement>('.eds-error');
+    expect(error?.textContent).toBe(input().validationMessage);
+    expect(error?.textContent).not.toBe('');
+    expect(input()).toHaveAttribute('aria-invalid', 'true');
+    expect(input().getAttribute('aria-describedby')?.split(' ')).toContain(error?.id);
+    const user = userEvent.setup();
+    await user.type(input(), '15032026');
+    await user.tab();
+    expect(document.querySelector('.eds-error')).toBeNull();
+    expect(input()).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('período obrigatório: erro no campo vazio', () => {
+    mount(periodo('', 'required'));
+    expect(($('ini') as HTMLInputElement).checkValidity()).toBe(false);
+    expect($('ini')).toHaveAttribute('aria-invalid', 'true');
+    expect(document.querySelectorAll('.eds-error')).toHaveLength(1);
+  });
+});
+
 describe('datepicker: campo de texto', () => {
   beforeEach(() => mount(single()));
 

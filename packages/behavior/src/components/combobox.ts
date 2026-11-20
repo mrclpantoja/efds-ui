@@ -1,6 +1,7 @@
 import { format, getMessages } from '../core/config';
 import {
   closeIcon,
+  describeBy,
   emit,
   ensureId,
   hidePopover,
@@ -98,7 +99,47 @@ export const comboboxBehavior: Behavior = {
     const syncValidity = () => {
       const invalid = !freeText && input.value !== '' && currentValue === '';
       input.setCustomValidity(invalid ? getMessages().comboboxInvalid : '');
+      refreshError();
     };
+
+    // Erro visível e associado (3.3.1): <p class="eds-error"> logo após o .eds-combobox, com
+    // aria-invalid e aria-describedby; some quando o campo volta a ser válido.
+    let errorEl: HTMLElement | null = null;
+    const showError = (message: string) => {
+      if (message === '') return;
+      input.setAttribute('aria-invalid', 'true');
+      if (!errorEl) {
+        errorEl = root.ownerDocument.createElement('p');
+        errorEl.className = 'eds-error';
+        errorEl.id = `${ensureId(input, 'combobox')}-err`;
+        root.after(errorEl);
+      }
+      describeBy(input, errorEl.id, true);
+      if (errorEl.textContent !== message) {
+        errorEl.textContent = message;
+        announce(message);
+      }
+    };
+    const clearError = () => {
+      if (!errorEl) return;
+      describeBy(input, errorEl.id, false);
+      errorEl.remove();
+      errorEl = null;
+      input.removeAttribute('aria-invalid');
+    };
+    const refreshError = (): void => {
+      if (!errorEl) return;
+      if (input.validity.valid) clearError();
+      else if (input.validationMessage !== errorEl.textContent) {
+        // O motivo mudou (ex.: de "escolha uma opção" para "campo obrigatório").
+        clearError();
+      }
+    };
+    /** Enter e saída do campo com texto que não é opção (só o combobox simples). */
+    const flagUnchosen = () => {
+      if (!multiple && input.validity.customError) showError(input.validationMessage);
+    };
+    input.addEventListener('invalid', () => showError(input.validationMessage), { signal });
 
     // ---- Estado visual ---------------------------------------------------------------------
     const markCurrent = () => {
@@ -391,6 +432,7 @@ export const comboboxBehavior: Behavior = {
       input.setCustomValidity(
         required && selected.size === 0 ? getMessages().comboMultiRequired : '',
       );
+      refreshError();
     };
 
     const tagsList = (): HTMLElement | null => {
@@ -596,6 +638,9 @@ export const comboboxBehavior: Behavior = {
             } else if (open) {
               // Sem destaque: fecha a lista e deixa o formulário seguir, como fechada.
               closePopup();
+              flagUnchosen();
+            } else if (input.validity.customError) {
+              flagUnchosen();
             }
             break;
           case 'Escape':
@@ -645,6 +690,7 @@ export const comboboxBehavior: Behavior = {
       () => {
         abortRemote();
         closePopup();
+        flagUnchosen();
       },
       { signal },
     );
@@ -727,6 +773,7 @@ export const comboboxBehavior: Behavior = {
       disabledObserver?.disconnect();
       announcer.dispose();
       input.setCustomValidity('');
+      clearError();
       ac.abort();
       abortRemote();
       if (statusTimer) clearTimeout(statusTimer);

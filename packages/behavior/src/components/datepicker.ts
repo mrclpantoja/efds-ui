@@ -22,7 +22,15 @@ import {
   weekdayNames,
   type Ymd,
 } from '../core/date';
-import { emit, ensureId, FOCUSABLE, hidePopover, safeMatches, showPopover } from '../core/dom';
+import {
+  describeBy,
+  emit,
+  ensureId,
+  FOCUSABLE,
+  hidePopover,
+  safeMatches,
+  showPopover,
+} from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer } from '../core/status';
 
@@ -139,13 +147,6 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
 
   // Erro visível e associado (3.3.1): <p class="eds-error"> logo após o .eds-datepicker.
   const errorEls: (HTMLElement | null)[] = fields.map(() => null);
-  const describedBy = (input: HTMLInputElement, id: string, on: boolean) => {
-    const tokens = (input.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
-    const rest = tokens.filter((t) => t !== id);
-    if (on) rest.push(id);
-    if (rest.length > 0) input.setAttribute('aria-describedby', rest.join(' '));
-    else input.removeAttribute('aria-describedby');
-  };
   const showError = (input: HTMLInputElement, i: number, message: string) => {
     let p = errorEls[i] ?? null;
     if (!p) {
@@ -153,7 +154,7 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
       errorEls[i] = p;
       (i > 0 ? (errorEls[i - 1] ?? root) : root).after(p);
     }
-    describedBy(input, p.id, true);
+    describeBy(input, p.id, true);
     if (p.textContent !== message) {
       p.textContent = message;
       announce(message);
@@ -162,10 +163,25 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
   const clearError = (input: HTMLInputElement, i: number) => {
     const p = errorEls[i];
     if (!p) return;
-    describedBy(input, p.id, false);
+    describeBy(input, p.id, false);
     p.remove();
     errorEls[i] = null;
   };
+
+  // Envio com o campo obrigatório vazio (ou inválido): o balão nativo some rápido; o erro fica visível.
+  fields.forEach((input, i) => {
+    input.addEventListener(
+      'invalid',
+      () => {
+        const message = input.validationMessage;
+        if (!message) return;
+        input.setAttribute('aria-invalid', 'true');
+        flagged.add(i);
+        showError(input, i, message);
+      },
+      { signal },
+    );
+  });
 
   const toggleBase =
     toggle.getAttribute('aria-label') ?? (range ? m().rangeChoose : m().dateChoose);

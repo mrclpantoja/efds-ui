@@ -6,7 +6,7 @@ const isDisabled = (tab: HTMLElement) =>
 
 /**
  * Abas: `.eds-tabs > .eds-tablist[role=tablist] > .eds-tab[role=tab][aria-controls]`.
- * Roving tabindex, setas (com volta), Home/End, aba indisponível alcançável por seta mas não
+ * `tabindex=0` só na aba selecionada, setas (com volta), Home/End, aba indisponível alcançável por seta mas não
  * ativa, painéis inativos com `hidden`. Ativação automática.
  */
 export const tabsBehavior: Behavior = {
@@ -27,8 +27,6 @@ export const tabsBehavior: Behavior = {
       return id ? root.ownerDocument.getElementById(id) : null;
     };
 
-    let focused: HTMLElement | null = null;
-
     const activeTab = (): HTMLElement | undefined => {
       const all = tabs();
       return (
@@ -39,11 +37,11 @@ export const tabsBehavior: Behavior = {
 
     const sync = () => {
       const active = activeTab();
-      const stop = focused && tabs().includes(focused) ? focused : active;
       for (const tab of tabs()) {
         const selected = tab === active;
         tab.setAttribute('aria-selected', String(selected));
-        tab.tabIndex = tab === stop ? 0 : -1;
+        // Parada de Tab: sempre a aba selecionada (a desabilitada recebe foco por seta, não por Tab).
+        tab.tabIndex = selected ? 0 : -1;
         const panel = panelOf(tab);
         if (panel) panel.hidden = !selected;
       }
@@ -61,27 +59,6 @@ export const tabsBehavior: Behavior = {
       (event) => {
         const tab = (event.target as Element).closest<HTMLElement>('[role="tab"]');
         if (tab && tabs().includes(tab)) select(tab);
-      },
-      { signal },
-    );
-
-    list.addEventListener(
-      'focusin',
-      (event) => {
-        const tab = (event.target as Element).closest<HTMLElement>('[role="tab"]');
-        if (!tab) return;
-        focused = tab;
-        sync();
-      },
-      { signal },
-    );
-
-    list.addEventListener(
-      'focusout',
-      (event) => {
-        if (list.contains(event.relatedTarget as Node | null)) return;
-        focused = null;
-        sync();
       },
       { signal },
     );

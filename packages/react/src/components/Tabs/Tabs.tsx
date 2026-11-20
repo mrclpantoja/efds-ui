@@ -74,9 +74,12 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     return () => setRegistry((list) => list.filter((t) => t.value !== tabValue));
   }, []);
   // Valor sem aba correspondente: o teclado ainda precisa de um tab stop (1ª aba habilitada).
+  // Aba desabilitada focada por setas não vira tab stop: ele fica na selecionada.
+  const base = registry.some((t) => t.value === active)
+    ? active
+    : registry.find((t) => !t.disabled)?.value;
   const stop =
-    focused ??
-    (registry.some((t) => t.value === active) ? active : registry.find((t) => !t.disabled)?.value);
+    focused !== null && registry.some((t) => t.value === focused && !t.disabled) ? focused : base;
   const ctx = useMemo(
     () => ({ baseId, active, focused, setFocused, select, stop, register }),
     [baseId, active, focused, select, stop, register],

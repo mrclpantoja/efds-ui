@@ -186,6 +186,18 @@ export const tableBehavior: Behavior = {
 
     const announceSelection = (count: number) => {
       const m = messages();
+      // Linhas marcadas e ocultas pelo filtro: diz as da busca e o total (4.1.3).
+      const total = allBoxes().filter((box) => box.checked).length;
+      if (total !== count) {
+        announce(
+          count === 0
+            ? format(m.selectedInSearchNone, { total })
+            : count === 1
+              ? format(m.selectedInSearchOne, { total })
+              : format(m.selectedInSearchMany, { count, total }),
+        );
+        return;
+      }
       announce(
         count === 0
           ? m.selectedNone

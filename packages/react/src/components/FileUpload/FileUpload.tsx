@@ -525,7 +525,11 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
                     className="eds-button eds-button-ghost eds-button-sm"
                     aria-label={t.retryLabel(fileName)}
                     disabled={disabled}
-                    onClick={() => startUpload(item.key)}
+                    onClick={() => {
+                      // O botão some ao reenviar: o foco vai ao Remover do mesmo item.
+                      pendingFocus.current = item.key;
+                      startUpload(item.key);
+                    }}
                   >
                     {t.retry}
                   </button>

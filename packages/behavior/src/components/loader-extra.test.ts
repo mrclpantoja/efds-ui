@@ -189,6 +189,35 @@ describe('page loader: saída por demora, reabertura, adoção, trigger e navega
       expect(isOpen()).toBe(false);
     });
 
+    it('Esc no diálogo é cancelado já no keydown (o 2º Esc do Chrome não fecha) e, se fechar, reabre', async () => {
+      const done = loader.start();
+      await vi.advanceTimersByTimeAsync(300);
+      const keydown = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true,
+      });
+      dialog()?.dispatchEvent(keydown);
+      expect(keydown.defaultPrevented).toBe(true);
+      const other = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+      dialog()?.dispatchEvent(other);
+      expect(other.defaultPrevented).toBe(false);
+      // Fechamento que escapa mesmo assim (CloseWatcher): reabre modal, com aria-busy coerente.
+      dialog()?.close();
+      await vi.advanceTimersByTimeAsync(5);
+      expect(isOpen()).toBe(true);
+      expect(dialog()?.matches(':modal')).toBe(true);
+      expect(document.getElementById('main')).toHaveAttribute('aria-busy', 'true');
+      // Segundo fechamento externo seguido: reabre de novo.
+      dialog()?.close();
+      await vi.advanceTimersByTimeAsync(5);
+      expect(isOpen()).toBe(true);
+      done();
+      await vi.advanceTimersByTimeAsync(500);
+      expect(isOpen()).toBe(false);
+      expect(document.getElementById('main')).not.toHaveAttribute('aria-busy');
+    });
+
     it('não reabre depois do Fechar do usuário', async () => {
       stop = init(document);
       void window.fetch('/api/x');

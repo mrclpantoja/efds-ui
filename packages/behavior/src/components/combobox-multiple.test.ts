@@ -208,6 +208,20 @@ describe('combobox múltiplo (local)', () => {
     expect(input().validationMessage).toBe('Escolha ao menos uma opção.');
   });
 
+  it('obrigatório no envio: erro visível ligado ao campo; escolher uma opção o remove', async () => {
+    destroy();
+    document.body.innerHTML = markup('', 'aria-required="true"', false);
+    destroy = initCombobox(document);
+    expect((document.getElementById('form') as HTMLFormElement).checkValidity()).toBe(false);
+    const error = document.querySelector<HTMLElement>('.eds-error');
+    expect(error).toHaveTextContent('Escolha ao menos uma opção.');
+    expect(input()).toHaveAttribute('aria-invalid', 'true');
+    expect(input().getAttribute('aria-describedby')?.split(' ')).toContain(error?.id);
+    opt('o1').click();
+    expect(document.querySelector('.eds-error')).toBeNull();
+    expect(input()).not.toHaveAttribute('aria-invalid');
+  });
+
   it('max-selected: as demais ficam aria-disabled e o status avisa', async () => {
     destroy();
     document.body.innerHTML = markup('data-eds-max-selected="2"', '', true);

@@ -1,0 +1,11 @@
+<!-- Carregando dentro do grupo (ex.: busca de CEP): spinner num .eds-input-group-text, alternado por
+     [hidden]; aria-busy no grupo. O anúncio é de um status à parte (role="status"). -->
+<div class="eds-field">
+  <label class="eds-label" for="ig-cep">CEP</label>
+  <div class="eds-input-group" aria-busy="true">
+    <input class="eds-input" id="ig-cep" inputmode="numeric" value="00000-000" autocomplete="postal-code" />
+    <span class="eds-input-group-text">
+      <span class="eds-spinner eds-spinner-sm" role="status"><span class="eds-visually-hidden">Buscando endereço</span></span>
+    </span>
+  </div>
+</div>

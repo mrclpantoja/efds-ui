@@ -40,6 +40,21 @@
       "types": "./dist/mask-entry.d.ts",
       "default": "./dist/mask-entry.js"
     },
+    "./fields": {
+      "development": "./src/fields-entry.ts",
+      "types": "./dist/fields-entry.d.ts",
+      "default": "./dist/fields-entry.js"
+    },
+    "./format": {
+      "development": "./src/format-entry.ts",
+      "types": "./dist/format-entry.d.ts",
+      "default": "./dist/format-entry.js"
+    },
+    "./theme": {
+      "development": "./src/theme-entry.ts",
+      "types": "./dist/theme-entry.d.ts",
+      "default": "./dist/theme-entry.js"
+    },
     "./balloon": {
       "development": "./src/balloon-entry.ts",
       "types": "./dist/balloon-entry.d.ts",
@@ -81,6 +96,22 @@
       "./mask": {
         "types": "./dist/mask-entry.d.ts",
         "default": "./dist/mask-entry.js"
+      },
+      "./balloon": {
+        "types": "./dist/balloon-entry.d.ts",
+        "default": "./dist/balloon-entry.js"
+      },
+      "./theme": {
+        "types": "./dist/theme-entry.d.ts",
+        "default": "./dist/theme-entry.js"
+      },
+      "./fields": {
+        "types": "./dist/fields-entry.d.ts",
+        "default": "./dist/fields-entry.js"
+      },
+      "./format": {
+        "types": "./dist/format-entry.d.ts",
+        "default": "./dist/format-entry.js"
       },
       "./eds-behavior.js": "./dist/eds-behavior.js",
       "./eds-behavior-core.js": "./dist/eds-behavior-core.js"

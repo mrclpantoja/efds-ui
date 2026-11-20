@@ -1,0 +1,152 @@
+/* NumberInput: campo numérico com botões − / + encaixados (o JS liga por data-eds-number).
+   Markup:
+     <div class="eds-number" data-eds-number>
+       <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button"
+         aria-label="Diminuir" tabindex="-1"><svg>…</svg></button>
+       <input class="eds-input eds-number-input" type="text" inputmode="decimal" aria-label="Quantidade" />
+       <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button"
+         aria-label="Aumentar" tabindex="-1"><svg>…</svg></button>
+     </div>
+   - Mesmo desenho do InputGroup (borda única, foco e erro no conjunto), mas autônomo: importável
+     sozinho. Erro: [aria-invalid="true"] no input; desabilitado/leitura também refletem no conjunto.
+   - Os botões ficam fora da ordem de Tab (o teclado usa ↑/↓, PageUp/PageDown, Home/End no campo);
+     seguem sendo alvos de clique/toque. Desabilitam-se (disabled) ao atingir min/max.
+   - Tamanhos: .eds-number-sm / -lg. O valor fica centralizado, com algarismos tabulares. */
+@layer eds.components {
+  .eds-number {
+    --_number-height: var(--eds-control-height-md);
+    --_number-radius: var(--eds-radius-md);
+    --_number-bg: var(--eds-color-bg-surface);
+    --_number-border: var(--eds-color-border-strong);
+
+    display: flex;
+    align-items: stretch;
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: calc(var(--eds-space-9) * 3);
+    min-inline-size: 0;
+    min-block-size: var(--_number-height);
+    border: var(--eds-border-width) solid var(--_number-border);
+    border-radius: var(--_number-radius);
+    background: var(--_number-bg);
+    color: var(--eds-color-text-primary);
+    transition: border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &:hover:not(:has(.eds-number-input:is(:disabled, [readonly], [aria-invalid='true']))) {
+      --_number-border: var(--eds-color-text-muted);
+    }
+
+    &:has(.eds-number-input:focus) {
+      --_number-border: var(--eds-color-action-primary);
+
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 0;
+    }
+
+    &:has(.eds-number-input[aria-invalid='true']) {
+      --_number-border: var(--eds-color-status-danger);
+    }
+
+    &:has(.eds-number-input[readonly]) {
+      --_number-bg: var(--eds-color-bg-subtle);
+    }
+
+    &:has(.eds-number-input:disabled) {
+      --_number-bg: var(--eds-color-bg-subtle);
+      --_number-border: var(--eds-color-border-default);
+
+      cursor: not-allowed;
+    }
+  }
+
+  .eds-number-sm {
+    --_number-height: var(--eds-control-height-sm);
+  }
+
+  .eds-number-lg {
+    --_number-height: var(--eds-control-height-lg);
+  }
+
+  .eds-number-input {
+    flex: 1 1 auto;
+    align-self: stretch;
+    min-block-size: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  /* Vence a máscara numero/moeda do Input (alinhada ao fim): aqui o valor é centralizado. */
+  .eds-number > .eds-number-input {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eds-number-button {
+    --_button-height: calc(var(--_number-height) - 2 * var(--eds-border-width));
+    --_button-radius: 0;
+
+    flex: none;
+    border-width: 0;
+
+    &:first-child {
+      border-start-start-radius: calc(var(--_number-radius) - var(--eds-border-width));
+      border-end-start-radius: calc(var(--_number-radius) - var(--eds-border-width));
+      border-inline-end: var(--eds-border-width) solid var(--eds-color-border-default);
+    }
+
+    &:last-child {
+      border-start-end-radius: calc(var(--_number-radius) - var(--eds-border-width));
+      border-end-end-radius: calc(var(--_number-radius) - var(--eds-border-width));
+      border-inline-start: var(--eds-border-width) solid var(--eds-color-border-default);
+    }
+
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+  }
+
+  /* Toque: alvos de --eds-target-min nos botões; o conjunto cresce e ganha largura. */
+  @media (pointer: coarse) {
+    .eds-number {
+      max-inline-size: calc(var(--eds-space-9) * 4);
+    }
+
+    .eds-number-button {
+      min-inline-size: var(--eds-target-min);
+      min-block-size: var(--eds-target-min);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-number {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-number {
+      --_number-border: CanvasText;
+    }
+
+    .eds-number:has(.eds-number-input:focus) {
+      outline-color: Highlight;
+    }
+
+    .eds-number:has(.eds-number-input:disabled) {
+      --_number-border: GrayText;
+    }
+
+    .eds-number-button:first-child {
+      border-inline-end-color: CanvasText;
+    }
+
+    .eds-number-button:last-child {
+      border-inline-start-color: CanvasText;
+    }
+  }
+}

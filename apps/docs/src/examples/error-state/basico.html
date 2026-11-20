@@ -1,0 +1,13 @@
+<!-- Só CSS. role="alert" só quando o erro aparece depois de uma ação do usuário; na carga da página, sem role.
+     O botão "Tentar de novo" ganha aria-busy="true" enquanto repete a chamada. -->
+<div class="eds-empty eds-empty-error">
+  <svg class="eds-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+    <circle cx="12" cy="12" r="9" /><path d="M12 8v4M12 16h.01" />
+  </svg>
+  <h3 class="eds-empty-title">Não foi possível carregar os pedidos</h3>
+  <p class="eds-empty-text">Verifique a conexão e tente novamente. Se o problema continuar, informe o código abaixo ao suporte.</p>
+  <p class="eds-empty-detail">Código: ERR-0042</p>
+  <div class="eds-empty-actions">
+    <button type="button" class="eds-button eds-button-primary">Tentar de novo</button>
+  </div>
+</div>

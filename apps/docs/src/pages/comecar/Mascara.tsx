@@ -43,6 +43,19 @@ export default function MascaraPage() {
             },
             { name: 'numero', effect: 'Como a moeda, sem símbolo por padrão.' },
             {
+              name: 'hora',
+              effect: 'hh:mm (00:00). Faixa 00:00 a 23:59 só com data-eds-mask-validate.',
+            },
+            {
+              name: 'competencia',
+              effect: 'mm/aaaa (03/2026). Mês 01 a 12 só com data-eds-mask-validate.',
+            },
+            {
+              name: 'processo',
+              effect:
+                'Número CNJ: NNNNNNN-DD.AAAA.J.TR.OOOO (25 caracteres). Com data-eds-mask-validate confere o dígito verificador.',
+            },
+            {
               name: 'padrão próprio',
               effect:
                 '0 = dígito, A = letra (maiúscula), * = letra ou dígito; os demais são literais; \\ escapa.',
@@ -91,6 +104,11 @@ export default function MascaraPage() {
               name: '<Input mask maskOptions unmask onValueChange>',
               effect: 'O mesmo contrato no React.',
             },
+            {
+              name: 'data-eds-mask-validate / <Input maskValidate>',
+              effect:
+                'Só em hora, competencia e processo: o campo fica inválido (setCustomValidity) fora da faixa e o erro aparece ao sair do campo. Vazio é válido (use required).',
+            },
             { name: 'eds:mask-change', effect: 'detail { value, raw }, também ao colar.' },
           ]}
         />
@@ -99,8 +117,10 @@ export default function MascaraPage() {
       <Section title="Acessibilidade e cuidados">
         <ul className="docs-list">
           <li>
-            <strong>A máscara não valida:</strong> não confere dígito verificador, data nem faixa.
-            Continue com <code>required</code>, <code>pattern</code> e a validação no servidor.
+            <strong>A máscara não valida por padrão:</strong> não confere dígito verificador, data
+            nem faixa (exceto com <code>data-eds-mask-validate</code> em hora, competência e
+            processo). Continue com <code>required</code>, <code>pattern</code> e a validação no
+            servidor.
           </li>
           <li>
             <strong>Dica de formato no texto de ajuda,</strong> não no placeholder (que some ao

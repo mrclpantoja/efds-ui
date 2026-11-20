@@ -1,0 +1,45 @@
+/* Copiar: botão que copia um texto (o JS liga por [data-eds-copy="#alvo"] ou [data-eds-copy-text="..."]).
+   Markup:
+     <button type="button" class="eds-button eds-button-secondary eds-button-sm eds-copy"
+       data-eds-copy="#chave">
+       <svg class="eds-copy-icon-idle" aria-hidden="true">…</svg>
+       <svg class="eds-copy-icon-done" aria-hidden="true">…</svg>
+       <span class="eds-copy-label">Copiar</span>
+     </button>
+   - Estado "copiado": o JS põe data-copied="true" por ~2 s e troca o texto de .eds-copy-label por
+     "Copiado" (o texto é quem informa; a cor e o ícone reforçam). O anúncio é de um status à parte.
+   - Sem os dois ícones o botão funciona: só o rótulo e a cor mudam.
+   - Só ícone: use .eds-button-icon com aria-label e o rótulo em .eds-visually-hidden dentro de .eds-copy-label. */
+@layer eds.components {
+  .eds-copy {
+    & .eds-copy-icon-done {
+      display: none;
+    }
+
+    &[data-copied='true'] {
+      --_button-fg: var(--eds-color-status-success-text);
+      --_button-border: var(--eds-color-status-success-text);
+      --_button-border-hover: var(--eds-color-status-success-text);
+
+      & .eds-copy-icon-idle {
+        display: none;
+      }
+
+      & .eds-copy-icon-done {
+        display: block;
+      }
+    }
+  }
+
+  .eds-copy-label {
+    white-space: nowrap;
+  }
+
+  @media (forced-colors: active) {
+    .eds-copy[data-copied='true'] {
+      --_button-fg: ButtonText;
+      --_button-border: Highlight;
+      --_button-border-hover: Highlight;
+    }
+  }
+}

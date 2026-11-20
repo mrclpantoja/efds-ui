@@ -16,6 +16,7 @@ import AcessibilidadePage from './pages/comecar/Acessibilidade';
 import EventosPage from './pages/comecar/Eventos';
 import ExportacaoPage from './pages/comecar/Exportacao';
 import MascaraPage from './pages/comecar/Mascara';
+import FormatadoresPage from './pages/comecar/Formatadores';
 import AccordionPage from './pages/componentes/Accordion';
 import FilterBarPage from './pages/componentes/FilterBar';
 import PageHeaderPage from './pages/componentes/PageHeader';
@@ -69,6 +70,20 @@ import TablePage from './pages/componentes/Table';
 import TextareaPage from './pages/componentes/Textarea';
 import ToastPage from './pages/componentes/Toast';
 import TreePage from './pages/componentes/Tree';
+// Onda C: campos
+import ProgressPage from './pages/componentes/Progress';
+import ErrorStatePage from './pages/componentes/ErrorState';
+import CopyPage from './pages/componentes/Copy';
+import TimelinePage from './pages/componentes/Timeline';
+import NotificationsPage from './pages/componentes/Notifications';
+import DirtyGuardPage from './pages/componentes/DirtyGuard';
+import SessionTimeoutPage from './pages/componentes/SessionTimeout';
+import ConditionalPage from './pages/componentes/Conditional';
+import CepPage from './pages/componentes/Cep';
+import InputGroupPage from './pages/componentes/InputGroup';
+import LookupPage from './pages/componentes/Lookup';
+import OtpPage from './pages/componentes/Otp';
+import PasswordPage from './pages/componentes/Password';
 
 export type SectionId = 'comecar' | 'fundamentos' | 'componentes';
 
@@ -107,6 +122,12 @@ export const routes: readonly DocRoute[] = [
     page: EventosPage,
   },
   { path: '/comecar/mascara', title: 'Máscara de entrada', section: 'comecar', page: MascaraPage },
+  {
+    path: '/comecar/formatadores',
+    title: 'Formatadores',
+    section: 'comecar',
+    page: FormatadoresPage,
+  },
   {
     path: '/comecar/exportacao',
     title: 'Exportação de tabelas',
@@ -190,7 +211,19 @@ export const routes: readonly DocRoute[] = [
     section: 'componentes',
     page: PageHeaderPage,
   },
+  {
+    path: '/componentes/cep',
+    title: 'CEP (consulta de endereço)',
+    section: 'componentes',
+    page: CepPage,
+  },
   { path: '/componentes/checkbox', title: 'Checkbox', section: 'componentes', page: CheckboxPage },
+  {
+    path: '/componentes/otp',
+    title: 'Código de verificação (OTP)',
+    section: 'componentes',
+    page: OtpPage,
+  },
   {
     path: '/componentes/combobox',
     title: 'Combobox (autocomplete)',
@@ -237,8 +270,20 @@ export const routes: readonly DocRoute[] = [
     section: 'componentes',
     page: FileUploadPage,
   },
+  {
+    path: '/componentes/input-group',
+    title: 'Grupo de campo e número',
+    section: 'componentes',
+    page: InputGroupPage,
+  },
   { path: '/componentes/stat', title: 'Indicador (Stat)', section: 'componentes', page: StatPage },
   { path: '/componentes/input', title: 'Input', section: 'componentes', page: InputPage },
+  {
+    path: '/componentes/lookup',
+    title: 'Lookup (busca por código)',
+    section: 'componentes',
+    page: LookupPage,
+  },
   { path: '/componentes/modal', title: 'Modal', section: 'componentes', page: ModalPage },
   {
     path: '/componentes/multi-select',
@@ -255,6 +300,7 @@ export const routes: readonly DocRoute[] = [
   },
   { path: '/componentes/popover', title: 'Popover', section: 'componentes', page: PopoverPage },
   { path: '/componentes/radio', title: 'Radio', section: 'componentes', page: RadioPage },
+  { path: '/componentes/password', title: 'Senha', section: 'componentes', page: PasswordPage },
   { path: '/componentes/select', title: 'Select', section: 'componentes', page: SelectPage },
   { path: '/componentes/sidebar', title: 'Sidebar', section: 'componentes', page: SidebarPage },
   { path: '/componentes/skeleton', title: 'Skeleton', section: 'componentes', page: SkeletonPage },
@@ -278,6 +324,39 @@ export const routes: readonly DocRoute[] = [
     title: 'Stepper e Wizard',
     section: 'componentes',
     page: StepperPage,
+  },
+  { path: '/componentes/progress', title: 'Progress', section: 'componentes', page: ProgressPage },
+  {
+    path: '/componentes/error-state',
+    title: 'Estado de erro',
+    section: 'componentes',
+    page: ErrorStatePage,
+  },
+  { path: '/componentes/copy', title: 'Copiar e segredo', section: 'componentes', page: CopyPage },
+  { path: '/componentes/timeline', title: 'Timeline', section: 'componentes', page: TimelinePage },
+  {
+    path: '/componentes/notifications',
+    title: 'Notificações',
+    section: 'componentes',
+    page: NotificationsPage,
+  },
+  {
+    path: '/componentes/dirty-guard',
+    title: 'Alterações não salvas',
+    section: 'componentes',
+    page: DirtyGuardPage,
+  },
+  {
+    path: '/componentes/session-timeout',
+    title: 'Sessão por inatividade',
+    section: 'componentes',
+    page: SessionTimeoutPage,
+  },
+  {
+    path: '/componentes/conditional',
+    title: 'Campos condicionais',
+    section: 'componentes',
+    page: ConditionalPage,
   },
   { path: '/componentes/tabs', title: 'Tabs', section: 'componentes', page: TabsPage },
   { path: '/componentes/textarea', title: 'Textarea', section: 'componentes', page: TextareaPage },

@@ -1,0 +1,108 @@
+/* Lookup de entidade: código curto + botão de busca + descrição resolvida (o JS liga por data-eds-lookup).
+   Markup:
+     <div class="eds-lookup" data-eds-lookup data-eds-lookup-source="/api/clientes?q=" data-eds-lookup-dialog="dlg-cli">
+       <input class="eds-input eds-lookup-code" name="cliente" aria-label="Código do cliente" />
+       <button type="button" class="eds-button eds-button-secondary eds-button-icon" aria-label="Buscar cliente">…</button>
+       <output class="eds-lookup-description" aria-live="polite">—</output>
+     </div>
+   - A descrição é só leitura (<output>), na altura dos controles. Sem resultado/antes de buscar, o JS
+     deixa "—" e [data-empty="true"] (cor atenuada). Código inexistente: aria-invalid no input e
+     p.eds-error fora do .eds-lookup, ligada por aria-describedby.
+   - Em largura estreita, a descrição desce para a linha de baixo (quebra o flex).
+   - Tamanhos: .eds-lookup-sm / -lg (alturas dos controles via tokens, logo da densidade). */
+@layer eds.components {
+  .eds-lookup {
+    --_lookup-height: var(--eds-control-height-md);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--eds-space-2);
+    min-inline-size: 0;
+  }
+
+  .eds-lookup-sm {
+    --_lookup-height: var(--eds-control-height-sm);
+
+    & > .eds-input {
+      --_input-height: var(--eds-control-height-sm);
+    }
+
+    & > .eds-button {
+      --_button-height: var(--eds-control-height-sm);
+    }
+  }
+
+  .eds-lookup-lg {
+    --_lookup-height: var(--eds-control-height-lg);
+
+    & > .eds-input {
+      --_input-height: var(--eds-control-height-lg);
+    }
+
+    & > .eds-button {
+      --_button-height: var(--eds-control-height-lg);
+    }
+  }
+
+  .eds-lookup-code {
+    flex: none;
+    inline-size: calc(var(--eds-space-9) * 2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eds-lookup > .eds-button {
+    flex: none;
+  }
+
+  .eds-lookup-description {
+    display: flex;
+    flex: 1 1 calc(var(--eds-space-9) * 3);
+    align-items: center;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: var(--_lookup-height);
+    padding-block: var(--eds-space-1);
+    padding-inline: var(--eds-space-3);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-subtle);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    overflow-wrap: anywhere;
+
+    &[data-empty='true'] {
+      color: var(--eds-color-text-secondary);
+    }
+  }
+
+  /* Tabela de resultados do diálogo: a descrição quebra linha e o botão "Selecionar" fica à vista
+     a 320 px (sem a largura mínima de uma tabela de dados, que o faria rolar; sobra só uma folga de
+     ~30 px, que rola dentro do wrap). */
+  .eds-lookup-results .eds-table {
+    --_table-min-inline-size: 0;
+
+    & :is(th, td) {
+      padding-inline: var(--eds-space-2);
+    }
+  }
+
+  /* Campo desabilitado: a descrição acompanha. */
+  .eds-lookup:has(.eds-lookup-code:disabled) .eds-lookup-description {
+    color: var(--eds-color-text-muted);
+  }
+
+  @media (pointer: coarse) {
+    .eds-lookup > .eds-button {
+      min-inline-size: var(--eds-target-min);
+      min-block-size: var(--eds-target-min);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-lookup-description {
+      border-color: CanvasText;
+    }
+  }
+}

@@ -9,7 +9,17 @@
  * A máscara não valida: dígito verificador, datas e limites ficam com `required`/`pattern`/servidor.
  */
 
-export type MaskName = 'telefone' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'moeda' | 'numero';
+export type MaskName =
+  | 'telefone'
+  | 'cpf'
+  | 'cnpj'
+  | 'cpf-cnpj'
+  | 'cep'
+  | 'moeda'
+  | 'numero'
+  | 'hora'
+  | 'competencia'
+  | 'processo';
 
 export const MASK_NAMES: readonly MaskName[] = [
   'telefone',
@@ -19,6 +29,9 @@ export const MASK_NAMES: readonly MaskName[] = [
   'cep',
   'moeda',
   'numero',
+  'hora',
+  'competencia',
+  'processo',
 ];
 
 export interface MaskOptions {
@@ -60,6 +73,12 @@ export interface Mask {
   readonly inputMode: MaskInputMode;
   /** Valor de `autocomplete` sugerido (só onde existe token adequado). */
   readonly autocomplete: string | undefined;
+  /**
+   * Validação de faixa das máscaras `hora` (00:00 a 23:59), `competencia` (mês 01 a 12) e
+   * `processo` (dígito verificador do CNJ). Vazio é válido (use `required`); incompleto não.
+   * `undefined` nas demais, que não validam.
+   */
+  readonly validate: ((text: string) => boolean) | undefined;
   /** Mascara um valor vindo de fora (atributo `value`, estado do React). */
   format(text: string): string;
   /** Só os caracteres significativos de um texto (mascarado ou não). */
@@ -209,6 +228,9 @@ const PHONE_9 = parsePattern('(00) 00000-0000');
 const CPF = parsePattern('000.000.000-00');
 const CNPJ = parsePattern('**.***.***/****-00');
 const CEP = parsePattern('00000-000');
+const HORA = parsePattern('00:00');
+const COMPETENCIA = parsePattern('00/0000');
+const PROCESSO = parsePattern('0000000-00.0000.0.00.0000');
 
 const digitsOf = (text: string) => text.replace(/\D/g, '');
 const alnumOf = (text: string) =>
@@ -241,6 +263,33 @@ function customKind(pattern: string): { kind: Kind; inputMode: MaskInputMode } {
     inputMode: slots.length > 0 && slots.every((s) => s === '0') ? 'numeric' : 'text',
   };
 }
+
+// ---- Validação de faixa (hora, competência, processo CNJ) -------------------------------------
+
+const validHora = (text: string): boolean => {
+  const m = /^(\d{2}):(\d{2})$/.exec(text);
+  return m !== null && Number(m[1]) <= 23 && Number(m[2]) <= 59;
+};
+
+const validCompetencia = (text: string): boolean => {
+  const m = /^(\d{2})\/(\d{4})$/.exec(text);
+  return m !== null && Number(m[1]) >= 1 && Number(m[1]) <= 12 && Number(m[2]) >= 1;
+};
+
+/** Resto da divisão por 97 de um número em dígitos, sem BigInt (módulo 97-10 do CNJ). */
+function mod97(digits: string): number {
+  let rest = 0;
+  for (const ch of digits) rest = (rest * 10 + Number(ch)) % 97;
+  return rest;
+}
+
+/** NNNNNNN-DD.AAAA.J.TR.OOOO: o número NNNNNNN AAAA JTR OOOO DD deixa resto 1 na divisão por 97. */
+const validProcesso = (text: string): boolean => {
+  const m = /^(\d{7})-(\d{2})\.(\d{4})\.(\d)\.(\d{2})\.(\d{4})$/.exec(text);
+  if (!m) return false;
+  const [, n, dd, aaaa, j, tr, oooo] = m;
+  return mod97(`${n}${aaaa}${j}${tr}${oooo}${dd}`) === 1;
+};
 
 // ---- Moeda e número --------------------------------------------------------------------------
 
@@ -342,7 +391,8 @@ export function isMaskName(value: string): value is MaskName {
 }
 
 /**
- * Cria uma máscara pelo nome (`telefone`, `cpf`, `cnpj`, `cpf-cnpj`, `cep`, `moeda`, `numero`)
+ * Cria uma máscara pelo nome (`telefone`, `cpf`, `cnpj`, `cpf-cnpj`, `cep`, `moeda`, `numero`,
+ * `hora`, `competencia`, `processo`)
  * ou por um padrão personalizado: `0` dígito, `A` letra (vira maiúscula), `*` letra ou dígito,
  * `\` para um literal que seria espaço (`\0`); o resto é literal.
  */
@@ -351,6 +401,7 @@ export function createMask(spec: string, options: MaskOptions = {}): Mask {
   let name: string = spec;
   let inputMode: MaskInputMode = 'numeric';
   let autocomplete: string | undefined;
+  let validate: ((text: string) => boolean) | undefined;
   switch (spec) {
     case 'telefone':
       kind = phoneKind();
@@ -371,6 +422,18 @@ export function createMask(spec: string, options: MaskOptions = {}): Mask {
     case 'cep':
       kind = patternKind(() => CEP, digitsOf, 9);
       autocomplete = 'postal-code';
+      break;
+    case 'hora':
+      kind = patternKind(() => HORA, digitsOf, 5);
+      validate = validHora;
+      break;
+    case 'competencia':
+      kind = patternKind(() => COMPETENCIA, digitsOf, 7);
+      validate = validCompetencia;
+      break;
+    case 'processo':
+      kind = patternKind(() => PROCESSO, digitsOf, 25);
+      validate = validProcesso;
       break;
     case 'moeda':
     case 'numero': {
@@ -398,6 +461,7 @@ export function createMask(spec: string, options: MaskOptions = {}): Mask {
     maxLength: kind.maxLength,
     inputMode,
     autocomplete,
+    validate: validate ? (text) => (text === '' ? true : validate(mask.format(text))) : undefined,
     format(text) {
       const sig = kind.fromText?.(text, true) ?? kind.extract(text).sig;
       return kind.render(sig);

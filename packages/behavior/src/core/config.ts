@@ -182,6 +182,71 @@ export interface Messages {
   filterCountOne: string;
   filterCountMany: string;
   filterMoreCount: string;
+  // Senha: `{level}`
+  passwordShow: string;
+  passwordStrength: string;
+  passwordStrengthEmpty: string;
+  passwordStrengthAnnounce: string;
+  passwordLevel1: string;
+  passwordLevel2: string;
+  passwordLevel3: string;
+  passwordLevel4: string;
+  passwordRuleMet: string;
+  passwordRuleUnmet: string;
+  // Código de verificação (OTP): `{n}`, `{total}`
+  otpCell: string;
+  otpCellChar: string;
+  // NumberInput: `{value}`
+  numberDecrement: string;
+  numberIncrement: string;
+  numberAdjusted: string;
+  // Lookup: `{code}`, `{description}`
+  lookupSearch: string;
+  lookupCode: string;
+  lookupDescription: string;
+  lookupSelect: string;
+  lookupSelectLabel: string;
+  lookupLoading: string;
+  lookupNotFound: string;
+  lookupError: string;
+  lookupRetry: string;
+  lookupClose: string;
+  lookupTitle: string;
+  // Máscaras com validação opcional
+  maskInvalidTime: string;
+  maskInvalidCompetence: string;
+  maskInvalidProcess: string;
+  // CEP
+  cepLoading: string;
+  cepNotFound: string;
+  cepError: string;
+  cepRetry: string;
+  cepFilled: string;
+  // Página e feedback (copiar, notificações, tema, alterações não salvas, sessão)
+  copyDone: string;
+  copyAnnounce: string;
+  copyFailed: string;
+  notificationsNone: string;
+  notificationsOne: string;
+  notificationsMany: string;
+  notificationsAllRead: string;
+  themeReport: string;
+  themeAdjusted: string;
+  dirtyTitle: string;
+  dirtyMessage: string;
+  dirtyLeave: string;
+  dirtyStay: string;
+  sessionTitle: string;
+  sessionBody: string;
+  sessionContinue: string;
+  sessionLeave: string;
+  sessionAnnounce: string;
+  sessionExpired: string;
+  sessionSecond: string;
+  sessionSeconds: string;
+  sessionMinute: string;
+  sessionMinutes: string;
+  sessionAnd: string;
 }
 
 export const defaultMessages: Messages = {
@@ -352,6 +417,72 @@ export const defaultMessages: Messages = {
   filterCountOne: '1 filtro ativo.',
   filterCountMany: '{count} filtros ativos.',
   filterMoreCount: '({count})',
+  // Senha
+  passwordShow: 'Mostrar senha',
+  passwordStrength: 'Força: {level}',
+  passwordStrengthEmpty: 'Força: não avaliada',
+  passwordStrengthAnnounce: 'Força da senha: {level}.',
+  passwordLevel1: 'fraca',
+  passwordLevel2: 'razoável',
+  passwordLevel3: 'boa',
+  passwordLevel4: 'forte',
+  passwordRuleMet: 'Atendida: ',
+  passwordRuleUnmet: 'Pendente: ',
+  // Código de verificação
+  otpCell: 'Dígito {n} de {total}',
+  otpCellChar: 'Caractere {n} de {total}',
+  // NumberInput
+  numberDecrement: 'Diminuir',
+  numberIncrement: 'Aumentar',
+  numberAdjusted: 'Valor ajustado para {value}.',
+  // Lookup
+  lookupSearch: 'Buscar',
+  lookupCode: 'Código',
+  lookupDescription: 'Descrição',
+  lookupSelect: 'Selecionar',
+  lookupSelectLabel: 'Selecionar {code}, {description}',
+  lookupLoading: 'Buscando…',
+  lookupNotFound: 'Código não encontrado.',
+  lookupError: 'Não foi possível buscar. Tente de novo.',
+  lookupRetry: 'Tentar de novo',
+  lookupClose: 'Fechar',
+  lookupTitle: 'Buscar',
+  // Máscaras com validação opcional
+  maskInvalidTime: 'Hora inválida. Use hh:mm, de 00:00 a 23:59.',
+  maskInvalidCompetence: 'Competência inválida. Use mm/aaaa, com o mês de 01 a 12.',
+  maskInvalidProcess: 'Número de processo inválido. Confira o número e o dígito verificador.',
+  // CEP
+  cepLoading: 'Buscando CEP…',
+  cepNotFound: 'CEP não encontrado.',
+  cepError: 'Não foi possível consultar o CEP.',
+  cepRetry: 'Tentar de novo',
+  cepFilled: 'Endereço preenchido.',
+  // Página e feedback
+  copyDone: 'Copiado',
+  copyAnnounce: 'Copiado para a área de transferência.',
+  copyFailed: 'Não foi possível copiar. Selecione o texto e use Ctrl+C.',
+  notificationsNone: 'Notificações, nenhuma não lida',
+  notificationsOne: 'Notificações, 1 não lida',
+  notificationsMany: 'Notificações, {count} não lidas',
+  notificationsAllRead: 'Todas as notificações marcadas como lidas.',
+  themeReport: 'Contraste do texto sobre a ação: {ratio}:1 (mínimo 4,5:1).',
+  themeAdjusted: 'A cor foi ajustada para atingir o contraste.',
+  dirtyTitle: 'Alterações não salvas',
+  dirtyMessage: 'Há alterações que ainda não foram salvas. Se sair agora, elas serão perdidas.',
+  dirtyLeave: 'Sair sem salvar',
+  dirtyStay: 'Continuar editando',
+  sessionTitle: 'Sua sessão vai expirar',
+  sessionBody:
+    'Por inatividade, você será desconectado em {time}. Alterações não salvas serão perdidas.',
+  sessionContinue: 'Continuar conectado',
+  sessionLeave: 'Sair',
+  sessionAnnounce: 'A sessão expira em {time}.',
+  sessionExpired: 'Sessão encerrada por inatividade.',
+  sessionSecond: '{count} segundo',
+  sessionSeconds: '{count} segundos',
+  sessionMinute: '{count} minuto',
+  sessionMinutes: '{count} minutos',
+  sessionAnd: ' e ',
 };
 
 export const DEFAULT_LOCALE = 'pt-BR';
@@ -374,6 +505,24 @@ export function setLocale(value: string | undefined): void {
 
 export function resetLocale(): void {
   locale = DEFAULT_LOCALE;
+}
+
+/**
+ * Serviço de consulta de CEP, com `{cep}` no lugar dos 8 dígitos. **Vazio por padrão**: sem URL
+ * configurada nenhuma chamada externa é feita (o autor escolhe o serviço e responde pela LGPD).
+ */
+let cepUrl = '';
+
+export function getCepUrl(): string {
+  return cepUrl;
+}
+
+export function setCepUrl(value: string | undefined): void {
+  if (value !== undefined) cepUrl = value;
+}
+
+export function resetCepUrl(): void {
+  cepUrl = '';
 }
 
 let messages: Messages = { ...defaultMessages };

@@ -1,4 +1,5 @@
-import { emit } from '../core/dom';
+import { getMessages } from '../core/config';
+import { describeBy, emit, ensureId } from '../core/dom';
 import { createMask, type MaskOptions } from '../core/mask';
 import { bindAll, type Behavior } from '../core/registry';
 
@@ -10,7 +11,10 @@ import { bindAll, type Behavior } from '../core/registry';
  * caracteres significativos (na moeda, `1234.56`).
  *
  * O valor do campo é sempre o texto mascarado; o cursor é preservado ao digitar, apagar e colar.
- * Sem anúncio por tecla e sem validação: `required`/`pattern`/servidor continuam valendo.
+ * Sem anúncio por tecla e, por padrão, sem validação: `required`/`pattern`/servidor continuam
+ * valendo. Com `data-eds-mask-validate`, `hora` (00:00 a 23:59), `competencia` (mês 01 a 12) e
+ * `processo` (dígito verificador do CNJ) conferem a faixa: o campo fica inválido (`setCustomValidity`)
+ * e o erro aparece em `p.eds-error` ao sair do campo ou enviar.
  * Evento `eds:mask-change` (`{ value, raw }`) a cada alteração. Atributos que o autor já definiu
  * (`inputmode`, `autocomplete`, `maxlength`) nunca são trocados.
  */
@@ -64,10 +68,52 @@ export const maskBehavior: Behavior = {
       observer.observe(input, { attributes: true, attributeFilter: ['disabled'] });
     }
 
+    // Validação de faixa opcional (hora, competência, processo).
+    const rangeCheck = input.hasAttribute('data-eds-mask-validate') ? mask.validate : undefined;
+    let errorEl: HTMLElement | null = null;
+    const clearError = () => {
+      if (!errorEl) return;
+      describeBy(input, errorEl.id, false);
+      errorEl.remove();
+      errorEl = null;
+      input.removeAttribute('aria-invalid');
+    };
+    const showError = () => {
+      const message = input.validationMessage;
+      if (!input.validity.customError || message === '') return;
+      input.setAttribute('aria-invalid', 'true');
+      if (!errorEl) {
+        errorEl = document.createElement('p');
+        errorEl.className = 'eds-error';
+        errorEl.id = `${ensureId(input, 'mask')}-err`;
+        (input.closest('.eds-input-group') ?? input).after(errorEl);
+      }
+      errorEl.textContent = message;
+      describeBy(input, errorEl.id, true);
+    };
+    const validate = () => {
+      if (!rangeCheck) return;
+      const m = getMessages();
+      const message =
+        mask.name === 'hora'
+          ? m.maskInvalidTime
+          : mask.name === 'competencia'
+            ? m.maskInvalidCompetence
+            : m.maskInvalidProcess;
+      const ok = rangeCheck(input.value);
+      input.setCustomValidity(ok ? '' : message);
+      if (ok) clearError();
+    };
+    if (rangeCheck) {
+      input.addEventListener('invalid', showError, { signal });
+      input.addEventListener('blur', showError, { signal });
+    }
+
     let last = '';
     let internal = false;
     const sync = () => {
       if (hidden) hidden.value = mask.unmask(input.value);
+      validate();
     };
     const write = (value: string, caret: number | null) => {
       if (input.value !== value) input.value = value;
@@ -159,6 +205,8 @@ export const maskBehavior: Behavior = {
     return () => {
       ac.abort();
       observer?.disconnect();
+      clearError();
+      if (rangeCheck) input.setCustomValidity('');
       hidden?.remove();
       if (hidden && name) input.setAttribute('name', name);
       for (const attr of added) input.removeAttribute(attr);

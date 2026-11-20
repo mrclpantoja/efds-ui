@@ -1,0 +1,11 @@
+<!-- Erro: aria-invalid em todas as células e a mensagem em p.eds-error ligada ao fieldset. -->
+<fieldset class="eds-otp" aria-describedby="otp-erro-msg">
+  <legend class="eds-label">Código de verificação</legend>
+  <div class="eds-otp-cells">
+    <input class="eds-input eds-otp-cell" inputmode="numeric" maxlength="1" value="1" aria-invalid="true" aria-label="Dígito 1 de 4" />
+    <input class="eds-input eds-otp-cell" inputmode="numeric" maxlength="1" value="2" aria-invalid="true" aria-label="Dígito 2 de 4" />
+    <input class="eds-input eds-otp-cell" inputmode="numeric" maxlength="1" value="3" aria-invalid="true" aria-label="Dígito 3 de 4" />
+    <input class="eds-input eds-otp-cell" inputmode="numeric" maxlength="1" value="4" aria-invalid="true" aria-label="Dígito 4 de 4" />
+  </div>
+  <p class="eds-error" id="otp-erro-msg">Código incorreto ou expirado. Peça um novo código.</p>
+</fieldset>

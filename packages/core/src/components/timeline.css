@@ -1,0 +1,233 @@
+/* Timeline / histórico: lista ordenada de eventos com marcador, data, título, texto e autor.
+   Markup:
+     <ol class="eds-timeline">
+       <li class="eds-timeline-item" data-tone="success">
+         <span class="eds-timeline-marker" aria-hidden="true"><svg>…</svg></span>
+         <div class="eds-timeline-content">
+           <div class="eds-timeline-header">
+             <span class="eds-timeline-title">Pedido aprovado</span>
+             <time class="eds-timeline-time" datetime="2026-11-20T10:30">20/11/2026 10:30</time>
+           </div>
+           <p class="eds-timeline-text">Aprovado após conferência dos itens.</p>
+           <p class="eds-timeline-actor">por Maria Exemplo</p>
+         </div>
+       </li>
+     </ol>
+   Agrupado por dia:
+     <ol class="eds-timeline-groups">
+       <li class="eds-timeline-group">
+         <h3 class="eds-timeline-group-title">Hoje, 20/11/2026</h3>
+         <ol class="eds-timeline">…</ol>
+       </li>
+     </ol>
+   - Tom por data-tone no item (neutral padrão | accent | info | success | warning | danger). O tom é
+     reforço: o marcador leva ícone e o título diz o que houve. Marcador vazio vira um ponto.
+   - Compacta: .eds-timeline-compact (marcador menor, menos respiro, texto de apoio em linha).
+   - Ordem: do mais recente para o mais antigo (ou o inverso) é decisão do autor; o CSS não inverte. */
+@layer eds.components {
+  .eds-timeline {
+    --_tl-marker: var(--eds-icon-size-xl);
+    --_tl-gap: var(--eds-space-3);
+    --_tl-space: var(--eds-space-5);
+
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-timeline-compact {
+    --_tl-marker: var(--eds-icon-size-md);
+    --_tl-gap: var(--eds-space-2);
+    --_tl-space: var(--eds-space-3);
+  }
+
+  .eds-timeline-item {
+    --_tl-fg: var(--eds-color-text-secondary);
+    --_tl-bg: var(--eds-color-bg-subtle);
+    --_tl-border: var(--eds-color-border-strong);
+
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--_tl-marker) minmax(0, 1fr);
+    column-gap: var(--_tl-gap);
+    padding-block-end: var(--_tl-space);
+
+    /* Linha que liga este marcador ao próximo. */
+    &:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      inset-block: calc(var(--_tl-marker) + var(--eds-space-1)) var(--eds-space-1);
+      inset-inline-start: calc((var(--_tl-marker) - var(--eds-border-width)) / 2);
+      inline-size: var(--eds-border-width);
+      background: var(--eds-color-border-default);
+    }
+
+    &:last-child {
+      padding-block-end: 0;
+    }
+
+    &[data-tone='accent'] {
+      --_tl-fg: var(--eds-color-action-primary);
+      --_tl-bg: var(--eds-color-action-primary-subtle);
+      --_tl-border: var(--eds-color-action-primary);
+    }
+
+    &[data-tone='info'] {
+      --_tl-fg: var(--eds-color-status-info-text);
+      --_tl-bg: var(--eds-color-status-info-subtle);
+      --_tl-border: var(--eds-color-status-info-text);
+    }
+
+    &[data-tone='success'] {
+      --_tl-fg: var(--eds-color-status-success-text);
+      --_tl-bg: var(--eds-color-status-success-subtle);
+      --_tl-border: var(--eds-color-status-success-text);
+    }
+
+    &[data-tone='warning'] {
+      --_tl-fg: var(--eds-color-status-warning-text);
+      --_tl-bg: var(--eds-color-status-warning-subtle);
+      --_tl-border: var(--eds-color-status-warning-text);
+    }
+
+    &[data-tone='danger'] {
+      --_tl-fg: var(--eds-color-status-danger-text);
+      --_tl-bg: var(--eds-color-status-danger-subtle);
+      --_tl-border: var(--eds-color-status-danger-text);
+    }
+  }
+
+  .eds-timeline-marker {
+    display: flex;
+    grid-column: 1;
+    align-self: start;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_tl-marker);
+    block-size: var(--_tl-marker);
+    border: var(--eds-border-width) solid var(--_tl-border);
+    border-radius: 50%;
+    background: var(--_tl-bg);
+    color: var(--_tl-fg);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+    }
+
+    &:empty::before {
+      content: '';
+      inline-size: var(--eds-space-2);
+      block-size: var(--eds-space-2);
+      border-radius: 50%;
+      background: currentColor;
+    }
+  }
+
+  .eds-timeline-content {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-0-5);
+    min-inline-size: 0;
+    padding-block-start: calc((var(--_tl-marker) - var(--eds-line-height-body)) / 2);
+  }
+
+  .eds-timeline-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--eds-space-3);
+  }
+
+  .eds-timeline-title {
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    font-weight: var(--eds-font-weight-medium);
+    overflow-wrap: anywhere;
+  }
+
+  .eds-timeline-time {
+    color: var(--eds-color-text-muted);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .eds-timeline-text,
+  .eds-timeline-actor {
+    margin: 0;
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    overflow-wrap: anywhere;
+  }
+
+  .eds-timeline-text {
+    max-inline-size: 65ch;
+    color: var(--eds-color-text-secondary);
+  }
+
+  .eds-timeline-actor {
+    color: var(--eds-color-text-muted);
+  }
+
+  /* Compacta: título e data na mesma linha, texto de apoio atenuado. */
+  .eds-timeline-compact .eds-timeline-content {
+    padding-block-start: calc((var(--_tl-marker) - var(--eds-line-height-small)) / 2);
+  }
+
+  .eds-timeline-compact .eds-timeline-title {
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+  }
+
+  .eds-timeline-compact .eds-timeline-marker > svg {
+    inline-size: var(--eds-space-3);
+    block-size: var(--eds-space-3);
+  }
+
+  /* Grupos por dia. */
+  .eds-timeline-groups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-timeline-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-3);
+    min-inline-size: 0;
+  }
+
+  .eds-timeline-group-title {
+    margin: 0;
+    padding-block-end: var(--eds-space-1);
+    border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  @media (forced-colors: active) {
+    .eds-timeline-marker {
+      border-color: CanvasText;
+      background: Canvas;
+      color: CanvasText;
+    }
+
+    .eds-timeline-item:not(:last-child)::before {
+      background: CanvasText;
+    }
+  }
+}

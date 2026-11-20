@@ -1,0 +1,19 @@
+<!-- Behavior: form[data-eds-dirty-guard] compara os campos com o estado inicial. Com alterações, sair por link
+     interno pede confirmação (EDS.confirm) e fechar a aba dispara o beforeunload nativo; o aviso some depois
+     de um envio bem-sucedido. data-eds-dirty-message troca o texto. Evento: eds:dirty-change (detail.dirty).
+     Sem CSS próprio: usa Field, Input e Button. O link abaixo é só um destino de demonstração. -->
+<form class="eds-stack eds-gap-4" data-eds-dirty-guard
+  data-eds-dirty-message="Há alterações não salvas. Sair mesmo assim?" onsubmit="event.preventDefault()">
+  <div class="eds-field">
+    <label class="eds-label" for="dg-titulo" data-required>Título</label>
+    <input class="eds-input" id="dg-titulo" name="titulo" value="Projeto Aurora" required />
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="dg-obs">Observações</label>
+    <textarea class="eds-textarea" id="dg-obs" name="obs" rows="3"></textarea>
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <button type="submit" class="eds-button eds-button-primary">Salvar</button>
+    <a class="eds-button eds-button-tertiary" href="#/componentes/dirty-guard">Voltar à lista</a>
+  </div>
+</form>

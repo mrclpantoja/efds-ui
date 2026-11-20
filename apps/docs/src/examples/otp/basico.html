@@ -1,0 +1,16 @@
+<!-- Behavior: [data-eds-otp] (+ data-eds-otp-length, data-eds-otp-name) liga as células: digitar avança,
+     Backspace volta, setas movem, colar o código inteiro distribui; o hidden recebe o valor.
+     Evento: eds:otp-complete (detail.value). autocomplete="one-time-code" só na primeira célula. -->
+<fieldset class="eds-otp" data-eds-otp data-eds-otp-length="6" data-eds-otp-name="codigo" aria-describedby="otp-ajuda">
+  <legend class="eds-label">Código de verificação</legend>
+  <div class="eds-otp-cells">
+    <input class="eds-input eds-otp-cell" inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Dígito 1 de 6" />
+    <input class="eds-input eds-otp-cell" inputmode="numeric" autocomplete="off" maxlength="1" aria-label="Dígito 2 de 6" />
+    <input class="eds-input eds-otp-cell" inputmode="numeric" autocomplete="off" maxlength="1" aria-label="Dígito 3 de 6" />
+    <input class="eds-input eds-otp-cell" inputmode="numeric" autocomplete="off" maxlength="1" aria-label="Dígito 4 de 6" />
+    <input class="eds-input eds-otp-cell" inputmode="numeric" autocomplete="off" maxlength="1" aria-label="Dígito 5 de 6" />
+    <input class="eds-input eds-otp-cell" inputmode="numeric" autocomplete="off" maxlength="1" aria-label="Dígito 6 de 6" />
+  </div>
+  <input type="hidden" name="codigo" />
+  <p class="eds-helper" id="otp-ajuda">Enviamos 6 dígitos para o seu e-mail.</p>
+</fieldset>

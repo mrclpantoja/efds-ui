@@ -1,0 +1,47 @@
+<!-- Só CSS. O foco e o erro pintam o grupo inteiro; o prefixo/sufixo não substitui o rótulo. -->
+<div class="eds-grid eds-grid-auto">
+  <div class="eds-field">
+    <label class="eds-label" for="ig-valor">Valor</label>
+    <div class="eds-input-group">
+      <span class="eds-input-group-text">R$</span>
+      <input class="eds-input" id="ig-valor" inputmode="decimal" value="1.280,50" />
+    </div>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="ig-peso">Peso</label>
+    <div class="eds-input-group">
+      <input class="eds-input" id="ig-peso" inputmode="decimal" value="12,5" />
+      <span class="eds-input-group-text">kg</span>
+    </div>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="ig-usuario">Usuário</label>
+    <div class="eds-input-group">
+      <span class="eds-input-group-text">@</span>
+      <input class="eds-input" id="ig-usuario" value="maria.exemplo" />
+      <span class="eds-input-group-text">.exemplo.gov.br</span>
+    </div>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="ig-busca">Buscar</label>
+    <div class="eds-input-group">
+      <input class="eds-input" id="ig-busca" type="search" />
+      <button type="button" class="eds-button eds-button-secondary eds-input-group-button">Buscar</button>
+    </div>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="ig-erro">Valor com erro</label>
+    <div class="eds-input-group">
+      <span class="eds-input-group-text">R$</span>
+      <input class="eds-input" id="ig-erro" inputmode="decimal" value="-5" aria-invalid="true" aria-describedby="ig-erro-msg" />
+    </div>
+    <p class="eds-error" id="ig-erro-msg">O valor não pode ser negativo.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="ig-off">Desabilitado</label>
+    <div class="eds-input-group">
+      <span class="eds-input-group-text">R$</span>
+      <input class="eds-input" id="ig-off" value="0,00" disabled />
+    </div>
+  </div>
+</div>

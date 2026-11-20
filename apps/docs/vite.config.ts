@@ -12,7 +12,7 @@ export default defineConfig({
   server: { host: '127.0.0.1', port: 5199 },
   resolve: {
     alias: [
-      // Mais específicos primeiro: o alias de prefixo pegaria '@eds-ui/behavior/export' e '/mask'.
+      // Mais específicos primeiro: o alias de prefixo pegaria '@eds-ui/behavior/export', '/mask', '/fields' e '/format'.
       {
         find: /^@eds-ui\/behavior\/export\/(csv|json|xlsx|pdf)$/,
         replacement: fromSource('../../packages/behavior/src/export/formats/$1.ts'),
@@ -24,6 +24,18 @@ export default defineConfig({
       {
         find: '@eds-ui/behavior/balloon',
         replacement: fromSource('../../packages/behavior/src/balloon-entry.ts'),
+      },
+      {
+        find: '@eds-ui/behavior/theme',
+        replacement: fromSource('../../packages/behavior/src/theme-entry.ts'),
+      },
+      {
+        find: '@eds-ui/behavior/fields',
+        replacement: fromSource('../../packages/behavior/src/fields-entry.ts'),
+      },
+      {
+        find: '@eds-ui/behavior/format',
+        replacement: fromSource('../../packages/behavior/src/format-entry.ts'),
       },
       {
         find: '@eds-ui/behavior/mask',

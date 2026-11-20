@@ -1,0 +1,36 @@
+<!-- Tamanhos e estados (só CSS). -->
+<div class="eds-grid eds-grid-auto">
+  <div class="eds-field">
+    <label class="eds-label" for="num-sm">Pequeno</label>
+    <div class="eds-number eds-number-sm">
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Diminuir" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12h14" /></svg></button>
+      <input class="eds-input eds-number-input" id="num-sm" type="text" inputmode="decimal" value="3" />
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Aumentar" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+    </div>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="num-lg">Grande</label>
+    <div class="eds-number eds-number-lg">
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Diminuir" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12h14" /></svg></button>
+      <input class="eds-input eds-number-input" id="num-lg" type="text" inputmode="decimal" value="3" />
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Aumentar" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+    </div>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="num-erro">Com erro (no máximo)</label>
+    <div class="eds-number">
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Diminuir" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12h14" /></svg></button>
+      <input class="eds-input eds-number-input" id="num-erro" type="text" inputmode="decimal" value="120" aria-invalid="true" aria-describedby="num-erro-msg" />
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Aumentar" tabindex="-1" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+    </div>
+    <p class="eds-error" id="num-erro-msg">O máximo é 99.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="num-off">Desabilitado</label>
+    <div class="eds-number">
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Diminuir" tabindex="-1" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12h14" /></svg></button>
+      <input class="eds-input eds-number-input" id="num-off" type="text" inputmode="decimal" value="0" disabled />
+      <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Aumentar" tabindex="-1" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+    </div>
+  </div>
+</div>

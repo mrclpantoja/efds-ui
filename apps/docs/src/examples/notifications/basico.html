@@ -1,0 +1,50 @@
+<!-- Behavior: o Popover usa [data-eds-popover] (onda B). O JS de notificações liga por [data-eds-notifications]
+     no painel: marcar uma como lida (clique no item) e "Marcar todas como lidas" ([data-eds-notifications-read-all])
+     atualizam data-unread, a contagem (.eds-notifications-count e o aria-label do sino) e mostram
+     .eds-notifications-empty quando não sobra nada. Eventos: eds:notifications-read (detail.id) e
+     eds:notifications-read-all. -->
+<button type="button" class="eds-button eds-button-ghost eds-button-icon eds-notifications" popovertarget="notif-1"
+  aria-expanded="false" aria-label="Notificações, 2 não lidas" data-eds-popover>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0" /></svg>
+  <span class="eds-notifications-count" aria-hidden="true">2</span>
+</button>
+<div class="eds-popover eds-notifications-panel" id="notif-1" popover role="dialog" aria-labelledby="notif-1-t" data-eds-notifications>
+  <div class="eds-notifications-header">
+    <h2 class="eds-popover-title" id="notif-1-t">Notificações</h2>
+    <button type="button" class="eds-button eds-button-ghost eds-button-sm" data-eds-notifications-read-all>Marcar todas como lidas</button>
+  </div>
+  <ul class="eds-notifications-list">
+    <li class="eds-notification" data-unread="true" data-id="n1">
+      <a class="eds-notification-link" href="#/componentes/notifications">
+        <span class="eds-notification-dot" aria-hidden="true"></span>
+        <span class="eds-notification-body">
+          <span class="eds-notification-status">Não lida</span>
+          <span class="eds-notification-title">Pedido PED-0001 aprovado</span>
+          <span class="eds-notification-text">Entrega prevista para 28/11.</span>
+          <time class="eds-notification-time" datetime="2026-11-20T10:30">há 5 minutos</time>
+        </span>
+      </a>
+    </li>
+    <li class="eds-notification" data-unread="true" data-id="n2">
+      <a class="eds-notification-link" href="#/componentes/notifications">
+        <span class="eds-notification-dot" aria-hidden="true"></span>
+        <span class="eds-notification-body">
+          <span class="eds-notification-status">Não lida</span>
+          <span class="eds-notification-title">Nova mensagem de Maria Exemplo</span>
+          <time class="eds-notification-time" datetime="2026-11-20T09:50">há 45 minutos</time>
+        </span>
+      </a>
+    </li>
+    <li class="eds-notification" data-id="n3">
+      <a class="eds-notification-link" href="#/componentes/notifications">
+        <span class="eds-notification-dot" aria-hidden="true"></span>
+        <span class="eds-notification-body">
+          <span class="eds-notification-status">Não lida</span>
+          <span class="eds-notification-title">Relatório mensal gerado</span>
+          <time class="eds-notification-time" datetime="2026-11-19T18:00">ontem</time>
+        </span>
+      </a>
+    </li>
+  </ul>
+  <p class="eds-notifications-empty" hidden>Você não tem notificações.</p>
+</div>

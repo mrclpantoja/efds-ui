@@ -1,0 +1,16 @@
+<!-- Behavior: [data-eds-copy="#alvo"] (copia o texto/valor do elemento) ou [data-eds-copy-text="..."] (texto fixo).
+     Clipboard API com fallback execCommand. Ao copiar: data-copied="true" por ~2 s, o texto de
+     .eds-copy-label vira "Copiado" e um status à parte anuncia. Evento: eds:copy (detail.text). -->
+<div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3 eds-stack-align-start">
+  <code class="eds-text-mono" id="copy-chave">CHAVE-EXEMPLO-0001</code>
+  <button type="button" class="eds-button eds-button-secondary eds-button-sm eds-copy" data-eds-copy="#copy-chave">
+    <svg class="eds-copy-icon-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V6a2 2 0 012-2h9" /></svg>
+    <svg class="eds-copy-icon-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>
+    <span class="eds-copy-label">Copiar</span>
+  </button>
+  <button type="button" class="eds-button eds-button-secondary eds-button-sm eds-copy" data-eds-copy-text="https://exemplo.gov.br/pedidos/PED-0001">
+    <svg class="eds-copy-icon-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V6a2 2 0 012-2h9" /></svg>
+    <svg class="eds-copy-icon-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>
+    <span class="eds-copy-label">Copiar link</span>
+  </button>
+</div>

@@ -22,6 +22,16 @@ import { filterBarBehavior } from './components/filter-bar';
 import { popoverBehavior } from './components/popover';
 import { tooltipBehavior } from './components/tooltip';
 import { wizardBehavior } from './components/wizard';
+// Onda C (campos)
+import { lookupBehavior } from './components/lookup';
+import { numberBehavior } from './components/number';
+import { otpBehavior } from './components/otp';
+import { passwordBehavior } from './components/password';
+import { conditionalBehavior } from './components/conditional';
+import { copyBehavior } from './components/copy';
+import { dirtyGuardBehavior } from './components/dirty-guard';
+import { notificationsBehavior } from './components/notifications';
+import { initSession } from './components/session';
 import { configure, type BehaviorOptions } from './setup';
 
 /**
@@ -59,7 +69,16 @@ export function initWith(
       popoverBehavior,
       wizardBehavior,
       filterBarBehavior,
-      // Os que só entram na compilação completa (exportação e máscara)
+      // Onda C (campos)
+      passwordBehavior,
+      otpBehavior,
+      numberBehavior,
+      lookupBehavior,
+      copyBehavior,
+      notificationsBehavior,
+      dirtyGuardBehavior,
+      conditionalBehavior,
+      // Os que só entram na compilação completa (exportação, máscara, CEP e formatadores)
       ...extra,
     ]),
     initButtonBusy(root),
@@ -68,6 +87,7 @@ export function initWith(
     // Confirmação declarativa
     initConfirm(root),
     initToast(),
+    initSession(document),
     initLoader(),
     ...(options?.nativeAlert ? [initNativeAlert()] : []),
   ];

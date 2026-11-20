@@ -1,0 +1,30 @@
+<!-- Behavior: [data-eds-show-if] em qualquer elemento. Sintaxe: "campo=valor", "campo!=valor", "campo"
+     (preenchido/marcado) e "a|b" para várias opções. O oculto recebe hidden e seus campos ficam disabled (não
+     vão no envio nem validam). [data-eds-require-if] torna o campo obrigatório enquanto a condição valer.
+     Sem JS tudo fica visível (o servidor deve revalidar). Sem CSS próprio: o atributo hidden já vence
+     qualquer display (camada utilities). -->
+<form class="eds-stack eds-gap-4" onsubmit="event.preventDefault()">
+  <div class="eds-field">
+    <label class="eds-label" for="cond-tipo">Tipo de pessoa</label>
+    <select class="eds-select" id="cond-tipo" name="tipo">
+      <option value="pf">Pessoa física</option>
+      <option value="pj">Pessoa jurídica</option>
+    </select>
+  </div>
+  <div class="eds-field" data-eds-show-if="tipo=pj">
+    <label class="eds-label" for="cond-razao" data-required>Razão social</label>
+    <input class="eds-input" id="cond-razao" name="razao" data-eds-require-if="tipo=pj" />
+  </div>
+  <div class="eds-field" data-eds-show-if="tipo=pf">
+    <label class="eds-label" for="cond-nome">Nome completo</label>
+    <input class="eds-input" id="cond-nome" name="nome" autocomplete="name" />
+  </div>
+  <label class="eds-check">
+    <input type="checkbox" class="eds-checkbox" name="outro" value="1" />
+    <span>Informar contato alternativo</span>
+  </label>
+  <div class="eds-field" data-eds-show-if="outro">
+    <label class="eds-label" for="cond-contato">E-mail alternativo</label>
+    <input class="eds-input" id="cond-contato" name="contato" type="email" autocomplete="email" />
+  </div>
+</form>

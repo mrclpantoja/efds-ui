@@ -1,0 +1,191 @@
+/* InputGroup: campo com prefixo/sufixo de texto e botões encaixados, numa borda única.
+   Markup:
+     <div class="eds-input-group">
+       <span class="eds-input-group-text">R$</span>
+       <input class="eds-input" aria-label="Valor" />
+       <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-input-group-button"
+         aria-label="Mostrar senha"><svg>…</svg></button>
+     </div>
+   - A borda, o foco e o erro vivem no grupo: o input interno fica sem borda. O foco do campo
+     (:focus) pinta o grupo; o foco de um botão usa o anel do próprio botão, para dentro.
+   - Erro herdado: [aria-invalid="true"] no input marca o grupo (a mensagem fica em p.eds-error
+     fora do grupo, ligada por aria-describedby). Também reage a [data-valid="true"], :disabled
+     e [readonly] do input.
+   - Texto de apoio (prefixo/sufixo) NÃO é o rótulo: o campo continua precisando de label/aria-label.
+   - Carregando (ex.: busca de CEP): um .eds-input-group-text com .eds-spinner, alternado por [hidden],
+     e [aria-busy="true"] no grupo.
+   - Tamanhos: .eds-input-group-sm / -lg (alturas vêm de --eds-control-height-*, logo da densidade). */
+@layer eds.components {
+  .eds-input-group {
+    --_group-height: var(--eds-control-height-md);
+    --_group-radius: var(--eds-radius-md);
+    --_group-bg: var(--eds-color-bg-surface);
+    --_group-border: var(--eds-color-border-strong);
+
+    display: flex;
+    align-items: stretch;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--_group-height);
+    border: var(--eds-border-width) solid var(--_group-border);
+    border-radius: var(--_group-radius);
+    background: var(--_group-bg);
+    /* Os cantos dos acessórios seguem o raio do grupo mesmo quando um irmão invisível (o
+       role="status" do CopyButton, por exemplo) tira o botão de :last-child. */
+    overflow: clip;
+    color: var(--eds-color-text-primary);
+    transition: border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &:hover:not(
+        :has(> .eds-input:is(:disabled, [readonly], [aria-invalid='true'], [data-valid='true']))
+      ) {
+      --_group-border: var(--eds-color-text-muted);
+    }
+
+    &:has(> .eds-input:focus) {
+      --_group-border: var(--eds-color-action-primary);
+
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 0;
+    }
+
+    &:has(> .eds-input[data-valid='true']) {
+      --_group-border: var(--eds-color-status-success-text);
+    }
+
+    &:has(> .eds-input[aria-invalid='true']) {
+      --_group-border: var(--eds-color-status-danger);
+    }
+
+    &:has(> .eds-input[readonly]) {
+      --_group-bg: var(--eds-color-bg-subtle);
+    }
+
+    &:has(> .eds-input:disabled) {
+      --_group-bg: var(--eds-color-bg-subtle);
+      --_group-border: var(--eds-color-border-default);
+
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+
+    /* O input perde borda, raio e fundo (são do grupo) e o anel de foco próprio. */
+    & > .eds-input {
+      flex: 1 1 auto;
+      align-self: stretch;
+      min-block-size: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    & > .eds-input:first-child {
+      border-start-start-radius: calc(var(--_group-radius) - var(--eds-border-width));
+      border-end-start-radius: calc(var(--_group-radius) - var(--eds-border-width));
+    }
+
+    & > .eds-input:last-child {
+      border-start-end-radius: calc(var(--_group-radius) - var(--eds-border-width));
+      border-end-end-radius: calc(var(--_group-radius) - var(--eds-border-width));
+    }
+
+    /* Divisória entre o campo e os acessórios. */
+    & > :not(:first-child) {
+      border-inline-start: var(--eds-border-width) solid var(--eds-color-border-default);
+    }
+  }
+
+  .eds-input-group-sm {
+    --_group-height: var(--eds-control-height-sm);
+  }
+
+  .eds-input-group-lg {
+    --_group-height: var(--eds-control-height-lg);
+  }
+
+  /* Prefixo/sufixo de texto: "R$", "kg", "@", ".gov.br". */
+  .eds-input-group-text {
+    display: flex;
+    flex: none;
+    align-items: center;
+    box-sizing: border-box;
+    padding-inline: var(--eds-space-3);
+    background: var(--eds-color-bg-subtle);
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    white-space: nowrap;
+
+    &:first-child {
+      border-start-start-radius: calc(var(--_group-radius) - var(--eds-border-width));
+      border-end-start-radius: calc(var(--_group-radius) - var(--eds-border-width));
+    }
+
+    &:last-child {
+      border-start-end-radius: calc(var(--_group-radius) - var(--eds-border-width));
+      border-end-end-radius: calc(var(--_group-radius) - var(--eds-border-width));
+    }
+  }
+
+  /* Botão encaixado: sem borda/raio próprios; quadrado quando for só ícone (a altura vem do grupo). */
+  .eds-input-group-button {
+    --_button-height: calc(var(--_group-height) - 2 * var(--eds-border-width));
+    --_button-radius: 0;
+
+    flex: none;
+    border-block: 0;
+    border-inline-end: 0;
+
+    &:first-child {
+      border-start-start-radius: calc(var(--_group-radius) - var(--eds-border-width));
+      border-end-start-radius: calc(var(--_group-radius) - var(--eds-border-width));
+    }
+
+    &:last-child {
+      border-start-end-radius: calc(var(--_group-radius) - var(--eds-border-width));
+      border-end-end-radius: calc(var(--_group-radius) - var(--eds-border-width));
+    }
+
+    /* O anel de foco do botão fica dentro do grupo, sem ser cortado nem cobrir a borda. */
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+  }
+
+  /* Toque: alvo mínimo nos botões encaixados (o grupo cresce junto). */
+  @media (pointer: coarse) {
+    .eds-input-group-button {
+      min-inline-size: var(--eds-target-min);
+      min-block-size: var(--eds-target-min);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-input-group {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-input-group {
+      --_group-border: CanvasText;
+    }
+
+    .eds-input-group:has(> .eds-input:focus) {
+      outline-color: Highlight;
+    }
+
+    .eds-input-group:has(> .eds-input:disabled) {
+      --_group-border: GrayText;
+    }
+
+    .eds-input-group > :not(:first-child) {
+      border-inline-start-color: CanvasText;
+    }
+  }
+}

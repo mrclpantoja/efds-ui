@@ -8,6 +8,7 @@
  *   data-eds-loader-slow-after="ms"   quando oferecer "Fechar" / "Continuar aguardando"
  *   data-eds-loader-trigger="all|user" todo fetch/XHR (padrão) ou só os iniciados pelo usuário
  *   data-eds-native-alert             window.alert vira EDS.alert (não bloqueia)
+ *   data-eds-cep-url="https://…/{cep}" serviço de CEP (vazio por padrão: sem chamada externa)
  */
 import type { LoaderOptions } from './components/loader';
 import type { BehaviorOptions } from './setup';
@@ -43,6 +44,8 @@ export function boot(
     if (title !== null) loader.title = title;
     if (text !== null) loader.text = text;
     if (Object.keys(loader).length > 0) configure({ loader });
+    const cepUrl = script.getAttribute('data-eds-cep-url');
+    if (cepUrl !== null && cepUrl.trim() !== '') configure({ cepUrl: cepUrl.trim() });
     nativeAlert = script.hasAttribute('data-eds-native-alert');
     if (!script.hasAttribute('data-eds-manual')) startWhenReady();
   } else {

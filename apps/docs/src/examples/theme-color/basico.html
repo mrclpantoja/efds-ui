@@ -1,0 +1,19 @@
+<!-- Behavior (@eds-ui/behavior/theme): createTheme(hex) gera as variáveis do eixo tema (--eds-color-action-* e
+     accent 50-900) com contraste AA garantido (ajusta a luminosidade em OKLCH: >= 4.5:1 com texto branco no
+     500/600 e, no escuro, no 400). Devolve CSS (string) ou aplica no elemento com data-theme="custom".
+     Aqui o seletor de cor é só a entrada da demonstração; o relatório de contraste vem da função.
+     Sem CSS próprio: o tema só troca tokens. O relatório não é região viva (o seletor de cor dispara a cada
+     movimento e o leitor de tela repetiria o texto). -->
+<div class="eds-stack eds-gap-4" data-eds-theme-demo>
+  <div class="eds-field">
+    <label class="eds-label" for="tc-cor">Cor da organização</label>
+    <input class="eds-input" id="tc-cor" type="color" value="#2f6f5e" data-eds-theme-color aria-describedby="tc-cor-ajuda" />
+    <p class="eds-helper" id="tc-cor-ajuda">O sistema ajusta o tom até o texto branco atingir o contraste mínimo (4.5:1).</p>
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <button type="button" class="eds-button eds-button-primary">Ação principal</button>
+    <button type="button" class="eds-button eds-button-ghost">Ação suave</button>
+    <span class="eds-badge eds-badge-info">Amostra</span>
+  </div>
+  <p class="eds-text-small" data-eds-theme-report>Contraste do texto sobre a ação: calculado ao escolher a cor.</p>
+</div>

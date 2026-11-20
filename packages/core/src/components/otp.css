@@ -1,0 +1,71 @@
+/* OTP: código de verificação em células (o JS liga por data-eds-otp) ou em campo único (sem JS).
+   Markup com células:
+     <fieldset class="eds-otp" data-eds-otp data-eds-otp-length="6" data-eds-otp-name="codigo">
+       <legend class="eds-label">Código de verificação</legend>
+       <div class="eds-otp-cells">
+         <input class="eds-input eds-otp-cell" inputmode="numeric" autocomplete="one-time-code"
+           maxlength="1" aria-label="Dígito 1 de 6" /> …
+       </div>
+       <input type="hidden" name="codigo" />
+     </fieldset>
+   Fallback sem JS (um só campo): <input class="eds-input eds-otp-single" inputmode="numeric"
+     autocomplete="one-time-code" pattern="\d{6}" />
+   Estados vêm do input: [aria-invalid="true"] (em todas as células), :disabled, [readonly]. */
+@layer eds.components {
+  .eds-otp {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-1);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    & > legend {
+      padding: 0;
+      margin-block-end: var(--eds-space-1);
+    }
+  }
+
+  .eds-otp-cells {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--eds-space-2);
+    min-inline-size: 0;
+  }
+
+  .eds-otp-cell {
+    --_input-height: var(--eds-control-height-lg);
+    --_input-padding-x: 0;
+    --_otp-cell-size: var(--eds-control-height-lg);
+
+    flex: 0 1 var(--_otp-cell-size);
+    inline-size: auto;
+    min-inline-size: var(--eds-space-6);
+    max-inline-size: var(--_otp-cell-size);
+    text-align: center;
+    font-size: var(--eds-font-size-h4);
+    font-weight: var(--eds-font-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    caret-color: var(--eds-color-action-primary);
+  }
+
+  /* Campo único: o código inteiro, espaçado e centralizado. */
+  .eds-otp-single {
+    inline-size: 100%;
+    max-inline-size: calc(var(--eds-space-9) * 3);
+    text-align: center;
+    font-size: var(--eds-font-size-h4);
+    font-weight: var(--eds-font-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.4em;
+  }
+
+  /* Toque: as células crescem até o alvo mínimo (o 16px já vem do Input). */
+  @media (pointer: coarse) {
+    .eds-otp-cell {
+      --_input-height: var(--eds-target-min);
+      --_otp-cell-size: var(--eds-target-min);
+    }
+  }
+}

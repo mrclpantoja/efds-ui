@@ -2,7 +2,15 @@
  * Núcleo comum das duas compilações do pacote: a completa (`index.ts`) e a "core" sem
  * exportador e sem máscara (`index-core.ts`, `dist/eds-behavior-core.js`).
  */
-import { resetLocale, resetMessages, setLocale, setMessages, type Messages } from './core/config';
+import {
+  resetCepUrl,
+  resetLocale,
+  resetMessages,
+  setCepUrl,
+  setLocale,
+  setMessages,
+  type Messages,
+} from './core/config';
 import { initAlert } from './components/alert';
 import { initButtonBusy } from './components/button-busy';
 import { initSelectReadonly } from './components/select-readonly';
@@ -29,6 +37,11 @@ import { initFilterBar } from './components/filter-bar';
 import { initPopover } from './components/popover';
 import { initTooltip } from './components/tooltip';
 import { initWizard } from './components/wizard';
+// Onda C (campos)
+import { initNumber } from './components/number';
+import { initLookup } from './components/lookup';
+import { initOtp } from './components/otp';
+import { initPassword } from './components/password';
 
 export interface BehaviorOptions {
   /**
@@ -46,6 +59,12 @@ export interface BehaviorOptions {
    * `confirm` e `prompt` nativos nunca são trocados.
    */
   nativeAlert?: boolean;
+  /**
+   * Serviço de consulta de CEP, com `{cep}` no lugar dos 8 dígitos (ex.:
+   * `https://viacep.com.br/ws/{cep}/json/`). **Vazio por padrão: nenhuma chamada externa** sem o
+   * autor escolher o serviço. Só vale na compilação completa (`data-eds-cep`).
+   */
+  cepUrl?: string;
 }
 
 /** Configura locale, textos e loader. Pode ser chamado antes ou depois de `init`. */
@@ -53,9 +72,14 @@ export function configure(options: BehaviorOptions): void {
   setLocale(options.locale);
   setMessages(options.messages);
   setLoaderConfig(options.loader);
+  setCepUrl(options.cepUrl);
 }
 
-export { resetLocale, resetMessages };
+export { resetCepUrl, resetLocale, resetMessages };
+// Onda C (página e feedback)
+export { session, initSession } from './components/session';
+export { markClean } from './components/dirty-guard';
+export { copyText } from './components/copy';
 export type { Messages, LoaderOptions };
 export type {
   LoaderHideReason,
@@ -99,6 +123,11 @@ export {
   initPopover,
   initTooltip,
   initWizard,
+  // Onda C (campos)
+  initLookup,
+  initNumber,
+  initOtp,
+  initPassword,
   loader,
   toast,
 };

@@ -1,0 +1,39 @@
+<!-- Behavior: [data-eds-format="currency|number|date|datetime|relative|cpf|cnpj|cpf-cnpj|phone|cep|cpf-mask"] com
+     data-value="..." é formatado no init pelo locale do documento (o texto interno é o fallback sem JS).
+     Opções: data-eds-format-currency="BRL", data-eds-format-decimals, data-eds-format-locale. O módulo puro
+     (formatCurrency, formatDate, maskCpf…) está em @eds-ui/behavior/format. Só dados fictícios; CPF sempre
+     mascarado ("cpf-mask" -> ***.456.789-**). Sem CSS próprio: use .eds-text-tabular nos números de colunas. -->
+<dl class="eds-stack eds-gap-2">
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <dt class="eds-text-label">Moeda</dt>
+    <dd><span class="eds-text-tabular" data-eds-format="currency" data-value="1280.5">R$ 1.280,50</span></dd>
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <dt class="eds-text-label">Número</dt>
+    <dd><span class="eds-text-tabular" data-eds-format="number" data-value="1234567.891">1.234.567,891</span></dd>
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <dt class="eds-text-label">Data</dt>
+    <dd><span data-eds-format="date" data-value="2026-11-20">20/11/2026</span></dd>
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <dt class="eds-text-label">Data e hora</dt>
+    <dd><span data-eds-format="datetime" data-value="2026-11-20T10:30">20/11/2026 10:30</span></dd>
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <dt class="eds-text-label">Relativo</dt>
+    <dd><time data-eds-format="relative" datetime="2026-11-20T10:25" data-value="2026-11-20T10:25">20/11/2026 10:25</time></dd>
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <dt class="eds-text-label">CPF (mascarado)</dt>
+    <dd><span class="eds-text-mono" data-eds-format="cpf-mask" data-value="00045678900">***.456.789-**</span></dd>
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <dt class="eds-text-label">Telefone</dt>
+    <dd><span class="eds-text-tabular" data-eds-format="phone" data-value="53999990000">(53) 99999-0000</span></dd>
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <dt class="eds-text-label">CEP</dt>
+    <dd><span class="eds-text-tabular" data-eds-format="cep" data-value="00000000">00000-000</span></dd>
+  </div>
+</dl>

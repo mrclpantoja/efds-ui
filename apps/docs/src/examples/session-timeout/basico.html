@@ -1,0 +1,25 @@
+<!-- Behavior: EDS.session({ timeout: 900, warnBefore: 60, onExpire, keepAliveUrl }) ou
+     data-eds-session-timeout="900" (+ data-eds-session-warn="60") no script. O JS monta o aviso: um
+     <dialog class="eds-modal eds-alert-dialog" role="alertdialog"> com "Continuar conectado" e "Sair", contagem
+     regressiva em .eds-session-countdown (visual, aria-hidden) e anúncio a cada minuto e nos últimos 10 s em
+     status à parte. Este exemplo mostra o diálogo já montado (abra por data-eds-open). -->
+<button type="button" class="eds-button eds-button-secondary" data-eds-open="sessao-aviso">Ver aviso de sessão</button>
+
+<dialog class="eds-modal eds-alert-dialog" id="sessao-aviso" role="alertdialog" data-variant="warning"
+  aria-labelledby="sessao-aviso-t" aria-describedby="sessao-aviso-d">
+  <div class="eds-alert-dialog-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+  </div>
+  <h2 class="eds-alert-dialog-title" id="sessao-aviso-t">Sua sessão vai expirar</h2>
+  <p class="eds-alert-dialog-text" id="sessao-aviso-d">
+    Por inatividade, você será desconectado em
+    <strong class="eds-session-countdown" aria-hidden="true">01:00</strong>
+    <span class="eds-visually-hidden">1 minuto</span>. Alterações não salvas serão perdidas.
+  </p>
+  <div class="eds-alert-dialog-actions">
+    <form method="dialog" class="eds-stack eds-stack-row eds-gap-3">
+      <button class="eds-button eds-button-secondary" value="sair">Sair</button>
+      <button class="eds-button eds-button-primary" value="continuar" data-autofocus>Continuar conectado</button>
+    </form>
+  </div>
+</dialog>

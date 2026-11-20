@@ -148,9 +148,9 @@ export default function Comportamento() {
       <Section title="Instalar">
         <p>
           O pacote tem duas saídas: um <strong>script clássico</strong> (
-          <code>eds-behavior.js</code>, para <code>&lt;script src&gt;</code>, cerca de 54 kB com
-          gzip) e um <strong>módulo ESM</strong> tree-shakeable. O visual continua vindo do{' '}
-          <code>@eds-ui/core</code>: o pacote não carrega CSS.
+          <code>eds-behavior.js</code>, para <code>&lt;script src&gt;</code>, cerca de 72 kB com
+          gzip, no pacote completo) e um <strong>módulo ESM</strong> tree-shakeable. O visual
+          continua vindo do <code>@eds-ui/core</code>: o pacote não carrega CSS.
         </p>
         <CodeBlock code="pnpm add @eds-ui/behavior" label="Instalação do behavior" />
       </Section>
@@ -167,12 +167,18 @@ export default function Comportamento() {
         </p>
         <CodeBlock code={manual} label="Código HTML: modo manual" />
         <p>
-          Quem não usa a exportação de tabelas nem a máscara de entrada pode carregar{' '}
-          <code>eds-behavior-core.js</code>: é o mesmo script (mesmo <code>window.EDS</code>, mesmos
-          atributos e a mesma configuração pela tag) sem o exportador CSV/Excel/JSON/PDF e sem a
-          máscara: cerca de 41 kB com gzip, contra 54 kB do completo. Nele,{' '}
-          <code>data-eds-export</code> e <code>data-eds-mask</code> não fazem nada. O{' '}
-          <code>eds-behavior.js</code> segue completo.
+          Quem não usa a exportação de tabelas, a máscara de entrada, o CEP, os formatadores nem o
+          tema por cor pode carregar <code>eds-behavior-core.js</code>: é o mesmo script (mesmo{' '}
+          <code>window.EDS</code>, mesmos atributos e a mesma configuração pela tag) sem esses cinco
+          recursos: cerca de 56 kB com gzip, contra 72 kB do completo. Nele,{' '}
+          <code>data-eds-export</code>, <code>data-eds-mask</code>, <code>data-eds-cep</code>,{' '}
+          <code>data-eds-format</code> e <code>data-eds-theme-color</code> não fazem nada, e{' '}
+          <code>EDS.exportData</code> e <code>EDS.createMask</code> não existem. O NumberInput
+          continua formatando os decimais (usa o núcleo da máscara por dentro), mas um
+          <code>data-eds-mask</code> dele só edita o texto durante a digitação no completo. Senha,
+          OTP, NumberInput, Lookup, copiar, notificações, alterações não salvas, sessão por
+          inatividade e campos condicionais estão nos dois. O <code>eds-behavior.js</code> segue
+          completo.
         </p>
       </Section>
 

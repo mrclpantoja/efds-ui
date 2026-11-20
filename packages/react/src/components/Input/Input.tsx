@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, type InputHTMLAttributes } from 'react';
+import { forwardRef, useEffect, useMemo, type InputHTMLAttributes } from 'react';
 import { cx } from '../../utils/cx';
 import { useControlAttrs } from '../../internal/field-context';
 import { mergeRefs } from '../../internal/refs-d';
@@ -9,7 +9,17 @@ export type { InputMaskOptions };
 export type InputSize = 'sm' | 'md' | 'lg';
 
 /** Máscaras prontas. Qualquer outra string é um padrão: `0` dígito, `A` letra, `*` letra ou dígito. */
-export type InputMaskName = 'telefone' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'moeda' | 'numero';
+export type InputMaskName =
+  | 'telefone'
+  | 'cpf'
+  | 'cnpj'
+  | 'cpf-cnpj'
+  | 'cep'
+  | 'moeda'
+  | 'numero'
+  | 'hora'
+  | 'competencia'
+  | 'processo';
 
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** Padrão: `md`. */
@@ -26,11 +36,25 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   mask?: InputMaskName | (string & Record<never, never>);
   /** Casas decimais, símbolo e sinal de `moeda` e `numero`. */
   maskOptions?: InputMaskOptions;
+  /**
+   * Confere a faixa de `hora` (00:00 a 23:59), `competencia` (mês 01 a 12) e `processo` (dígito
+   * verificador do CNJ): o campo fica inválido (`setCustomValidity`) e o envio é bloqueado. A mensagem
+   * visível é sua (`Field error`). Padrão: não valida.
+   */
+  maskValidate?: boolean;
+  /** Mensagem de `maskValidate`. Padrão (pt-BR): hora, competência ou número de processo inválido. */
+  maskInvalidMessage?: string;
   /** Com `name`, o campo visível deixa de ser enviado e um hidden leva só os caracteres significativos. */
   unmask?: boolean;
   /** Valor mascarado e valor limpo (moeda: `"1234.56"`), a cada alteração. */
   onValueChange?: (masked: string, raw: string) => void;
 }
+
+const INVALID_MESSAGES: Record<string, string> = {
+  hora: 'Hora inválida. Use hh:mm, de 00:00 a 23:59.',
+  competencia: 'Competência inválida. Use mm/aaaa, com o mês de 01 a 12.',
+  processo: 'Número de processo inválido. Confira o número e o dígito verificador.',
+};
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   {
@@ -41,6 +65,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     mask: maskSpec,
     maskOptions,
     unmask,
+    maskValidate,
+    maskInvalidMessage,
     onValueChange,
     value,
     defaultValue,
@@ -71,6 +97,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const mask = masked.mask;
   const innerRef = masked.inputRef;
   const mergedRef = useMemo(() => mergeRefs(ref, innerRef), [ref, innerRef]);
+  // Validação de faixa (hora, competência, processo): vira a validade nativa do campo.
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el || !mask) return;
+    if (!maskValidate || !mask.validate) {
+      el.setCustomValidity('');
+      return;
+    }
+    const ok = mask.validate(el.value);
+    el.setCustomValidity(
+      ok ? '' : (maskInvalidMessage ?? INVALID_MESSAGES[mask.name] ?? 'Valor inválido.'),
+    );
+  });
   const sendRaw = mask !== null && unmask === true && name !== undefined && name !== '';
 
   const control = (

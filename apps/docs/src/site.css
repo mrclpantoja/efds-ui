@@ -44,6 +44,14 @@
   white-space: nowrap;
 }
 
+/* Reflow a 320 px (WCAG 1.4.10): código longo em linha (URLs, chamadas) quebra em vez de rolar a página. */
+@media (max-width: 40em) {
+  :where(.eds-app-main) code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
 /* Tipos TypeScript com espaços (uniões) podem quebrar nos espaços. */
 .docs-code-wrap {
   white-space: normal;

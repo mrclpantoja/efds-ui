@@ -1,0 +1,187 @@
+/* Barra de progresso: <progress> nativo estilizado igual em Blink, WebKit e Gecko.
+   Markup:
+     <div class="eds-progress-field">
+       <div class="eds-progress-header">
+         <label class="eds-progress-label" for="p1">Importando planilha</label>
+         <span class="eds-progress-value">45%</span>
+       </div>
+       <progress class="eds-progress" id="p1" value="45" max="100">45%</progress>
+     </div>
+   - O valor também aparece em texto (.eds-progress-value): a barra nunca é a única informação.
+   - Indeterminado = sem atributo value (:indeterminate): faixa que corre; com reduced-motion vira
+     listras fixas (não sugerem percentual). Anuncie o fim por Toast/status, não a cada passo.
+   - Tamanhos: .eds-progress-sm / padrão md. Tom: data-tone="success|warning|danger|info" (padrão =
+     cor de ação); o tom é só reforço, o texto/estado dizem o mesmo.
+   - O trilho do indeterminado anima background-position (a única propriedade que o <progress> expõe). */
+@layer eds.components {
+  .eds-progress-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-1);
+    min-inline-size: 0;
+  }
+
+  .eds-progress-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--eds-space-3);
+  }
+
+  .eds-progress-label {
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    font-weight: var(--eds-font-weight-medium);
+  }
+
+  .eds-progress-value {
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eds-progress {
+    --_progress-height: var(--eds-space-3);
+    --_progress-fill: var(--eds-color-action-primary);
+    --_progress-track: var(--eds-color-bg-subtle);
+
+    appearance: none;
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: var(--_progress-height);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-full);
+    background: var(--_progress-track);
+    color: var(--_progress-fill);
+    overflow: hidden;
+
+    &::-webkit-progress-bar {
+      background: var(--_progress-track);
+    }
+
+    &::-webkit-progress-value {
+      border-radius: var(--eds-radius-full);
+      background: var(--_progress-fill);
+      transition: inline-size var(--eds-motion-duration-base) var(--eds-motion-easing-standard);
+    }
+
+    &::-moz-progress-bar {
+      border-radius: var(--eds-radius-full);
+      background: var(--_progress-fill);
+    }
+
+    /* Indeterminado: o próprio elemento pinta a faixa que corre; as partes internas ficam transparentes. */
+    &:indeterminate {
+      background:
+        linear-gradient(to right, transparent, var(--_progress-fill) 30% 70%, transparent) no-repeat,
+        var(--_progress-track);
+      background-size:
+        40% 100%,
+        100% 100%;
+      animation: eds-progress-slide calc(var(--eds-motion-duration-slow) * 3) ease-in-out infinite;
+
+      &::-webkit-progress-bar {
+        background: transparent;
+      }
+
+      &::-webkit-progress-value {
+        background: transparent;
+      }
+
+      &::-moz-progress-bar {
+        background: transparent;
+      }
+    }
+
+    &[data-tone='info'] {
+      --_progress-fill: var(--eds-color-status-info-text);
+    }
+
+    &[data-tone='success'] {
+      --_progress-fill: var(--eds-color-status-success-text);
+    }
+
+    &[data-tone='warning'] {
+      --_progress-fill: var(--eds-color-status-warning-text);
+    }
+
+    &[data-tone='danger'] {
+      --_progress-fill: var(--eds-color-status-danger-text);
+    }
+  }
+
+  .eds-progress-sm {
+    --_progress-height: var(--eds-space-2);
+  }
+
+  @keyframes eds-progress-slide {
+    from {
+      background-position:
+        -40% 0,
+        0 0;
+    }
+
+    to {
+      background-position:
+        140% 0,
+        0 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-progress::-webkit-progress-value {
+      transition: none;
+    }
+
+    /* Sem movimento: listras diagonais fixas, que não parecem um percentual. */
+    .eds-progress:indeterminate {
+      background:
+        repeating-linear-gradient(
+          -45deg,
+          var(--_progress-fill) 0 var(--eds-space-2),
+          var(--_progress-track) 0 var(--eds-space-4)
+        ),
+        var(--_progress-track);
+      animation: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-progress {
+      forced-color-adjust: none;
+      border-color: CanvasText;
+      background: Canvas;
+
+      &::-webkit-progress-bar {
+        background: Canvas;
+      }
+
+      &::-webkit-progress-value,
+      &::-moz-progress-bar {
+        background: Highlight;
+      }
+
+      &:indeterminate {
+        background:
+          linear-gradient(to right, transparent, Highlight 30% 70%, transparent) no-repeat,
+          Canvas;
+        background-size:
+          40% 100%,
+          100% 100%;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (forced-colors: active) {
+    .eds-progress:indeterminate {
+      background: repeating-linear-gradient(
+        -45deg,
+        Highlight 0 var(--eds-space-2),
+        Canvas 0 var(--eds-space-4)
+      );
+    }
+  }
+}

@@ -63,4 +63,12 @@
     --_text-size: var(--eds-font-size-small);
     --_text-line: var(--eds-line-height-small);
   }
+
+  /* Modificadores (combinam com qualquer .eds-text-*): código/identificadores e números em colunas. */
+  .eds-text-mono {
+    font-family: var(--eds-font-family-code);
+  }
+  .eds-text-tabular {
+    font-variant-numeric: tabular-nums;
+  }
 }

@@ -1,0 +1,7 @@
+<!-- Fallback sem JS: um só campo. O JS pode transformá-lo em células (data-eds-otp no pai). -->
+<div class="eds-field">
+  <label class="eds-label" for="otp-unico">Código de verificação</label>
+  <input class="eds-input eds-otp-single" id="otp-unico" name="codigo" inputmode="numeric" autocomplete="one-time-code"
+    pattern="\d{6}" maxlength="6" aria-describedby="otp-unico-ajuda" />
+  <p class="eds-helper" id="otp-unico-ajuda">6 dígitos.</p>
+</div>

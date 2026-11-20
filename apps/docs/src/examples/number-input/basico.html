@@ -1,0 +1,16 @@
+<!-- Behavior: [data-eds-number] liga os botões (clique; segurar repete), ↑/↓ (step), PageUp/PageDown (x10),
+     Home/End (min/max). min, max e step vêm dos atributos do input (aqui: min="0" max="99" step="1", ignorados pelo type="text").
+     Com casas decimais usa a máscara "numero" (data-eds-mask="numero" + data-eds-mask-decimals).
+     Os botões ficam fora do Tab (tabindex="-1") e se desabilitam em min/max. Evento: eds:number-change (detail.value). -->
+<div class="eds-field">
+  <label class="eds-label" for="num-qtd">Quantidade</label>
+  <div class="eds-number" data-eds-number>
+    <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Diminuir" tabindex="-1">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12h14" /></svg>
+    </button>
+    <input class="eds-input eds-number-input" id="num-qtd" name="quantidade" type="text" inputmode="decimal" value="1" min="0" max="99" step="1" autocomplete="off" />
+    <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-number-button" aria-label="Aumentar" tabindex="-1">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+    </button>
+  </div>
+</div>

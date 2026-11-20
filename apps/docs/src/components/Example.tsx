@@ -29,7 +29,7 @@ export interface ExampleProps {
 
 /** Atributos cujo valor é (lista de) id ou referência a id. */
 const ID_ATTRS =
-  /(\s(?:id|for|form|aria-labelledby|aria-describedby|aria-controls|aria-owns|aria-activedescendant|aria-errormessage|popovertarget|list|data-eds-help|data-eds-open|data-eds-status|data-eds-table-filter|data-eds-export-target)=)"([^"]*)"/g;
+  /(\s(?:id|for|form|aria-labelledby|aria-describedby|aria-controls|aria-owns|aria-activedescendant|aria-errormessage|popovertarget|list|data-eds-help|data-eds-open|data-eds-status|data-eds-table-filter|data-eds-export-target|data-eds-lookup-dialog)=)"([^"]*)"/g;
 
 /**
  * Dá a cada id do exemplo um sufixo único por instância, para o mesmo exemplo poder aparecer
@@ -40,13 +40,24 @@ export function scopeIds(html: string, suffix: string): string {
   const ids = new Set<string>();
   for (const match of html.matchAll(/\sid="([^"]+)"/g)) ids.add(match[1] ?? '');
   if (ids.size === 0) return html;
-  return html.replace(ID_ATTRS, (_all, attr: string, value: string) => {
-    const scoped = value
-      .split(/\s+/)
-      .map((token) => (ids.has(token) ? `${token}-${suffix}` : token))
-      .join(' ');
-    return `${attr}"${scoped}"`;
-  });
+  return (
+    html
+      .replace(ID_ATTRS, (_all, attr: string, value: string) => {
+        const scoped = value
+          .split(/\s+/)
+          .map((token) => (ids.has(token) ? `${token}-${suffix}` : token))
+          .join(' ');
+        return `${attr}"${scoped}"`;
+      })
+      // `data-eds-cep-fill="campo:#id,..."` e `data-eds-copy="#id"`: os seletores `#id` também
+      // apontam para ids do exemplo.
+      .replace(/(\sdata-eds-(?:cep-fill|copy)=)"([^"]*)"/g, (_all, attr: string, value: string) => {
+        const scoped = value.replace(/#([A-Za-z][\w-]*)/g, (m, id: string) =>
+          ids.has(id) ? `#${id}-${suffix}` : m,
+        );
+        return `${attr}"${scoped}"`;
+      })
+  );
 }
 
 /**

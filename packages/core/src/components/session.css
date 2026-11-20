@@ -1,0 +1,14 @@
+/* Sessão por inatividade: contagem regressiva dentro do alertdialog (Modal + .eds-alert-dialog).
+   Markup:
+     <p>Sua sessão termina em <strong class="eds-session-countdown">01:00</strong>.</p>
+   - Só dá algarismos tabulares (o número não "treme" a cada segundo). O anúncio para leitor de tela
+     NÃO vem desta contagem (o JS anuncia a cada minuto e nos últimos segundos, em região à parte):
+     marque a contagem visual com aria-hidden="true" e mantenha o texto falado em .eds-visually-hidden. */
+@layer eds.components {
+  .eds-session-countdown {
+    color: var(--eds-color-text-primary);
+    font-weight: var(--eds-font-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+}

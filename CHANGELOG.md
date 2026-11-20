@@ -159,3 +159,50 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - `StatGrid` anuncia o carregamento num único `role="status"` (`texts.loading`, `texts.loaded`); o `Stat` isolado mantém o próprio.
 - Table `loadingOverlay`: a sobreposição cobre toda a área rolável, a tabela fica `inert` enquanto carrega e o foco volta ao sair; classe nova `.eds-table-overlay-box` (centraliza o Spinner na área visível). No HTML puro, ponha `inert` na `<table>`.
 - Playground: o filtro de Situação da Listagem volta a ser de seleção múltipla, com um chip por valor.
+
+### Lista de melhorias, onda C (campos, feedback e comportamentos de página)
+
+**@eds-ui/core**
+
+- InputGroup (prefixo/sufixo de texto e botões encaixados, foco e erro no grupo, carregando com Spinner), NumberInput (`.eds-number`, botões − e +), medidor de força e regras de senha (`.eds-password-strength`, `.eds-password-rules`), OTP (`.eds-otp` com células ou `.eds-otp-single`), Lookup (código + busca + descrição).
+- Progress (`progress.eds-progress` nativo estilizado, indeterminado com listras fixas em reduced-motion, sm/md e `data-tone`), ErrorState (`.eds-empty-error`), Copy (`data-copied`) e Secret, Timeline (marcador com tom, compacta e agrupada por dia), Notificações (sino com contagem e lista no Popover, não lida por texto + ponto) e `.eds-session-countdown`.
+- Utilitários de texto `.eds-text-mono` e `.eds-text-tabular`.
+
+**@eds-ui/behavior (página e feedback)**
+
+- Copiar: `data-eds-copy` / `data-eds-copy-text` (Clipboard API com reserva `execCommand`), rótulo "Copiado" por 2 s, anúncio, eventos `eds:copy` e `eds:copy-fail`; `EDS.copyText`.
+- Notificações (sino sobre o Popover): leitura individual e "Marcar todas como lidas", contagem no nome do botão, eventos `eds:notifications-read` e `eds:notifications-read-all`.
+- Alterações não salvas: `form[data-eds-dirty-guard]` com `beforeunload`, confirmação ao sair por link (inclui rotas por hash), `eds:dirty-change`, `eds:dirty-reset` e `EDS.markClean`.
+- Sessão por inatividade: `EDS.session()` ou `data-eds-session-timeout`; aviso em `alertdialog` com contagem acessível (anúncio por minuto e aos 10 s; WCAG 2.2.1 e 2.2.6), sincronização entre abas, sem rede salvo `keepAliveUrl`; eventos `eds:session-extend` e `eds:session-expire`.
+- Campos condicionais: `data-eds-show-if` / `data-eds-require-if` (`=`, `!=`, presença, `!campo`, `a|b`), oculto com `hidden` e campos `disabled`, compatível com CSP; `eds:conditional-change`.
+- Tema por cor da organização: `@eds-ui/behavior/theme` (`createTheme`, `applyTheme`, `contrastRatio`) gera a escala de acento em OKLCH com contraste AA garantido nos dois modos; `data-eds-theme-color` para demonstração (só no pacote completo).
+
+**@eds-ui/react (página e feedback)**
+
+- `Progress`, `ErrorState`, `CopyButton` (e `copyToClipboard`), `SecretField`, `Timeline` (com `groups`), `NotificationBell`, `SessionTimeout` / `useSessionTimeout` e `useUnsavedChanges`; campos condicionais por estado (padrão documentado, sem API nova).
+
+**@eds-ui/behavior (campos)**
+
+- Senha (`data-eds-password`): mostrar/ocultar com `aria-pressed`, força 0–4 por heurística local, regras atendidas/pendentes em texto, anúncio no blur ou após pausa; evento `eds:password-strength`.
+- Código de verificação (`data-eds-otp`): células com colar e preenchimento por SMS, campo único como reserva sem JS; eventos `eds:otp-change` e `eds:otp-complete`.
+- NumberInput (`data-eds-number`): padrão spinbutton (setas, PageUp/PageDown, Home/End, repetição ao segurar), máscara `numero` nas casas decimais; `eds:number-change`.
+- Lookup (`data-eds-lookup`): código + descrição + busca em modal, fonte remota ou local; `eds:lookup-change`.
+- Máscaras `hora`, `competencia` e `processo` (CNJ), com `data-eds-mask-validate` opcional (faixa e dígito verificador).
+- Formatadores (`@eds-ui/behavior/format`, `data-eds-format`): moeda, número, data, data e hora, relativo, CPF, CNPJ, telefone, CEP e `maskCpf` (LGPD).
+- CEP (`data-eds-cep`, `data-eds-cep-fill`): `cepUrl` vazio por padrão, sem chamada externa até o autor configurar; estados carregando, não encontrado e falha com tentar de novo; `eds:cep-result`.
+- Subentrada `@eds-ui/behavior/fields` (regras puras compartilhadas com o React). Tamanhos do IIFE após a onda C: `eds-behavior.js` ~221 kB (72 kB gzip), `eds-behavior-core.js` ~177 kB (56 kB gzip; sem CEP, formatadores, exportação e tema).
+
+**@eds-ui/react (campos)**
+
+- `PasswordInput`, `OtpInput`, `InputGroup`, `NumberInput`, `Lookup` (nunca chama a rede sozinho) e `useCep`.
+- `Input`: máscaras `hora`, `competencia` e `processo`; `maskValidate` e `maskInvalidMessage`.
+- Formatadores reexportados (`formatCurrency`, `formatDate`, `formatRelative`, `formatCpf`, `maskCpf`, `parseNumber`, …).
+
+**Revisão de UX da onda C**
+
+- Alterações não salvas: funcionava mal com máscara no formulário (o estado inicial era lido antes de a máscara reformatar); a confirmação de saída passa a `danger`, com foco inicial em "Continuar editando".
+- Lookup: resultados cabem a 320 px (`.eds-lookup-results`) e o travessão do estado vazio não é mais lido.
+- NumberInput e campos condicionais devolvem o foco quando um botão se desabilita ou um bloco some.
+- `.eds-input-group` recorta os cantos (`overflow: clip`); o "Tentar de novo" do CEP fica junto da mensagem; o OTP de exemplo liga a ajuda ao grupo.
+- Tema por cor: relatório segue o modo claro/escuro, deixa de ser região viva, diz "ajustada" (não "escurecida") e checa o acento sobre o cinza 800 do escuro.
+- Documentação: o botão Copiar dos exemplos voltou a achar o alvo; tamanhos do IIFE atualizados (`eds-behavior.js` ~222 kB / 72 kB gzip, `eds-behavior-core.js` ~178 kB / 56 kB gzip).

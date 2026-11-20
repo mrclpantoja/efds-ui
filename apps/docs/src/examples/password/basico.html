@@ -1,0 +1,25 @@
+<!-- Behavior: [data-eds-password] no input liga o mostrar/ocultar ([data-eds-password-toggle]: troca type e
+     aria-pressed, mantém foco e cursor; nome fixo "Mostrar senha"). [data-eds-password-strength] calcula a
+     força 0-4 localmente (a senha nunca sai da página): atualiza data-level e o texto de
+     .eds-password-strength e data-met em cada <li> de .eds-password-rules. Anúncio no blur ou com atraso. -->
+<div class="eds-field">
+  <label class="eds-label" for="senha-1" data-required>Nova senha</label>
+  <div class="eds-input-group">
+    <input class="eds-input" id="senha-1" name="senha" type="password" autocomplete="new-password" required
+      data-eds-password data-eds-password-strength aria-describedby="senha-1-req senha-1-str" />
+    <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-input-group-button"
+      aria-pressed="false" aria-label="Mostrar senha" data-eds-password-toggle>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg>
+    </button>
+  </div>
+  <div class="eds-password-strength" id="senha-1-str" data-level="0">
+    <span class="eds-password-strength-bar"></span>
+    <span class="eds-password-strength-text">Força: digite uma senha</span>
+  </div>
+  <ul class="eds-password-rules" id="senha-1-req">
+    <li data-met="false"><span class="eds-visually-hidden">Pendente: </span>Ao menos 8 caracteres</li>
+    <li data-met="false"><span class="eds-visually-hidden">Pendente: </span>Letras maiúsculas e minúsculas</li>
+    <li data-met="false"><span class="eds-visually-hidden">Pendente: </span>Ao menos um número</li>
+    <li data-met="false"><span class="eds-visually-hidden">Pendente: </span>Ao menos um símbolo</li>
+  </ul>
+</div>

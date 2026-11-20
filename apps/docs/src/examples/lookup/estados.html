@@ -1,0 +1,20 @@
+<!-- Estados estáticos: resolvido e código inexistente (só CSS). -->
+<div class="eds-grid eds-grid-auto">
+  <div class="eds-field">
+    <label class="eds-label" for="lk-ok">Produto</label>
+    <div class="eds-lookup">
+      <input class="eds-input eds-lookup-code" id="lk-ok" value="P-0042" />
+      <button type="button" class="eds-button eds-button-secondary eds-button-icon" aria-label="Buscar produto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" /></svg></button>
+      <output class="eds-lookup-description" for="lk-ok">Caderno universitário 96 folhas</output>
+    </div>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="lk-err">Produto</label>
+    <div class="eds-lookup">
+      <input class="eds-input eds-lookup-code" id="lk-err" value="P-9999" aria-invalid="true" aria-describedby="lk-err-msg" />
+      <button type="button" class="eds-button eds-button-secondary eds-button-icon" aria-label="Buscar produto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" /></svg></button>
+      <output class="eds-lookup-description" for="lk-err" data-empty="true">—</output>
+    </div>
+    <p class="eds-error" id="lk-err-msg">Produto não encontrado.</p>
+  </div>
+</div>

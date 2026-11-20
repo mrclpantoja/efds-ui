@@ -275,3 +275,74 @@ export type {
 // Locale
 export { LocaleProvider, useLocale } from './components/Locale';
 export type { LocaleProviderProps } from './components/Locale';
+
+// Onda C: campos
+export { InputGroup } from './components/InputGroup';
+export type { InputGroupProps, InputGroupSize } from './components/InputGroup';
+export { PasswordInput } from './components/PasswordInput';
+export type { PasswordInputProps, PasswordRule, PasswordTexts } from './components/PasswordInput';
+export { OtpInput } from './components/OtpInput';
+export type { OtpInputProps, OtpTexts } from './components/OtpInput';
+export { NumberInput } from './components/NumberInput';
+export type { NumberInputProps, NumberInputTexts } from './components/NumberInput';
+export { Lookup } from './components/Lookup';
+export type { LookupColumn, LookupItem, LookupProps, LookupTexts } from './components/Lookup';
+export { useCep } from './components/Cep';
+export type { CepStatus, UseCepOptions, UseCepResult } from './components/Cep';
+export type { CepAddress } from '@eds-ui/behavior/fields';
+// Formatadores (funções puras do @eds-ui/behavior/format, sem componente)
+export {
+  formatCep,
+  formatCnpj,
+  formatCpf,
+  formatCpfCnpj,
+  formatCurrency,
+  formatDate,
+  formatDateTime,
+  formatNumber,
+  formatPhone,
+  formatRelative,
+  maskCpf,
+  parseDate,
+  parseNumber,
+} from '@eds-ui/behavior/format';
+export type {
+  CurrencyFormatOptions,
+  DateFormatOptions,
+  DateStyle,
+  FormatOptions,
+  NumberFormatOptions,
+  RelativeFormatOptions,
+} from '@eds-ui/behavior/format';
+
+// Onda C: página e feedback
+export { Progress } from './components/Progress';
+export type { ProgressProps, ProgressTone, ProgressSize } from './components/Progress';
+export { ErrorState } from './components/ErrorState';
+export type { ErrorStateProps, ErrorStateTexts } from './components/ErrorState';
+export { CopyButton, copyToClipboard } from './components/CopyButton';
+export type { CopyButtonProps, CopyButtonTexts } from './components/CopyButton';
+export { SecretField } from './components/SecretField';
+export type { SecretFieldProps, SecretFieldTexts } from './components/SecretField';
+export { Timeline } from './components/Timeline';
+export type {
+  TimelineProps,
+  TimelineItem,
+  TimelineGroup,
+  TimelineTone,
+} from './components/Timeline';
+export { NotificationBell } from './components/NotificationBell';
+export type {
+  NotificationBellProps,
+  NotificationBellTexts,
+  NotificationItem,
+} from './components/NotificationBell';
+export { SessionTimeout, useSessionTimeout } from './components/SessionTimeout';
+export type {
+  SessionTimeoutProps,
+  SessionTimeoutTexts,
+  SessionTimeoutOptions,
+  SessionTimeoutState,
+} from './components/SessionTimeout';
+export { useUnsavedChanges } from './components/UnsavedChanges';
+export type { UnsavedChangesOptions, UnsavedChangesTexts } from './components/UnsavedChanges';

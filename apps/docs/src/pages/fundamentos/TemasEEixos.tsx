@@ -3,12 +3,23 @@ import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
 import { Section } from '../../components/Section';
 import { ThemeGrid } from '../../components/TokenSamples';
+import TemaPorCor from '../../examples/theme-color/basico';
+import temaPorCorHtml from '../../examples/theme-color/basico.html?raw';
+import temaPorCorSource from '../../examples/theme-color/basico.tsx?raw';
 import Subarvore from '../../examples/temas/subarvore';
 import subarvoreHtml from '../../examples/temas/subarvore.html?raw';
 import subarvoreSource from '../../examples/temas/subarvore.tsx?raw';
 
 const importSeletivo = `import '@eds-ui/themes/theme-green.css';   // só o tema verde
 import '@eds-ui/themes/mode-dark.css';      // só o modo escuro`;
+
+const usoTemaPorCor = `import { createTheme, applyTheme } from '@eds-ui/behavior/theme';
+
+// Só gera (CSS em string, para guardar no servidor ou injetar)
+const { css, checks, adjusted } = createTheme('#2F6F5E');
+
+// Gera e aplica num elemento (padrão: <html>); remove() desfaz
+const { result, remove } = applyTheme('#2F6F5E');`;
 
 const html = `<html lang="pt-BR" data-theme="green" data-mode="dark" data-density="compact" data-shape="rounded">`;
 
@@ -135,6 +146,32 @@ export default function TemasEEixos() {
           html={subarvoreHtml}
           react={{ Component: Subarvore, source: subarvoreSource }}
         />
+      </Section>
+
+      <Section title="Tema por cor da organização">
+        <p>
+          Para um órgão ou cliente com a sua cor (white-label), <code>createTheme(hex)</code> gera a
+          escala <code>--eds-accent-50</code> a <code>--eds-accent-900</code> do eixo tema a partir
+          de uma cor, em OKLCH. A cor entra como o tom 500 quando já passa no contraste; senão fica
+          só o necessário mais escura. Nos dois modos o resultado atinge o AA: texto branco sobre a
+          ação (500, 600 e 700) no claro e texto escuro sobre a ação (400, 300 e 200) no escuro,
+          além do acento como texto sobre as superfícies. Não há arquivo por cor: a função devolve
+          CSS (string) ou aplica as variáveis num elemento com{' '}
+          <code>data-theme=&quot;custom&quot;</code>.
+        </p>
+        <Example
+          title="Escolha a cor"
+          description="O seletor de cor aplica o tema só neste bloco (data-theme e data-mode no mesmo elemento) e mostra o contraste medido. A função devolve a lista completa de verificações (checks)."
+          html={temaPorCorHtml}
+          react={{ Component: TemaPorCor, source: temaPorCorSource }}
+        />
+        <CodeBlock code={usoTemaPorCor} label="createTheme e applyTheme" />
+        <p>
+          O resultado traz <code>scale</code>, <code>tokens</code>, <code>css</code>, a lista{' '}
+          <code>checks</code> (cada verificação com as cores, a razão e se passou) e{' '}
+          <code>adjusted</code> (a cor teve de ser ajustada). Como os outros eixos, o tema muda só
+          tokens: nenhum componente muda.
+        </p>
       </Section>
 
       <Section title="Importação seletiva">

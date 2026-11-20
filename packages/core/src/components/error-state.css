@@ -1,0 +1,36 @@
+/* ErrorState: variante de Empty para falha de carregamento, com ação "Tentar de novo".
+   Markup (herda .eds-empty, ver empty.css):
+     <div class="eds-empty eds-empty-error" role="alert">
+       <svg class="eds-empty-icon" aria-hidden="true">…</svg>
+       <h3 class="eds-empty-title">Não foi possível carregar os pedidos</h3>
+       <p class="eds-empty-text">Verifique a conexão e tente novamente.</p>
+       <p class="eds-empty-detail">Código: ERR-0042</p>
+       <div class="eds-empty-actions"><button class="eds-button eds-button-primary">Tentar de novo</button></div>
+     </div>
+   - role="alert" só quando o erro surge depois de uma ação do usuário; na carga inicial da página, sem role.
+   - A cor do ícone é reforço: o título diz que falhou. .eds-empty-detail é o detalhe técnico opcional
+     (código, ID de suporte), em fonte monoespaçada.
+   - Com .eds-button[aria-busy="true"] no Tentar de novo, o botão mostra o próprio spinner (button.css). */
+@layer eds.components {
+  .eds-empty-error {
+    & .eds-empty-icon {
+      color: var(--eds-color-status-danger-text);
+    }
+  }
+
+  .eds-empty-detail {
+    margin: 0;
+    max-inline-size: 45ch;
+    color: var(--eds-color-text-muted);
+    font-family: var(--eds-font-family-code);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    overflow-wrap: anywhere;
+  }
+
+  @media (forced-colors: active) {
+    .eds-empty-error .eds-empty-icon {
+      color: CanvasText;
+    }
+  }
+}

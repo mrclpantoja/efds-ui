@@ -1,0 +1,266 @@
+/*
+ * Sortable: arrastar e soltar em divs/listas (o JS liga por data-eds-sortable). O CSS cuida só da
+ * aparência dos estados; o movimento (Pointer Events + teclado) é do JS.
+ *
+ *   <div class="eds-sortable" data-eds-sortable data-eds-group="quadro" aria-label="A fazer">
+ *     <div class="eds-sortable-item" data-id="t1">
+ *       <button type="button" class="eds-sortable-handle" aria-label="Mover X"><svg>…</svg></button>
+ *       …conteúdo livre…
+ *     </div>
+ *   </div>
+ *
+ * Estados por atributo: item[data-dragging] (display:none; o placeholder reserva o espaço),
+ * handle[aria-pressed="true"] ou item[data-grabbed] (item sem handle; pego pelo teclado),
+ * container[data-drop-target], [data-eds-disabled], [data-eds-orientation="horizontal|grid"].
+ * Elementos criados pelo JS: .eds-sortable-ghost (clone do item, position:fixed; o JS define
+ * inline-size e a posição por transform) e .eds-sortable-placeholder (o JS pode definir a altura
+ * do item em style; sem isso vale o mínimo abaixo).
+ *
+ * Classes além do contrato (quadro/kanban): .eds-sortable-board (grade de colunas responsiva),
+ * .eds-sortable-column (coluna: título + .eds-sortable) e .eds-sortable-column-title.
+ */
+@layer eds.components {
+  .eds-sortable {
+    --_sortable-gap: var(--eds-space-2);
+    --_sortable-pad: var(--eds-space-2);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_sortable-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    /* Contêiner vazio continua sendo um alvo de soltar. */
+    min-block-size: calc(var(--eds-control-height-lg) + 2 * var(--_sortable-pad));
+    margin: 0;
+    padding: var(--_sortable-pad);
+    border: 1px solid transparent;
+    border-radius: var(--eds-radius-md);
+    list-style: none;
+
+    &[data-eds-orientation='horizontal'] {
+      flex-direction: row;
+      align-items: stretch;
+      overflow-x: auto;
+    }
+
+    &[data-eds-orientation='grid'] {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
+    }
+
+    /* Vazio (sem itens nem espaço reservado): contorno tracejado neutro; o texto vem de
+       data-eds-empty (opcional), para a dica não depender só de cor. */
+    &:not(:has(> .eds-sortable-item, > .eds-sortable-placeholder)) {
+      border-color: var(--eds-color-border-strong);
+      border-style: dashed;
+
+      &[data-eds-empty]::before {
+        content: attr(data-eds-empty);
+        margin: auto;
+        padding: var(--eds-space-2);
+        color: var(--eds-color-text-secondary);
+        font-size: var(--eds-font-size-small);
+        line-height: var(--eds-line-height-small);
+        text-align: center;
+      }
+    }
+
+    /* Alvo de soltar: borda tracejada + fundo; o tracejado é o sinal além da cor. */
+    &[data-drop-target] {
+      border-color: var(--eds-color-action-primary);
+      border-style: dashed;
+      background: var(--eds-color-action-primary-subtle);
+    }
+  }
+
+  .eds-sortable-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--eds-space-2);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--eds-space-2) var(--eds-space-3);
+    border: 1px solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    overflow-wrap: anywhere;
+
+    /* Sem handle o próprio item é o pegador (focável pelo JS). */
+    &:not(:has(.eds-sortable-handle)) {
+      cursor: grab;
+    }
+
+    @media (hover: hover) {
+      &:not(:has(.eds-sortable-handle), [data-eds-disabled], [aria-disabled='true']):hover {
+        border-color: var(--eds-color-border-strong);
+      }
+    }
+
+    &:focus-visible {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: var(--eds-focus-ring-offset);
+    }
+
+    /* Arrasto por ponteiro: o original some e o placeholder reserva o espaço. */
+    &[data-dragging] {
+      display: none;
+    }
+
+    /* Item sem handle pego pelo teclado (data-grabbed) ou handle pego dentro dele. */
+    &[data-grabbed],
+    &:has(> .eds-sortable-handle[aria-pressed='true']) {
+      border-color: var(--eds-color-action-primary);
+      background: var(--eds-color-action-primary-subtle);
+      box-shadow:
+        0 0 0 1px var(--eds-color-action-primary),
+        var(--eds-shadow-lg);
+      /* "Levantado": distinto do anel de foco (que é só contorno). */
+      translate: 0 calc(-1 * var(--eds-space-1));
+
+      @media (prefers-reduced-motion: reduce) {
+        translate: none;
+      }
+    }
+
+    &:is([data-eds-disabled], [aria-disabled='true']) {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  :where([data-eds-orientation='horizontal']) > .eds-sortable-item {
+    flex: 0 0 auto;
+  }
+
+  .eds-sortable-handle {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--eds-control-height-sm);
+    block-size: var(--eds-control-height-sm);
+    margin-block: calc(-1 * var(--eds-space-1));
+    padding: 0;
+    border: 0;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: var(--eds-color-text-secondary);
+    cursor: grab;
+    /* Toque no handle arrasta em vez de rolar a página. */
+    touch-action: none;
+
+    & > svg {
+      inline-size: 1rem;
+      block-size: 1rem;
+      fill: currentColor;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--eds-color-bg-subtle);
+        color: var(--eds-color-text-primary);
+      }
+    }
+
+    &:focus-visible {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: var(--eds-focus-ring-offset);
+    }
+
+    &[aria-pressed='true'] {
+      background: var(--eds-color-action-primary);
+      color: var(--eds-color-text-on-action);
+      cursor: grabbing;
+    }
+
+    &:is(:disabled, [aria-disabled='true']) {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  :where([data-eds-disabled]) .eds-sortable-handle {
+    color: var(--eds-color-text-muted);
+    cursor: not-allowed;
+  }
+
+  /* Reserva a posição de soltar: mesma caixa do item, borda tracejada na cor de ação. */
+  .eds-sortable-placeholder {
+    box-sizing: border-box;
+    min-block-size: var(--eds-control-height-lg);
+    min-inline-size: 0;
+    border: 2px dashed var(--eds-color-action-primary);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-action-primary-subtle);
+  }
+
+  /* Fantasma que segue o ponteiro: o JS define inline-size e a posição. */
+  .eds-sortable-ghost {
+    --_ghost-z: 100; /* camada interna: não há token de z-index */
+
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: var(--_ghost-z);
+    margin: 0;
+    border-color: var(--eds-color-action-primary);
+    box-shadow: var(--eds-shadow-lg);
+    opacity: 0.95;
+    pointer-events: none;
+    cursor: grabbing;
+  }
+
+  /* Quadro (kanban): colunas lado a lado quando há espaço, empilhadas no estreito. */
+  .eds-sortable-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: var(--eds-space-4);
+    align-items: start;
+  }
+
+  .eds-sortable-column {
+    min-inline-size: 0;
+    padding: var(--eds-space-2);
+    border-radius: var(--eds-radius-lg);
+    background: var(--eds-color-bg-subtle);
+
+    & > .eds-sortable {
+      padding-inline: 0;
+    }
+  }
+
+  .eds-sortable-column-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-2);
+    margin: 0;
+    padding: var(--eds-space-2) var(--eds-space-1);
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  @media (forced-colors: active) {
+    .eds-sortable-handle[aria-pressed='true'],
+    .eds-sortable-item:is(
+      [aria-pressed='true'],
+      :has(> .eds-sortable-handle[aria-pressed='true'])
+    ) {
+      outline: 2px solid Highlight;
+      outline-offset: 1px;
+    }
+
+    .eds-sortable-handle[aria-pressed='true'] {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    .eds-sortable[data-drop-target],
+    .eds-sortable-placeholder {
+      border-color: Highlight;
+    }
+  }
+}

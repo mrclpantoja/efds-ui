@@ -160,6 +160,46 @@ describe('toast', () => {
     expect(document.getElementById('dlg')).not.toContainElement(region());
   });
 
+  it('ao fechar o modal, a mesma região vai para o body muda (sem releitura) e volta a polite', async () => {
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      '<dialog id="dlg" class="eds-modal"><button type="button">ok</button></dialog>',
+    );
+    const dlg = document.getElementById('dlg') as HTMLDialogElement;
+    dlg.showModal();
+    toast({ message: 'Dentro.', duration: 0 });
+    await settle();
+    const live = region() as HTMLElement;
+    const first = toasts()[0] as HTMLElement;
+    expect(dlg).toContainElement(live);
+    // Um toast novo enquanto a região está em trânsito espera.
+    dlg.close();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(document.body).toContainElement(live);
+    expect(live).toHaveAttribute('aria-live', 'off');
+    toast({ message: 'Depois.', duration: 0 });
+    await vi.advanceTimersByTimeAsync(10);
+    expect(toasts()).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(80);
+    expect(live).toHaveAttribute('aria-live', 'polite');
+    expect(toasts()).toHaveLength(2);
+    // Mesmos nós (nada recriado) e uma só região no documento.
+    expect(region()).toBe(live);
+    expect(toasts()[0]).toBe(first);
+    expect(document.querySelectorAll('.eds-toast-region')).toHaveLength(1);
+  });
+
+  it('região vazia muda de lugar sem passar por aria-live=off', async () => {
+    toast({ message: 'Um.', duration: 0 });
+    await settle();
+    toast.dismissAll();
+    document.body.insertAdjacentHTML('beforeend', '<dialog id="dlg"><button>ok</button></dialog>');
+    (document.getElementById('dlg') as HTMLDialogElement).showModal();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(document.getElementById('dlg')).toContainElement(region());
+    expect(region()).toHaveAttribute('aria-live', 'polite');
+  });
+
   it('destroy desmonta a região', async () => {
     toast({ message: 'Oi.', duration: 0 });
     await settle();

@@ -1,0 +1,21 @@
+<!-- data-eds-confirm: sem JavaScript seu. Só confirmado, o formulário é enviado, o link navega
+     e o botão age. O onsubmit abaixo apenas simula o servidor deste exemplo. -->
+<div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+  <form class="eds-stack eds-gap-3"
+    onsubmit="event.preventDefault(); EDS.toast({ variant: 'success', message: 'Pedido PED-0001 excluído.' })"
+    data-eds-confirm="Excluir o pedido PED-0001?"
+    data-eds-confirm-title="Excluir pedido"
+    data-eds-confirm-variant="danger"
+    data-eds-confirm-ok="Excluir">
+    <button type="submit" class="eds-button eds-button-danger">Excluir pedido (form)</button>
+  </form>
+
+  <button type="button" class="eds-button eds-button-secondary"
+    data-eds-confirm="Arquivar o pedido PED-0002?"
+    data-eds-confirm-ok="Arquivar"
+    onclick="EDS.toast({ message: 'Pedido PED-0002 arquivado.' })">Arquivar (botão)</button>
+
+  <a class="eds-button eds-button-tertiary" href="#/componentes/toast"
+    data-eds-confirm="Sair desta página e ir para o Toast?"
+    data-eds-confirm-title="Sair da página">Ir para o Toast (link)</a>
+</div>

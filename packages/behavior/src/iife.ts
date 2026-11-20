@@ -6,15 +6,18 @@
  *   data-eds-loader-title / -text     textos padrão do loader
  *   data-eds-loader-slow-after="ms"   quando oferecer "Fechar" / "Continuar aguardando"
  *   data-eds-loader-trigger="all|user" todo fetch/XHR (padrão) ou só os iniciados pelo usuário
+ *   data-eds-native-alert             window.alert vira EDS.alert (não bloqueia)
  */
 import { configure, init } from './index';
 import type { LoaderOptions } from './components/loader';
 
 export * from './index';
 
+let nativeAlert = false;
+
 function startWhenReady(): void {
   const start = () => {
-    init(document);
+    init(document, nativeAlert ? { nativeAlert: true } : undefined);
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
@@ -36,6 +39,7 @@ if (script instanceof HTMLScriptElement) {
   if (title !== null) loader.title = title;
   if (text !== null) loader.text = text;
   if (Object.keys(loader).length > 0) configure({ loader });
+  nativeAlert = script.hasAttribute('data-eds-native-alert');
   if (!script.hasAttribute('data-eds-manual')) startWhenReady();
 } else {
   startWhenReady();

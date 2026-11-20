@@ -1,0 +1,37 @@
+<!-- Contêineres com o mesmo data-eds-group trocam itens. No teclado, com o item pego,
+     ←/→ passam à coluna vizinha. Uma coluna vazia continua sendo um alvo de soltar. -->
+<div class="eds-sortable-board">
+  <div class="eds-sortable-column">
+    <h4 class="eds-sortable-column-title" id="afazer-titulo">A fazer</h4>
+    <div class="eds-sortable" data-eds-sortable data-eds-group="quadro" aria-labelledby="afazer-titulo">
+      <div class="eds-sortable-item" data-id="q1">
+        <button type="button" class="eds-sortable-handle" aria-label="Mover Revisar contrato">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 5 3Zm6 0a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 11 3ZM5 6.8a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM5 10.6a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z" /></svg>
+        </button>
+        <span>Revisar contrato</span>
+      </div>
+      <div class="eds-sortable-item" data-id="q2">
+        <button type="button" class="eds-sortable-handle" aria-label="Mover Cadastrar fornecedor">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 5 3Zm6 0a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 11 3ZM5 6.8a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM5 10.6a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z" /></svg>
+        </button>
+        <span>Cadastrar fornecedor</span>
+      </div>
+    </div>
+  </div>
+  <div class="eds-sortable-column">
+    <h4 class="eds-sortable-column-title" id="fazendo-titulo">Fazendo</h4>
+    <div class="eds-sortable" data-eds-sortable data-eds-group="quadro" aria-labelledby="fazendo-titulo">
+      <div class="eds-sortable-item" data-id="q3">
+        <button type="button" class="eds-sortable-handle" aria-label="Mover Conciliar extrato">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 5 3Zm6 0a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 11 3ZM5 6.8a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM5 10.6a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z" /></svg>
+        </button>
+        <span>Conciliar extrato</span>
+      </div>
+    </div>
+  </div>
+  <div class="eds-sortable-column">
+    <h4 class="eds-sortable-column-title" id="feito-titulo">Feito</h4>
+    <div class="eds-sortable" data-eds-sortable data-eds-group="quadro" aria-labelledby="feito-titulo">
+    </div>
+  </div>
+</div>

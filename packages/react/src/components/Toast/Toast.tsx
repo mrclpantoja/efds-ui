@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -26,6 +27,12 @@ export interface ToastOptions {
    */
   title?: string;
   message: string;
+  /** Tempo até fechar sozinho, em ms. `0` mantém até fechar. Padrão: pela variante e pelo tamanho do texto. */
+  duration?: number;
+  /** Botão de ação (ex.: Desfazer): fecha o toast e executa `onClick`. */
+  action?: { label: string; onClick: () => void };
+  /** Chamado uma vez quando o toast começa a fechar (tempo, botão, ação ou `dismiss`). */
+  onClose?: () => void;
 }
 
 const severityDefault: Record<ToastVariant, string> = {
@@ -42,6 +49,11 @@ export interface ToastApi {
 }
 
 const ToastContext = createContext<ToastApi | null>(null);
+
+/** Uso interno (Tree etc.): a API do provider mais próximo, ou `null`. Não exportado pelo pacote. */
+export function useOptionalToast(): ToastApi | null {
+  return useContext(ToastContext);
+}
 
 /** Acesso à fila de toasts. Exige `<ToastProvider>` acima. */
 export function useToast(): ToastApi {
@@ -60,7 +72,8 @@ interface ToastEntry extends ToastOptions {
 const EXIT_MS = 300;
 
 /** info/success: máx(5 s, ~1 s a cada 10 palavras); warning/danger ficam até serem fechados. */
-function autoCloseMs(variant: ToastVariant, text: string): number | null {
+function autoCloseMs(variant: ToastVariant, text: string, duration?: number): number | null {
+  if (duration !== undefined) return duration > 0 ? duration : null;
   if (variant === 'warning' || variant === 'danger') return null;
   const words = text.split(/\s+/).filter(Boolean).length;
   return Math.max(5000, words * 100);
@@ -117,7 +130,7 @@ function ToastItem({
   register,
   onDismiss,
 }: ToastItemProps) {
-  const { id, variant, title, message, closing } = toast;
+  const { id, variant, title, message, closing, action } = toast;
 
   // Tempo restante vive no provider: sobrevive à remontagem da região (abrir/fechar modal).
   useEffect(() => {
@@ -157,6 +170,19 @@ function ToastItem({
         {title ? ' ' : null}
         {message}
       </div>
+      {action ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="eds-toast-action"
+          onClick={() => {
+            onDismiss(id);
+            action.onClick();
+          }}
+        >
+          {action.label}
+        </Button>
+      ) : null}
       <Button
         variant="ghost"
         size="sm"
@@ -201,6 +227,7 @@ export function ToastProvider({
   const remaining = useRef(new Map<number, number>());
   const count = useRef(0);
   const closingIds = useRef(new Set<number>());
+  const closers = useRef(new Map<number, () => void>());
   const [hover, setHover] = useState(false);
   const [focusWithin, setFocusWithin] = useState(false);
   const host = useModalHost();
@@ -213,6 +240,9 @@ export function ToastProvider({
   const dismiss = useCallback((id: number) => {
     if (closingIds.current.has(id)) return;
     closingIds.current.add(id);
+    const onClose = closers.current.get(id);
+    closers.current.delete(id);
+    onClose?.();
     // O botão focado sai do DOM: devolve o foco a quem disparou o toast.
     const el = elements.current.get(id);
     const origin = origins.current.get(id);
@@ -252,12 +282,13 @@ export function ToastProvider({
     const id = nextId.current++;
     count.current += 1;
     const variant = options.variant ?? 'info';
+    if (options.onClose) closers.current.set(id, options.onClose);
     const active = document.activeElement;
     origins.current.set(
       id,
       active instanceof HTMLElement && active !== document.body ? active : null,
     );
-    const ms = autoCloseMs(variant, `${options.title ?? ''} ${options.message}`);
+    const ms = autoCloseMs(variant, `${options.title ?? ''} ${options.message}`, options.duration);
     if (ms !== null) remaining.current.set(id, ms);
     setToasts((list) => [...list, { ...options, id, variant, closing: false }]);
     return id;
@@ -266,36 +297,59 @@ export function ToastProvider({
   const api = useMemo<ToastApi>(() => ({ show, dismiss }), [show, dismiss]);
   const visible = toasts.slice(0, maxVisible);
 
-  const region = (
-    <div
-      className="eds-toast-region"
-      aria-live="polite"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setFocusWithin(true)}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setFocusWithin(false);
-      }}
-    >
-      {visible.map((toast) => (
-        <ToastItem
-          key={toast.id}
-          toast={toast}
-          paused={hover || focusWithin}
-          closeLabel={closeLabel}
-          severityLabel={severityLabels?.[toast.variant] ?? severityDefault[toast.variant]}
-          remaining={remaining}
-          register={register}
-          onDismiss={dismiss}
-        />
-      ))}
-    </div>
-  );
+  // Uma única região viva, criada uma vez e só MOVIDA entre a página e o dialog modal aberto:
+  // nada é destruído e recriado com o toast dentro (releitura) e nunca há duas regiões.
+  const [regionEl] = useState<HTMLElement | null>(() => {
+    if (typeof document === 'undefined') return null;
+    const el = document.createElement('div');
+    el.className = 'eds-toast-region';
+    el.setAttribute('aria-live', 'polite');
+    return el;
+  });
+  useEffect(() => {
+    const el = regionEl;
+    if (!el) return;
+    const enter = () => setHover(true);
+    const leave = () => setHover(false);
+    const focusIn = () => setFocusWithin(true);
+    const focusOut = (event: FocusEvent) => {
+      if (!el.contains(event.relatedTarget as Node | null)) setFocusWithin(false);
+    };
+    el.addEventListener('mouseenter', enter);
+    el.addEventListener('mouseleave', leave);
+    el.addEventListener('focusin', focusIn);
+    el.addEventListener('focusout', focusOut);
+    return () => {
+      el.removeEventListener('mouseenter', enter);
+      el.removeEventListener('mouseleave', leave);
+      el.removeEventListener('focusin', focusIn);
+      el.removeEventListener('focusout', focusOut);
+      el.remove();
+    };
+  }, [regionEl]);
+  useLayoutEffect(() => {
+    if (!regionEl) return;
+    const target = host ?? document.body;
+    if (regionEl.parentElement !== target) target.appendChild(regionEl);
+  }, [regionEl, host]);
+
+  const items = visible.map((toast) => (
+    <ToastItem
+      key={toast.id}
+      toast={toast}
+      paused={hover || focusWithin}
+      closeLabel={closeLabel}
+      severityLabel={severityLabels?.[toast.variant] ?? severityDefault[toast.variant]}
+      remaining={remaining}
+      register={register}
+      onDismiss={dismiss}
+    />
+  ));
 
   return (
     <ToastContext.Provider value={api}>
       {children}
-      {host ? createPortal(region, host) : region}
+      {regionEl ? createPortal(items, regionEl) : null}
     </ToastContext.Provider>
   );
 }

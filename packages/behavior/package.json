@@ -25,6 +25,11 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./export": {
+      "development": "./src/export-entry.ts",
+      "types": "./dist/export-entry.d.ts",
+      "default": "./dist/export-entry.js"
+    },
     "./eds-behavior.js": "./dist/eds-behavior.js"
   },
   "scripts": {
@@ -42,5 +47,18 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./export": {
+        "types": "./dist/export-entry.d.ts",
+        "default": "./dist/export-entry.js"
+      },
+      "./eds-behavior.js": "./dist/eds-behavior.js"
+    }
   }
 }

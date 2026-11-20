@@ -35,6 +35,9 @@
 @import './components/card.css';
 @import './components/modal.css';
 @import './components/drawer.css';
+@import './components/alert-dialog.css';
+@import './components/sortable.css';
+@import './components/tree.css';
 
 /* Componentes — Navigation */
 @import './components/navbar.css';

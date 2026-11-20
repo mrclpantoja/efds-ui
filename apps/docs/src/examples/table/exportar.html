@@ -1,0 +1,56 @@
+<div class="eds-table-toolbar">
+  <button type="button" class="eds-button eds-button-secondary eds-button-sm" id="exportar-gatilho" popovertarget="exportar-menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" />
+    </svg>
+    Exportar
+  </button>
+  <div id="exportar-menu" class="eds-dropdown" role="group" aria-labelledby="exportar-gatilho" popover="auto">
+    <button type="button" class="eds-dropdown-item" data-eds-export="csv" data-eds-export-target="pedidos-exportar" data-eds-export-filename="pedidos">CSV</button>
+    <button type="button" class="eds-dropdown-item" data-eds-export="xlsx" data-eds-export-target="pedidos-exportar" data-eds-export-filename="pedidos">Excel (.xlsx)</button>
+    <button type="button" class="eds-dropdown-item" data-eds-export="json" data-eds-export-target="pedidos-exportar" data-eds-export-filename="pedidos">JSON</button>
+    <button type="button" class="eds-dropdown-item" data-eds-export="pdf" data-eds-export-target="pedidos-exportar" data-eds-export-filename="pedidos" data-eds-export-title="Pedidos de novembro" data-eds-export-subtitle="Dados fictícios">PDF</button>
+  </div>
+</div>
+
+<div class="eds-table-wrap">
+  <table class="eds-table" id="pedidos-exportar">
+    <caption class="eds-table-caption eds-visually-hidden">Pedidos de novembro, com exportação</caption>
+    <thead>
+      <tr>
+        <th scope="col">Código</th>
+        <th scope="col">Cliente</th>
+        <th scope="col" data-eds-export-ignore>CPF do responsável</th>
+        <th scope="col" data-type="date">Entrega</th>
+        <th scope="col" data-type="currency" class="eds-table-num">Total</th>
+        <th scope="col" class="eds-table-actions"><span class="eds-visually-hidden">Ações</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PED-0001</td>
+        <td>Atelier Exemplo</td>
+        <td>000.000.000-00</td>
+        <td data-value="2026-11-24">24/11/2026</td>
+        <td class="eds-table-num" data-value="1280.5">R$ 1.280,50</td>
+        <td class="eds-table-actions"><button type="button" class="eds-button eds-button-ghost eds-button-sm">Abrir</button></td>
+      </tr>
+      <tr>
+        <td>PED-0002</td>
+        <td>Comércio Modelo</td>
+        <td>000.000.000-01</td>
+        <td data-value="2026-11-25">25/11/2026</td>
+        <td class="eds-table-num" data-value="459">R$ 459,00</td>
+        <td class="eds-table-actions"><button type="button" class="eds-button eds-button-ghost eds-button-sm">Abrir</button></td>
+      </tr>
+      <tr>
+        <td>PED-0003</td>
+        <td>Oficina Fictícia</td>
+        <td>000.000.000-02</td>
+        <td data-value="2026-11-30">30/11/2026</td>
+        <td class="eds-table-num" data-value="8920.9">R$ 8.920,90</td>
+        <td class="eds-table-actions"><button type="button" class="eds-button eds-button-ghost eds-button-sm">Abrir</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

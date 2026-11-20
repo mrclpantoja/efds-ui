@@ -50,6 +50,12 @@
     }
   }
 
+  /* O display:flex acima venceria o [hidden] do UA: a mensagem escondida pelo JS some de fato. */
+  .eds-error[hidden],
+  .eds-success[hidden] {
+    display: none;
+  }
+
   .eds-error {
     --_msg-fg: var(--eds-color-status-danger-text);
     --_msg-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 4.5h1.5v4.5h-1.5V4.5Zm0 5.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");

@@ -1,5 +1,6 @@
 import { Stack } from '@eds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
+import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
 import { Section } from '../../components/Section';
@@ -7,6 +8,9 @@ import { UseCases } from '../../components/UseCases';
 import Basica from '../../examples/table/basica';
 import basicaHtml from '../../examples/table/basica.html?raw';
 import basicaSource from '../../examples/table/basica.tsx?raw';
+import Exportar from '../../examples/table/exportar';
+import exportarHtml from '../../examples/table/exportar.html?raw';
+import exportarSource from '../../examples/table/exportar.tsx?raw';
 import Filtro from '../../examples/table/filtro';
 import filtroHtml from '../../examples/table/filtro.html?raw';
 import filtroSource from '../../examples/table/filtro.tsx?raw';
@@ -16,6 +20,31 @@ import interativaSource from '../../examples/table/interativa.tsx?raw';
 import Vazia from '../../examples/table/vazia';
 import vaziaHtml from '../../examples/table/vazia.html?raw';
 import vaziaSource from '../../examples/table/vazia.tsx?raw';
+
+const mascararHtml = `<script type="module">
+  document.addEventListener('eds:table-beforeexport', (event) => {
+    const { data } = event.detail;
+    // Mascara o identificador (ou tire a coluna: data.columns = data.columns.filter(...)).
+    data.rows = data.rows.map((row) => ({
+      ...row,
+      cpf: '***.***.***-' + String(row.cpf).slice(-2),
+    }));
+    // Para cancelar (pedir justificativa, registrar a auditoria): event.preventDefault();
+  });
+</script>`;
+
+const mascararReact = `<TableExport
+  getData={dados}
+  filename="pedidos"
+  onBeforeExport={(dados, { format }) => {
+    registrarAuditoria(format, dados.rows.length); // seu código
+    return {
+      ...dados,
+      rows: dados.rows.map((r) => ({ ...r, cpf: mascarar(String(r.cpf)) })),
+    };
+    // ou: return false; para cancelar.
+  }}
+/>`;
 
 export default function TablePage() {
   return (
@@ -87,6 +116,181 @@ export default function TablePage() {
           html={vaziaHtml}
           react={{ Component: Vazia, source: vaziaSource }}
         />
+      </Section>
+
+      <Section title="Exportar (CSV, Excel, JSON e PDF)">
+        <p>
+          Os quatro arquivos são gerados no navegador, sem dependência e sem enviar nada a
+          terceiros. O Excel (.xlsx) traz cabeçalho em negrito e congelado, filtro e formatos de
+          número e data; o CSV usa <code>;</code> e BOM (abre com acentos no Excel brasileiro); o
+          PDF é A4, com título, rodapé &quot;Página N de M&quot; e quebra de linhas. Caracteres fora
+          do Latin-1 saem como <code>?</code> no PDF, e datas anteriores a 01/03/1900 saem como
+          texto no Excel.
+        </p>
+        <Example
+          title="Exportar a tabela"
+          description={
+            <>
+              No HTML, itens de um <code>.eds-dropdown</code> com <code>data-eds-export</code>{' '}
+              apontam para a tabela, que é lida do DOM (o menu fecha ao clicar). No React, a fonte é
+              o estado: <code>TableExport</code> recebe os dados por <code>data</code> ou{' '}
+              <code>getData</code>. Nos dois exemplos o CPF não sai em claro: no HTML a coluna leva{' '}
+              <code>data-eds-export-ignore</code>; no React, <code>onBeforeExport</code> o mascara.
+              Só dados fictícios.
+            </>
+          }
+          html={exportarHtml}
+          react={{ Component: Exportar, source: exportarSource }}
+        />
+        <ClassTable
+          caption="Atributos HTML da exportação (@eds-ui/behavior)"
+          rows={[
+            {
+              name: 'data-eds-export="csv|xlsx|json|pdf"',
+              effect:
+                'No botão ou item de menu: gera o formato ao clicar. Exige data-eds-export-target.',
+            },
+            {
+              name: 'data-eds-export-target="ID"',
+              effect: 'id da tabela (ou de um contêiner com uma tabela).',
+            },
+            {
+              name: 'data-eds-export-filename',
+              effect:
+                'Nome sem extensão; ganha -aaaa-mm-dd. Padrão: a caption sem acento, ou "tabela".',
+            },
+            {
+              name: 'data-eds-export-title / data-eds-export-subtitle',
+              effect:
+                'Título (PDF: cabeçalho; XLSX: nome da planilha; padrão: a caption) e subtítulo do PDF.',
+            },
+            {
+              name: 'data-eds-export-scope="auto|visible|selected|all"',
+              effect:
+                'auto (padrão): as linhas marcadas, se houver, senão as visíveis (o filtro local vale). visible: sem hidden. selected: só as marcadas. all: todas as do DOM.',
+            },
+            {
+              name: 'th[data-type="text|number|currency|date|percent"]',
+              effect:
+                'Tipo da coluna (.eds-table-num já vale number). currency usa R$; percent guarda pontos percentuais.',
+            },
+            {
+              name: 'td[data-value]',
+              effect: 'Valor cru da célula (número ou data ISO); sem ele, vale o texto.',
+            },
+            {
+              name: 'th, td, tr [data-eds-export-ignore]',
+              effect:
+                'No th tira a coluna; no td esvazia a célula; no tr tira a linha. As colunas de seleção e de ações nunca entram.',
+            },
+          ]}
+        />
+        <ClassTable
+          caption="Eventos da exportação (na tabela, com bubble)"
+          rows={[
+            {
+              name: 'eds:table-beforeexport',
+              effect:
+                'Cancelável (preventDefault). detail: format, scope, filename, count, data. Altere detail.data para mascarar ou retirar colunas: o arquivo sai com a alteração.',
+            },
+            {
+              name: 'eds:table-export',
+              effect: 'Depois de gerar. detail: format, scope, filename, count.',
+            },
+          ]}
+        />
+        <PropsTable
+          caption="Props de TableExport"
+          rows={[
+            {
+              name: 'data | getData',
+              type: 'ExportData | () => ExportData',
+              required: true,
+              description: (
+                <>
+                  Colunas (<code>key</code>, <code>label</code>, <code>type</code>) e linhas. Use{' '}
+                  <code>getData</code> para ler o estado atual a cada clique.
+                </>
+              ),
+            },
+            {
+              name: 'formats',
+              type: "('csv' | 'xlsx' | 'json' | 'pdf')[]",
+              default: "['csv', 'xlsx', 'json', 'pdf']",
+              description: 'Formatos do menu, na ordem dada.',
+            },
+            {
+              name: 'filename',
+              type: 'string',
+              default: "'tabela'",
+              description: 'Nome sem extensão (ela é acrescentada).',
+            },
+            {
+              name: 'title / subtitle / sheetName',
+              type: 'string',
+              description: 'Título (PDF e planilha), subtítulo do PDF e nome da planilha.',
+            },
+            {
+              name: 'onBeforeExport',
+              type: '(data, { format, filename }) => ExportData | false | void',
+              description:
+                'Antes de gerar. Devolva os dados alterados (mascarados), false para cancelar ou nada para seguir.',
+            },
+            {
+              name: 'onExport',
+              type: '({ format, filename, count }) => void',
+              description: 'Depois que o arquivo foi gerado.',
+            },
+            {
+              name: 'label / formatLabels / messages',
+              type: 'ReactNode / Partial<Record<format, string>> / Partial<TableExportMessages>',
+              default: "'Exportar'",
+              description:
+                'Textos substituíveis: botão, itens do menu e anúncio de resultado (done, doneOne, empty, failed; {name} e {count}).',
+            },
+            {
+              name: 'variant / size / disabled / className',
+              type: 'ButtonVariant / ButtonSize / boolean / string',
+              default: "'secondary' / 'md'",
+              description: 'Passam para o botão. O ref também vai para ele.',
+            },
+          ]}
+        />
+        <p>
+          Sem o componente, as funções <code>exportData</code>, <code>toCsv</code>,{' '}
+          <code>toJson</code>, <code>toXlsx</code> e <code>toPdf</code> também saem de{' '}
+          <code>@eds-ui/react</code> (e de <code>@eds-ui/behavior</code>). O React usa só o
+          subcaminho <code>@eds-ui/behavior/export</code>: não leva o <code>init</code> nem os
+          outros módulos.
+        </p>
+        <Stack gap={3}>
+          <p className="eds-text-label">LGPD: o que sai no arquivo</p>
+          <ul className="docs-list">
+            <li>
+              O arquivo leva <strong>tudo o que está nos dados</strong>, inclusive colunas que a
+              interface esconde por CSS. Mascarar só no CSS não basta: o texto continua no DOM.
+            </li>
+            <li>
+              Colunas com dado pessoal ou sensível (CPF, e-mail, telefone, saúde, finanças) devem
+              ser omitidas ou mascaradas <strong>no servidor</strong> ou, no cliente, tratadas antes
+              de exportar: <code>data-eds-export-ignore</code>, ou um ouvinte de{' '}
+              <code>eds:table-beforeexport</code> (HTML), ou <code>onBeforeExport</code> (React).
+            </li>
+            <li>
+              O mesmo gancho serve para registrar quem exportou o quê (formato, quantidade, nome do
+              arquivo) e para cancelar pedindo justificativa. Só o que está carregado sai: com
+              paginação no servidor, exporte pelo servidor.
+            </li>
+          </ul>
+          <CodeBlock
+            code={mascararHtml}
+            label="Código HTML: mascarar dado sensível antes de exportar"
+          />
+          <CodeBlock
+            code={mascararReact}
+            label="Código React: mascarar e auditar antes de exportar"
+          />
+        </Stack>
       </Section>
 
       <Section title="API React">

@@ -1,32 +1,39 @@
 import { useState } from 'react';
-import { Button, Drawer } from '@eds-ui/react';
+import { Button, Drawer, Sidebar, SidebarItem, SidebarSection } from '@eds-ui/react';
+import { BellIcon, DashboardIcon, DownloadIcon, UserIcon, UsersIcon } from '@eds-ui/icons';
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
   const fechar = () => setOpen(false);
+  const href = '#/componentes/drawer';
   return (
     <>
       <Button variant="tertiary" onClick={() => setOpen(true)}>
         Menu
       </Button>
       <Drawer open={open} onClose={fechar} placement="start" title="Menu">
-        <ul>
-          <li>
-            <a href="#/componentes/drawer" onClick={fechar}>
+        {/* A navegação do Drawer reaproveita a Sidebar, sem o botão de colapsar. */}
+        <Sidebar collapsible={false}>
+          <SidebarSection>
+            <SidebarItem href={href} icon={<DashboardIcon />} current onClick={fechar}>
               Início
-            </a>
-          </li>
-          <li>
-            <a href="#/componentes/drawer" onClick={fechar}>
-              Projetos
-            </a>
-          </li>
-          <li>
-            <a href="#/componentes/drawer" onClick={fechar}>
+            </SidebarItem>
+            <SidebarItem href={href} icon={<UsersIcon />} onClick={fechar}>
+              Equipe
+            </SidebarItem>
+            <SidebarItem href={href} icon={<DownloadIcon />} onClick={fechar}>
               Relatórios
-            </a>
-          </li>
-        </ul>
+            </SidebarItem>
+          </SidebarSection>
+          <SidebarSection title="Conta">
+            <SidebarItem href={href} icon={<BellIcon />} onClick={fechar}>
+              Notificações
+            </SidebarItem>
+            <SidebarItem href={href} icon={<UserIcon />} onClick={fechar}>
+              Meu perfil
+            </SidebarItem>
+          </SidebarSection>
+        </Sidebar>
       </Drawer>
     </>
   );

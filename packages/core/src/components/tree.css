@@ -1,0 +1,446 @@
+/*
+ * Tree: árvore editável (padrão APG Treeview). O JS liga por data-eds-tree; o CSS cuida da
+ * aparência dos estados, que vêm de ARIA/atributos.
+ *
+ *   <div class="eds-tree" data-eds-tree data-eds-editable aria-label="Estrutura">
+ *     <ul role="tree">
+ *       <li role="treeitem" aria-expanded="true" aria-level="1" aria-selected="true" tabindex="0">
+ *         <div class="eds-tree-row">
+ *           <span class="eds-tree-toggle" aria-hidden="true"></span>
+ *           <svg class="eds-tree-icon" aria-hidden="true">…</svg>                 (opcional)
+ *           <span class="eds-tree-label">Nome</span>   (ou <input class="eds-input eds-input-sm"> editando)
+ *           <span class="eds-tree-actions"><button class="eds-tree-action" tabindex="-1">…</button></span>
+ *         </div>
+ *         <ul role="group">…treeitems aria-level="2"…</ul>
+ *       </li>
+ *     </ul>
+ *   </div>
+ *
+ * Estados: li[aria-expanded] (sem o atributo = folha, sem chevron), li[aria-selected="true"],
+ * li[aria-disabled="true"], li[aria-busy="true"] (carregando filhos), li[data-dragging].
+ * A indentação lê o nível de aria-level (1 a 10; a partir do 10 a indentação para), sem style inline.
+ * O menu de ações reutiliza .eds-dropdown.
+ *
+ * Indicadores de soltar (arrastar): atributos no .eds-tree-row alvo (definidos aqui; o motor de
+ * arrasto do JS só precisa aplicá-los):
+ *   data-drop="before" | "inside" | "after"   linha de 2px acima/abaixo, ou contorno (dentro)
+ *   data-drop-invalid                         não permitido: contorno tracejado + glifo de proibido
+ * O foco aparece como anel na linha (.eds-tree-row do treeitem focado), não no <li> inteiro.
+ */
+@layer eds.components {
+  .eds-tree {
+    container-type: inline-size;
+    min-inline-size: 0;
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+
+    & :is(ul) {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+  }
+
+  .eds-tree [role='treeitem'] {
+    /* O anel de foco vai para a linha; o <li> contém também os filhos. */
+    outline: none;
+
+    &[aria-expanded='false'] > [role='group'] {
+      display: none;
+    }
+
+    &[data-dragging] > .eds-tree-row {
+      opacity: 0.4;
+    }
+
+    &[aria-disabled='true'] > .eds-tree-row {
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+
+    &:focus-visible > .eds-tree-row {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: calc(-1 * var(--eds-focus-ring-width));
+    }
+  }
+
+  .eds-tree-row {
+    --_tree-indent: var(--eds-space-5);
+    --_tree-toggle: var(--eds-space-5);
+    --_tree-pad: var(--eds-space-1);
+    --_tree-level: 1;
+    --_tree-bg: transparent;
+    --_tree-guide: var(--eds-color-border-default);
+    --_tree-mark: var(--eds-color-action-primary);
+    --_tree-drop-image: none;
+    --_tree-drop-pos: 0 0;
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    min-block-size: var(--eds-control-height-sm);
+    padding-block: var(--eds-space-1);
+    padding-inline-start: calc(var(--_tree-pad) + var(--_tree-indent) * (var(--_tree-level) - 1));
+    padding-inline-end: var(--eds-space-2);
+    border-radius: var(--eds-radius-sm);
+    background-color: var(--_tree-bg);
+    /* Camadas: linha de soltar (antes/depois) e guias verticais dos níveis anteriores. */
+    background-image:
+      var(--_tree-drop-image),
+      repeating-linear-gradient(
+        to right,
+        var(--_tree-guide) 0 1px,
+        transparent 1px var(--_tree-indent)
+      );
+    background-repeat: no-repeat;
+    background-size:
+      100% var(--eds-focus-ring-width),
+      calc(var(--_tree-indent) * (var(--_tree-level) - 1)) 100%;
+    background-position:
+      var(--_tree-drop-pos),
+      calc(var(--_tree-pad) + var(--_tree-toggle) / 2 - 0.5px) 0;
+    cursor: default;
+    /* Arrastar com o mouse não seleciona o texto; o campo de renomear continua selecionável. */
+    user-select: none;
+
+    &:dir(rtl) {
+      background-image:
+        var(--_tree-drop-image),
+        repeating-linear-gradient(
+          to left,
+          var(--_tree-guide) 0 1px,
+          transparent 1px var(--_tree-indent)
+        );
+      background-position:
+        var(--_tree-drop-pos),
+        right calc(var(--_tree-pad) + var(--_tree-toggle) / 2 - 0.5px) top;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:has(> .eds-input)) {
+        --_tree-bg: var(--eds-color-bg-subtle);
+      }
+    }
+  }
+
+  /* Nível lido de aria-level. */
+  .eds-tree [aria-level='2'] > .eds-tree-row {
+    --_tree-level: 2;
+  }
+  .eds-tree [aria-level='3'] > .eds-tree-row {
+    --_tree-level: 3;
+  }
+  .eds-tree [aria-level='4'] > .eds-tree-row {
+    --_tree-level: 4;
+  }
+  .eds-tree [aria-level='5'] > .eds-tree-row {
+    --_tree-level: 5;
+  }
+  .eds-tree [aria-level='6'] > .eds-tree-row {
+    --_tree-level: 6;
+  }
+  .eds-tree [aria-level='7'] > .eds-tree-row {
+    --_tree-level: 7;
+  }
+  .eds-tree [aria-level='8'] > .eds-tree-row {
+    --_tree-level: 8;
+  }
+  .eds-tree [aria-level='9'] > .eds-tree-row {
+    --_tree-level: 9;
+  }
+  .eds-tree [aria-level='10'] > .eds-tree-row {
+    --_tree-level: 10;
+  }
+
+  /* Selecionado: fundo + barra no início (forma, não só cor). */
+  .eds-tree [aria-selected='true'] > .eds-tree-row {
+    --_tree-bg: var(--eds-color-action-primary-subtle);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 0;
+      inline-size: var(--eds-space-1);
+      border-start-start-radius: var(--eds-radius-sm);
+      border-end-start-radius: var(--eds-radius-sm);
+      background-color: var(--_tree-mark);
+    }
+  }
+
+  /* Chevron: aparece só em nós com aria-expanded; gira ao expandir. */
+  .eds-tree-toggle {
+    flex: none;
+    display: grid;
+    place-items: center;
+    inline-size: var(--_tree-toggle);
+    block-size: var(--_tree-toggle);
+    color: var(--eds-color-text-secondary);
+  }
+
+  .eds-tree [aria-expanded] > .eds-tree-row > .eds-tree-toggle {
+    cursor: pointer;
+
+    &::before {
+      content: '';
+      inline-size: 0.4em;
+      block-size: 0.4em;
+      border-inline-end: 0.125em solid currentColor;
+      border-block-end: 0.125em solid currentColor;
+      rotate: -45deg;
+      transition: rotate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+  }
+
+  .eds-tree [aria-expanded='true'] > .eds-tree-row > .eds-tree-toggle::before {
+    rotate: 45deg;
+  }
+
+  .eds-tree :dir(rtl) [aria-expanded='false'] > .eds-tree-row > .eds-tree-toggle::before {
+    rotate: 135deg;
+  }
+
+  /* Carregando filhos: o chevron vira um anel girando (e o JS anuncia). */
+  .eds-tree [aria-busy='true'] > .eds-tree-row > .eds-tree-toggle::before {
+    inline-size: 0.8em;
+    block-size: 0.8em;
+    border: 0.125em solid currentColor;
+    border-block-start-color: transparent;
+    border-radius: var(--eds-radius-full);
+    rotate: 0deg;
+    transition: none;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: eds-tree-spin 800ms linear infinite;
+    }
+  }
+
+  @keyframes eds-tree-spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  .eds-tree-icon {
+    flex: none;
+    inline-size: 1rem;
+    block-size: 1rem;
+    color: var(--eds-color-text-muted);
+    fill: currentColor;
+  }
+
+  .eds-tree-label {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* Edição inline: o campo ocupa a linha. */
+  .eds-tree-row > .eds-input {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    user-select: text;
+  }
+
+  /* Menu "⋯": alinhado ao fim do gatilho, abaixo (ou acima se faltar espaço). Sem anchor
+     positioning, vale o posicionamento do UA para popover (centralizado na viewport). */
+  @supports (position-area: block-end) {
+    .eds-tree > .eds-dropdown {
+      position-area: block-end span-inline-start;
+      /* Abre do lado com mais espaço; se ainda não couber, rola dentro da área disponível. */
+      position-try-order: most-block-size;
+      position-try-fallbacks: flip-block;
+      margin-block: var(--_dropdown-offset);
+      margin-inline: var(--eds-space-2);
+      max-block-size: 100%;
+    }
+  }
+
+  /* Ações "⋯": no hover, foco, seleção e com o menu aberto; sempre em toque. */
+  .eds-tree-actions {
+    flex: none;
+    display: flex;
+    align-items: center;
+    margin-inline-start: auto;
+    opacity: 0;
+
+    @media (hover: none) {
+      opacity: 1;
+    }
+  }
+
+  .eds-tree-row:hover .eds-tree-actions,
+  .eds-tree [aria-selected='true'] > .eds-tree-row .eds-tree-actions,
+  .eds-tree [role='treeitem']:focus-visible > .eds-tree-row .eds-tree-actions,
+  .eds-tree-actions:is(:focus-within, :has([aria-expanded='true'])) {
+    opacity: 1;
+  }
+
+  .eds-tree-action {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--eds-space-5);
+    block-size: var(--eds-space-5);
+    padding: 0;
+    border: 0;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: var(--eds-color-text-secondary);
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+
+    & > svg {
+      inline-size: 1rem;
+      block-size: 1rem;
+      fill: currentColor;
+    }
+
+    &:hover,
+    &[aria-expanded='true'] {
+      background: color-mix(in srgb, currentColor 14%, transparent);
+      color: var(--eds-color-text-primary);
+    }
+
+    &:focus-visible {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: calc(-1 * var(--eds-focus-ring-width));
+    }
+  }
+
+  /* Falha ao carregar filhos (li[data-error]): ícone + texto no nó, nunca só cor. Cabe ao lado do
+     rótulo quando há espaço; senão quebra para baixo dele (nada estoura a 320px). O markup é
+     aria-hidden: o anúncio vem do status do JS. */
+  .eds-tree-row:has(> .eds-tree-error) {
+    flex-wrap: wrap;
+
+    & > .eds-tree-label {
+      flex: 0 1 auto;
+    }
+  }
+
+  .eds-tree-error {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--eds-space-1);
+    min-inline-size: 0;
+    color: var(--eds-color-status-danger-text);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    overflow-wrap: anywhere;
+  }
+
+  /* O "!" do markup fica só como texto de reserva; o glifo visual vem da máscara. */
+  .eds-tree-error-icon {
+    flex: none;
+    inline-size: 1rem;
+    block-size: var(--eds-line-height-small);
+    overflow: hidden;
+    background-color: currentColor;
+    color: inherit;
+    font-size: 0;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='6'/%3E%3Cpath d='M8 4.8v3.8M8 11v.1'/%3E%3C/svg%3E")
+      center / 1rem no-repeat;
+  }
+
+  /* Indicadores de soltar. */
+  .eds-tree-row[data-drop='before'] {
+    --_tree-drop-image: linear-gradient(var(--_tree-mark), var(--_tree-mark));
+    --_tree-drop-pos: 0 0;
+  }
+
+  .eds-tree-row[data-drop='after'] {
+    --_tree-drop-image: linear-gradient(var(--_tree-mark), var(--_tree-mark));
+    --_tree-drop-pos: 0 100%;
+  }
+
+  .eds-tree-row[data-drop='inside'] {
+    --_tree-bg: var(--eds-color-action-primary-subtle);
+
+    outline: var(--eds-focus-ring-width) solid var(--_tree-mark);
+    outline-offset: calc(-1 * var(--eds-focus-ring-width));
+  }
+
+  /* Proibido (soltar dentro de um descendente): contorno tracejado + ícone de proibido em traço,
+     não só a cor. */
+  .eds-tree-row[data-drop-invalid] {
+    --_tree-bg: var(--eds-color-status-danger-subtle);
+    --_tree-mark: var(--eds-color-status-danger-text);
+
+    outline: var(--eds-focus-ring-width) dashed var(--_tree-mark);
+    outline-offset: calc(-1 * var(--eds-focus-ring-width));
+    color: var(--eds-color-status-danger-text);
+    cursor: not-allowed;
+
+    &::after {
+      content: '';
+      flex: none;
+      order: 1;
+      inline-size: 1rem;
+      block-size: 1rem;
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='6'/%3E%3Cpath d='M3.8 3.8l8.4 8.4'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    }
+  }
+
+  /* Fantasma do arrasto (clone da linha; classes eds-sortable-ghost eds-tree-ghost). Autônomo:
+     não depende do sortable.css. O JS define inline-size e a posição por transform. */
+  .eds-tree-ghost {
+    --_tree-ghost-z: 100; /* camada interna: não há token de z-index */
+
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: var(--_tree-ghost-z);
+    box-sizing: border-box;
+    margin: 0;
+    border: 1px solid var(--eds-color-action-primary);
+    border-radius: var(--eds-radius-sm);
+    background: var(--eds-color-bg-surface);
+    box-shadow: var(--eds-shadow-lg);
+    color: var(--eds-color-text-primary);
+    opacity: 0.95;
+    pointer-events: none;
+    cursor: grabbing;
+  }
+
+  /* Estreito: indentação menor; o rótulo já quebra linha. */
+  @container (max-width: 24rem) {
+    .eds-tree-row {
+      --_tree-indent: var(--eds-space-4);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-tree [aria-selected='true'] > .eds-tree-row {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+
+      &::before {
+        background-color: Highlight;
+      }
+    }
+
+    .eds-tree-row {
+      --_tree-mark: Highlight;
+      --_tree-guide: GrayText;
+    }
+
+    .eds-tree-error {
+      color: CanvasText;
+    }
+
+    .eds-tree-row[data-drop-invalid] {
+      --_tree-mark: CanvasText;
+
+      &::after {
+        background-color: CanvasText;
+      }
+    }
+  }
+}

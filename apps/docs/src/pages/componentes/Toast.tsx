@@ -6,6 +6,9 @@ import { PropsTable } from '../../components/PropsTable';
 import { Section } from '../../components/Section';
 import { UseCases } from '../../components/UseCases';
 import { toHref } from '../../router';
+import acaoHtml from '../../examples/toast/acao.html?raw';
+import Acao from '../../examples/toast/acao';
+import acaoSource from '../../examples/toast/acao.tsx?raw';
 import dispararHtml from '../../examples/toast/disparar.html?raw';
 import Disparar from '../../examples/toast/disparar';
 import dispararSource from '../../examples/toast/disparar.tsx?raw';
@@ -43,6 +46,7 @@ const id = toast({
   title: 'Sucesso:',             // opcional; sem ele, a severidade vai num prefixo oculto
   message: 'O contrato foi assinado e arquivado.',
   duration: 8000,                // opcional, em ms; 0 mantém até fechar
+  action: { label: 'Desfazer', onClick: () => restaurar() },   // opcional: botão no toast
 });
 
 toast.dismiss(id);               // fecha um toast
@@ -86,6 +90,21 @@ export default function ToastPage() {
           }
           html={dispararHtml}
           react={{ Component: Disparar, source: dispararSource }}
+        />
+        <Example
+          title="Com ação (Desfazer)"
+          description={
+            <>
+              A opção <code>action: {'{ label, onClick }'}</code> acrescenta um botão ao toast. Ao
+              ativá-lo, o toast fecha e <code>onClick</code> roda. É o padrão para
+              &quot;Desfazer&quot; depois de uma exclusão (a{' '}
+              <a href={toHref('/componentes/tree')}>Tree</a> usa isso). Dê tempo para o usuário
+              alcançar o botão (<code>duration</code> de 8 s ou mais) e não deixe a ação ser o único
+              jeito de recuperar o dado.
+            </>
+          }
+          html={acaoHtml}
+          react={{ Component: Acao, source: acaoSource }}
         />
         <Example
           title="Fila"
@@ -194,6 +213,22 @@ export default function ToastPage() {
                 </>
               ),
             },
+            {
+              name: 'duration',
+              type: 'number',
+              description:
+                'Tempo até fechar sozinho, em ms; 0 mantém até fechar. Padrão: pela variante e pelo tamanho do texto.',
+            },
+            {
+              name: 'action',
+              type: '{ label: string; onClick: () => void }',
+              description: (
+                <>
+                  Botão de ação (ex.: Desfazer): fecha o toast e executa <code>onClick</code>.
+                  Renderizado como <code>.eds-toast-action</code>.
+                </>
+              ),
+            },
           ]}
         />
         <PropsTable
@@ -241,6 +276,11 @@ export default function ToastPage() {
               effect: 'Coluna do texto, com quebra de palavras longas.',
             },
             { name: '.eds-toast-title', effect: 'Rótulo de severidade em semibold.' },
+            {
+              name: '.eds-toast-action',
+              effect:
+                'Botão de ação (.eds-button ghost sm) entre o conteúdo e o botão de fechar: executa e fecha o toast.',
+            },
             {
               name: '.eds-toast-close',
               effect: 'Em um .eds-button ghost, icon e sm: herda a cor do toast.',

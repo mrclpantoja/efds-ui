@@ -1,0 +1,34 @@
+<!-- data-eds-name: o JS mantém um <input type="hidden" name="prioridade[]" value="id"> por item,
+     na ordem. O formulário envia a ordem sem JavaScript seu (o onsubmit só simula o servidor). -->
+<form class="eds-stack eds-gap-4"
+  onsubmit="event.preventDefault(); EDS.toast({ message: 'Ordem enviada: ' + new FormData(this).getAll('prioridade[]').join(', ') })">
+  <div class="eds-sortable" data-eds-sortable data-eds-name="prioridade[]" aria-label="Prioridades">
+    <div class="eds-sortable-item" data-id="c1">
+      <button type="button" class="eds-sortable-handle" aria-label="Mover Contrato">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 5 3Zm6 0a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 11 3ZM5 6.8a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM5 10.6a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z" /></svg>
+      </button>
+      <span>Contrato</span>
+    </div>
+    <div class="eds-sortable-item" data-id="c2">
+      <button type="button" class="eds-sortable-handle" aria-label="Mover Proposta">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 5 3Zm6 0a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 11 3ZM5 6.8a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM5 10.6a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z" /></svg>
+      </button>
+      <span>Proposta</span>
+    </div>
+    <div class="eds-sortable-item" data-id="c3">
+      <button type="button" class="eds-sortable-handle" aria-label="Mover Reunião">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 5 3Zm6 0a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 11 3ZM5 6.8a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM5 10.6a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z" /></svg>
+      </button>
+      <span>Reunião</span>
+    </div>
+    <div class="eds-sortable-item" data-id="c4">
+      <button type="button" class="eds-sortable-handle" aria-label="Mover Relatório">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 5 3Zm6 0a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 11 3ZM5 6.8a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM5 10.6a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm6 0a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z" /></svg>
+      </button>
+      <span>Relatório</span>
+    </div>
+  </div>
+  <div>
+    <button type="submit" class="eds-button eds-button-primary">Salvar ordem</button>
+  </div>
+</form>

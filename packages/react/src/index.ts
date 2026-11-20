@@ -170,5 +170,44 @@ export type {
 } from './components/Dropdown';
 export { Tabs, TabList, Tab, TabPanel } from './components/Tabs';
 export type { TabsProps, TabListProps, TabProps, TabPanelProps } from './components/Tabs';
+export { DialogProvider, useDialog } from './components/Dialog';
+export type {
+  DialogApi,
+  DialogInputType,
+  DialogOptions,
+  DialogProviderProps,
+  DialogTexts,
+  DialogVariant,
+} from './components/Dialog';
+export { Sortable, SortableGroup } from './components/Sortable';
+export type {
+  SortableProps,
+  SortableGroupProps,
+  SortableHandleProps,
+  SortableRenderState,
+  SortableChange,
+  SortableItemData,
+  SortableOrientation,
+  SortableTexts,
+} from './components/Sortable';
+export { Tree } from './components/Tree';
+export type { TreeProps, TreeNodeData, TreeChange, TreeAction, TreeTexts } from './components/Tree';
 export { ToastProvider, useToast } from './components/Toast';
 export type { ToastProviderProps, ToastOptions, ToastApi, ToastVariant } from './components/Toast';
+
+// Exportação de tabelas (geradores do @eds-ui/behavior, sem o init)
+export { TableExport } from './components/TableExport';
+export type {
+  TableExportProps,
+  TableExportMessages,
+  TableExportBeforeInfo,
+  TableExportDoneInfo,
+} from './components/TableExport';
+export { exportData, toCsv, toJson, toPdf, toXlsx } from '@eds-ui/behavior/export';
+export type {
+  ExportColumn,
+  ExportColumnType,
+  ExportData,
+  ExportFormat,
+  ExportOptions,
+} from '@eds-ui/behavior/export';

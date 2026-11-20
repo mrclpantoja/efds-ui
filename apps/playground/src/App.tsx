@@ -8,6 +8,7 @@ import { SurfacesDemo } from './demos/SurfacesDemo';
 import { FormsDemo } from './demos/FormsDemo';
 import { LayoutDemo } from './demos/LayoutDemo';
 import { DataDemo } from './demos/DataDemo';
+import { InteractionDemo } from './demos/InteractionDemo';
 
 const axes = [
   { attr: 'theme', label: 'Tema', options: ['blue', 'green', 'purple', 'orange', 'neutral'] },
@@ -80,6 +81,7 @@ export function App() {
       <NavigationDemo />
       <FeedbackDemo />
       <DataDemo />
+      <InteractionDemo />
       <AppShellDemo />
     </main>
   );

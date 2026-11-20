@@ -429,6 +429,9 @@ importers:
 
   packages/react:
     dependencies:
+      '@eds-ui/behavior':
+        specifier: workspace:*
+        version: link:../behavior
       '@eds-ui/core':
         specifier: workspace:*
         version: link:../core

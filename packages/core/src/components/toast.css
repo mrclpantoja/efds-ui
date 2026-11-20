@@ -5,6 +5,7 @@
          <div class="eds-toast-content">
            <strong class="eds-toast-title">Sucesso:</strong> Pedido salvo.
          </div>
+         <button class="eds-button eds-button-ghost eds-button-sm eds-toast-action">Desfazer</button>  (opcional)
          <button class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-toast-close"
                  aria-label="Fechar notificação">...svg...</button>
        </div>
@@ -137,6 +138,21 @@
     grid-column: 3;
     grid-row: 1;
     margin-block: calc((var(--eds-line-height-body) - var(--eds-control-height-sm)) / 2);
+    margin-inline-end: calc(var(--eds-space-2) * -1);
+  }
+
+  /* Ação (ex.: "Desfazer"): botão ghost sm na linha abaixo do texto, alinhado ao fim; a linha
+     própria evita estourar a largura a 320px. Mesmo esquema de cor do botão de fechar. */
+  .eds-toast .eds-toast-action {
+    --_button-fg: var(--_toast-accent);
+    --_button-bg-hover: color-mix(in srgb, var(--_toast-accent) 14%, transparent);
+    --_button-bg-active: color-mix(in srgb, var(--_toast-accent) 14%, transparent);
+
+    grid-column: 2 / -1;
+    grid-row: 2;
+    justify-self: end;
+    max-inline-size: 100%;
+    margin-block-start: var(--eds-space-1);
     margin-inline-end: calc(var(--eds-space-2) * -1);
   }
 

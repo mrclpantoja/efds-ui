@@ -1,0 +1,8 @@
+<!-- prompt devolve Promise<string | null>: o texto digitado, ou null ao cancelar.
+     required e validate mantêm o diálogo aberto, com o erro junto do campo. -->
+<div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+  <button type="button" class="eds-button eds-button-secondary"
+    onclick="EDS.prompt('Nome do arquivo', 'relatorio', 'Salvar como', { required: true, okText: 'Salvar', validate: function (v) { return v.indexOf('/') >= 0 ? 'Não use a barra no nome.' : ''; } }).then(function (nome) { if (nome !== null) EDS.toast({ variant: 'success', message: 'Salvo como ' + nome + '.' }); })">Salvar como…</button>
+  <button type="button" class="eds-button eds-button-secondary"
+    onclick="EDS.prompt('Motivo do cancelamento', '', 'Cancelar pedido', { inputType: 'textarea', required: true, placeholder: 'Descreva o motivo' }).then(function (motivo) { if (motivo !== null) EDS.toast({ message: 'Motivo registrado.' }); })">Motivo (textarea)</button>
+</div>

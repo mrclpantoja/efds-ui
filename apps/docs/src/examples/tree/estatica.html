@@ -1,0 +1,54 @@
+<!-- Markup pronto do servidor. O JS numera aria-level, aria-setsize e aria-posinset, liga o
+     roving tabindex e o teclado. data-eds-multiselect: Ctrl/Shift escolhem vários nós. -->
+<div class="eds-tree" data-eds-tree data-eds-multiselect aria-label="Estrutura organizacional">
+  <ul role="tree" aria-label="Estrutura organizacional">
+    <li role="treeitem" aria-expanded="true" data-id="n1">
+      <div class="eds-tree-row">
+        <span class="eds-tree-toggle" aria-hidden="true"></span>
+        <span class="eds-tree-label">Diretoria Fictícia</span>
+      </div>
+      <ul role="group">
+        <li role="treeitem" aria-expanded="true" data-id="n2">
+          <div class="eds-tree-row">
+            <span class="eds-tree-toggle" aria-hidden="true"></span>
+            <span class="eds-tree-label">Sede Modelo</span>
+          </div>
+          <ul role="group">
+            <li role="treeitem" data-id="n3">
+              <div class="eds-tree-row">
+                <span class="eds-tree-toggle" aria-hidden="true"></span>
+                <span class="eds-tree-label">Financeiro de Exemplo</span>
+              </div>
+            </li>
+            <li role="treeitem" data-id="n4">
+              <div class="eds-tree-row">
+                <span class="eds-tree-toggle" aria-hidden="true"></span>
+                <span class="eds-tree-label">Compras</span>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li role="treeitem" aria-expanded="false" data-id="n5">
+          <div class="eds-tree-row">
+            <span class="eds-tree-toggle" aria-hidden="true"></span>
+            <span class="eds-tree-label">Filial Teste</span>
+          </div>
+          <ul role="group">
+            <li role="treeitem" data-id="n6">
+              <div class="eds-tree-row">
+                <span class="eds-tree-toggle" aria-hidden="true"></span>
+                <span class="eds-tree-label">Atendimento</span>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li role="treeitem" data-id="n7">
+      <div class="eds-tree-row">
+        <span class="eds-tree-toggle" aria-hidden="true"></span>
+        <span class="eds-tree-label">Conselho Consultivo</span>
+      </div>
+    </li>
+  </ul>
+</div>

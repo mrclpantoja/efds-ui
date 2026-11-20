@@ -149,6 +149,19 @@
     &:focus-visible {
       outline-offset: calc(-1 * var(--eds-focus-ring-width));
     }
+
+    /* Menu de navegação no Drawer (ex.: menu móvel): a Sidebar ocupa o corpo inteiro, sem a
+       largura fixa, a borda e o fundo próprios, e o corpo não soma o seu padding ao dela. */
+    &:has(> .eds-sidebar) {
+      padding: 0;
+    }
+
+    & > .eds-sidebar {
+      inline-size: auto;
+      block-size: 100%;
+      border-inline-end: 0;
+      background: transparent;
+    }
   }
 
   .eds-drawer-footer {

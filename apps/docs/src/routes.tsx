@@ -29,6 +29,7 @@ import ComboboxPage from './pages/componentes/Combobox';
 import DateInputPage from './pages/componentes/DateInput';
 import DatePickerPage from './pages/componentes/DatePicker';
 import DateRangePickerPage from './pages/componentes/DateRangePicker';
+import DialogsPage from './pages/componentes/Dialogs';
 import FileInputPage from './pages/componentes/FileInput';
 import FileUploadPage from './pages/componentes/FileUpload';
 import MultiSelectPage from './pages/componentes/MultiSelect';
@@ -48,12 +49,14 @@ import PaginationPage from './pages/componentes/Pagination';
 import RadioPage from './pages/componentes/Radio';
 import SelectPage from './pages/componentes/Select';
 import SidebarPage from './pages/componentes/Sidebar';
+import SortablePage from './pages/componentes/Sortable';
 import SkeletonPage from './pages/componentes/Skeleton';
 import SpinnerPage from './pages/componentes/Spinner';
 import SwitchPage from './pages/componentes/Switch';
 import TablePage from './pages/componentes/Table';
 import TextareaPage from './pages/componentes/Textarea';
 import ToastPage from './pages/componentes/Toast';
+import TreePage from './pages/componentes/Tree';
 
 export type SectionId = 'comecar' | 'fundamentos' | 'componentes';
 
@@ -110,6 +113,18 @@ export const routes: readonly DocRoute[] = [
     section: 'componentes',
     page: AppShellPage,
   },
+  {
+    path: '/componentes/sortable',
+    title: 'Arrastar e soltar (Sortable)',
+    section: 'componentes',
+    page: SortablePage,
+  },
+  {
+    path: '/componentes/tree',
+    title: 'Árvore (Tree)',
+    section: 'componentes',
+    page: TreePage,
+  },
   { path: '/componentes/badge', title: 'Badge', section: 'componentes', page: BadgePage },
   {
     path: '/componentes/breadcrumb',
@@ -149,6 +164,12 @@ export const routes: readonly DocRoute[] = [
     title: 'Date Range Picker',
     section: 'componentes',
     page: DateRangePickerPage,
+  },
+  {
+    path: '/componentes/dialogos',
+    title: 'Diálogos (alert, confirm, prompt)',
+    section: 'componentes',
+    page: DialogsPage,
   },
   { path: '/componentes/drawer', title: 'Drawer', section: 'componentes', page: DrawerPage },
   { path: '/componentes/dropdown', title: 'Dropdown', section: 'componentes', page: DropdownPage },

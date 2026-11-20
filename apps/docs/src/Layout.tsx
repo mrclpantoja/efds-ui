@@ -11,6 +11,7 @@ import {
   SidebarItem,
   SidebarSection,
   Stack,
+  DialogProvider,
   ToastProvider,
   useAppShell,
 } from '@eds-ui/react';
@@ -99,49 +100,52 @@ export function Layout() {
   else if (Page) body = <Page />;
   else body = <ComingSoon />;
 
-  // Um único ToastProvider para o site inteiro: os exemplos de Toast usam este.
+  // Um único ToastProvider e um único DialogProvider para o site inteiro: os exemplos de Toast e
+  // de Diálogos usam estes.
   return (
     <ToastProvider>
-      <AppShell
-        mainId="conteudo"
-        sidebar={
-          <Sidebar
-            className="eds-sidebar-full"
-            aria-label="Documentação"
-            brandIcon={<BrandMark />}
-            brandLabel={SITE_NAME}
-            collapsible={false}
-          >
-            {sections.map((section) => (
-              <SidebarSection key={section.id} title={section.title}>
-                {routes
-                  .filter((r) => r.section === section.id)
-                  .map((r) => (
-                    <SidebarItem key={r.path} href={toHref(r.path)} current={r.path === path}>
-                      {r.title}
-                    </SidebarItem>
-                  ))}
-              </SidebarSection>
-            ))}
-          </Sidebar>
-        }
-        header={
-          <AppShellHeader aria-label="Site">
-            <AppShellNavToggle />
-            <span className="eds-navbar-brand docs-header-brand">
-              <BrandMark />
-              {SITE_NAME}
-            </span>
-            <NavbarActions>
-              <AppearanceMenu />
-            </NavbarActions>
-          </AppShellHeader>
-        }
-      >
-        <PageFrame path={path} title={route?.title ?? 'Página não encontrada'} route={route}>
-          {body}
-        </PageFrame>
-      </AppShell>
+      <DialogProvider>
+        <AppShell
+          mainId="conteudo"
+          sidebar={
+            <Sidebar
+              className="eds-sidebar-full"
+              aria-label="Documentação"
+              brandIcon={<BrandMark />}
+              brandLabel={SITE_NAME}
+              collapsible={false}
+            >
+              {sections.map((section) => (
+                <SidebarSection key={section.id} title={section.title}>
+                  {routes
+                    .filter((r) => r.section === section.id)
+                    .map((r) => (
+                      <SidebarItem key={r.path} href={toHref(r.path)} current={r.path === path}>
+                        {r.title}
+                      </SidebarItem>
+                    ))}
+                </SidebarSection>
+              ))}
+            </Sidebar>
+          }
+          header={
+            <AppShellHeader aria-label="Site">
+              <AppShellNavToggle />
+              <span className="eds-navbar-brand docs-header-brand">
+                <BrandMark />
+                {SITE_NAME}
+              </span>
+              <NavbarActions>
+                <AppearanceMenu />
+              </NavbarActions>
+            </AppShellHeader>
+          }
+        >
+          <PageFrame path={path} title={route?.title ?? 'Página não encontrada'} route={route}>
+            {body}
+          </PageFrame>
+        </AppShell>
+      </DialogProvider>
     </ToastProvider>
   );
 }

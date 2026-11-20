@@ -29,6 +29,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@eds-ui/behavior": "workspace:*",
     "@eds-ui/core": "workspace:*"
   },
   "peerDependencies": {

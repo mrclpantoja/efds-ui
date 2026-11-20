@@ -127,8 +127,8 @@ export default function Comportamento() {
     <>
       <p className="eds-text-body-lg">
         O CSS do core estiliza; o que o CSS e a plataforma não entregam (abrir um Modal, trocar
-        Tabs, ordenar uma Table, filtrar um Combobox, escolher datas, enviar arquivos, o
-        carregamento de página) vem do <code>@eds-ui/behavior</code>: JavaScript puro,{' '}
+        Tabs, ordenar uma Table, filtrar um Combobox, escolher datas, enviar arquivos, exportar
+        tabelas, o carregamento de página) vem do <code>@eds-ui/behavior</code>: JavaScript puro,{' '}
         <strong>zero dependências</strong>, para quem usa só HTML (PHP, Java, .NET, Vue, Angular).
         Quem usa React não precisa dele:{' '}
         <a href={toHref('/comecar/uso-com-react')}>@eds-ui/react</a> já traz o mesmo comportamento.
@@ -248,6 +248,19 @@ export default function Comportamento() {
               ),
             },
             {
+              name: 'data-eds-export="csv|xlsx|json|pdf" / data-eds-export-target="ID"',
+              effect: (
+                <>
+                  Botão ou item de menu que baixa a tabela <code>ID</code> no formato escolhido,
+                  gerado no navegador, sem dependência. Opcionais:{' '}
+                  <code>data-eds-export-filename</code>, <code>-title</code>, <code>-subtitle</code>{' '}
+                  e <code>-scope</code>; <code>th[data-type]</code>, <code>td[data-value]</code> e{' '}
+                  <code>data-eds-export-ignore</code> descrevem colunas e células. Só alcança as
+                  linhas do DOM. <a href={toHref('/componentes/table')}>Table</a>.
+                </>
+              ),
+            },
+            {
               name: 'data-eds-sidebar-collapse',
               effect: (
                 <>
@@ -322,6 +335,48 @@ export default function Comportamento() {
               ),
             },
             {
+              name: 'data-eds-confirm / -title / -variant / -ok',
+              effect: (
+                <>
+                  Em <code>button</code>, <code>a</code> ou <code>form</code>: pergunta antes de
+                  agir (o link navega, o botão age, o formulário é enviado só se confirmado).{' '}
+                  <a href={toHref('/componentes/dialogos')}>Diálogos</a>.
+                </>
+              ),
+            },
+            {
+              name: 'data-eds-native-alert',
+              effect: (
+                <>
+                  Na tag do script: <code>window.alert</code> passa a abrir o diálogo do eDS.ui, sem
+                  bloquear.
+                </>
+              ),
+            },
+            {
+              name: 'data-eds-sortable / data-eds-group / data-eds-orientation / data-eds-name',
+              effect: (
+                <>
+                  No contêiner: arrastar e soltar itens (<code>.eds-sortable-item[data-id]</code>);
+                  itens trocam de contêiner dentro do mesmo grupo; <code>horizontal</code> ou{' '}
+                  <code>grid</code> mudam as setas; o nome gera um hidden por item.{' '}
+                  <a href={toHref('/componentes/sortable')}>Sortable</a>.
+                </>
+              ),
+            },
+            {
+              name: 'data-eds-tree / data-eds-editable / data-eds-multiselect',
+              effect: (
+                <>
+                  No <code>.eds-tree</code>: árvore navegável; editável (renomear, adicionar,
+                  excluir, mover); seleção múltipla. <code>data-eds-source</code>,{' '}
+                  <code>data-eds-children-url</code> e <code>data-eds-name</code> trazem os nós de
+                  um JSON, os filhos sob demanda e o JSON para o formulário.{' '}
+                  <a href={toHref('/componentes/tree')}>Tree</a>.
+                </>
+              ),
+            },
+            {
               name: 'data-eds-loader',
               effect: (
                 <>
@@ -335,7 +390,9 @@ export default function Comportamento() {
         <p>
           <a href={toHref('/componentes/tabs')}>Tabs</a>,{' '}
           <a href={toHref('/componentes/dropdown')}>Dropdown</a> e o Toast (<code>EDS.toast()</code>
-          , veja <a href={toHref('/componentes/toast')}>Toast</a>) não pedem atributo extra.
+          , veja <a href={toHref('/componentes/toast')}>Toast</a>) não pedem atributo extra. As
+          funções <code>EDS.alert()</code>, <code>EDS.confirm()</code> e <code>EDS.prompt()</code> (
+          <a href={toHref('/componentes/dialogos')}>Diálogos</a>) também não.
         </p>
       </Section>
 
@@ -379,8 +436,12 @@ export default function Comportamento() {
           <code>eds:upload-change</code>, <code>eds:upload-progress</code>,{' '}
           <code>eds:upload-complete</code>, <code>eds:upload-error</code>, <code>eds:dismiss</code>,{' '}
           <code>eds:toast-close</code>, <code>eds:loader-show</code>, <code>eds:loader-hide</code>,{' '}
-          <code>eds:sidebar-collapse</code>). Todos fazem bubble; <code>eds:sort</code> e{' '}
-          <code>eds:dismiss</code> são canceláveis.
+          <code>eds:sidebar-collapse</code>, <code>eds:sortable-change</code>,{' '}
+          <code>eds:tree-change</code>, <code>eds:tree-beforechange</code>,{' '}
+          <code>eds:tree-select</code>, <code>eds:tree-activate</code>, <code>eds:tree-toggle</code>
+          , <code>eds:table-beforeexport</code>, <code>eds:table-export</code>). Todos fazem bubble;{' '}
+          <code>eds:sort</code> (da Table), <code>eds:dismiss</code>,{' '}
+          <code>eds:tree-beforechange</code> e <code>eds:table-beforeexport</code> são canceláveis.
         </p>
         <CodeBlock code={eventos} label="Código JavaScript: eventos" />
       </Section>

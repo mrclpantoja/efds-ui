@@ -1,0 +1,147 @@
+/*
+ * Diálogos rápidos (alert, confirm, prompt): especialização do .eds-modal, gerada pelo JS
+ * (EDS.alert / EDS.confirm / EDS.prompt) ou escrita à mão. Importar depois de modal.css.
+ *
+ *   <dialog class="eds-modal eds-alert-dialog" data-variant="info|success|warning|danger|question"
+ *     aria-labelledby="t" aria-describedby="d">
+ *     <div class="eds-alert-dialog-icon" aria-hidden="true"><svg viewBox="0 0 24 24">…</svg></div>
+ *     <h2 class="eds-alert-dialog-title" id="t">Título</h2>
+ *     <p class="eds-alert-dialog-text" id="d">Texto</p>
+ *     <div class="eds-field">…input + <p class="eds-error">…</p></div>      (prompt)
+ *     <div class="eds-alert-dialog-actions">
+ *       <button class="eds-button eds-button-secondary">Cancelar</button>
+ *       <button class="eds-button eds-button-primary | eds-button-danger">OK</button>
+ *     </div>
+ *   </dialog>
+ *
+ * Glifo do ícone: desenhe com traços (o CSS aplica fill:none; stroke:currentColor; 2px),
+ * viewBox 24. O glifo difere por tipo (check, !, i, ?): a cor nunca é o único sinal.
+ * Sem título, o texto é o nome do diálogo. Em contêiner estreito (conteúdo < 21rem) as ações
+ * empilham com a ação principal em cima (a ordem do DOM e do foco não muda).
+ */
+@layer eds.components {
+  .eds-alert-dialog {
+    --_modal-width: 26rem;
+    --_modal-padding: var(--eds-space-5);
+    --_alert-dialog-bg: var(--eds-color-status-info-subtle);
+    --_alert-dialog-fg: var(--eds-color-status-info-text);
+    --_alert-dialog-icon-size: var(--eds-space-9);
+
+    container-type: inline-size;
+    align-items: center;
+    gap: var(--eds-space-3);
+    padding: var(--_modal-padding) var(--_modal-padding) var(--eds-space-5);
+    overflow-y: auto;
+    text-align: center;
+
+    /* Entrada sutil (escala + opacity) no lugar do deslocamento do modal. */
+    transform: scale(0.96);
+
+    &[open] {
+      transform: none;
+    }
+
+    @starting-style {
+      &[open] {
+        transform: scale(0.96);
+      }
+    }
+  }
+
+  .eds-alert-dialog[data-variant='success'] {
+    --_alert-dialog-bg: var(--eds-color-status-success-subtle);
+    --_alert-dialog-fg: var(--eds-color-status-success-text);
+  }
+
+  .eds-alert-dialog[data-variant='warning'] {
+    --_alert-dialog-bg: var(--eds-color-status-warning-subtle);
+    --_alert-dialog-fg: var(--eds-color-status-warning-text);
+  }
+
+  .eds-alert-dialog[data-variant='danger'] {
+    --_alert-dialog-bg: var(--eds-color-status-danger-subtle);
+    --_alert-dialog-fg: var(--eds-color-status-danger-text);
+  }
+
+  .eds-alert-dialog-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_alert-dialog-icon-size);
+    block-size: var(--_alert-dialog-icon-size);
+    margin-block-end: var(--eds-space-3);
+    border: 1px solid color-mix(in srgb, var(--_alert-dialog-fg) 30%, transparent);
+    border-radius: var(--eds-radius-full);
+    background: var(--_alert-dialog-bg);
+    color: var(--_alert-dialog-fg);
+
+    & > svg {
+      inline-size: var(--eds-space-6);
+      block-size: var(--eds-space-6);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  }
+
+  .eds-alert-dialog-title {
+    margin: 0;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+    font-size: var(--eds-font-size-h3);
+    line-height: var(--eds-line-height-h3);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-alert-dialog-text {
+    margin: 0;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+    font-size: var(--eds-font-size-body-lg);
+    line-height: var(--eds-line-height-body-lg);
+    color: var(--eds-color-text-primary);
+  }
+
+  /* Com título, o texto é apoio; sem título ele é o nome do diálogo e mantém o contraste pleno. */
+  .eds-alert-dialog-title + .eds-alert-dialog-text {
+    color: var(--eds-color-text-secondary);
+  }
+
+  /* Campo do prompt: alinhado ao início, ocupa a largura toda. */
+  .eds-alert-dialog > .eds-field {
+    inline-size: 100%;
+    text-align: start;
+  }
+
+  .eds-alert-dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--eds-space-3);
+    inline-size: 100%;
+    margin-block-start: var(--eds-space-4);
+  }
+
+  /* Estreito: empilhado, ação principal (última no DOM) em cima, botões na largura toda. */
+  @container (max-width: 21rem) {
+    .eds-alert-dialog-actions {
+      flex-direction: column-reverse;
+      flex-wrap: nowrap;
+
+      & > .eds-button {
+        inline-size: 100%;
+      }
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-alert-dialog-icon {
+      border-color: CanvasText;
+    }
+  }
+}

@@ -15,12 +15,16 @@ export interface ToastOptions {
    * máx(5 s, ~1 s a cada 10 palavras); warning/danger não fecham sozinhos.
    */
   duration?: number;
+  /** Botão de ação (ex.: "Desfazer"): roda `onClick` e fecha o toast. */
+  action?: { label: string; onClick: () => void };
 }
 
 /** Toasts visíveis ao mesmo tempo; os demais esperam na fila. */
 const MAX_VISIBLE = 3;
 /** Tempo da animação de saída do core. */
 const EXIT_MS = 300;
+/** Quanto a região fica muda depois de trocar de lugar (cobre a reinserção dos nós no DOM). */
+const MOVE_QUIET_MS = 60;
 
 interface Entry {
   id: number;
@@ -42,6 +46,8 @@ let focusWithin = false;
 let hostObserver: MutationObserver | null = null;
 let regionReady = false;
 let readyTimer: ReturnType<typeof setTimeout> | null = null;
+/** A região mudou de lugar com toasts dentro: fica muda (`aria-live="off"`) por um instante. */
+let moveTimer: ReturnType<typeof setTimeout> | null = null;
 
 function autoCloseMs(variant: ToastVariant, text: string): number | null {
   if (variant === 'warning' || variant === 'danger') return null;
@@ -99,8 +105,29 @@ function ensureRegion(): HTMLElement {
     });
   }
   // Com um dialog modal aberto a região vai para dentro dele; fora disso, na página.
-  findHost().append(region);
+  place(findHost());
   return region;
+}
+
+/**
+ * Leva a região (a mesma, nunca uma segunda) para `host`. Mover um nó o remove e o reinsere, e
+ * o leitor de tela releria os toasts que já estavam nela: com conteúdo, a região fica com
+ * `aria-live="off"` durante a troca e volta a `polite` logo depois; toasts novos esperam.
+ */
+function place(host: HTMLElement): void {
+  if (!region || region.parentElement === host) return;
+  if (region.childElementCount === 0) {
+    host.append(region);
+    return;
+  }
+  region.setAttribute('aria-live', 'off');
+  host.append(region);
+  if (moveTimer) clearTimeout(moveTimer);
+  moveTimer = setTimeout(() => {
+    moveTimer = null;
+    region?.setAttribute('aria-live', 'polite');
+    flush();
+  }, MOVE_QUIET_MS);
 }
 
 function buildToast(entry: Entry): HTMLElement {
@@ -147,12 +174,23 @@ function buildToast(entry: Entry): HTMLElement {
     dismiss(entry.id);
   });
 
-  el.append(content, close);
+  const { action } = entry.options;
+  if (action) {
+    const act = document.createElement('button');
+    act.type = 'button';
+    act.className = 'eds-button eds-button-ghost eds-button-sm eds-toast-action';
+    act.textContent = action.label;
+    act.addEventListener('click', () => {
+      dismiss(entry.id);
+      action.onClick();
+    });
+    el.append(content, act, close);
+  } else el.append(content, close);
   return el;
 }
 
 function flush() {
-  if (!regionReady) return;
+  if (!regionReady || moveTimer) return;
   const host = ensureRegion();
   const visible = entries.filter((e) => e.el).length;
   let room = MAX_VISIBLE - visible;
@@ -170,7 +208,7 @@ function flush() {
 function watchHost() {
   hostObserver?.disconnect();
   hostObserver = new MutationObserver(() => {
-    if (region && region.parentElement !== findHost()) findHost().append(region);
+    if (region) place(findHost());
   });
   hostObserver.observe(document.body, {
     subtree: true,
@@ -273,6 +311,8 @@ function teardown() {
   toast.dismissAll();
   if (readyTimer) clearTimeout(readyTimer);
   readyTimer = null;
+  if (moveTimer) clearTimeout(moveTimer);
+  moveTimer = null;
   regionReady = false;
   hostObserver?.disconnect();
   hostObserver = null;

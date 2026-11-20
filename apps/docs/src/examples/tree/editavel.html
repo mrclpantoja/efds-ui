@@ -1,0 +1,46 @@
+<!-- data-eds-editable liga a edição. data-eds-name mantém um <input type="hidden" name="estrutura">
+     com o JSON da árvore, atualizado a cada mudança, para o formulário enviar sem JS seu. -->
+<div class="eds-tree" data-eds-tree data-eds-editable data-eds-name="estrutura" aria-label="Categorias">
+  <ul role="tree" aria-label="Categorias">
+    <li role="treeitem" aria-expanded="true" data-id="e1">
+      <div class="eds-tree-row">
+        <span class="eds-tree-toggle" aria-hidden="true"></span>
+        <span class="eds-tree-label">Produtos</span>
+      </div>
+      <ul role="group">
+        <li role="treeitem" aria-expanded="true" data-id="e2">
+          <div class="eds-tree-row">
+            <span class="eds-tree-toggle" aria-hidden="true"></span>
+            <span class="eds-tree-label">Papelaria</span>
+          </div>
+          <ul role="group">
+            <li role="treeitem" data-id="e3">
+              <div class="eds-tree-row">
+                <span class="eds-tree-toggle" aria-hidden="true"></span>
+                <span class="eds-tree-label">Canetas</span>
+              </div>
+            </li>
+            <li role="treeitem" data-id="e4">
+              <div class="eds-tree-row">
+                <span class="eds-tree-toggle" aria-hidden="true"></span>
+                <span class="eds-tree-label">Cadernos</span>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li role="treeitem" data-id="e5">
+          <div class="eds-tree-row">
+            <span class="eds-tree-toggle" aria-hidden="true"></span>
+            <span class="eds-tree-label">Escritório</span>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li role="treeitem" data-id="e6">
+      <div class="eds-tree-row">
+        <span class="eds-tree-toggle" aria-hidden="true"></span>
+        <span class="eds-tree-label">Serviços</span>
+      </div>
+    </li>
+  </ul>
+</div>

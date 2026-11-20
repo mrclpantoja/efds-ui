@@ -373,6 +373,25 @@ describe('Toast', () => {
       expect(region().closest('dialog')).toBeNull();
     });
 
+    it('a mesma região é movida (não recriada) ao abrir/fechar o modal, sem duplicar', async () => {
+      const user = setupUser();
+      const { rerender } = render(<Page open={false} />);
+      const first = region();
+      await user.click(screen.getByRole('button', { name: 'Disparar' }));
+      rerender(<Page open />);
+      await flush();
+      expect(region()).toBe(first);
+      expect(region().closest('dialog')).not.toBeNull();
+      expect(region().querySelector('.eds-toast')).toHaveTextContent('Aviso.');
+      expect(document.querySelectorAll('.eds-toast-region')).toHaveLength(1);
+      rerender(<Page open={false} />);
+      await flush();
+      expect(region()).toBe(first);
+      expect(region().closest('dialog')).toBeNull();
+      expect(region().querySelectorAll('.eds-toast')).toHaveLength(1);
+      expect(document.querySelectorAll('.eds-toast-region')).toHaveLength(1);
+    });
+
     it('toast disparado dentro do modal aparece dentro dele', async () => {
       const user = setupUser();
       render(<Page open />);
@@ -435,5 +454,49 @@ describe('Toast', () => {
       advance(100);
       expect(document.querySelector('[data-closing]')).not.toBeNull();
     });
+  });
+});
+
+describe('Toast: ação e duração', () => {
+  it('action renderiza o botão do core, executa e fecha o toast', async () => {
+    const user = setupUser();
+    const onClick = vi.fn();
+    render(
+      <ToastProvider>
+        <Trigger options={{ message: 'Item excluído.', action: { label: 'Desfazer', onClick } }} />
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Disparar' }));
+    const action = screen.getByRole('button', { name: 'Desfazer' });
+    expect(action).toHaveClass(
+      'eds-button',
+      'eds-button-ghost',
+      'eds-button-sm',
+      'eds-toast-action',
+    );
+    await user.click(action);
+    expect(onClick).toHaveBeenCalledTimes(1);
+    advance(400);
+    expect(toasts()).toHaveLength(0);
+  });
+
+  it('duration define o tempo; 0 mantém até fechar', async () => {
+    const user = setupUser();
+    render(
+      <ToastProvider>
+        <Trigger options={{ message: 'Rápido.', duration: 8000 }} />
+        <Trigger options={{ message: 'Fixo.', duration: 0 }} label="Fixo" />
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Disparar' }));
+    advance(7900);
+    expect(document.querySelector('[data-closing]')).toBeNull();
+    advance(200);
+    expect(document.querySelector('[data-closing]')).not.toBeNull();
+    advance(500);
+    await user.click(screen.getByRole('button', { name: 'Fixo' }));
+    advance(60000);
+    expect(document.querySelector('[data-closing]')).toBeNull();
+    expect(toasts()).toHaveLength(1);
   });
 });

@@ -1,0 +1,13 @@
+<!-- EDS.alert(texto, título?, tipo?) é a API do eds-behavior.js (window.EDS). -->
+<div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+  <button type="button" class="eds-button eds-button-secondary"
+    onclick="EDS.alert('A conciliação roda todos os dias às 02h.', 'Aviso', 'info')">Informação</button>
+  <button type="button" class="eds-button eds-button-secondary"
+    onclick="EDS.alert('Pedido PED-0001 salvo com sucesso.', 'Pedido', 'success')">Sucesso</button>
+  <button type="button" class="eds-button eds-button-secondary"
+    onclick="EDS.alert('O certificado digital vence em 7 dias.', 'Atenção', 'warning')">Atenção</button>
+  <button type="button" class="eds-button eds-button-secondary"
+    onclick="EDS.alert('Não foi possível enviar a nota fiscal.', 'Falha no envio', 'danger')">Erro</button>
+  <button type="button" class="eds-button eds-button-secondary"
+    onclick="EDS.alert('Sem título, o próprio texto dá o nome ao diálogo.')">Sem título</button>
+</div>

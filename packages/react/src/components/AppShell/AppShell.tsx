@@ -12,6 +12,7 @@ import {
   type Ref,
 } from 'react';
 import { cx } from '../../utils/cx';
+import { mergeTexts } from '../../utils/texts';
 import { MenuGlyph } from '../../internal/glyphs-d';
 import { mergeRefs } from '../../internal/refs-d';
 import { Button } from '../Button';
@@ -24,6 +25,11 @@ import {
   useShellState,
 } from './context';
 
+export interface AppShellTexts {
+  /** Texto do skip link. */
+  skipLink: string;
+}
+
 export interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Slot da `<Sidebar>`. */
   sidebar?: ReactNode;
@@ -31,8 +37,8 @@ export interface AppShellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
   header?: ReactNode;
   /** Conteúdo da página (dentro do único `<main>`). */
   children?: ReactNode;
-  /** Texto do skip link. Padrão: "Pular para o conteúdo". */
-  skipLinkLabel?: string;
+  /** Textos internos (padrões em pt-BR): `skipLink` ("Pular para o conteúdo"). */
+  texts?: Partial<AppShellTexts>;
   /** id do `<main>` (padrão: gerado). */
   mainId?: string;
   /** id da sidebar (padrão: o `id` dado à `<Sidebar>`, ou gerado). */
@@ -53,7 +59,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
     sidebar,
     header,
     children,
-    skipLinkLabel = 'Pular para o conteúdo',
+    texts,
     mainId: mainIdProp,
     navId: navIdProp,
     mainClassName,
@@ -89,7 +95,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
     <AppShellContext.Provider value={value}>
       <div {...rest} ref={ref} className={cx('eds-app', className)}>
         <a ref={skipRef} className="eds-skip-link" href={`#${mainId}`} onClick={skip}>
-          {skipLinkLabel}
+          {mergeTexts({ skipLink: 'Pular para o conteúdo' }, texts).skipLink}
         </a>
         <SidebarSlotContext.Provider value>{sidebar}</SidebarSlotContext.Provider>
         {header}
@@ -123,19 +129,24 @@ export const AppShellHeader = forwardRef<HTMLElement, AppShellHeaderProps>(funct
 });
 AppShellHeader.displayName = 'AppShellHeader';
 
+export interface AppShellNavToggleTexts {
+  label: string;
+}
+
 export interface AppShellNavToggleProps extends Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   'children'
 > {
-  /** Nome acessível. Padrão: "Abrir navegação". */
-  label?: string;
+  /** Textos internos (padrões em pt-BR): `label`, o nome acessível ("Abrir navegação"). */
+  texts?: Partial<AppShellNavToggleTexts>;
   /** Ícone (padrão: menu). */
   icon?: ReactNode;
 }
 
 /** Botão de menu que abre a sidebar off-canvas (visível só abaixo de 768px, por CSS). */
 export const AppShellNavToggle = forwardRef<HTMLButtonElement, AppShellNavToggleProps>(
-  function AppShellNavToggle({ label = 'Abrir navegação', icon, className, ...rest }, ref) {
+  function AppShellNavToggle({ texts, icon, className, ...rest }, ref) {
+    const label = mergeTexts({ label: 'Abrir navegação' }, texts).label;
     const { navId, navOpen } = useAppShell();
     return (
       <Button

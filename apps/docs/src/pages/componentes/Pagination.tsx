@@ -110,8 +110,8 @@ export default function PaginationPage() {
               description: 'Mostra "Página X de Y" (só em larguras estreitas, por CSS).',
             },
             {
-              name: 'labels',
-              type: 'Partial<PaginationLabels>',
+              name: 'texts',
+              type: 'Partial<PaginationTexts>',
               description: (
                 <>
                   Textos (padrão pt-BR): <code>nav</code> (&quot;Paginação&quot;),{' '}
@@ -171,8 +171,8 @@ export default function PaginationPage() {
           <ul className="docs-list">
             <li>
               <strong>Landmark:</strong> <code>&lt;nav&gt;</code> com{' '}
-              <code>aria-label=&quot;Paginação&quot;</code> (<code>labels.nav</code>, para
-              traduzir). Se houver mais de uma na página, dê nomes diferentes.
+              <code>aria-label=&quot;Paginação&quot;</code> (<code>texts.nav</code>, para traduzir).
+              Se houver mais de uma na página, dê nomes diferentes.
             </li>
             <li>
               <strong>Página atual:</strong> <code>aria-current=&quot;page&quot;</code>. Cada página
@@ -193,7 +193,7 @@ export default function PaginationPage() {
             </li>
             <li>
               <strong>Forçado pelo componente:</strong> os glifos de seta são decorativos (
-              <code>aria-hidden</code>) e o nome de cada página vem de <code>labels.page</code>.
+              <code>aria-hidden</code>) e o nome de cada página vem de <code>texts.page</code>.
             </li>
             <li>
               <strong>O consumidor deve garantir:</strong> atualizar o conteúdo e o resumo junto com

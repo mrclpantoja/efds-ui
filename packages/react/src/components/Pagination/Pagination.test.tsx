@@ -106,7 +106,7 @@ describe('Pagination', () => {
         page={2}
         pageCount={3}
         showInfo={false}
-        labels={{
+        texts={{
           nav: 'Pagination',
           previous: 'Previous',
           next: 'Next',

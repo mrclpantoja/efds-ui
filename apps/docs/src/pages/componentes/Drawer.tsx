@@ -104,10 +104,14 @@ export default function DrawerPage() {
               description: 'Ações do rodapé. Omitido, o rodapé não é renderizado.',
             },
             {
-              name: 'closeLabel',
-              type: 'string',
-              default: "'Fechar'",
-              description: 'Nome acessível do botão de fechar.',
+              name: 'texts',
+              type: 'Partial<DrawerTexts>',
+              description: (
+                <>
+                  Textos internos: <code>close</code> (&quot;Fechar&quot;), o nome acessível do
+                  botão de fechar.
+                </>
+              ),
             },
             {
               name: 'closeOnBackdrop',
@@ -161,6 +165,24 @@ export default function DrawerPage() {
               effect: 'Ações do rodapé, com borda no topo (a única borda de divisão).',
             },
             { name: '[open]', effect: 'Painel aberto.' },
+          ]}
+        />
+      </Section>
+
+      <Section title="Eventos (HTML)">
+        <ClassTable
+          caption="Eventos do @eds-ui/behavior"
+          headers={['Evento', 'Quando']}
+          rows={[
+            {
+              name: 'eds:drawer-open',
+              effect:
+                'O Drawer abre (gatilho data-eds-open ou showModal() do código). detail: { trigger } (null quando aberto por código).',
+            },
+            {
+              name: 'eds:drawer-close',
+              effect: 'O Drawer fecha (Esc, botão, fundo ou close()). detail: { returnValue }.',
+            },
           ]}
         />
       </Section>

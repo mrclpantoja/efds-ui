@@ -66,6 +66,12 @@ export default function SelectPage() {
               description: 'Tamanho. O padrão não emite classe.',
             },
             {
+              name: 'readOnly',
+              type: 'boolean',
+              description:
+                'Somente leitura (o select nativo não tem o atributo): a lista não abre e o valor não muda, mas o campo continua focável, é lido (aria-readonly) e vai no envio do formulário.',
+            },
+            {
               name: 'invalid',
               type: 'boolean',
               description: (
@@ -101,6 +107,11 @@ export default function SelectPage() {
               effect: 'Menor ou maior que o padrão (md não tem classe).',
             },
             { name: ':focus', effect: 'Borda na cor de ação e anel de foco.' },
+            {
+              name: '[aria-readonly="true"]',
+              effect:
+                'Somente leitura: fundo suave como o Input readonly, seta atenuada, sem hover. Em HTML, o @eds-ui/behavior impede abrir a lista e mudar a escolha (o campo segue focável e vai no envio); sem o JS, só o visual muda.',
+            },
             { name: '[aria-invalid="true"]', effect: 'Borda de perigo.' },
             { name: '[data-valid="true"]', effect: 'Borda de sucesso.' },
             { name: ':disabled', effect: 'Fundo sutil, texto esmaecido.' },

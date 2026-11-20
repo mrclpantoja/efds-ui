@@ -70,7 +70,7 @@
     position: absolute;
     inset-block-start: var(--eds-space-2);
     inset-inline-start: var(--eds-space-2);
-    z-index: 1;
+    z-index: var(--eds-z-raised);
     padding: var(--eds-space-2) var(--eds-space-3);
     border-radius: var(--eds-radius-md);
     background: var(--eds-color-action-primary);
@@ -109,17 +109,17 @@
      inferior-final e danger/warning não fecham sozinhos; sem folga, um controle focado no rodapé
      da rolagem ficaria sob ela. Enquanto houver toast, o scroller reserva scroll-padding-block-end:
      o documento (<html>) e, no app shell, a .eds-app-main (quem rola de fato). Um toast de duas
-     linhas ocupa ~ space-9 + space-4 com a margem da região; o valor soma uma folga (space-5) a
+     linhas ocupa ~ space-9 + inset-md com a margem da região; o valor soma uma folga (space-5) a
      isso. Com 2 ou mais toasts empilhados reserva mais um passo. A reserva só existe com toast
      montado: o :has() sai com o último toast. Limite: pilhas com 3+ toasts cobrem parte da folga. */
   :where(html):has(.eds-toast-region > .eds-toast) {
-    --_toast-clearance: calc(var(--eds-space-9) + var(--eds-space-5) + var(--eds-space-4));
+    --_toast-clearance: calc(var(--eds-space-9) + var(--eds-space-5) + var(--eds-inset-md));
 
     scroll-padding-block-end: var(--_toast-clearance);
   }
 
   :where(html):has(.eds-toast-region > .eds-toast + .eds-toast) {
-    --_toast-clearance: calc(var(--eds-space-9) * 2 + var(--eds-space-5) + var(--eds-space-4));
+    --_toast-clearance: calc(var(--eds-space-9) * 2 + var(--eds-space-5) + var(--eds-inset-md));
   }
 
   :where(html):has(.eds-toast-region > .eds-toast) .eds-app-main {

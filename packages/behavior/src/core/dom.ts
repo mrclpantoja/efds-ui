@@ -104,9 +104,7 @@ export function watchScrollRegion(el: HTMLElement, labelledby: () => string): ()
 }
 
 /** Texto sem acento e sem diferença de caixa, para o filtro do Combobox. */
-export function normalizeText(text: string): string {
-  return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
-}
+export { normalizeText } from './data';
 
 /** Acrescenta (`on`) ou retira o `id` de `aria-describedby`, preservando os outros. */
 export function describeBy(input: Element, id: string, on: boolean): void {

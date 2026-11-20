@@ -21,7 +21,7 @@
  */
 @layer eds.components {
   .eds-alert-dialog {
-    --_modal-width: 26rem;
+    --_modal-width: var(--eds-layout-dialog-sm);
     --_modal-padding: var(--eds-space-5);
     --_alert-dialog-bg: var(--eds-color-status-info-subtle);
     --_alert-dialog-fg: var(--eds-color-status-info-text);
@@ -76,7 +76,8 @@
     inline-size: var(--_alert-dialog-icon-size);
     block-size: var(--_alert-dialog-icon-size);
     margin-block-end: var(--eds-space-3);
-    border: 1px solid color-mix(in srgb, var(--_alert-dialog-fg) 30%, transparent);
+    border: var(--eds-border-width) solid
+      color-mix(in srgb, var(--_alert-dialog-fg) 30%, transparent);
     border-radius: var(--eds-radius-full);
     background: var(--_alert-dialog-bg);
     color: var(--_alert-dialog-fg);
@@ -129,7 +130,7 @@
     justify-content: flex-end;
     gap: var(--eds-space-3);
     inline-size: 100%;
-    margin-block-start: var(--eds-space-4);
+    margin-block-start: var(--eds-inset-md);
   }
 
   /* Estreito: empilhado, ação principal (última no DOM) em cima, botões na largura toda. */

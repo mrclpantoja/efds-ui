@@ -1,5 +1,5 @@
 /* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/semantic/control.json */
-/* Dimensões de controles e foco (padrão comfortable). A densidade sobrescreve control-height-md e table-row-height. */
+/* Dimensões de controles, insets, bordas, ícones e alvos (padrão comfortable). A densidade sobrescreve control-height-sm/-md/-lg, inset-sm/-md/-lg e table-row-height. */
 
 /* prettier-ignore */
 @layer eds.tokens {
@@ -7,7 +7,17 @@
     --eds-control-height-sm: 32px;
     --eds-control-height-md: 38px;
     --eds-control-height-lg: 44px;
+    --eds-inset-sm: var(--eds-space-3);
+    --eds-inset-md: var(--eds-space-4);
+    --eds-inset-lg: var(--eds-space-5);
     --eds-table-row-height: 44px;
+    --eds-border-width: 1px;
+    --eds-border-width-strong: 2px;
+    --eds-icon-size-sm: 1rem;
+    --eds-icon-size-md: 1.25rem;
+    --eds-icon-size-lg: 1.5rem;
+    --eds-icon-size-xl: 2rem;
+    --eds-target-min: 2.75rem;
     --eds-focus-ring-width: 2px;
     --eds-focus-ring-offset: 2px;
   }

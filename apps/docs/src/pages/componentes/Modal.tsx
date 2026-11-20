@@ -104,9 +104,10 @@ export default function ModalPage() {
             },
             {
               name: 'size',
-              type: "'sm' | 'md' | 'lg'",
+              type: "'sm' | 'md' | 'lg' | 'full'",
               default: "'md'",
-              description: 'Largura. O padrão não emite classe.',
+              description:
+                'Largura. O padrão não emite classe; full ocupa a tela toda (.eds-modal-full).',
             },
             {
               name: 'footer',
@@ -114,10 +115,14 @@ export default function ModalPage() {
               description: 'Ações do rodapé. Omitido, o rodapé não é renderizado.',
             },
             {
-              name: 'closeLabel',
-              type: 'string',
-              default: "'Fechar'",
-              description: 'Nome acessível do botão de fechar.',
+              name: 'texts',
+              type: 'Partial<ModalTexts>',
+              description: (
+                <>
+                  Textos internos: <code>close</code> (&quot;Fechar&quot;), o nome acessível do
+                  botão de fechar.
+                </>
+              ),
             },
             {
               name: 'closeOnBackdrop',
@@ -161,6 +166,11 @@ export default function ModalPage() {
                 'O <dialog>: centralizado, largura 35rem (limitada à tela), raio grande, sombra, entrada e saída com opacidade e deslocamento.',
             },
             { name: '.eds-modal-sm / .eds-modal-lg', effect: 'Largura 25rem ou 45rem.' },
+            {
+              name: '.eds-modal-full',
+              effect:
+                'Tela cheia: sem margem, raio nem borda abaixo de 768px; acima, com a margem do diálogo. Cabeçalho e rodapé fixos, só o corpo rola.',
+            },
             { name: '.eds-modal-header', effect: 'Título à esquerda e botão Fechar à direita.' },
             { name: '.eds-modal-title', effect: 'Tipografia de título (h3).' },
             {
@@ -175,6 +185,24 @@ export default function ModalPage() {
             {
               name: 'html:has(.eds-modal:modal)',
               effect: 'Trava a rolagem da página enquanto o modal está aberto.',
+            },
+          ]}
+        />
+      </Section>
+
+      <Section title="Eventos (HTML)">
+        <ClassTable
+          caption="Eventos do @eds-ui/behavior"
+          headers={['Evento', 'Quando']}
+          rows={[
+            {
+              name: 'eds:modal-open',
+              effect:
+                'O diálogo abre (gatilho data-eds-open ou showModal() do código). detail: { trigger } (null quando aberto por código).',
+            },
+            {
+              name: 'eds:modal-close',
+              effect: 'O diálogo fecha (Esc, botão, fundo ou close()). detail: { returnValue }.',
             },
           ]}
         />
@@ -209,7 +237,7 @@ export default function ModalPage() {
             <li>
               <strong>Forçado pelo tipo:</strong> <code>title</code>, <code>open</code> e{' '}
               <code>onClose</code> são obrigatórios. O botão Fechar tem nome acessível substituível
-              (<code>closeLabel</code>).
+              (<code>texts.close</code>).
             </li>
             <li>
               <strong>O consumidor deve garantir:</strong> confirmar antes de fechar um formulário

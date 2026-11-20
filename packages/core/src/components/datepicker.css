@@ -19,7 +19,7 @@
     --_dp-height: var(--eds-control-height-md);
     --_dp-toggle-size: min(1.75rem, calc(var(--_dp-height) - 0.5rem));
     --_dp-toggle-inset: var(--eds-space-1);
-    --_dp-icon-size: 1rem;
+    --_dp-icon-size: var(--eds-icon-size-sm);
     --_dp-toggle-fg: var(--eds-color-text-secondary);
 
     position: relative;
@@ -32,7 +32,7 @@
 
     &:has(> .eds-input-lg) {
       --_dp-height: var(--eds-control-height-lg);
-      --_dp-toggle-size: 2rem;
+      --_dp-toggle-size: var(--eds-icon-size-xl);
     }
 
     /* Reserva o espaço do botão. */
@@ -40,7 +40,7 @@
       padding-inline-end: calc(var(--_dp-toggle-size) + var(--_dp-toggle-inset) * 2);
     }
 
-    &:has(.eds-datepicker-input:disabled) {
+    &:has(.eds-datepicker-input:disabled, .eds-datepicker-input[readonly]) {
       --_dp-toggle-fg: var(--eds-color-text-muted);
     }
   }
@@ -56,7 +56,7 @@
     block-size: var(--_dp-toggle-size);
     margin: 0;
     padding: 0;
-    border: 1px solid transparent;
+    border: var(--eds-border-width) solid transparent;
     border-radius: var(--eds-radius-sm);
     background: transparent;
     color: var(--_dp-toggle-fg);
@@ -99,6 +99,17 @@
     &[aria-disabled='true'] {
       color: var(--eds-color-text-muted);
       cursor: not-allowed;
+    }
+  }
+
+  /* Somente leitura: campo com a aparência do Input readonly; o botão não reage ao ponteiro (o JS
+     impede abrir o calendário). */
+  .eds-datepicker:has(.eds-datepicker-input[readonly]) .eds-datepicker-toggle {
+    cursor: default;
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background: transparent;
+      color: var(--_dp-toggle-fg);
     }
   }
 

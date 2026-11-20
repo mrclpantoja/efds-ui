@@ -1,7 +1,11 @@
 {
   "$selector": "[data-density=\"compact\"]",
-  "$description": "Densidade compact: altura de controle md, espaço 4 e linha de tabela.",
+  "$description": "Densidade compact: alturas de controle (sm < md < lg, alvo mínimo de 24px no compact), insets e linha de tabela. A escala space-* não varia.",
+  "control-height-sm": "28px",
   "control-height-md": "32px",
-  "space-4": "12px",
+  "control-height-lg": "36px",
+  "inset-sm": "{space-2}",
+  "inset-md": "{space-3}",
+  "inset-lg": "{space-4}",
   "table-row-height": "36px"
 }

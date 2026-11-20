@@ -15,6 +15,7 @@ import { toast } from './toast';
 
 const ITEM = 'li[role="treeitem"]';
 const ROW = '.eds-tree-row';
+const NAV_KEYS = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End']);
 
 export interface TreeNodeData {
   id: string;
@@ -119,6 +120,16 @@ export const treeBehavior: Behavior = {
 
     let anchor: HTMLElement | null = null;
 
+    // Lista de itens visíveis em cache: invalidada por qualquer mudança de estrutura ou de
+    // `aria-expanded` (observador abaixo, `setExpanded`, `refresh` e teclas que alteram a árvore).
+    let visibleCache: HTMLElement[] | null = null;
+    const invalidate = () => {
+      visibleCache = null;
+    };
+    const cachedVisible = (): HTMLElement[] => (visibleCache ??= visibleItems(rootList()));
+    let observer: MutationObserver | null = null;
+    let refreshQueued = false;
+
     // ---- estrutura e atributos --------------------------------------------------------------
 
     const ensureActions = (li: HTMLElement) => {
@@ -183,16 +194,33 @@ export const treeBehavior: Behavior = {
       numberList(list, 1);
       ensureRoving();
       if (jsonInput) jsonInput.value = JSON.stringify(toJson(list));
+      invalidate();
+      // As mudanças que o próprio refresh fez (botões de ação, aria-*) não pedem outro refresh.
+      observer?.takeRecords();
+    };
+
+    /** Vários lotes de mutação no mesmo instante viram um só refresh (microtask). */
+    const scheduleRefresh = () => {
+      if (refreshQueued) return;
+      refreshQueued = true;
+      queueMicrotask(() => {
+        if (!refreshQueued) return;
+        refreshQueued = false;
+        refresh();
+      });
     };
 
     // ---- foco e seleção -----------------------------------------------------------------------
 
     const focusItem = (li: HTMLElement | null | undefined) => {
       if (!li || !li.isConnected) return;
-      const list = rootList();
-      for (const other of Array.from(list?.querySelectorAll<HTMLElement>(ITEM) ?? [])) {
-        other.tabIndex = other === li ? 0 : -1;
+      // Só quem hoje está no tab stop precisa mudar (sem percorrer todos os itens).
+      for (const other of Array.from(
+        rootList()?.querySelectorAll<HTMLElement>(`${ITEM}[tabindex="0"]`) ?? [],
+      )) {
+        if (other !== li) other.tabIndex = -1;
       }
+      li.tabIndex = 0;
       li.focus();
     };
 
@@ -316,6 +344,7 @@ export const treeBehavior: Behavior = {
     const setExpanded = (li: HTMLElement, open: boolean) => {
       if (!isParent(li) || isExpanded(li) === open) return;
       li.setAttribute('aria-expanded', String(open));
+      invalidate();
       if (!open) {
         const active = doc.activeElement;
         if (active && active !== li && li.contains(active)) focusItem(li);
@@ -810,7 +839,7 @@ export const treeBehavior: Behavior = {
       const now = Date.now();
       typed = now - typedAt > 500 ? char : typed + char;
       typedAt = now;
-      const visible = visibleItems(rootList());
+      const visible = cachedVisible();
       const start = visible.indexOf(li);
       const query = normalizeText(typed);
       const cycle = [
@@ -822,13 +851,23 @@ export const treeBehavior: Behavior = {
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
+      try {
+        handleKey(event);
+      } finally {
+        // Teclas que podem alterar a árvore descartam o cache; as de navegação o reaproveitam.
+        if (!NAV_KEYS.has(event.key) || event.altKey || event.ctrlKey || event.metaKey)
+          invalidate();
+      }
+    };
+
+    const handleKey = (event: KeyboardEvent) => {
       if (event.defaultPrevented) return;
       const li = (event.target as Element).closest<HTMLElement>(ITEM);
       if (!li || event.target !== li || !tree.contains(li)) return;
       const { key, altKey, shiftKey } = event;
       const ctrl = event.ctrlKey || event.metaKey;
       const edit = editable();
-      const visible = visibleItems(rootList());
+      const visible = cachedVisible();
       const at = visible.indexOf(li);
       const handled = () => event.preventDefault();
 
@@ -1034,8 +1073,19 @@ export const treeBehavior: Behavior = {
     tree.addEventListener('dblclick', onDblClick);
     tree.addEventListener('click', onActionPrepare, true);
 
-    const observer = new MutationObserver(() => refresh());
-    const watch = () => observer.observe(tree, { childList: true, subtree: true });
+    const mutationObserver = new MutationObserver((records) => {
+      invalidate();
+      // Só mudança de estrutura renumera; `aria-expanded` externo apenas invalida o cache.
+      if (records.some((record) => record.type === 'childList')) scheduleRefresh();
+    });
+    observer = mutationObserver;
+    const watch = () =>
+      mutationObserver.observe(tree, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['aria-expanded'],
+      });
 
     const source = tree.getAttribute('data-eds-source');
     if (!rootList() && source) {
@@ -1076,7 +1126,8 @@ export const treeBehavior: Behavior = {
 
     return () => {
       engine.destroy();
-      observer.disconnect();
+      mutationObserver.disconnect();
+      refreshQueued = false;
       tree.removeEventListener('keydown', onKeyDown);
       doc.removeEventListener('eds:toast-close', onToastClose);
       tree.removeEventListener('click', onClick);

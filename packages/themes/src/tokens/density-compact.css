@@ -1,11 +1,15 @@
 /* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/density-compact.json */
-/* Densidade compact: altura de controle md, espaço 4 e linha de tabela. */
+/* Densidade compact: alturas de controle (sm < md < lg, alvo mínimo de 24px no compact), insets e linha de tabela. A escala space-* não varia. */
 
 /* prettier-ignore */
 @layer eds.tokens {
   [data-density="compact"] {
+    --eds-control-height-sm: 28px;
     --eds-control-height-md: 32px;
-    --eds-space-4: 12px;
+    --eds-control-height-lg: 36px;
+    --eds-inset-sm: var(--eds-space-2);
+    --eds-inset-md: var(--eds-space-3);
+    --eds-inset-lg: var(--eds-space-4);
     --eds-table-row-height: 36px;
   }
 }

@@ -365,12 +365,33 @@ const FILE_LINK = /\.(pdf|xlsx?|csv|zip|docx?|odt|ods)$/i;
 /** Depois de `beforeunload`, se a página continua viva a navegação foi cancelada. */
 const UNLOAD_GRACE_MS = 800;
 
+/** Cópia sem a flag `g` (o `test` com `g` guarda estado), feita uma vez por regra. */
+const plainRules = new WeakMap<RegExp, RegExp>();
+
 function isExcluded(url: string): boolean {
-  return config.exclude.some((rule) =>
-    typeof rule === 'string'
-      ? url.includes(rule)
-      : new RegExp(rule.source, rule.flags.replace('g', '')).test(url),
-  );
+  if (config.exclude.length === 0) return false;
+  return config.exclude.some((rule) => {
+    if (typeof rule === 'string') return url.includes(rule);
+    let plain = plainRules.get(rule);
+    if (!plain) {
+      plain = new RegExp(rule.source, rule.flags.replace('g', ''));
+      plainRules.set(rule, plain);
+    }
+    return plain.test(url);
+  });
+}
+
+/** `X-EDS-Loader: off` presente? Lê sem copiar os cabeçalhos. */
+function hasOffHeader(source: HeadersInit): boolean {
+  const isOff = (value: string | null | undefined) => value?.toLowerCase() === 'off';
+  if (source instanceof Headers) return isOff(source.get(HEADER));
+  if (Array.isArray(source)) {
+    return source.some(([name, value]) => name.toLowerCase() === HEADER && isOff(value));
+  }
+  for (const name of Object.keys(source)) {
+    if (name.toLowerCase() === HEADER) return isOff((source as Record<string, string>)[name]);
+  }
+  return false;
 }
 
 /** `trigger: 'user'` só conta o que nasce de uma ação do usuário (sem suporte: conta tudo). */
@@ -406,16 +427,24 @@ function installAuto(): () => void {
           : input instanceof URL
             ? input.href
             : (input as Request).url;
-      const { edsLoader, ...rest } = init ?? {};
-      const headers = new Headers(
-        rest.headers ?? (input instanceof Request ? input.headers : undefined),
-      );
-      const headerOff = headers.get(HEADER)?.toLowerCase() === 'off';
+      // Sem alocar nada nas chamadas comuns: só separa `edsLoader` e só cria `Headers` quando
+      // o cabeçalho de exclusão está de fato presente.
+      let edsLoader: PatchedFetchInit['edsLoader'];
+      let rest: RequestInit | undefined = init;
+      if (init && 'edsLoader' in init) {
+        const { edsLoader: own, ...others } = init;
+        edsLoader = own;
+        rest = others;
+      }
+      const headerSource: HeadersInit | undefined =
+        rest?.headers ?? (input instanceof Request ? input.headers : undefined);
+      const headerOff = headerSource !== undefined && hasOffHeader(headerSource);
       let nextInput = input;
-      let nextInit: RequestInit | undefined = init ? rest : undefined;
+      let nextInit: RequestInit | undefined = rest;
       if (headerOff) {
+        const headers = new Headers(headerSource);
         headers.delete(HEADER);
-        if (input instanceof Request && !rest.headers) nextInput = new Request(input, { headers });
+        if (input instanceof Request && !rest?.headers) nextInput = new Request(input, { headers });
         else nextInit = { ...rest, headers };
       }
       if (edsLoader === false || headerOff || isExcluded(url) || !triggered()) {

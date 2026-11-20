@@ -20,6 +20,9 @@ export interface ComboboxOption {
 }
 
 const DEBOUNCE_MS = 300;
+/** Acima desta quantidade de opções locais, o filtro espera a pausa da digitação. */
+const LOCAL_DEBOUNCE_OPTIONS = 200;
+const LOCAL_DEBOUNCE_MS = 80;
 const STATUS_MS = 500;
 const LOADING_STATUS_MS = 400;
 const DEFAULT_MIN_CHARS = 2;
@@ -207,10 +210,25 @@ export const comboboxBehavior: Behavior = {
       else popup.removeAttribute('data-placement');
     };
 
-    const onViewportChange = () => position();
+    // scroll/resize disparam em rajada: no máximo uma reposição por quadro.
+    let positionFrame = 0;
+    const onViewportChange = () => {
+      if (typeof requestAnimationFrame !== 'function') return position();
+      if (positionFrame) return;
+      positionFrame = requestAnimationFrame(() => {
+        positionFrame = 0;
+        position();
+      });
+    };
+    const cancelPositionFrame = () => {
+      if (positionFrame && typeof cancelAnimationFrame === 'function')
+        cancelAnimationFrame(positionFrame);
+      positionFrame = 0;
+    };
 
     const openPopup = () => {
-      if (open) return;
+      // Somente leitura: o campo segue focável e lido, mas a lista não abre.
+      if (open || input.readOnly) return;
       open = true;
       input.setAttribute('aria-expanded', 'true');
       showPopover(popup);
@@ -230,13 +248,25 @@ export const comboboxBehavior: Behavior = {
       announce('');
       window.removeEventListener('resize', onViewportChange);
       window.removeEventListener('scroll', onViewportChange, true);
+      cancelPositionFrame();
     };
 
     // ---- Dados -----------------------------------------------------------------------------
+    // Rótulo normalizado por opção; a própria comparação do rótulo invalida o cache.
+    const normalized = new WeakMap<HTMLElement, { label: string; norm: string }>();
+    const normalizedLabel = (option: HTMLElement): string => {
+      const label = labelOf(option);
+      const hit = normalized.get(option);
+      if (hit && hit.label === label) return hit.norm;
+      const norm = normalizeText(label);
+      normalized.set(option, { label, norm });
+      return norm;
+    };
     const filterLocal = (query: string) => {
       const needle = normalizeText(query.trim());
       for (const option of options()) {
-        option.hidden = needle !== '' && !normalizeText(labelOf(option)).includes(needle);
+        const hide = needle !== '' && !normalizedLabel(option).includes(needle);
+        if (option.hidden !== hide) option.hidden = hide;
       }
     };
 
@@ -348,11 +378,23 @@ export const comboboxBehavior: Behavior = {
         }
       }
       if (!source) {
-        filterLocal(query);
-        refreshEmpty();
-        openPopup();
-        position();
-        scheduleStatus();
+        const runLocal = () => {
+          filterLocal(input.value);
+          refreshEmpty();
+          openPopup();
+          position();
+          scheduleStatus();
+        };
+        // Listas pequenas filtram a cada tecla; as grandes esperam a pausa da digitação.
+        if (debounce) clearTimeout(debounce);
+        debounce = null;
+        if (options().length > LOCAL_DEBOUNCE_OPTIONS) {
+          openPopup();
+          debounce = setTimeout(() => {
+            debounce = null;
+            runLocal();
+          }, LOCAL_DEBOUNCE_MS);
+        } else runLocal();
         return;
       }
       abortRemote();
@@ -461,7 +503,7 @@ export const comboboxBehavior: Behavior = {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'eds-combobox-tag-remove';
-        button.disabled = input.disabled;
+        button.disabled = input.disabled || input.readOnly;
         button.setAttribute('aria-label', format(getMessages().comboTagRemove, { label }));
         button.append(closeIcon());
         li.append(text, button);
@@ -615,6 +657,7 @@ export const comboboxBehavior: Behavior = {
         switch (event.key) {
           case 'ArrowDown':
             event.preventDefault();
+            if (input.readOnly) break;
             if (!open) {
               if (openFromArrow() && !event.altKey) move(1);
             } else if (!event.altKey) move(1);
@@ -623,6 +666,8 @@ export const comboboxBehavior: Behavior = {
             if (event.altKey) {
               event.preventDefault();
               closePopup();
+            } else if (input.readOnly) {
+              event.preventDefault();
             } else if (!open) {
               event.preventDefault();
               if (openFromArrow()) move(-1);
@@ -649,7 +694,7 @@ export const comboboxBehavior: Behavior = {
               event.stopPropagation();
               abortRemote();
               closePopup();
-            } else if (input.value !== '') {
+            } else if (input.value !== '' && !input.readOnly) {
               event.preventDefault();
               event.stopPropagation();
               input.value = '';
@@ -662,7 +707,7 @@ export const comboboxBehavior: Behavior = {
             }
             break;
           case 'Backspace':
-            if (multiple && input.value === '' && selected.size > 0) {
+            if (multiple && !input.readOnly && input.value === '' && selected.size > 0) {
               event.preventDefault();
               const last = [...selected.entries()].pop();
               if (last) toggle(last[0], last[1]);
@@ -718,12 +763,20 @@ export const comboboxBehavior: Behavior = {
       { signal },
     );
 
-    let disabledObserver: MutationObserver | null = null;
+    // `readonly` do campo: `aria-readonly` e etiquetas sem o botão de remover ativo.
+    const syncReadonly = () => {
+      if (input.readOnly) input.setAttribute('aria-readonly', 'true');
+      else input.removeAttribute('aria-readonly');
+      if (input.readOnly) closePopup();
+      for (const button of removeButtons()) button.disabled = input.disabled || input.readOnly;
+    };
+    syncReadonly();
+    const disabledObserver = new MutationObserver(syncReadonly);
+    disabledObserver.observe(input, {
+      attributes: true,
+      attributeFilter: ['disabled', 'readonly'],
+    });
     if (multiple) {
-      disabledObserver = new MutationObserver(() => {
-        for (const button of removeButtons()) button.disabled = input.disabled;
-      });
-      disabledObserver.observe(input, { attributes: true, attributeFilter: ['disabled'] });
       listbox.setAttribute('aria-multiselectable', 'true');
       control?.addEventListener(
         'click',
@@ -731,7 +784,7 @@ export const comboboxBehavior: Behavior = {
           const target = event.target as Element;
           const button = target.closest<HTMLButtonElement>('.eds-combobox-tag-remove');
           if (button) {
-            if (!input.disabled) removeFromTag(button);
+            if (!input.disabled && !input.readOnly) removeFromTag(button);
           } else if (!input.disabled && target !== input) input.focus();
         },
         { signal },
@@ -770,7 +823,7 @@ export const comboboxBehavior: Behavior = {
     if (!multiple) syncValidity();
 
     return () => {
-      disabledObserver?.disconnect();
+      disabledObserver.disconnect();
       announcer.dispose();
       input.setCustomValidity('');
       clearError();

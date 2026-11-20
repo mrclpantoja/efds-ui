@@ -67,7 +67,7 @@ describe('AppShell', () => {
 
   it('skip link move o foco ao main sem alterar o hash', async () => {
     const user = userEvent.setup();
-    render(<AppShell skipLinkLabel="Ir ao conteúdo">x</AppShell>);
+    render(<AppShell texts={{ skipLink: 'Ir ao conteúdo' }}>x</AppShell>);
     await user.click(screen.getByRole('link', { name: 'Ir ao conteúdo' }));
     expect(screen.getByRole('main')).toHaveFocus();
     expect(window.location.hash).toBe('');
@@ -92,7 +92,7 @@ describe('AppShell', () => {
         navId="menu"
         header={
           <AppShellHeader>
-            <AppShellNavToggle label="Open menu" />
+            <AppShellNavToggle texts={{ label: 'Open menu' }} />
           </AppShellHeader>
         }
       >

@@ -261,7 +261,7 @@ describe('MultiSelect', () => {
   });
 
   it('requiredMessage é configurável', () => {
-    const { input } = setup({ required: true, requiredMessage: 'Pick one.' });
+    const { input } = setup({ required: true, texts: { required: 'Pick one.' } });
     expect(input.validationMessage).toBe('Pick one.');
   });
 
@@ -313,9 +313,11 @@ describe('MultiSelect', () => {
   it('textos configuráveis', async () => {
     const { user, input, opt, status } = setup({
       defaultValue: ['poa'],
-      tagsLabel: 'Chosen',
-      removeLabel: (l) => `Drop ${l}`,
-      selectedStatus: (l, n) => `${l} picked (${n})`,
+      texts: {
+        tags: 'Chosen',
+        remove: (l) => `Drop ${l}`,
+        selected: (l, n) => `${l} picked (${n})`,
+      },
     });
     expect(screen.getByRole('list', { name: 'Chosen' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Drop Porto Alegre' })).toBeInTheDocument();

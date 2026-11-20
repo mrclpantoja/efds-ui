@@ -3,3 +3,4 @@
 @import './base/root.css';
 @import './base/typography.css';
 @import './base/accessibility.css';
+@import './base/print.css';

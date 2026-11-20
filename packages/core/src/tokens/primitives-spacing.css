@@ -1,13 +1,15 @@
 /* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/primitives/spacing.json */
-/* Escala de espaçamento base 4px. A densidade sobrescreve space-4 (ver packages/themes/tokens/density-*.json). */
+/* Escala de espaçamento base 4px, com os degraus de 2px (space-0-5) e 20px (space-4-5). Valores fixos: a densidade não altera a escala, e sim os tokens semânticos inset-* (semantic/control.json). */
 
 /* prettier-ignore */
 @layer eds.tokens {
   :where(:root) {
+    --eds-space-0-5: 2px;
     --eds-space-1: 4px;
     --eds-space-2: 8px;
     --eds-space-3: 12px;
     --eds-space-4: 16px;
+    --eds-space-4-5: 20px;
     --eds-space-5: 24px;
     --eds-space-6: 32px;
     --eds-space-7: 40px;

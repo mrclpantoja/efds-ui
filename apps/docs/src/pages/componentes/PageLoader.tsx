@@ -64,7 +64,7 @@ configure({ loader: { mode: 'manual' } }); // vale também depois do init`;
 const react = `import { PageLoaderProvider, usePageLoader } from '@eds-ui/react';
 
 // Um único provider, na raiz. Com auto (padrão), todo fetch e XMLHttpRequest o aciona.
-<PageLoaderProvider exclude={[/\\/api\\/poll/]} title="Carregando…">
+<PageLoaderProvider exclude={[/\\/api\\/poll/]} texts={{ title: 'Carregando…' }}>
   <App />
 </PageLoaderProvider>
 
@@ -218,10 +218,16 @@ export default function PageLoaderPage() {
               description: 'Tempo mínimo visível depois de aparecer (ms).',
             },
             {
-              name: 'title / text',
-              type: 'string',
-              default: "'Carregando…' / 'Aguarde um instante.'",
-              description: 'Textos padrão; cada start/track pode trocá-los.',
+              name: 'texts',
+              type: 'Partial<PageLoaderTexts>',
+              description: (
+                <>
+                  Textos (pt-BR): <code>title</code> (&quot;Carregando…&quot;), <code>text</code>{' '}
+                  (&quot;Aguarde um instante.&quot;), <code>slowText</code>, <code>close</code> e{' '}
+                  <code>continue</code> (botões da demora). Cada start/track pode trocar título e
+                  texto.
+                </>
+              ),
             },
             {
               name: 'exclude',

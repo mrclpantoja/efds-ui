@@ -15,7 +15,7 @@
     min-block-size: var(--_textarea-min-height);
     padding-block: var(--_textarea-padding-y);
     padding-inline: var(--_textarea-padding-x);
-    border: 1px solid var(--_textarea-border);
+    border: var(--eds-border-width) solid var(--_textarea-border);
     border-radius: var(--_textarea-radius);
     background: var(--_textarea-bg);
     color: var(--_textarea-fg);
@@ -61,6 +61,22 @@
 
       cursor: not-allowed;
       resize: none;
+    }
+  }
+
+  /* Tamanhos (md é o padrão): só a altura mínima muda, como no Input. */
+  .eds-textarea-sm {
+    --_textarea-min-height: calc(var(--eds-control-height-sm) * 2);
+  }
+
+  .eds-textarea-lg {
+    --_textarea-min-height: calc(var(--eds-control-height-lg) * 2);
+  }
+
+  /* Toque: 16px evita o zoom automático do iOS ao focar (vale para todos os tamanhos). */
+  @media (pointer: coarse) {
+    .eds-textarea {
+      font-size: 1rem;
     }
   }
 

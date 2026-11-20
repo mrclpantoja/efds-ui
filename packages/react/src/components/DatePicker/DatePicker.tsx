@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { cx } from '../../utils/cx';
 import { FieldContext, useControlAttrs } from '../../internal/field-context';
+import { useLocale } from '../Locale';
 import { useAnnouncer } from '../../internal/announcer';
 import { mergeRefs } from '../../internal/refs-d';
 import { useControllable } from '../../internal/useControllable';
@@ -83,7 +84,7 @@ export interface DatePickerProps extends Omit<
   invalid?: boolean;
   /** Sucesso: `data-valid="true"`. */
   valid?: boolean;
-  /** Idioma dos nomes de mês e dia (`Intl`). Padrão: `pt-BR`. A máscara continua dd/mm/aaaa. */
+  /** Idioma dos nomes de mês e dia (`Intl`). Padrão: o do `LocaleProvider` (`pt-BR`). A máscara continua dd/mm/aaaa. */
   locale?: string;
   /** Textos internos substituíveis (i18n). */
   texts?: DatePickerTexts;
@@ -107,7 +108,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
     size = 'md',
     invalid,
     valid,
-    locale = 'pt-BR',
+    locale: localeProp,
     texts: textsProp,
     disabled,
     readOnly,
@@ -128,6 +129,8 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
     valid,
   });
   const ctx = useContext(FieldContext);
+  const contextLocale = useLocale();
+  const locale = localeProp ?? contextLocale;
   const generated = useId();
   const errorId = `${generated}-err`;
   const dialogId = `${generated}-cal`;

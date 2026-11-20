@@ -20,5 +20,16 @@ export type {
   TableToolbarProps,
   TableFooterProps,
   TableSort,
+  TableSortDirection,
+  TableSortState,
+  TableTexts,
   TableColumnKind,
 } from './Table';
+export { sortTableData, filterTableData, useTableFilter } from './data';
+export type {
+  SortTableDataOptions,
+  FilterTableDataOptions,
+  TableFilterTexts,
+  UseTableFilterOptions,
+  UseTableFilterResult,
+} from './data';

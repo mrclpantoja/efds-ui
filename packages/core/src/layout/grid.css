@@ -11,7 +11,7 @@
  *                                     (space-9 × 4); quebra sozinha, sem nenhum span
  *   .eds-grid-subgrid                 num item que também é .eds-grid: herda as trilhas do
  *                                     grid pai (alinha conteúdo aninhado às 12 colunas)
- *   .eds-gap-{0..9}                   espaçamento (utilities.css); padrão space-4, que
+ *   .eds-gap-{0..9}                   espaçamento (utilities.css); padrão inset-md, que
  *                                     acompanha a densidade
  *
  *   <div class="eds-grid">
@@ -32,7 +32,7 @@
  */
 @layer eds.layout {
   .eds-grid {
-    --_gap: var(--eds-space-4);
+    --_gap: var(--eds-inset-md);
 
     container: eds-grid / inline-size;
     display: grid;

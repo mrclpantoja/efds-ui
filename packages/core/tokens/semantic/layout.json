@@ -1,6 +1,10 @@
 {
   "$selector": ":where(:root)",
-  "$description": "Estrutura de página. Breakpoints (documentação; custom properties não funcionam em @media): 640 / 768 / 1024 / 1280px.",
+  "$description": "Estrutura de página. Os 4 breakpoints do projeto (640 / 768 / 1024 / 1280px) existem como tokens só para documentação e leitura por JS: custom properties não funcionam em @media nem em @container, ali vale o número. layout-container-2xl é apenas uma largura máxima opcional, sem breakpoint próprio (acima de 1280px o conteúdo não ganha novas colunas).",
+  "layout-breakpoint-sm": "640px",
+  "layout-breakpoint-md": "768px",
+  "layout-breakpoint-lg": "1024px",
+  "layout-breakpoint-xl": "1280px",
   "layout-sidebar-width": "240px",
   "layout-sidebar-width-collapsed": "72px",
   "layout-navbar-height": "64px",
@@ -8,5 +12,9 @@
   "layout-container-md": "768px",
   "layout-container-lg": "1024px",
   "layout-container-xl": "1280px",
-  "layout-container-2xl": "1440px"
+  "layout-container-2xl": "1440px",
+  "layout-dialog-sm": "25rem",
+  "layout-dialog-md": "35rem",
+  "layout-dialog-lg": "45rem",
+  "layout-table-min": "36rem"
 }

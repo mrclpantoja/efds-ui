@@ -87,6 +87,12 @@ export default function CheckboxPage() {
           caption="Props de Checkbox"
           rows={[
             {
+              name: 'size',
+              type: "'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description: 'Tamanho. O padrão não emite classe.',
+            },
+            {
               name: 'children',
               type: 'ReactNode',
               description: (
@@ -138,6 +144,7 @@ export default function CheckboxPage() {
               name: '.eds-checkbox',
               effect: 'A caixa: 1,125rem, borda forte, raio pequeno, marca desenhada em CSS.',
             },
+            { name: '.eds-checkbox-sm / -lg', effect: 'Caixa menor e maior.' },
             { name: ':checked', effect: 'Fundo na cor de ação e marca de seleção.' },
             { name: ':indeterminate', effect: 'Fundo na cor de ação e traço horizontal.' },
             { name: '[aria-invalid="true"]', effect: 'Borda de perigo (e fundo, se marcado).' },

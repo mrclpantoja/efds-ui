@@ -100,10 +100,15 @@ export default function AppShellPage() {
               ),
             },
             {
-              name: 'skipLinkLabel',
-              type: 'string',
-              default: "'Pular para o conteúdo'",
-              description: 'Texto do skip link.',
+              name: 'texts',
+              type: 'Partial<AppShellTexts>',
+              description: (
+                <>
+                  Textos internos: <code>skipLink</code> (&quot;Pular para o conteúdo&quot;). No{' '}
+                  <code>AppShellNavToggle</code>, <code>texts.label</code> (&quot;Abrir
+                  navegação&quot;).
+                </>
+              ),
             },
             {
               name: 'mainId',

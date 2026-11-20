@@ -1,4 +1,4 @@
-import { format, getMessages } from '../core/config';
+import { DEFAULT_LOCALE, format, getLocale, getMessages } from '../core/config';
 import type { ExportColumnType, ExportData } from './types';
 
 /** Valor já interpretado de uma célula. */
@@ -164,15 +164,82 @@ export function normalize(data: ExportData): NormalizedData {
   return { columns, rows: cells.map((row) => row.map((c) => c ?? { kind: 'empty' })) };
 }
 
-// ---- Formatação pt-BR ----------------------------------------------------------------------
+// ---- Formatação por locale (padrão pt-BR) ---------------------------------------------------
 
-/** Número em pt-BR sem depender de `Intl`: vírgula decimal e, opcional, ponto de milhar. */
+interface LocaleFormat {
+  decimal: string;
+  group: string;
+  /** Ordem e separadores da data numérica, ex.: `[['d'], '/', ['m'], '/', ['y']]`. */
+  datePattern: ({ part: 'd' | 'm' | 'y' } | { literal: string })[];
+}
+
+const formats = new Map<string, LocaleFormat>();
+
+/** Separadores e ordem da data do locale, lidos do `Intl` só para saber os símbolos. */
+export function localeFormat(locale: string = getLocale()): LocaleFormat {
+  const cached = formats.get(locale);
+  if (cached) return cached;
+  let result: LocaleFormat;
+  try {
+    const numbers = new Intl.NumberFormat(locale).formatToParts(1234567.5);
+    const date = new Intl.DateTimeFormat(locale, {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }).formatToParts(new Date(Date.UTC(2001, 10, 22)));
+    const pattern: LocaleFormat['datePattern'] = [];
+    for (const p of date) {
+      if (p.type === 'day') pattern.push({ part: 'd' });
+      else if (p.type === 'month') pattern.push({ part: 'm' });
+      else if (p.type === 'year') pattern.push({ part: 'y' });
+      else if (p.type === 'literal') pattern.push({ literal: p.value });
+    }
+    result = {
+      decimal: numbers.find((p) => p.type === 'decimal')?.value ?? ',',
+      group: numbers.find((p) => p.type === 'group')?.value ?? '.',
+      datePattern: pattern,
+    };
+  } catch {
+    return locale === DEFAULT_LOCALE
+      ? {
+          decimal: ',',
+          group: '.',
+          datePattern: [
+            { part: 'd' },
+            { literal: '/' },
+            { part: 'm' },
+            { literal: '/' },
+            { part: 'y' },
+          ],
+        }
+      : localeFormat(DEFAULT_LOCALE);
+  }
+  formats.set(locale, result);
+  return result;
+}
+
+/** Locale pedido (ou o global), em forma canônica; tag inválida cai no global. */
+export function resolveLocale(requested?: string): string {
+  if (requested) {
+    try {
+      return Intl.getCanonicalLocales(requested)[0] ?? getLocale();
+    } catch {
+      /* inválido */
+    }
+  }
+  return getLocale();
+}
+
+/** Número sem depender de `Intl` para os dígitos: separadores do locale e, opcional, milhar. */
 export function formatDecimal(
   value: number,
   minFrac: number,
   maxFrac: number,
   group: boolean,
+  locale: string = getLocale(),
 ): string {
+  const sep = localeFormat(locale);
   const abs = Math.abs(value);
   let s = abs.toFixed(maxFrac);
   if (s.includes('e')) s = String(abs);
@@ -180,15 +247,26 @@ export function formatDecimal(
   let int = parts[0] ?? '0';
   let frac = parts[1] ?? '';
   while (frac.length > minFrac && frac.endsWith('0')) frac = frac.slice(0, -1);
-  if (group) int = int.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  if (group) int = int.replace(/\B(?=(\d{3})+(?!\d))/g, sep.group);
   const negative = value < 0 && /[1-9]/.test(int + frac);
-  return `${negative ? '-' : ''}${int}${frac ? `,${frac}` : ''}`;
+  return `${negative ? '-' : ''}${int}${frac ? `${sep.decimal}${frac}` : ''}`;
 }
 
 const p2 = (n: number): string => String(n).padStart(2, '0');
 
-export function formatDate(cell: DateCell): string {
-  const day = `${p2(cell.day)}/${p2(cell.month)}/${String(cell.year).padStart(4, '0')}`;
+/** Data no locale (ordem e separadores do `Intl`; dia e mês com 2 dígitos, ano com 4). */
+export function formatDate(cell: DateCell, locale: string = getLocale()): string {
+  const day = localeFormat(locale)
+    .datePattern.map((p) =>
+      'literal' in p
+        ? p.literal
+        : p.part === 'd'
+          ? p2(cell.day)
+          : p.part === 'm'
+            ? p2(cell.month)
+            : String(cell.year).padStart(4, '0'),
+    )
+    .join('');
   if (!cell.time) return day;
   const hm = `${p2(cell.hour)}:${p2(cell.minute)}`;
   return `${day} ${cell.second ? `${hm}:${p2(cell.second)}` : hm}`;
@@ -199,25 +277,33 @@ export function formatIsoDate(cell: DateCell): string {
   return cell.time ? `${day}T${p2(cell.hour)}:${p2(cell.minute)}:${p2(cell.second)}` : day;
 }
 
-/** Relógio local de um `Date`: `dd/mm/aaaa hh:mm`. */
-export function formatNow(now: Date): string {
-  return formatDate({
-    kind: 'date',
-    year: now.getFullYear(),
-    month: now.getMonth() + 1,
-    day: now.getDate(),
-    hour: now.getHours(),
-    minute: now.getMinutes(),
-    second: 0,
-    time: true,
-  });
+/** Relógio local de um `Date`: data do locale e `hh:mm`. */
+export function formatNow(now: Date, locale: string = getLocale()): string {
+  return formatDate(
+    {
+      kind: 'date',
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
+      day: now.getDate(),
+      hour: now.getHours(),
+      minute: now.getMinutes(),
+      second: 0,
+      time: true,
+    },
+    locale,
+  );
 }
 
 /**
  * Texto da célula. `csv`: números sem ponto de milhar e sem símbolo, para o Excel reconhecer;
  * `view` (PDF e larguras do XLSX): com milhar e "R$".
  */
-export function cellText(cell: Cell, type: ExportColumnType, mode: 'csv' | 'view'): string {
+export function cellText(
+  cell: Cell,
+  type: ExportColumnType,
+  mode: 'csv' | 'view',
+  locale: string = getLocale(),
+): string {
   switch (cell.kind) {
     case 'empty':
       return '';
@@ -228,16 +314,16 @@ export function cellText(cell: Cell, type: ExportColumnType, mode: 'csv' | 'view
       return cell.value ? m.exportYes : m.exportNo;
     }
     case 'date':
-      return formatDate(cell);
+      return formatDate(cell, locale);
     case 'number': {
       const group = mode === 'view';
       if (type === 'currency') {
-        const n = formatDecimal(cell.value, 2, 2, group);
+        const n = formatDecimal(cell.value, 2, 2, group, locale);
         if (mode === 'csv') return n;
         return n.startsWith('-') ? `-R$ ${n.slice(1)}` : `R$ ${n}`;
       }
-      if (type === 'percent') return `${formatDecimal(cell.value, 0, 2, group)}%`;
-      return formatDecimal(cell.value, 0, 6, group);
+      if (type === 'percent') return `${formatDecimal(cell.value, 0, 2, group, locale)}%`;
+      return formatDecimal(cell.value, 0, 6, group, locale);
     }
   }
 }

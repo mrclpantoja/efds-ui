@@ -61,7 +61,7 @@ export default function AlertPage() {
               O Alert não se remove sozinho: no React, o consumidor o desmonta e leva o foco para um
               elemento lógico, já que o botão que tinha o foco sai do DOM. No HTML, o{' '}
               <code>@eds-ui/behavior</code> faz isso com <code>data-eds-dismiss</code> no botão (e
-              dispara <code>eds:dismiss</code>, cancelável).
+              dispara <code>eds:alert-dismiss</code>, cancelável).
             </>
           }
           html={fechavelHtml}
@@ -106,14 +106,15 @@ export default function AlertPage() {
               ),
             },
             {
-              name: 'severityLabel',
-              type: 'string | false',
-              default: 'por variante',
+              name: 'texts',
+              type: 'Partial<AlertTexts>',
               description: (
                 <>
-                  Texto oculto que diz a severidade antes do título: &quot;Informação:&quot;,
-                  &quot;Sucesso:&quot;, &quot;Atenção:&quot; ou &quot;Erro:&quot;. Passe outro texto
-                  para traduzir, ou <code>false</code> quando o título já diz a severidade.
+                  Textos internos. <code>severity</code> (padrão por variante:
+                  &quot;Informação:&quot;, &quot;Sucesso:&quot;, &quot;Atenção:&quot; ou
+                  &quot;Erro:&quot;) é o texto oculto antes do título: passe outro para traduzir, ou{' '}
+                  <code>false</code> quando o título já diz a severidade. <code>close</code>{' '}
+                  (&quot;Fechar aviso&quot;) é o nome acessível do botão de fechar.
                 </>
               ),
             },
@@ -132,12 +133,6 @@ export default function AlertPage() {
               type: 'MouseEventHandler<HTMLButtonElement>',
               description:
                 'Mostra o botão de fechar. O Alert não se remove: o consumidor o desmonta e move o foco.',
-            },
-            {
-              name: 'closeLabel',
-              type: 'string',
-              default: "'Fechar aviso'",
-              description: 'Nome acessível do botão de fechar.',
             },
             {
               name: 'role',
@@ -191,7 +186,7 @@ export default function AlertPage() {
           <ul className="docs-list">
             <li>
               <strong>Severidade em texto:</strong> o ícone não tem nome acessível e a cor não pode
-              ser o único canal. O React coloca um texto oculto (<code>severityLabel</code>) antes
+              ser o único canal. O React coloca um texto oculto (<code>texts.severity</code>) antes
               do conteúdo; no HTML, escreva &quot;Erro:&quot; visível ou em{' '}
               <code>.eds-visually-hidden</code>.
             </li>
@@ -208,7 +203,7 @@ export default function AlertPage() {
             </li>
             <li>
               <strong>Forçado pelo tipo e pelo componente:</strong> o botão de fechar tem{' '}
-              <code>aria-label</code> (<code>closeLabel</code>) e o ícone interno é{' '}
+              <code>aria-label</code> (<code>texts.close</code>) e o ícone interno é{' '}
               <code>aria-hidden</code>.
             </li>
             <li>

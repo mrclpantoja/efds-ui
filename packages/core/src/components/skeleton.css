@@ -59,7 +59,7 @@
       transparent
     );
     translate: -100% 0;
-    animation: eds-skeleton-shimmer calc(var(--eds-motion-duration-base) * 8) linear infinite;
+    animation: eds-skeleton-shimmer calc(var(--eds-motion-duration-slow) * 2) linear infinite;
   }
 
   @keyframes eds-skeleton-shimmer {
@@ -76,7 +76,7 @@
 
   @media (forced-colors: active) {
     .eds-skeleton {
-      border: 1px solid GrayText;
+      border: var(--eds-border-width) solid GrayText;
       background: transparent;
     }
   }

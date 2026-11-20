@@ -2,14 +2,18 @@ import { forwardRef } from 'react';
 import {
   DialogBase,
   type DialogBehaviorProps,
+  type DialogShellTexts,
   type DialogNativeProps,
 } from '../../internal/DialogBase';
 import { cx } from '../../utils/cx';
 
-export type ModalSize = 'sm' | 'md' | 'lg';
+export type ModalSize = 'sm' | 'md' | 'lg' | 'full';
+
+/** Textos internos do Modal (`close`). */
+export type ModalTexts = DialogShellTexts;
 
 export interface ModalProps extends DialogBehaviorProps, DialogNativeProps {
-  /** Largura. Padrão: `md`. */
+  /** Largura. `full` ocupa a tela toda (`.eds-modal-full`). Padrão: `md`. */
   size?: ModalSize;
 }
 

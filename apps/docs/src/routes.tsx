@@ -21,6 +21,7 @@ import TemasEEixos from './pages/fundamentos/TemasEEixos';
 import Tokens from './pages/fundamentos/Tokens';
 import Tipografia from './pages/fundamentos/Tipografia';
 import LayoutPage from './pages/fundamentos/Layout';
+import Icones from './pages/fundamentos/Icones';
 import AlertPage from './pages/componentes/Alert';
 import AppShellPage from './pages/componentes/AppShell';
 import BadgePage from './pages/componentes/Badge';
@@ -104,6 +105,7 @@ export const routes: readonly DocRoute[] = [
     page: Tipografia,
   },
   { path: '/fundamentos/layout', title: 'Layout', section: 'fundamentos', page: LayoutPage },
+  { path: '/fundamentos/icones', title: 'Ícones', section: 'fundamentos', page: Icones },
 
   // Componentes (ordem alfabética; Pagination e Empty State são partes do Table)
   { path: '/componentes/alert', title: 'Alert', section: 'componentes', page: AlertPage },

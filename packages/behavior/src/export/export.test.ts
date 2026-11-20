@@ -346,6 +346,22 @@ describe('afm', () => {
   });
 });
 
+describe('locale', () => {
+  it('formata números e datas no locale pedido, com pt-BR como padrão', () => {
+    expect(formatDecimal(1280.5, 2, 2, true, 'en-US')).toBe('1,280.50');
+    expect(formatDecimal(1280.5, 2, 2, false, 'de-DE')).toBe('1280,50');
+    const en = toCsv(data, { locale: 'en-US' }).split('\r\n');
+    expect(en[1]).toBe('"Óleo Modelo ""Ltda""; Ação";1280.50;3;12.5%;03/15/2026');
+    expect(toCsv(data).split('\r\n')[1]).toContain(';1280,50;3;12,5%;15/03/2026');
+  });
+
+  it('o PDF declara o /Lang do locale', () => {
+    const latin = (bytes: Uint8Array) => Array.from(bytes, (b) => String.fromCharCode(b)).join('');
+    expect(latin(toPdf(data, { now: NOW }))).toContain('/Lang (pt-BR)');
+    expect(latin(toPdf(data, { now: NOW, locale: 'en-US' }))).toContain('/Lang (en-US)');
+  });
+});
+
 describe('toPdf', () => {
   it('uma página A4 retrato com a estrutura correta', () => {
     const { pdf, pages } = checkStructure(

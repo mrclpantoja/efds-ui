@@ -40,6 +40,7 @@ packages/
   core/         CSS puro: tokens, base, layout, componentes
   themes/       temas e eixos (theme, mode, density, shape)
   react/        wrappers React sobre as classes do core
+  behavior/     JS puro (sem dependência) para quem usa só HTML: ligado por atributos data-*
   icons/        ícones
 tooling/
   typescript-config/  eslint-config/  vitest-config/

@@ -1,7 +1,11 @@
 {
   "$selector": "[data-density=\"comfortable\"]",
-  "$description": "Densidade comfortable: altura de controle md, espaço 4 e linha de tabela.",
+  "$description": "Densidade comfortable: alturas de controle (sm < md < lg, alvo mínimo de 24px no compact), insets e linha de tabela. A escala space-* não varia.",
+  "control-height-sm": "32px",
   "control-height-md": "38px",
-  "space-4": "16px",
+  "control-height-lg": "44px",
+  "inset-sm": "{space-3}",
+  "inset-md": "{space-4}",
+  "inset-lg": "{space-5}",
   "table-row-height": "44px"
 }

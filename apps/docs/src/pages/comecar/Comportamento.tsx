@@ -105,6 +105,9 @@ const mensagens = `import { configure } from '@eds-ui/behavior';
 
 // Os textos padrão estão em pt-BR. Troque qualquer um (ex.: outro idioma).
 configure({
+  // Locale do Intl: ordem de texto da Table, meses e dias do DatePicker, datas e números da
+  // exportação (e o /Lang do PDF). Padrão: 'pt-BR'.
+  locale: 'en-US',
   messages: {
     toastClose: 'Close notification',
     comboNoResults: 'No results.',
@@ -116,7 +119,7 @@ configure({
 
 const eventos = `// Todos os eventos são CustomEvent com prefixo eds: e bubbles. Ouça no document.
 document.addEventListener('eds:tabs-change', (e) => console.log(e.detail.id));
-document.addEventListener('eds:sort', (e) => {
+document.addEventListener('eds:table-sort', (e) => {
   // Cancelável: com preventDefault, a ordenação é sua (ex.: no servidor).
   e.preventDefault();
   location.search = '?ordem=' + e.detail.column + '&sentido=' + e.detail.direction;
@@ -145,7 +148,7 @@ export default function Comportamento() {
       <Section title="Instalar">
         <p>
           O pacote tem duas saídas: um <strong>script clássico</strong> (
-          <code>eds-behavior.js</code>, para <code>&lt;script src&gt;</code>, cerca de 10 kB com
+          <code>eds-behavior.js</code>, para <code>&lt;script src&gt;</code>, cerca de 47 kB com
           gzip) e um <strong>módulo ESM</strong> tree-shakeable. O visual continua vindo do{' '}
           <code>@eds-ui/core</code>: o pacote não carrega CSS.
         </p>
@@ -163,6 +166,14 @@ export default function Comportamento() {
           Para ligar quando você quiser, marque a tag com <code>data-eds-manual</code>:
         </p>
         <CodeBlock code={manual} label="Código HTML: modo manual" />
+        <p>
+          Quem não usa a exportação de tabelas nem a máscara de entrada pode carregar{' '}
+          <code>eds-behavior-core.js</code>: é o mesmo script (mesmo <code>window.EDS</code>, mesmos
+          atributos e a mesma configuração pela tag) sem o exportador CSV/Excel/JSON/PDF e sem a
+          máscara: cerca de 35 kB com gzip, contra 47 kB do completo. Nele,{' '}
+          <code>data-eds-export</code> e <code>data-eds-mask</code> não fazem nada. O{' '}
+          <code>eds-behavior.js</code> segue completo.
+        </p>
       </Section>
 
       <Section title="Uso por módulo (Vue, Angular, bundlers)">
@@ -422,7 +433,11 @@ export default function Comportamento() {
       <Section title="Textos">
         <p>
           Os textos padrão (&quot;Fechar notificação&quot;, &quot;Nenhum resultado&quot;,
-          &quot;Carregando…&quot;, anúncios da tabela) estão em pt-BR e são configuráveis:
+          &quot;Carregando…&quot;, anúncios da tabela) estão em pt-BR e são configuráveis. O{' '}
+          <code>locale</code> (padrão <code>pt-BR</code>) cuida do <code>Intl</code>: ordem de texto
+          da tabela, nomes de mês e dia do calendário e formato de datas e números da exportação. No
+          React, o equivalente é o <code>LocaleProvider</code> e o <code>texts</code> de cada
+          componente:
         </p>
         <CodeBlock code={mensagens} label="Código TypeScript: configure messages" />
       </Section>
@@ -431,16 +446,19 @@ export default function Comportamento() {
         <p>
           Os componentes avisam o que aconteceu por <code>CustomEvent</code> com prefixo{' '}
           <code>eds:</code> (<code>eds:tabs-change</code>, <code>eds:modal-open</code>,{' '}
-          <code>eds:sort</code>, <code>eds:select-change</code>, <code>eds:combobox-change</code>,{' '}
-          <code>eds:date-change</code>, <code>eds:daterange-change</code>,{' '}
-          <code>eds:upload-change</code>, <code>eds:upload-progress</code>,{' '}
-          <code>eds:upload-complete</code>, <code>eds:upload-error</code>, <code>eds:dismiss</code>,{' '}
+          <code>eds:modal-close</code>, <code>eds:drawer-open</code>, <code>eds:drawer-close</code>,{' '}
+          <code>eds:dropdown-open</code>, <code>eds:dropdown-close</code>,{' '}
+          <code>eds:table-sort</code>, <code>eds:table-select-change</code>,{' '}
+          <code>eds:combobox-change</code>, <code>eds:date-change</code>,{' '}
+          <code>eds:daterange-change</code>, <code>eds:upload-change</code>,{' '}
+          <code>eds:upload-progress</code>, <code>eds:upload-complete</code>,{' '}
+          <code>eds:upload-error</code>, <code>eds:alert-dismiss</code>,{' '}
           <code>eds:toast-close</code>, <code>eds:loader-show</code>, <code>eds:loader-hide</code>,{' '}
           <code>eds:sidebar-collapse</code>, <code>eds:sortable-change</code>,{' '}
           <code>eds:tree-change</code>, <code>eds:tree-beforechange</code>,{' '}
           <code>eds:tree-select</code>, <code>eds:tree-activate</code>, <code>eds:tree-toggle</code>
           , <code>eds:table-beforeexport</code>, <code>eds:table-export</code>). Todos fazem bubble;{' '}
-          <code>eds:sort</code> (da Table), <code>eds:dismiss</code>,{' '}
+          <code>eds:table-sort</code> (da Table), <code>eds:alert-dismiss</code>,{' '}
           <code>eds:tree-beforechange</code> e <code>eds:table-beforeexport</code> são canceláveis.
         </p>
         <CodeBlock code={eventos} label="Código JavaScript: eventos" />

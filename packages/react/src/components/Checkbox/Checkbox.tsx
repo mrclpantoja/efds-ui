@@ -9,6 +9,8 @@ import {
 import { cx } from '../../utils/cx';
 import { useControlAttrs } from '../../internal/field-context';
 
+export type CheckboxSize = 'sm' | 'md' | 'lg';
+
 type CheckboxBaseProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'size' | 'children'
@@ -18,6 +20,8 @@ type CheckboxBaseProps = Omit<
    * no `onChange`, atualize seu estado para `indeterminate={false}`.
    */
   indeterminate?: boolean;
+  /** Padrão: `md`. */
+  size?: CheckboxSize;
   /** Erro: `aria-invalid="true"`. Dentro de um Fieldset com `error` já é automático. */
   invalid?: boolean;
 };
@@ -41,7 +45,7 @@ export type CheckboxProps = CheckboxBaseProps &
 
 /** `ref`, `className` e demais props nativas vão para o `<input>`. */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
-  { indeterminate = false, invalid, className, children, ...rest },
+  { indeterminate = false, size = 'md', invalid, className, children, ...rest },
   ref,
 ) {
   const inner = useRef<HTMLInputElement>(null);
@@ -65,7 +69,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
       {...rest}
       ref={inner}
       type="checkbox"
-      className={cx('eds-checkbox', className)}
+      className={cx('eds-checkbox', size !== 'md' && `eds-checkbox-${size}`, className)}
       {...attrs}
       data-valid={undefined}
     />

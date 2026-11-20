@@ -12,7 +12,7 @@
 @layer eds.components {
   .eds-tabs {
     --_tabs-grow: 0;
-    --_tabs-gap: var(--eds-space-4);
+    --_tabs-gap: var(--eds-inset-md);
 
     display: block;
     min-inline-size: 0;
@@ -29,7 +29,7 @@
     scrollbar-width: thin;
     scrollbar-color: var(--eds-color-border-strong) transparent;
     /* Linha de base desenhada por baixo; o indicador da aba (2px) a cobre. */
-    box-shadow: inset 0 -1px 0 var(--eds-color-border-default);
+    box-shadow: inset 0 calc(var(--eds-border-width) * -1) 0 var(--eds-color-border-default);
   }
 
   .eds-tab {
@@ -43,9 +43,9 @@
     justify-content: center;
     box-sizing: border-box;
     min-block-size: var(--_tab-height);
-    padding-inline: var(--eds-space-4);
+    padding-inline: var(--eds-inset-md);
     border: 0;
-    border-block-end: 2px solid var(--_tab-indicator);
+    border-block-end: var(--eds-border-width-strong) solid var(--_tab-indicator);
     border-radius: 0;
     background: transparent;
     color: var(--_tab-fg);
@@ -64,6 +64,11 @@
     &:hover:not([aria-selected='true'], :disabled, [aria-disabled='true']) {
       --_tab-fg: var(--eds-color-text-primary);
       --_tab-indicator: var(--eds-color-border-strong);
+    }
+
+    &:active:not([aria-selected='true'], :disabled, [aria-disabled='true']) {
+      --_tab-fg: var(--eds-color-text-primary);
+      --_tab-indicator: var(--eds-color-text-muted);
     }
 
     &[aria-selected='true'] {

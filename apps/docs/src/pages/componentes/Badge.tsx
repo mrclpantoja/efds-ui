@@ -71,6 +71,12 @@ export default function BadgePage() {
               description: 'Cor semântica. A cor nunca é o único sinal: o texto diz a situação.',
             },
             {
+              name: 'size',
+              type: "'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description: 'Tamanho. O padrão não emite classe.',
+            },
+            {
               name: 'dot',
               type: 'boolean',
               default: 'false',
@@ -95,6 +101,7 @@ export default function BadgePage() {
               effect:
                 'Fundo sutil e texto na cor de status (AA). Sempre use uma delas junto de .eds-badge.',
             },
+            { name: '.eds-badge-sm / -lg', effect: 'Texto e padding menores e maiores.' },
             {
               name: '.eds-badge-dot',
               effect: 'Tira o fundo e põe um ponto (::before) na cor da variante.',

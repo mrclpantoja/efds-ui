@@ -10,6 +10,21 @@
     }
   }
 
+  /* Mais contraste (prefers-contrast: more): bordas mais fortes e espessas, texto auxiliar no tom
+     secundário e anel de foco mais grosso. Só reatribui tokens semânticos; os componentes não mudam.
+     Fica em eds.base para vencer os eixos de modo (eds.tokens), também em subárvores com data-mode. */
+  @media (prefers-contrast: more) {
+    :root,
+    [data-mode] {
+      --eds-border-width: var(--eds-border-width-strong);
+      --eds-color-border-default: var(--eds-color-border-strong);
+      --eds-color-border-strong: var(--eds-color-text-secondary);
+      --eds-color-text-muted: var(--eds-color-text-secondary);
+      --eds-focus-ring-width: calc(var(--eds-border-width-strong) * 1.5);
+      --eds-focus-ring-offset: var(--eds-border-width-strong);
+    }
+  }
+
   .eds-visually-hidden:not(:focus, :active) {
     position: absolute;
     inline-size: 1px;

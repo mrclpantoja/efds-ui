@@ -13,6 +13,7 @@ import {
   type ReactNode,
 } from 'react';
 import { cx } from '../../utils/cx';
+import { mergeTexts } from '../../utils/texts';
 import { FieldContext, useControlAttrs } from '../../internal/field-context';
 import { useAnnouncer } from '../../internal/announcer';
 import { mergeRefs } from '../../internal/refs-d';
@@ -32,6 +33,32 @@ import { Spinner } from '../Spinner';
 export type ComboboxSize = 'sm' | 'md' | 'lg';
 
 export type { ComboboxOption };
+
+export interface ComboboxTexts {
+  /** Lista sem resultado. Padrão: "Nenhum resultado". */
+  empty: ReactNode;
+  /** Busca em andamento. Padrão: "Carregando…". */
+  loading: ReactNode;
+  /** Nome acessível da lista de opções. Padrão: o `aria-label` do campo. */
+  list?: string;
+  /** Texto do status (live region) conforme a quantidade de resultados. */
+  status: (count: number) => string;
+  /** Status anunciado após ~400 ms de `loading`. Padrão: "Carregando…". */
+  loadingStatus: string;
+  /** Status ao escolher uma opção. Padrão: "{label} selecionado.". */
+  selected: (label: string) => string;
+  /** Mensagem de validade quando há texto sem opção escolhida. Padrão: "Escolha uma das opções da lista.". */
+  invalidChoice: string;
+}
+
+const defaultTexts: ComboboxTexts = {
+  empty: 'Nenhum resultado',
+  loading: 'Carregando…',
+  status: defaultStatus,
+  loadingStatus: 'Carregando…',
+  selected: (label) => `${label} selecionado.`,
+  invalidChoice: 'Escolha uma das opções da lista.',
+};
 
 export interface ComboboxProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -54,20 +81,10 @@ export interface ComboboxProps extends Omit<
   filter?: ComboboxFilter;
   /** Busca em andamento: mostra o texto de carregamento e `aria-busy` no popup. */
   loading?: boolean;
-  /** Padrão: "Nenhum resultado". */
-  emptyMessage?: ReactNode;
-  /** Padrão: "Carregando…". */
-  loadingMessage?: ReactNode;
-  /** Nome acessível da lista de opções. Padrão: o `aria-label` do campo. */
-  listLabel?: string;
-  /** Texto do status (live region) conforme a quantidade de resultados. */
-  statusMessage?: (count: number) => string;
+  /** Textos internos (padrões em pt-BR). */
+  texts?: Partial<ComboboxTexts>;
   /** Erro de carregamento: aparece no popup (`.eds-combobox-empty`) e é anunciado. */
   error?: ReactNode;
-  /** Status anunciado após ~400 ms de `loading`. Padrão: "Carregando…". */
-  loadingStatus?: string;
-  /** Status ao escolher uma opção. Padrão: "{label} selecionado.". */
-  selectedStatus?: (label: string) => string;
   /**
    * Rótulo do `value` controlado cuja opção ainda não está em `options` (ex.: tela de edição com
    * busca remota).
@@ -75,8 +92,6 @@ export interface ComboboxProps extends Omit<
   selectedLabel?: string;
   /** Texto livre: o hidden recebe o texto digitado e não há validação de escolha. */
   freeText?: boolean;
-  /** Mensagem de validade quando há texto sem opção escolhida. Padrão: "Escolha uma das opções da lista.". */
-  invalidChoiceMessage?: string;
   /** Gera um `<input type="hidden">` com o valor escolhido para envio em formulário. */
   name?: string;
   /** Padrão: `md`. */
@@ -102,21 +117,16 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
     onInputChange,
     filter = true,
     loading = false,
-    emptyMessage = 'Nenhum resultado',
-    loadingMessage = 'Carregando…',
-    listLabel,
+    texts,
     error,
-    loadingStatus = 'Carregando…',
-    selectedStatus = (label: string) => `${label} selecionado.`,
     selectedLabel: selectedLabelProp,
     freeText = false,
-    invalidChoiceMessage = 'Escolha uma das opções da lista.',
-    statusMessage = defaultStatus,
     name,
     size = 'md',
     invalid,
     valid,
     disabled,
+    readOnly,
     className,
     onKeyDown,
     onBlur,
@@ -125,6 +135,15 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
   },
   ref,
 ) {
+  const {
+    empty: emptyMessage,
+    loading: loadingMessage,
+    list: listLabel,
+    status: statusMessage,
+    loadingStatus,
+    selected: selectedStatus,
+    invalidChoice: invalidChoiceMessage,
+  } = mergeTexts(defaultTexts, texts);
   const attrs = useControlAttrs({
     id: rest.id,
     describedBy: rest['aria-describedby'],
@@ -264,6 +283,8 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
+    // Somente leitura: o campo continua focável e lido; a lista não abre e o valor não muda.
+    if (readOnly) return;
     if (loading && open && ['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key) && !event.altKey) {
       event.preventDefault();
       return;
@@ -337,13 +358,14 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
         aria-controls={listId}
         aria-activedescendant={expanded && activeIndex >= 0 ? optionId(activeIndex) : undefined}
         disabled={disabled}
+        readOnly={readOnly}
+        aria-readonly={readOnly || undefined}
         value={text}
         onChange={handleInput}
         onKeyDown={handleKeyDown}
         onClick={(event) => {
           onClick?.(event);
-          if (!event.defaultPrevented && !disabled && !rest.readOnly && !open)
-            openFromArrow('none');
+          if (!event.defaultPrevented && !disabled && !readOnly && !open) openFromArrow('none');
         }}
         onBlur={(event) => {
           closeList();

@@ -3,12 +3,16 @@ import { cx } from '../../utils/cx';
 import { useControlAttrs } from '../../internal/field-context';
 import { RadioGroupContext } from '../../internal/radio-group-context';
 
+export type RadioSize = 'sm' | 'md' | 'lg';
+
 export interface RadioProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'size' | 'children' | 'value' | 'checked' | 'defaultChecked'
 > {
   /** Texto do rótulo (obrigatório). */
   children: ReactNode;
+  /** Padrão: `md`. */
+  size?: RadioSize;
   /** Valor da opção (obrigatório). */
   value: string;
   /** Só fora de um RadioGroup (dentro dele, quem controla é o grupo). */
@@ -21,7 +25,7 @@ export interface RadioProps extends Omit<
 
 /** Dentro de um RadioGroup herda `name`, `required` e o estado marcado. `ref`/`className` vão para o `<input>`. */
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
-  { invalid, className, children, value, checked, defaultChecked, onChange, ...rest },
+  { size = 'md', invalid, className, children, value, checked, defaultChecked, onChange, ...rest },
   ref,
 ) {
   const group = useContext(RadioGroupContext);
@@ -53,7 +57,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
         ref={ref}
         type="radio"
         value={value}
-        className={cx('eds-radio', className)}
+        className={cx('eds-radio', size !== 'md' && `eds-radio-${size}`, className)}
         {...state}
         {...attrs}
         data-valid={undefined}

@@ -92,8 +92,8 @@
       var(--_tree-drop-image),
       repeating-linear-gradient(
         to right,
-        var(--_tree-guide) 0 1px,
-        transparent 1px var(--_tree-indent)
+        var(--_tree-guide) 0 var(--eds-border-width),
+        transparent var(--eds-border-width) var(--_tree-indent)
       );
     background-repeat: no-repeat;
     background-size:
@@ -101,7 +101,7 @@
       calc(var(--_tree-indent) * (var(--_tree-level) - 1)) 100%;
     background-position:
       var(--_tree-drop-pos),
-      calc(var(--_tree-pad) + var(--_tree-toggle) / 2 - 0.5px) 0;
+      calc(var(--_tree-pad) + var(--_tree-toggle) / 2 - var(--eds-border-width) / 2) 0;
     cursor: default;
     /* Arrastar com o mouse não seleciona o texto; o campo de renomear continua selecionável. */
     user-select: none;
@@ -111,18 +111,22 @@
         var(--_tree-drop-image),
         repeating-linear-gradient(
           to left,
-          var(--_tree-guide) 0 1px,
-          transparent 1px var(--_tree-indent)
+          var(--_tree-guide) 0 var(--eds-border-width),
+          transparent var(--eds-border-width) var(--_tree-indent)
         );
       background-position:
         var(--_tree-drop-pos),
-        right calc(var(--_tree-pad) + var(--_tree-toggle) / 2 - 0.5px) top;
+        right calc(var(--_tree-pad) + var(--_tree-toggle) / 2 - var(--eds-border-width) / 2) top;
     }
 
     @media (hover: hover) {
       &:hover:not(:has(> .eds-input)) {
         --_tree-bg: var(--eds-color-bg-subtle);
       }
+    }
+
+    &:active:not(:has(> .eds-input)) {
+      --_tree-bg: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
     }
   }
 
@@ -214,7 +218,7 @@
     transition: none;
 
     @media (prefers-reduced-motion: no-preference) {
-      animation: eds-tree-spin 800ms linear infinite;
+      animation: eds-tree-spin var(--eds-motion-duration-slow) linear infinite;
     }
   }
 
@@ -226,8 +230,8 @@
 
   .eds-tree-icon {
     flex: none;
-    inline-size: 1rem;
-    block-size: 1rem;
+    inline-size: var(--eds-icon-size-sm);
+    block-size: var(--eds-icon-size-sm);
     color: var(--eds-color-text-muted);
     fill: currentColor;
   }
@@ -294,8 +298,8 @@
     cursor: pointer;
 
     & > svg {
-      inline-size: 1rem;
-      block-size: 1rem;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
       fill: currentColor;
     }
 
@@ -337,14 +341,14 @@
   /* O "!" do markup fica só como texto de reserva; o glifo visual vem da máscara. */
   .eds-tree-error-icon {
     flex: none;
-    inline-size: 1rem;
+    inline-size: var(--eds-icon-size-sm);
     block-size: var(--eds-line-height-small);
     overflow: hidden;
     background-color: currentColor;
     color: inherit;
     font-size: 0;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='6'/%3E%3Cpath d='M8 4.8v3.8M8 11v.1'/%3E%3C/svg%3E")
-      center / 1rem no-repeat;
+      center / var(--eds-icon-size-sm) no-repeat;
   }
 
   /* Indicadores de soltar. */
@@ -380,8 +384,8 @@
       content: '';
       flex: none;
       order: 1;
-      inline-size: 1rem;
-      block-size: 1rem;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
       background-color: currentColor;
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='6'/%3E%3Cpath d='M3.8 3.8l8.4 8.4'/%3E%3C/svg%3E")
         center / contain no-repeat;
@@ -391,7 +395,7 @@
   /* Fantasma do arrasto (clone da linha; classes eds-sortable-ghost eds-tree-ghost). Autônomo:
      não depende do sortable.css. O JS define inline-size e a posição por transform. */
   .eds-tree-ghost {
-    --_tree-ghost-z: 100; /* camada interna: não há token de z-index */
+    --_tree-ghost-z: var(--eds-z-drag);
 
     position: fixed;
     inset-block-start: 0;
@@ -399,7 +403,7 @@
     z-index: var(--_tree-ghost-z);
     box-sizing: border-box;
     margin: 0;
-    border: 1px solid var(--eds-color-action-primary);
+    border: var(--eds-border-width) solid var(--eds-color-action-primary);
     border-radius: var(--eds-radius-sm);
     background: var(--eds-color-bg-surface);
     box-shadow: var(--eds-shadow-lg);
@@ -412,14 +416,14 @@
   /* Estreito: indentação menor; o rótulo já quebra linha. */
   @container (max-width: 24rem) {
     .eds-tree-row {
-      --_tree-indent: var(--eds-space-4);
+      --_tree-indent: var(--eds-inset-md);
     }
   }
 
   @media (forced-colors: active) {
     .eds-tree [aria-selected='true'] > .eds-tree-row {
-      outline: 2px solid Highlight;
-      outline-offset: -2px;
+      outline: var(--eds-border-width-strong) solid Highlight;
+      outline-offset: calc(var(--eds-border-width-strong) * -1);
 
       &::before {
         background-color: Highlight;

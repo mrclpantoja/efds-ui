@@ -370,6 +370,22 @@ export default function TreePage() {
         />
       </Section>
 
+      <Section title="Desempenho">
+        <p>Os números abaixo são uma referência de uso, não um limite imposto pelo código.</p>
+        <ul className="docs-list">
+          <li>
+            <strong>Referência prática:</strong> até cerca de 2.000 nós no DOM, com a navegação por
+            teclado instantânea. Acima disso, use <code>data-eds-lazy</code> para carregar os filhos
+            sob demanda e manter os ramos fechados.
+          </li>
+          <li>
+            A renumeração (<code>aria-level</code>, <code>aria-posinset</code>) acontece uma vez por
+            lote de mudanças, e a lista de itens visíveis fica em cache até a árvore mudar.
+          </li>
+          <li>Não há virtualização: um nó fechado continua no DOM depois de carregado.</li>
+        </ul>
+      </Section>
+
       <Section title="Acessibilidade">
         <Stack gap={3}>
           <ClassTable

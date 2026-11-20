@@ -17,11 +17,17 @@ import {
 } from 'react';
 import { flushSync } from 'react-dom';
 import { cx } from '../../utils/cx';
+import { mergeTexts } from '../../utils/texts';
 import { SidebarCollapseGlyph } from '../../internal/glyphs-d';
 import { mergeRefs } from '../../internal/refs-d';
 import { AppShellContext, SidebarSlotContext, useShellState } from '../AppShell/context';
 
 const SidebarContext = createContext<{ onNavigate: () => void } | null>(null);
+
+export interface SidebarTexts {
+  /** Rótulo fixo do botão de colapsar (não muda com o estado). */
+  collapse: string;
+}
 
 export interface SidebarProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
   /** Ícone da marca (cabeçalho da sidebar). */
@@ -38,8 +44,8 @@ export interface SidebarProps extends Omit<HTMLAttributes<HTMLElement>, 'childre
   collapsed?: boolean;
   defaultCollapsed?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
-  /** Rótulo fixo do botão de colapsar (não muda com o estado). Padrão: "Menu lateral". */
-  collapseLabel?: string;
+  /** Textos internos (padrões em pt-BR): `collapse` ("Menu lateral"). */
+  texts?: Partial<SidebarTexts>;
   /** Ícone do botão de colapsar. */
   collapseIcon?: ReactNode;
 }
@@ -58,7 +64,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
     collapsed,
     defaultCollapsed = false,
     onCollapsedChange,
-    collapseLabel = 'Menu lateral',
+    texts,
     collapseIcon,
     className,
     'aria-label': ariaLabel = 'Principal',
@@ -158,7 +164,9 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
                 onClick={toggleCollapsed}
               >
                 {collapseIcon ?? <SidebarCollapseGlyph />}
-                <span className="eds-sidebar-label">{collapseLabel}</span>
+                <span className="eds-sidebar-label">
+                  {mergeTexts({ collapse: 'Menu lateral' }, texts).collapse}
+                </span>
               </button>
             ) : null}
           </div>

@@ -9,8 +9,8 @@
   .eds-file {
     --_file-height: var(--eds-control-height-md);
     --_file-radius: var(--eds-radius-md);
-    --_file-border-width: 1px;
-    --_file-button-padding-x: var(--eds-space-4);
+    --_file-border-width: var(--eds-border-width);
+    --_file-button-padding-x: var(--eds-inset-md);
     --_file-bg: var(--eds-color-bg-surface);
     --_file-fg: var(--eds-color-text-secondary);
     --_file-border: var(--eds-color-border-strong);

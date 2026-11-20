@@ -10,18 +10,22 @@
     --_badge-bg: var(--eds-color-bg-subtle);
     --_badge-fg: var(--eds-color-text-secondary);
     --_badge-dot: var(--eds-color-text-secondary);
+    --_badge-pad-y: var(--eds-space-0-5);
+    --_badge-pad-x: var(--eds-space-2);
+    --_badge-font-size: var(--eds-font-size-small);
+    --_badge-line-height: var(--eds-line-height-small);
 
     display: inline-flex;
     align-items: center;
     gap: var(--eds-space-1);
     box-sizing: border-box;
-    padding-block: calc(var(--eds-space-1) / 2);
-    padding-inline: var(--eds-space-2);
+    padding-block: var(--_badge-pad-y);
+    padding-inline: var(--_badge-pad-x);
     border-radius: var(--eds-radius-sm);
     background: var(--_badge-bg);
     color: var(--_badge-fg);
-    font-size: var(--eds-font-size-small);
-    line-height: var(--eds-line-height-small);
+    font-size: var(--_badge-font-size);
+    line-height: var(--_badge-line-height);
     font-weight: var(--eds-font-weight-medium);
     white-space: nowrap;
     cursor: default;
@@ -66,16 +70,29 @@
     &::before {
       content: '';
       flex: none;
-      inline-size: 0.5rem;
-      block-size: 0.5rem;
+      inline-size: var(--eds-space-2);
+      block-size: var(--eds-space-2);
       border-radius: 50%;
       background: var(--_badge-dot);
     }
   }
 
+  /* Tamanhos (md é o padrão). O texto não desce de 12px; o sm só aperta os recuos. */
+  .eds-badge-sm {
+    --_badge-pad-y: 0;
+    --_badge-pad-x: var(--eds-space-1);
+  }
+
+  .eds-badge-lg {
+    --_badge-pad-y: var(--eds-space-1);
+    --_badge-pad-x: var(--eds-space-3);
+    --_badge-font-size: var(--eds-font-size-label);
+    --_badge-line-height: var(--eds-line-height-label);
+  }
+
   @media (forced-colors: active) {
     .eds-badge:not(.eds-badge-dot) {
-      border: 1px solid currentColor;
+      border: var(--eds-border-width) solid currentColor;
     }
 
     .eds-badge-dot::before {

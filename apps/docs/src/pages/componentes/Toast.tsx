@@ -34,7 +34,7 @@ const markup = `
 const provider = `import { ToastProvider } from '@eds-ui/react';
 
 // Um único provider na raiz do app. Os padrões bastam para a maioria dos casos.
-<ToastProvider maxVisible={2} severityLabels={{ danger: 'Falha:' }}>
+<ToastProvider maxVisible={2} texts={{ severity: { danger: 'Falha:' } }}>
   <App />
 </ToastProvider>`;
 
@@ -157,26 +157,21 @@ export default function ToastPage() {
               description: 'A aplicação. A região de toasts é montada depois dela.',
             },
             {
-              name: 'closeLabel',
-              type: 'string',
-              default: "'Fechar notificação'",
-              description: 'Nome acessível do botão de fechar de cada toast.',
-            },
-            {
               name: 'maxVisible',
               type: 'number',
               default: '3',
               description: 'Toasts visíveis ao mesmo tempo; os demais esperam na fila.',
             },
             {
-              name: 'severityLabels',
-              type: "Partial<Record<'info' | 'success' | 'warning' | 'danger', string>>",
-              default:
-                "{ info: 'Informação:', success: 'Sucesso:', warning: 'Atenção:', danger: 'Erro:' }",
+              name: 'texts',
+              type: 'Partial<ToastTexts>',
               description: (
                 <>
-                  Prefixo oculto que anuncia a severidade quando o toast não tem <code>title</code>.
-                  Informe só os rótulos que quiser trocar (outro idioma, outro tom).
+                  Textos internos. <code>close</code> (&quot;Fechar notificação&quot;) é o nome
+                  acessível do botão de fechar de cada toast. <code>severity</code> traz o prefixo
+                  oculto que anuncia a severidade quando o toast não tem <code>title</code>
+                  (padrão: info &quot;Informação:&quot;, success &quot;Sucesso:&quot;, warning
+                  &quot;Atenção:&quot;, danger &quot;Erro:&quot;); informe só os que quiser trocar.
                 </>
               ),
             },
@@ -208,7 +203,7 @@ export default function ToastPage() {
               description: (
                 <>
                   Rótulo visível em destaque. Sem ele, o provider anuncia a severidade por um
-                  prefixo oculto (<code>severityLabels</code>); em qualquer caso a cor nunca é o
+                  prefixo oculto (<code>texts.severity</code>); em qualquer caso a cor nunca é o
                   único canal.
                 </>
               ),
@@ -319,9 +314,9 @@ export default function ToastPage() {
             </li>
             <li>
               <strong>Forçado pelo componente:</strong> o botão de fechar tem{' '}
-              <code>aria-label</code> (<code>closeLabel</code>) e o ícone é decorativo; a severidade
-              vai em texto: o <code>title</code>, se houver, ou um prefixo oculto (
-              <code>severityLabels</code>).
+              <code>aria-label</code> (<code>texts.close</code>) e o ícone é decorativo; a
+              severidade vai em texto: o <code>title</code>, se houver, ou um prefixo oculto (
+              <code>texts.severity</code>).
             </li>
             <li>
               <strong>O consumidor deve garantir:</strong> que o toast nunca seja o único canal da

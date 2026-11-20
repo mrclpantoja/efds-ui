@@ -1,5 +1,5 @@
 /* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/primitives/radius.json */
-/* Raios no formato soft (padrão). O eixo shape sobrescreve radius-sm, radius-md e radius-lg. */
+/* Raios no formato soft (padrão). O eixo shape sobrescreve radius-sm, -md, -lg e -xl. radius-full (círculos: rádio, polegar do switch, pontos) não varia com a forma. */
 
 /* prettier-ignore */
 @layer eds.tokens {

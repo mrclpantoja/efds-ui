@@ -1,5 +1,5 @@
 import { HELVETICA, HELVETICA_BOLD, winAnsiCode } from './afm';
-import { cellText, formatNow, msg, normalize } from './model';
+import { cellText, formatNow, msg, normalize, resolveLocale } from './model';
 import type { ExportData, ExportOptions } from './types';
 
 /**
@@ -178,6 +178,7 @@ function columnWidths(
 export function toPdf(data: ExportData, options: ExportOptions = {}): Uint8Array {
   const { columns, rows } = normalize(data);
   const now = options.now ?? new Date();
+  const locale = resolveLocale(options.locale);
   const cols = columns.length;
   const numeric = columns.map(
     (c) => c.type === 'number' || c.type === 'currency' || c.type === 'percent',
@@ -185,7 +186,7 @@ export function toPdf(data: ExportData, options: ExportOptions = {}): Uint8Array
 
   const heads = columns.map((c) => paragraphs(c.label.replace(/\s+/g, ' '))[0] ?? []);
   const texts = rows.map((row) =>
-    row.map((cell, c) => paragraphs(cellText(cell, columns[c]?.type ?? 'text', 'view'))),
+    row.map((cell, c) => paragraphs(cellText(cell, columns[c]?.type ?? 'text', 'view', locale))),
   );
 
   // Escolha de orientação: paisagem se a largura natural passa da útil do retrato.
@@ -227,7 +228,7 @@ export function toPdf(data: ExportData, options: ExportOptions = {}): Uint8Array
     ? wrapText(options.subtitle, avail, false, SUBTITLE_SIZE)
     : [];
   const generated = wrapText(
-    msg('exportGeneratedAt', { date: formatNow(now) }),
+    msg('exportGeneratedAt', { date: formatNow(now, locale) }),
     avail,
     false,
     NOTE_SIZE,
@@ -397,7 +398,7 @@ export function toPdf(data: ExportData, options: ExportOptions = {}): Uint8Array
 
   push('%PDF-1.4\n%âãÏÓ\n');
   const pageIds = pages.map((_, i) => 6 + 2 * i);
-  object(1, '<< /Type /Catalog /Pages 2 0 R /Lang (pt-BR) >>');
+  object(1, `<< /Type /Catalog /Pages 2 0 R /Lang (${locale}) >>`);
   object(
     2,
     `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(' ')}] /Count ${total} >>`,

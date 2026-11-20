@@ -3,7 +3,7 @@
  *
  * API
  *   .eds-gap-{0..9}   espaçamento entre filhos de .eds-grid / .eds-stack = --eds-space-N
- *                     (space-4 acompanha a densidade). 0 remove o espaçamento.
+ *                     (valores fixos, não variam com a densidade; o padrão dos blocos é inset-md). 0 remove o espaçamento.
  *
  * Fica em eds.utilities: vence o padrão do bloco base (eds.layout) em qualquer ordem de
  * import. Só reatribui --_gap no próprio elemento; grids/stacks aninhados voltam ao padrão.

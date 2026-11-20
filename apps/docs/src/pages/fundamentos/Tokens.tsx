@@ -134,12 +134,19 @@ export default function Tokens() {
               effect: 'Tipografia: família, tamanhos e alturas de linha por estilo, e pesos.',
             },
             {
-              name: '--eds-space-{1..9}',
-              effect: 'Escala de espaçamento (4px a 64px). O space-4 acompanha a densidade.',
+              name: '--eds-space-{0-5|1..9|4-5}',
+              effect:
+                'Escala fixa de espaçamento (2px a 64px, com o degrau de 20px). Não muda com a densidade.',
+            },
+            {
+              name: '--eds-inset-{sm|md|lg}',
+              effect:
+                'Recuo interno e espaço entre elementos de um componente. É o que acompanha a densidade (md: 12, 16 e 20px).',
             },
             {
               name: '--eds-radius-{none|sm|md|lg|xl|full}',
-              effect: 'Raios de borda. Acompanham o eixo de forma.',
+              effect:
+                'Raios de borda. sm, md, lg e xl acompanham o eixo de forma; full é sempre círculo (rádio, polegar do switch, pontos).',
             },
             {
               name: '--eds-shadow-{xs|sm|md|lg}',
@@ -147,11 +154,36 @@ export default function Tokens() {
             },
             {
               name: '--eds-control-height-{sm|md|lg}',
-              effect: 'Altura dos controles. Acompanha a densidade.',
+              effect:
+                'Altura dos controles. Os três degraus acompanham a densidade e mantêm sm < md < lg (no compacto, 28, 32 e 36px; nunca abaixo de 24px, WCAG 2.5.8).',
+            },
+            {
+              name: '--eds-border-width, --eds-border-width-strong',
+              effect: 'Espessura de bordas (1px) e de realces como o indicador da aba (2px).',
+            },
+            {
+              name: '--eds-icon-size-{sm|md|lg|xl}',
+              effect: 'Tamanho de ícones: 16, 20, 24 e 32px (em rem).',
+            },
+            {
+              name: '--eds-target-min',
+              effect:
+                'Alvo mínimo de toque (44px). Em ponteiro grosso, rótulos e checkboxes, rádios e switches sozinhos ganham essa área sem mudar o desenho.',
+            },
+            {
+              name: '--eds-z-{raised|sticky|dropdown|overlay|toast|drag}',
+              effect:
+                'Camadas de empilhamento (1, 10, 20, 30, 40 e 50). Popups em popover e dialog ficam na camada superior do navegador e dispensam z-index.',
+            },
+            {
+              name: '--eds-motion-duration-{fast|base|slow}',
+              effect:
+                'Durações de 150, 200 e 800ms (a lenta serve a giros contínuos). Zeradas com movimento reduzido.',
             },
             {
               name: '--eds-layout-*',
-              effect: 'Larguras de Container, Sidebar e altura da Navbar.',
+              effect:
+                'Larguras de Container, Sidebar e Modal (dialog-sm|md|lg), altura da Navbar e os quatro breakpoints (640, 768, 1024 e 1280px, só para consulta: em @media e @container vale o número). container-2xl é apenas uma largura máxima, sem breakpoint próprio.',
             },
           ]}
         />
@@ -165,7 +197,8 @@ export default function Tokens() {
         <SpaceScale />
         <h3 className="eds-text-h3">Raio</h3>
         <p>
-          Os raios <code>sm</code>, <code>md</code> e <code>lg</code> acompanham o eixo de forma.
+          Os raios <code>sm</code>, <code>md</code>, <code>lg</code> e <code>xl</code> acompanham o
+          eixo de forma. O <code>full</code> é sempre círculo.
         </p>
         <RadiusScale />
         <p>
@@ -215,6 +248,11 @@ export default function Tokens() {
           </li>
           <li>
             Os tokens de movimento são zerados com <code>prefers-reduced-motion: reduce</code>.
+          </li>
+          <li>
+            Com <code>prefers-contrast: more</code>, o core engrossa as bordas, usa o tom forte nas
+            bordas, o texto secundário no lugar do auxiliar e um anel de foco mais grosso, só
+            reatribuindo estes tokens.
           </li>
         </ul>
       </Section>

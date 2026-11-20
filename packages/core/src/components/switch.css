@@ -1,14 +1,17 @@
 /* Switch: <input type="checkbox" role="switch">. Ligado/desligado, nunca uma ação. Rótulo: .eds-check (field.css). */
 @layer eds.components {
   .eds-switch {
-    --_switch-width: 2.5rem;
-    --_switch-height: 1.375rem;
-    --_switch-thumb: 1rem;
-    --_switch-pad: 0.125rem;
+    --_switch-thumb: var(--eds-icon-size-sm);
+    --_switch-pad: var(--eds-space-0-5);
+    --_switch-width: calc(var(--_switch-thumb) * 2.5);
+    --_switch-height: calc(
+      var(--_switch-thumb) + (var(--_switch-pad) + var(--eds-border-width)) * 2
+    );
     --_switch-bg: var(--eds-color-border-strong);
     --_switch-thumb-bg: var(--eds-color-bg-surface);
     --_switch-travel: calc(
-      var(--_switch-width) - var(--_switch-thumb) - var(--_switch-pad) * 2 - 2px
+      var(--_switch-width) - var(--_switch-thumb) - (var(--_switch-pad) + var(--eds-border-width)) *
+        2
     );
     --_switch-x: 0rem;
 
@@ -21,7 +24,7 @@
     margin: 0;
     margin-block-start: calc((var(--eds-line-height-body) - var(--_switch-height)) / 2);
     padding: var(--_switch-pad);
-    border: 1px solid transparent;
+    border: var(--eds-border-width) solid transparent;
     border-radius: var(--eds-radius-full);
     background: var(--_switch-bg);
     cursor: pointer;
@@ -67,6 +70,28 @@
 
       &:checked {
         --_switch-x: calc(var(--_switch-travel) * -1);
+      }
+    }
+  }
+
+  /* Tamanhos (md é o padrão): o polegar escala, o resto deriva dele. */
+  .eds-switch-sm {
+    --_switch-thumb: calc(var(--eds-icon-size-sm) - var(--eds-space-1));
+  }
+
+  .eds-switch-lg {
+    --_switch-thumb: var(--eds-icon-size-md);
+  }
+
+  /* Toque: alvo ampliado por pseudo-elemento; dentro de .eds-check o rótulo já o amplia. */
+  @media (pointer: coarse) {
+    .eds-switch:not(.eds-check > *) {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: calc((100% - var(--eds-target-min)) / 2);
       }
     }
   }

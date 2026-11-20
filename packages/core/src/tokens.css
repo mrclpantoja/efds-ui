@@ -8,5 +8,6 @@
 @import './tokens/semantic-colors.css';
 @import './tokens/semantic-typography.css';
 @import './tokens/semantic-control.css';
+@import './tokens/semantic-layer.css';
 @import './tokens/semantic-layout.css';
 @import './tokens/semantic-shadows.css';

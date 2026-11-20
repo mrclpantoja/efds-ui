@@ -52,7 +52,7 @@
     --_sidebar-tip-bg: transparent;
     --_sidebar-tip-fg: currentColor;
     --_sidebar-pad: var(--eds-space-2);
-    --_sidebar-icon: 1.25rem;
+    --_sidebar-icon: var(--eds-icon-size-md);
     /* Centraliza o ícone na largura compacta; vale também na expandida (alinhamento fixo). */
     --_sidebar-item-start: calc(
       (var(--eds-layout-sidebar-width-collapsed) - 2 * var(--_sidebar-pad) - var(--_sidebar-icon)) /
@@ -75,7 +75,7 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     border: 0;
-    border-inline-end: 1px solid var(--eds-color-border-default);
+    border-inline-end: var(--eds-border-width) solid var(--eds-color-border-default);
     background: var(--eds-color-bg-surface);
     color: var(--eds-color-text-secondary);
     font-size: var(--eds-font-size-body);
@@ -89,7 +89,7 @@
     gap: var(--eds-space-3);
     min-block-size: var(--eds-layout-navbar-height);
     padding-inline: calc(var(--_sidebar-pad) + var(--_sidebar-item-start));
-    border-block-end: 1px solid var(--eds-color-border-default);
+    border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
     color: var(--eds-color-text-primary);
     font-size: var(--eds-font-size-body-lg);
     font-weight: var(--eds-font-weight-semibold);
@@ -113,7 +113,7 @@
 
   .eds-sidebar-footer {
     margin-block-start: auto;
-    border-block-start: 1px solid var(--eds-color-border-default);
+    border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
   }
 
   .eds-sidebar-section-title {
@@ -178,6 +178,12 @@
       --_item-icon: var(--eds-color-text-secondary);
     }
 
+    &:active:not([aria-current='page']) {
+      --_item-bg: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
+      --_item-fg: var(--eds-color-text-primary);
+      --_item-icon: var(--eds-color-text-secondary);
+    }
+
     /* Atual: superfície accent suave + texto action-primary (≥4.5:1 calculado em todos os
        temas/modos) + peso semibold (pista que não depende de cor). */
     &[aria-current='page'] {
@@ -198,7 +204,7 @@
        pelo overflow dos ancestrais; a margem o leva para fora do trilho. */
     &:is(:hover, :focus-visible) > .eds-sidebar-label {
       position: var(--_sidebar-tip-position);
-      z-index: 1;
+      z-index: var(--eds-z-dropdown);
       margin-inline-start: var(--_sidebar-tip-offset);
       padding: var(--_sidebar-tip-pad);
       border-radius: var(--eds-radius-sm);
@@ -308,7 +314,7 @@
 
   @media (forced-colors: active) {
     .eds-sidebar-item[aria-current='page'] {
-      outline: 1px solid CanvasText;
+      outline: var(--eds-border-width) solid CanvasText;
     }
   }
 }

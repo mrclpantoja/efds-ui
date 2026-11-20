@@ -26,7 +26,7 @@
 @layer eds.components {
   .eds-card {
     --_card-radius: var(--eds-radius-md);
-    --_card-padding: var(--eds-space-4);
+    --_card-padding: var(--eds-inset-md);
     --_card-bg: var(--eds-color-bg-surface);
     --_card-border: var(--eds-color-border-default);
     --_card-shadow: none;
@@ -36,7 +36,7 @@
     flex-direction: column;
     box-sizing: border-box;
     min-inline-size: 0;
-    border: 1px solid var(--_card-border);
+    border: var(--eds-border-width) solid var(--_card-border);
     border-radius: var(--_card-radius);
     background: var(--_card-bg);
     box-shadow: var(--_card-shadow);
@@ -48,7 +48,7 @@
     /* Controles dentro do card ficam acima do link esticado. */
     & :is(a, button, input, select, textarea, summary):not(.eds-card-link) {
       position: relative;
-      z-index: 1;
+      z-index: var(--eds-z-raised);
     }
   }
 

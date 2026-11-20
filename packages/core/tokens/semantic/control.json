@@ -1,10 +1,20 @@
 {
   "$selector": ":where(:root)",
-  "$description": "Dimensões de controles e foco (padrão comfortable). A densidade sobrescreve control-height-md e table-row-height.",
+  "$description": "Dimensões de controles, insets, bordas, ícones e alvos (padrão comfortable). A densidade sobrescreve control-height-sm/-md/-lg, inset-sm/-md/-lg e table-row-height.",
   "control-height-sm": "32px",
   "control-height-md": "38px",
   "control-height-lg": "44px",
+  "inset-sm": "{space-3}",
+  "inset-md": "{space-4}",
+  "inset-lg": "{space-5}",
   "table-row-height": "44px",
+  "border-width": "1px",
+  "border-width-strong": "2px",
+  "icon-size-sm": "1rem",
+  "icon-size-md": "1.25rem",
+  "icon-size-lg": "1.5rem",
+  "icon-size-xl": "2rem",
+  "target-min": "2.75rem",
   "focus-ring-width": "2px",
   "focus-ring-offset": "2px"
 }

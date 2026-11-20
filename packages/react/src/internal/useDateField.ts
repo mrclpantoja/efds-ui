@@ -100,7 +100,8 @@ export function useDateField({
   // Colar uma data reconhecível (dd/mm/aaaa ou ISO, com espaços em volta) substitui o campo
   // inteiro sem passar pelo maxlength, que cortaria o texto antes da máscara. Igual ao behavior.
   const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
-    if (event.defaultPrevented) return;
+    // Somente leitura: o valor não muda, nem por colagem.
+    if (event.defaultPrevented || event.currentTarget.readOnly) return;
     const pasted = isoToBRIfPasted(event.clipboardData.getData('text')).trim();
     if (!parseBR(pasted)) return;
     event.preventDefault();

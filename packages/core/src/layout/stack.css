@@ -3,7 +3,7 @@
  * avulsas e CSS repetitivo de alinhamento.
  *
  * API
- *   .eds-stack                                vertical, itens esticados, gap space-4
+ *   .eds-stack                                vertical, itens esticados, gap inset-md (acompanha a densidade)
  *   .eds-stack-row                            horizontal, itens centralizados no eixo cruzado
  *   .eds-stack-align-{start|center|end|stretch|baseline}   eixo cruzado (align-items)
  *   .eds-stack-justify-{start|center|end|between}          eixo principal (justify-content)
@@ -25,7 +25,7 @@
  */
 @layer eds.layout {
   .eds-stack {
-    --_gap: var(--eds-space-4);
+    --_gap: var(--eds-inset-md);
     --_stack-direction: column;
     --_stack-align: stretch;
     --_stack-justify: flex-start;

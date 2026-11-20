@@ -19,7 +19,7 @@ export default function Spa({ rota }: { rota: string }) {
     <AppShell
       header={
         <AppShellHeader aria-label="Aplicação">
-          <AppShellNavToggle label="Abrir menu" />
+          <AppShellNavToggle texts={{ label: 'Abrir menu' }} />
         </AppShellHeader>
       }
     >

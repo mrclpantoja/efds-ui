@@ -49,6 +49,13 @@
       text-decoration: underline;
     }
 
+    /* Pressionado: o sublinhado já do hover ganha peso, sem trocar de cor de novo. */
+    & > a:active {
+      color: var(--eds-color-text-primary);
+      text-decoration: underline;
+      text-decoration-thickness: calc(var(--eds-border-width) * 2);
+    }
+
     & > [aria-current] {
       color: var(--eds-color-text-primary);
       font-weight: var(--eds-font-weight-medium);

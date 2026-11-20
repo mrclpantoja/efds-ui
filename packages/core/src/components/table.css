@@ -5,7 +5,7 @@
        <table class="eds-table [eds-table-sticky]">
          <caption class="eds-table-caption [eds-visually-hidden]">Pedidos</caption>
          <thead><tr>
-           <th scope="col" class="eds-table-check"><input type="checkbox" class="eds-checkbox" aria-label="Selecionar todos"></th>
+           <th scope="col" class="eds-table-check"><label class="eds-check"><input type="checkbox" class="eds-checkbox" aria-label="Selecionar todos"></label></th>
            <th scope="col" aria-sort="ascending"><button type="button" class="eds-table-sort">Código <svg aria-hidden="true"/></button></th>
            <th scope="col" class="eds-table-num">Valor</th>
            <th scope="col" class="eds-table-actions"><span class="eds-visually-hidden">Ações</span></th>
@@ -27,7 +27,7 @@
     box-sizing: border-box;
     max-inline-size: 100%;
     overflow: auto;
-    border: 1px solid var(--eds-color-border-default);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
     border-radius: var(--eds-radius-md);
     background: var(--eds-color-bg-surface);
 
@@ -39,7 +39,7 @@
 
   .eds-table {
     /* Abaixo disto a tabela não espreme colunas: rola dentro do wrap. */
-    --_table-min-inline-size: 36rem;
+    --_table-min-inline-size: var(--eds-layout-table-min);
 
     inline-size: 100%;
     min-inline-size: var(--_table-min-inline-size);
@@ -54,8 +54,8 @@
       box-sizing: border-box;
       block-size: var(--eds-table-row-height);
       padding-block: var(--eds-space-1);
-      padding-inline: var(--eds-space-4);
-      border-block-end: 1px solid var(--eds-color-border-default);
+      padding-inline: var(--eds-inset-md);
+      border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
       text-align: start;
       vertical-align: middle;
       white-space: nowrap;
@@ -89,6 +89,20 @@
       }
     }
 
+    /* Linhas clicáveis (opt-in: .eds-table-clickable na tabela, ação feita pelo app): cursor e
+       resposta ao toque/clique. */
+    &.eds-table-clickable tbody tr:not(:has(.eds-table-empty)) {
+      cursor: pointer;
+
+      &:active {
+        background: color-mix(
+          in srgb,
+          var(--eds-color-bg-subtle),
+          var(--eds-color-text-primary) 8%
+        );
+      }
+    }
+
     /* Selecionada: vem do checkbox marcado; vence o hover. */
     & tbody tr:has(.eds-table-check input:checked) {
       background: var(--eds-color-action-primary-subtle);
@@ -107,8 +121,8 @@
 
   .eds-table-caption:not(.eds-visually-hidden) {
     padding-block: var(--eds-space-3);
-    padding-inline: var(--eds-space-4);
-    border-block-end: 1px solid var(--eds-color-border-default);
+    padding-inline: var(--eds-inset-md);
+    border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
     color: var(--eds-color-text-primary);
     font-size: var(--eds-font-size-label);
     line-height: var(--eds-line-height-label);
@@ -125,13 +139,50 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Seleção: coluna estreita só com o checkbox. */
+  /* Seleção: coluna estreita só com o checkbox. O padrão é o checkbox dentro de
+     <label class="eds-check">, que preenche a célula inteira e vira o alvo de clique; o checkbox
+     direto na célula segue aceito. */
   .eds-table .eds-table-check {
     inline-size: 1%;
     padding-inline-end: 0;
 
     & > .eds-checkbox {
       margin: 0;
+    }
+
+    /* A célula cede o recuo ao rótulo: a largura da coluna não muda e o alvo cobre a célula. */
+    &:has(> .eds-check) {
+      padding: 0;
+    }
+
+    & > .eds-check {
+      box-sizing: border-box;
+      align-items: center;
+      min-block-size: calc(var(--eds-table-row-height) - var(--eds-border-width));
+      padding-block: 0;
+      padding-inline: var(--eds-inset-md) 0;
+
+      & > .eds-checkbox {
+        margin: 0;
+      }
+    }
+  }
+
+  /* Toque: o checkbox solto recebe um alvo centrado de --eds-target-min na largura e da altura da
+     linha no máximo; o rótulo da seleção cresce até --eds-target-min nas duas direções. */
+  @media (pointer: coarse) {
+    .eds-table .eds-table-check > .eds-checkbox:not(.eds-check > *)::after {
+      inset-block: calc((100% - var(--eds-table-row-height)) / 2);
+    }
+
+    .eds-table .eds-table-check > .eds-check {
+      justify-content: center;
+      min-block-size: max(
+        calc(var(--eds-table-row-height) - var(--eds-border-width)),
+        var(--eds-target-min)
+      );
+      min-inline-size: var(--eds-target-min);
+      padding-inline: var(--eds-space-2);
     }
   }
 
@@ -158,7 +209,10 @@
     gap: var(--eds-space-1);
     box-sizing: border-box;
     /* Nunca passa da altura da linha (o th não cresce): 1px a menos para a borda. */
-    min-block-size: max(1.5rem, calc(var(--eds-table-row-height) - 1px));
+    min-block-size: max(
+      var(--eds-icon-size-lg),
+      calc(var(--eds-table-row-height) - var(--eds-border-width))
+    );
     margin-inline: calc(var(--eds-space-2) * -1);
     padding-block: 0;
     padding-inline: var(--eds-space-2);
@@ -172,13 +226,17 @@
 
     & > svg {
       flex: none;
-      inline-size: 1rem;
-      block-size: 1rem;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
       color: var(--eds-color-text-muted);
     }
 
     &:hover {
       background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
+    }
+
+    &:active {
+      background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 14%);
     }
   }
 
@@ -213,7 +271,7 @@
   .eds-table-sticky thead th {
     position: sticky;
     inset-block-start: 0;
-    z-index: 1;
+    z-index: var(--eds-z-sticky);
   }
 
   /* Estado vazio dentro da tabela. */
@@ -306,7 +364,7 @@
 
   .eds-card-header + .eds-table-wrap {
     margin-block-start: var(--_card-padding);
-    border-block-start: 1px solid var(--eds-color-border-default);
+    border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
   }
 
   .eds-card > :is(.eds-table-toolbar, .eds-table-footer) {

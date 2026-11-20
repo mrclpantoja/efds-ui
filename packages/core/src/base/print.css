@@ -1,0 +1,168 @@
+/*
+ * Impressão. Fica em eds.utilities (a camada mais alta) para vencer o CSS dos componentes.
+ *
+ * O que muda no papel:
+ *   - sem navegação e sem elementos de tela: sidebar, navbar, região de toasts, carregador, fundo de
+ *     diálogo, paginação, colunas de seleção e de ações da Table. Para esconder qualquer outro
+ *     elemento use .eds-no-print.
+ *   - o app shell deixa de ter altura de viewport e rolagem interna (senão só a primeira "tela"
+ *     sairia no papel); a Table perde a rolagem e repete o cabeçalho a cada página.
+ *   - cores em preto e branco legíveis, também a partir do modo escuro (texto claro em papel branco
+ *     some): os tokens semânticos são remapeados para cores de sistema, sem sombras.
+ *   - linhas de tabela, cards, alertas e itens não são cortados entre páginas; títulos não ficam
+ *     órfãos no fim da página.
+ *   - links externos no conteúdo mostram o endereço depois do texto.
+ */
+@layer eds.utilities {
+  @media print {
+    :root,
+    [data-mode] {
+      color-scheme: light;
+
+      --eds-color-bg-page: Canvas;
+      --eds-color-bg-surface: Canvas;
+      --eds-color-bg-subtle: Canvas;
+      --eds-color-bg-overlay: Canvas;
+      --eds-color-text-primary: CanvasText;
+      --eds-color-text-secondary: CanvasText;
+      --eds-color-text-muted: GrayText;
+      --eds-color-text-on-action: Canvas;
+      --eds-color-border-default: GrayText;
+      --eds-color-border-strong: CanvasText;
+      --eds-color-action-primary: CanvasText;
+      --eds-color-action-primary-hover: CanvasText;
+      --eds-color-action-primary-active: CanvasText;
+      --eds-color-action-primary-subtle: Canvas;
+      --eds-color-action-danger: CanvasText;
+      --eds-color-action-danger-hover: CanvasText;
+      --eds-color-action-danger-active: CanvasText;
+      --eds-color-status-info: CanvasText;
+      --eds-color-status-info-subtle: Canvas;
+      --eds-color-status-info-text: CanvasText;
+      --eds-color-status-success: CanvasText;
+      --eds-color-status-success-subtle: Canvas;
+      --eds-color-status-success-text: CanvasText;
+      --eds-color-status-warning: CanvasText;
+      --eds-color-status-warning-subtle: Canvas;
+      --eds-color-status-warning-text: CanvasText;
+      --eds-color-status-danger: CanvasText;
+      --eds-color-status-danger-subtle: Canvas;
+      --eds-color-status-danger-text: CanvasText;
+      --eds-color-focus-ring: CanvasText;
+      --eds-shadow-xs: none;
+      --eds-shadow-sm: none;
+      --eds-shadow-md: none;
+      --eds-shadow-lg: none;
+    }
+
+    /* Fora do papel. */
+    .eds-no-print,
+    .eds-sidebar,
+    .eds-navbar,
+    .eds-toast-region,
+    .eds-page-loader,
+    .eds-skip-link,
+    .eds-app-nav-toggle,
+    .eds-pagination,
+    .eds-sortable-ghost,
+    .eds-table-toolbar,
+    .eds-table .eds-table-check,
+    .eds-table .eds-table-actions {
+      display: none;
+    }
+
+    dialog::backdrop {
+      display: none;
+    }
+
+    /* O navegador não imprime fundos por padrão ("Elementos gráficos de segundo plano" desligado):
+       onde o estado depende do preenchimento (marca branca sobre fundo escuro), o texto sumiria.
+       Botões sólidos, caixas marcadas, chave ligada e dia escolhido imprimem o fundo. */
+    .eds-button,
+    .eds-checkbox,
+    .eds-radio,
+    .eds-switch,
+    .eds-calendar [aria-selected='true'] {
+      print-color-adjust: exact;
+    }
+
+    /* App shell: o conteúdo corre pelas páginas. */
+    .eds-app {
+      display: block;
+      block-size: auto;
+      overflow: visible;
+    }
+
+    .eds-app-main {
+      overflow: visible;
+    }
+
+    /* Table sem rolagem; células quebram em vez de estourar a folha; cabeçalho repete. */
+    .eds-table-wrap {
+      overflow: visible;
+      max-block-size: none;
+    }
+
+    .eds-table {
+      min-inline-size: 0;
+
+      & thead {
+        display: table-header-group;
+      }
+
+      & tfoot {
+        display: table-footer-group;
+      }
+
+      & :is(th, td) {
+        white-space: normal;
+      }
+
+      & tr {
+        break-inside: avoid;
+      }
+    }
+
+    .eds-table-sticky thead th {
+      position: static;
+    }
+
+    /* Quebras de página. */
+    .eds-card,
+    .eds-alert,
+    .eds-empty,
+    .eds-tree-row,
+    .eds-sortable-item {
+      break-inside: avoid;
+    }
+
+    :where(
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      .eds-text-display,
+      .eds-text-h1,
+      .eds-text-h2,
+      .eds-text-h3,
+      .eds-text-h4
+    ) {
+      break-after: avoid;
+    }
+
+    :where(p, li, dd) {
+      orphans: 3;
+      widows: 3;
+    }
+
+    /* Links externos do conteúdo: o endereço vai ao lado do texto (navegação e botões ficam de fora). */
+    :where(main, .eds-app-main) a[href^='http']:not(.eds-button, .eds-card-link)::after {
+      content: ' (' attr(href) ')';
+      overflow-wrap: anywhere;
+      font-size: var(--eds-font-size-small);
+      font-weight: var(--eds-font-weight-regular);
+    }
+  }
+}

@@ -56,9 +56,9 @@ describe('Alert', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('closeLabel substitui o texto do botão', () => {
+  it('texts.close substitui o texto do botão', () => {
     render(
-      <Alert onClose={() => {}} closeLabel="Dismiss">
+      <Alert onClose={() => {}} texts={{ close: 'Dismiss' }}>
         x
       </Alert>,
     );
@@ -100,13 +100,13 @@ describe('Alert', () => {
     rerender(<Alert variant="warning">sem título</Alert>);
     expect(hidden()).toHaveTextContent('Atenção:');
     rerender(
-      <Alert variant="success" severityLabel="Done:">
+      <Alert variant="success" texts={{ severity: 'Done:' }}>
         x
       </Alert>,
     );
     expect(hidden()).toHaveTextContent('Done:');
     rerender(
-      <Alert variant="info" severityLabel={false}>
+      <Alert variant="info" texts={{ severity: false }}>
         x
       </Alert>,
     );

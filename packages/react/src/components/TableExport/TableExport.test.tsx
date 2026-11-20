@@ -72,8 +72,7 @@ describe('TableExport', () => {
       <TableExport
         data={data}
         formats={['pdf', 'csv', 'pdf']}
-        label="Export"
-        formatLabels={{ csv: 'Planilha CSV' }}
+        texts={{ label: 'Export', csv: 'Planilha CSV' }}
         variant="primary"
         size="sm"
         className="extra"
@@ -188,7 +187,7 @@ describe('TableExport', () => {
       <TableExport
         data={{ ...data, rows: data.rows.slice(0, 1) }}
         filename="p"
-        messages={{ doneOne: 'Saved {name}.' }}
+        texts={{ doneOne: 'Saved {name}.' }}
       />,
     );
     await user.click(item('CSV'));

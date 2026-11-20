@@ -1,0 +1,90 @@
+/**
+ * Núcleo comum das duas compilações do pacote: a completa (`index.ts`) e a "core" sem
+ * exportador e sem máscara (`index-core.ts`, `dist/eds-behavior-core.js`).
+ */
+import { resetLocale, resetMessages, setLocale, setMessages, type Messages } from './core/config';
+import { initAlert } from './components/alert';
+import { initButtonBusy } from './components/button-busy';
+import { initSelectReadonly } from './components/select-readonly';
+// Confirmação declarativa
+import { initConfirm } from './components/confirm';
+import { initCombobox } from './components/combobox';
+import { initDatepicker } from './components/datepicker';
+import { initNativeAlert } from './components/dialogs';
+import { initDropdown } from './components/dropdown';
+import { initLoader, loader, setLoaderConfig, type LoaderOptions } from './components/loader';
+import { initModal } from './components/modal';
+import { initSidebar } from './components/sidebar';
+import { initTable } from './components/table';
+import { initTableFilter } from './components/table-filter';
+import { initTabs } from './components/tabs';
+import { initToast, toast } from './components/toast';
+import { initUpload } from './components/upload';
+// Sortable e Tree
+import { initSortable } from './components/sortable';
+import { initTree } from './components/tree';
+
+export interface BehaviorOptions {
+  /**
+   * Locale BCP 47 (padrão `pt-BR`): ordem de texto da Table, nomes de mês e dia do DatePicker e
+   * formato de datas e números do exportador (e o `/Lang` do PDF). Os textos seguem em `messages`.
+   */
+  locale?: string;
+
+  /** Textos (pt-BR por padrão) trocados por idioma. */
+  messages?: Partial<Messages>;
+  /** Configuração do PageLoader. */
+  loader?: LoaderOptions;
+  /**
+   * Só em `init`: troca `window.alert` por `EDS.alert` (não bloqueia) até o `destroy`.
+   * `confirm` e `prompt` nativos nunca são trocados.
+   */
+  nativeAlert?: boolean;
+}
+
+/** Configura locale, textos e loader. Pode ser chamado antes ou depois de `init`. */
+export function configure(options: BehaviorOptions): void {
+  setLocale(options.locale);
+  setMessages(options.messages);
+  setLoaderConfig(options.loader);
+}
+
+export { resetLocale, resetMessages };
+export type { Messages, LoaderOptions };
+export type {
+  LoaderHideReason,
+  LoaderMode,
+  LoaderRequestOptions,
+  LoaderTrigger,
+} from './components/loader';
+export type { ToastOptions, ToastVariant } from './components/toast';
+// Diálogos rápidos
+export { alert, confirm, prompt } from './components/dialogs';
+export type { DialogInputType, DialogOptions, DialogVariant } from './components/dialogs';
+export type { ComboboxOption } from './components/combobox';
+export type { SortDirection } from './components/table';
+export type { TreeChangeAction, TreeNodeData } from './components/tree';
+export {
+  initAlert,
+  initButtonBusy,
+  initCombobox,
+  // Confirmação declarativa
+  initConfirm,
+  initDatepicker,
+  initDropdown,
+  initLoader,
+  initModal,
+  initNativeAlert,
+  initSelectReadonly,
+  initSidebar,
+  initTable,
+  initTableFilter,
+  initTabs,
+  initToast,
+  initUpload,
+  // Sortable e Tree
+  initSortable,
+  initTree,
+  loader,
+  toast,
+};

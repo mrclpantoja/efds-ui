@@ -12,8 +12,9 @@ import {
   TableHeaderCell,
   TableRow,
   TableToolbar,
+  sortTableData,
   type BadgeVariant,
-  type TableSort,
+  type TableSortState,
 } from '@eds-ui/react';
 import { EditIcon } from '@eds-ui/icons';
 
@@ -91,31 +92,18 @@ const pedidos: Pedido[] = [
   },
 ];
 
-type Coluna = 'codigo' | 'cliente' | 'total';
-type Direcao = 'ascending' | 'descending';
-
-const rotulos: Record<Coluna, string> = { codigo: 'Código', cliente: 'Cliente', total: 'Total' };
 const porPagina = 3;
 const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
 export default function Interativa() {
-  const [ordem, setOrdem] = useState<{ coluna: Coluna; direcao: Direcao }>({
-    coluna: 'codigo',
-    direcao: 'ascending',
-  });
+  // Ordenação controlada: a Table deriva o aria-sort e anuncia; sortTableData ordena os dados.
+  const [ordem, setOrdem] = useState<TableSortState>({ column: 'codigo', direction: 'ascending' });
   const [pagina, setPagina] = useState(1);
   const [selecionados, setSelecionados] = useState<ReadonlySet<string>>(new Set(['PED-0003']));
-  // Região de status única da tabela: ordenação, seleção e página são anunciadas aqui.
+  // Região de status da seleção e da página (a ordenação a Table anuncia sozinha).
   const [aviso, setAviso] = useState('');
 
-  const ordenados = useMemo(() => {
-    const lista = [...pedidos].sort((a, b) =>
-      ordem.coluna === 'total'
-        ? a.total - b.total
-        : a[ordem.coluna].localeCompare(b[ordem.coluna], 'pt-BR'),
-    );
-    return ordem.direcao === 'ascending' ? lista : lista.reverse();
-  }, [ordem]);
+  const ordenados = useMemo(() => sortTableData(pedidos, ordem), [ordem]);
 
   const totalPaginas = Math.ceil(ordenados.length / porPagina);
   const inicio = (pagina - 1) * porPagina;
@@ -123,17 +111,6 @@ export default function Interativa() {
 
   const todosNaPagina = visiveis.every((p) => selecionados.has(p.codigo));
   const algunsNaPagina = !todosNaPagina && visiveis.some((p) => selecionados.has(p.codigo));
-
-  const sortDe = (coluna: Coluna): TableSort => (ordem.coluna === coluna ? ordem.direcao : 'none');
-
-  const ordenarPor = (coluna: Coluna) => {
-    const direcao: Direcao =
-      ordem.coluna === coluna && ordem.direcao === 'ascending' ? 'descending' : 'ascending';
-    setOrdem({ coluna, direcao });
-    setAviso(
-      `Ordenado por ${rotulos[coluna]}, ${direcao === 'ascending' ? 'crescente' : 'decrescente'}.`,
-    );
-  };
 
   const atualizarSelecao = (proxima: Set<string>) => {
     setSelecionados(proxima);
@@ -182,7 +159,11 @@ export default function Interativa() {
         </Button>
       </TableToolbar>
 
-      <Table caption="Pedidos recentes, ordenáveis por código, cliente e total">
+      <Table
+        caption="Pedidos recentes, ordenáveis por código, cliente e total"
+        sort={ordem}
+        onSortChange={setOrdem}
+      >
         <TableHead>
           <TableRow>
             <TableHeaderCell column="check">
@@ -193,14 +174,10 @@ export default function Interativa() {
                 onChange={alternarPagina}
               />
             </TableHeaderCell>
-            <TableHeaderCell sort={sortDe('codigo')} onSort={() => ordenarPor('codigo')}>
-              Código
-            </TableHeaderCell>
-            <TableHeaderCell sort={sortDe('cliente')} onSort={() => ordenarPor('cliente')}>
-              Cliente
-            </TableHeaderCell>
+            <TableHeaderCell sortKey="codigo">Código</TableHeaderCell>
+            <TableHeaderCell sortKey="cliente">Cliente</TableHeaderCell>
             <TableHeaderCell>Situação</TableHeaderCell>
-            <TableHeaderCell numeric sort={sortDe('total')} onSort={() => ordenarPor('total')}>
+            <TableHeaderCell numeric sortKey="total">
               Total
             </TableHeaderCell>
             <TableHeaderCell column="actions">

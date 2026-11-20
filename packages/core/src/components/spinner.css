@@ -3,12 +3,12 @@
    continuar legível parado. Cor padrão = cor de ação (sobrescreva com color).
    Markup:
      <span class="eds-spinner" role="status"><span class="eds-visually-hidden">Carregando</span></span>
-   Tamanhos: .eds-spinner-sm (1rem) · padrão (1.5rem) · .eds-spinner-lg (2rem).
+   Tamanhos: .eds-spinner-sm (icon-size-sm) · padrão (icon-size-lg) · .eds-spinner-lg (icon-size-xl).
    Reduced-motion: não gira; o arco fixo continua indicando "em andamento" e o texto oculto
    segue sendo anunciado. */
 @layer eds.components {
   .eds-spinner {
-    --_spinner-size: 1.5rem;
+    --_spinner-size: var(--eds-icon-size-lg);
 
     color: var(--eds-color-action-primary);
     display: inline-block;
@@ -21,15 +21,15 @@
     border-inline-end-color: currentColor;
     border-radius: 50%;
     vertical-align: middle;
-    animation: eds-spinner-spin calc(var(--eds-motion-duration-base) * 4) linear infinite;
+    animation: eds-spinner-spin var(--eds-motion-duration-slow) linear infinite;
   }
 
   .eds-spinner-sm {
-    --_spinner-size: 1rem;
+    --_spinner-size: var(--eds-icon-size-sm);
   }
 
   .eds-spinner-lg {
-    --_spinner-size: 2rem;
+    --_spinner-size: var(--eds-icon-size-xl);
   }
 
   @keyframes eds-spinner-spin {

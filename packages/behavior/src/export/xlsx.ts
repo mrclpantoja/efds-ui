@@ -1,5 +1,12 @@
 import { getMessages } from '../core/config';
-import { cellText, normalize, type Cell, type NormalizedColumn } from './model';
+import {
+  cellText,
+  localeFormat,
+  normalize,
+  resolveLocale,
+  type Cell,
+  type NormalizedColumn,
+} from './model';
 import type { ExportData, ExportOptions } from './types';
 import { createZip } from './zip';
 
@@ -85,7 +92,23 @@ function decimalsOf(value: number): number {
   return dot < 0 ? 0 : s.length - dot - 1;
 }
 
-function stylesXml(): string {
+/** Código de formato de data do Excel na ordem do locale (`dd/mm/yyyy` em pt-BR). */
+function dateCode(locale: string): string {
+  return localeFormat(locale)
+    .datePattern.map((p) =>
+      'literal' in p
+        ? p.literal.replace(/[^/.-]/g, (ch) => `\\${ch}`)
+        : p.part === 'd'
+          ? 'dd'
+          : p.part === 'm'
+            ? 'mm'
+            : 'yyyy',
+    )
+    .join('');
+}
+
+function stylesXml(locale: string): string {
+  const date = dateCode(locale);
   const fmt = (id: number, code: string) => `<numFmt numFmtId="${id}" formatCode="${esc(code)}"/>`;
   const xf = (numFmtId: number, extra = '', fontId = 0, fillId = 0, borderId = 0) =>
     `<xf numFmtId="${numFmtId}" fontId="${fontId}" fillId="${fillId}" borderId="${borderId}" xfId="0"` +
@@ -95,8 +118,8 @@ function stylesXml(): string {
   const right = '<alignment horizontal="right"/>';
   return (
     `${XML}<styleSheet xmlns="${NS}">` +
-    `<numFmts count="4">${fmt(164, '"R$"\\ #,##0.00')}${fmt(165, 'dd/mm/yyyy')}` +
-    `${fmt(166, 'dd/mm/yyyy\\ hh:mm')}${fmt(167, '#,##0.######')}</numFmts>` +
+    `<numFmts count="4">${fmt(164, '"R$"\\ #,##0.00')}${fmt(165, date)}` +
+    `${fmt(166, `${date}\\ hh:mm`)}${fmt(167, '#,##0.######')}</numFmts>` +
     '<fonts count="2"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font>' +
     '<font><b/><sz val="11"/><name val="Calibri"/><family val="2"/></font></fonts>' +
     '<fills count="3"><fill><patternFill patternType="none"/></fill>' +
@@ -133,6 +156,7 @@ const isNumeric = (c: NormalizedColumn): boolean =>
  */
 export function toXlsx(data: ExportData, options: ExportOptions = {}): Uint8Array {
   const { columns, rows } = normalize(data);
+  const locale = resolveLocale(options.locale);
   if (columns.length > MAX_COLS) throw new RangeError(`XLSX aceita no máximo ${MAX_COLS} colunas.`);
   if (rows.length + 1 > MAX_ROWS) throw new RangeError(`XLSX aceita no máximo ${MAX_ROWS} linhas.`);
 
@@ -178,7 +202,7 @@ export function toXlsx(data: ExportData, options: ExportOptions = {}): Uint8Arra
       const col = columns[c];
       if (!col || cell.kind === 'empty') return;
       const at = `${columnLetters(c)}${ref}`;
-      const view = cellText(cell, col.type, 'view');
+      const view = cellText(cell, col.type, 'view', locale);
       const longest = Math.max(...view.split(/\r\n|\r|\n/).map((line) => Array.from(line).length));
       widths[c] = Math.max(widths[c] ?? 0, longest);
       if (cell.kind === 'number') {
@@ -267,7 +291,7 @@ export function toXlsx(data: ExportData, options: ExportOptions = {}): Uint8Arra
           '</Relationships>',
       ),
       file('xl/worksheets/sheet1.xml', sheet),
-      file('xl/styles.xml', stylesXml()),
+      file('xl/styles.xml', stylesXml(locale)),
       file('xl/sharedStrings.xml', sharedXml),
     ],
     options.now ?? new Date(),

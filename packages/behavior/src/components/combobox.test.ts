@@ -223,6 +223,8 @@ describe('combobox local', () => {
     // Perto do rodapé: não cabe embaixo, cabe em cima.
     (input().getBoundingClientRect as ReturnType<typeof vi.fn>).mockReturnValue(rect(650));
     window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(new Event('resize')); // rajada: uma reposição por quadro
+    await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
     expect(popup()).toHaveAttribute('data-placement', 'top');
     expect(popup().style.getPropertyValue('--_combobox-y')).toBe('650px');
   });

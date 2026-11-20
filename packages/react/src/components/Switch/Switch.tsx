@@ -2,19 +2,23 @@ import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
 import { useControlAttrs } from '../../internal/field-context';
 
+export type SwitchSize = 'sm' | 'md' | 'lg';
+
 export interface SwitchProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'size' | 'children' | 'role'
 > {
   /** Texto do rótulo (obrigatório). Descreva o estado ligado, não uma ação. */
   children: ReactNode;
+  /** Padrão: `md`. */
+  size?: SwitchSize;
   /** Erro: `aria-invalid="true"`. */
   invalid?: boolean;
 }
 
 /** `<input type="checkbox" role="switch">`. `ref`, `className` e props nativas vão para o `<input>`. */
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
-  { invalid, className, children, ...rest },
+  { size = 'md', invalid, className, children, ...rest },
   ref,
 ) {
   const attrs = useControlAttrs(
@@ -34,7 +38,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
         ref={ref}
         type="checkbox"
         role="switch"
-        className={cx('eds-switch', className)}
+        className={cx('eds-switch', size !== 'md' && `eds-switch-${size}`, className)}
         {...attrs}
         data-valid={undefined}
       />

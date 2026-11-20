@@ -1,10 +1,9 @@
 import { emit, ensureId, watchScrollRegion } from '../core/dom';
-import { format, getMessages } from '../core/config';
+import { format, getLocale, getMessages } from '../core/config';
 import { bindAll, type Behavior } from '../core/registry';
+import { parseDate, parseNumber, sortValues, type SortDirection } from '../core/data';
 
-export type SortDirection = 'ascending' | 'descending';
-
-const collator = new Intl.Collator('pt-BR', { numeric: true, sensitivity: 'base' });
+export type { SortDirection };
 
 /**
  * Região `role="status"` da tabela: a indicada por `data-eds-status="ID"`, a irmã do wrap
@@ -31,42 +30,7 @@ const cellValue = (cell: Element | undefined): string => {
   return (cell.getAttribute('data-sort-value') ?? cell.textContent ?? '').trim();
 };
 
-/** "R$ 1.280,50", "1280.5", "-3" -> número (pt-BR por padrão); senão `null`. */
-export function parseNumber(text: string): number | null {
-  const t = text.replace(/\s|R\$|€|£|%/g, '');
-  if (/^[+-]?\d{1,3}(\.\d{3})+(,\d+)?$/.test(t))
-    return Number(t.replace(/\./g, '').replace(',', '.'));
-  if (/^[+-]?\d+,\d+$/.test(t)) return Number(t.replace(',', '.'));
-  if (/^[+-]?\d+(\.\d+)?$/.test(t)) return Number(t);
-  return null;
-}
-
-/** "31/12/2025" ou "2025-12-31" (opcional hora) -> timestamp; senão `null`. */
-export function parseDate(text: string): number | null {
-  let match = /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T](\d{1,2}):(\d{2}))?$/.exec(text);
-  if (match) {
-    const [, d, m, y, hh, mm] = match;
-    return new Date(
-      Number(y),
-      Number(m) - 1,
-      Number(d),
-      Number(hh ?? 0),
-      Number(mm ?? 0),
-    ).getTime();
-  }
-  match = /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{1,2}):(\d{2}))?/.exec(text);
-  if (match) {
-    const [, y, m, d, hh, mm] = match;
-    return new Date(
-      Number(y),
-      Number(m) - 1,
-      Number(d),
-      Number(hh ?? 0),
-      Number(mm ?? 0),
-    ).getTime();
-  }
-  return null;
-}
+export { parseDate, parseNumber };
 
 /** Ordena as linhas por uma coluna; vazios ficam por último. Estável. */
 export function sortRows(
@@ -74,32 +38,11 @@ export function sortRows(
   column: number,
   direction: SortDirection,
 ): HTMLTableRowElement[] {
-  const values = rows.map((row) => cellValue(row.cells[column]));
-  const filled = values.filter((v) => v !== '');
-  const numbers = filled.map(parseNumber);
-  const dates = filled.map(parseDate);
-  const kind =
-    filled.length > 0 && numbers.every((n) => n !== null)
-      ? 'number'
-      : filled.length > 0 && dates.every((d) => d !== null)
-        ? 'date'
-        : 'text';
-  const sign = direction === 'ascending' ? 1 : -1;
-  const keyed = rows.map((row, i) => {
-    const raw = values[i] ?? '';
-    const key = kind === 'number' ? parseNumber(raw) : kind === 'date' ? parseDate(raw) : raw;
-    return { row, key, empty: raw === '' };
-  });
-  keyed.sort((a, b) => {
-    if (a.empty || b.empty) return a.empty === b.empty ? 0 : a.empty ? 1 : -1;
-    if (kind === 'text') return sign * collator.compare(String(a.key), String(b.key));
-    return sign * ((a.key as number) - (b.key as number));
-  });
-  return keyed.map((k) => k.row);
+  return sortValues(rows, (row) => cellValue(row.cells[column]), direction, getLocale());
 }
 
 /**
- * Tabela: ordenação no cliente (`button.eds-table-sort` em `th`, `eds:sort` cancelável),
+ * Tabela: ordenação no cliente (`button.eds-table-sort` em `th`, `eds:table-sort` cancelável),
  * seleção (`input[data-eds-select-all]` / `input[data-eds-select-row]`), anúncio no
  * `[role=status]` e região rolável focável só quando rola.
  */
@@ -142,14 +85,17 @@ export const tableBehavior: Behavior = {
         const column = th.cellIndex;
         const label = (button.textContent ?? '').replace(/\s+/g, ' ').trim();
         // Com preventDefault o consumidor ordena (e atualiza aria-sort) no servidor.
-        if (!emit(table, 'sort', { column, label, direction, th }, true)) return;
+        if (!emit(table, 'table-sort', { column, label, direction, th }, true)) return;
 
         const body = table.tBodies[0];
         if (body) {
           const rows = Array.from(body.rows).filter(
             (row) => !row.querySelector('.eds-table-empty'),
           );
-          for (const row of sortRows(rows, column, direction)) body.append(row);
+          // Uma única inserção: as linhas vão para um fragmento e voltam de uma vez.
+          const fragment = body.ownerDocument.createDocumentFragment();
+          for (const row of sortRows(rows, column, direction)) fragment.append(row);
+          body.append(fragment);
         }
         for (const other of headers()) {
           other.setAttribute('aria-sort', other === th ? direction : 'none');
@@ -184,10 +130,11 @@ export const tableBehavior: Behavior = {
       return checked;
     };
 
+    let checkedTotal = 0;
     const announceSelection = (count: number) => {
       const m = messages();
       // Linhas marcadas e ocultas pelo filtro: diz as da busca e o total (4.1.3).
-      const total = allBoxes().filter((box) => box.checked).length;
+      const total = checkedTotal;
       if (total !== count) {
         announce(
           count === 0
@@ -216,12 +163,15 @@ export const tableBehavior: Behavior = {
           for (const box of rowBoxes()) if (!box.disabled) box.checked = input.checked;
         } else if (!input.hasAttribute('data-eds-select-row')) return;
         const count = syncAll();
+        // allBoxes() é consultado uma vez por change.
+        const boxes = allBoxes();
+        checkedTotal = boxes.filter((box) => box.checked).length;
         announceSelection(count);
         const rows = rowBoxes()
           .filter((box) => box.checked)
           .map((box) => box.closest('tr'));
-        const total = allBoxes().filter((box) => box.checked).length;
-        emit(table, 'select-change', { count, rows, total });
+        const total = checkedTotal;
+        emit(table, 'table-select-change', { count, rows, total });
       },
       { signal },
     );

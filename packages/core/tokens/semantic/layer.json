@@ -1,0 +1,10 @@
+{
+  "$selector": ":where(:root)",
+  "$description": "Camadas de empilhamento (z-index). Popups em popover/dialog vão para a top layer e dispensam z-index; estes valores servem a elementos posicionados no fluxo da página.",
+  "z-raised": "1",
+  "z-sticky": "10",
+  "z-dropdown": "20",
+  "z-overlay": "30",
+  "z-toast": "40",
+  "z-drag": "50"
+}

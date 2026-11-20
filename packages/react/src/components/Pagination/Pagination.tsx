@@ -2,7 +2,7 @@ import { forwardRef, type HTMLAttributes, type MouseEvent, type ReactNode } from
 import { cx } from '../../utils/cx';
 import { ChevronLeftGlyph, ChevronRightGlyph } from '../../internal/glyphs';
 
-export interface PaginationLabels {
+export interface PaginationTexts {
   /** `aria-label` do `<nav>`. */
   nav: string;
   previous: string;
@@ -13,7 +13,7 @@ export interface PaginationLabels {
   info: (page: number, pageCount: number) => string;
 }
 
-const defaultLabels: PaginationLabels = {
+const defaultTexts: PaginationTexts = {
   nav: 'Paginação',
   previous: 'Anterior',
   next: 'Próxima',
@@ -31,7 +31,7 @@ export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, 'chil
   /** Mostra "Página X de Y". Padrão: `true`. */
   showInfo?: boolean;
   /** Textos (padrão pt-BR). */
-  labels?: Partial<PaginationLabels>;
+  texts?: Partial<PaginationTexts>;
 }
 
 type Slot = number | 'start-ellipsis' | 'end-ellipsis';
@@ -48,19 +48,10 @@ export function getPaginationSlots(page: number, pageCount: number): Slot[] {
 
 /** Paginação controlada. Prev/next no limite ficam `aria-disabled` (focáveis; a ação é ignorada). */
 export const Pagination = forwardRef<HTMLElement, PaginationProps>(function Pagination(
-  {
-    page,
-    pageCount,
-    onPageChange,
-    getHref,
-    showInfo = true,
-    labels: labelsProp,
-    className,
-    ...rest
-  },
+  { page, pageCount, onPageChange, getHref, showInfo = true, texts: textsProp, className, ...rest },
   ref,
 ) {
-  const labels = { ...defaultLabels, ...labelsProp };
+  const labels = { ...defaultTexts, ...textsProp };
   const total = Math.max(1, Math.floor(pageCount));
   const current = Math.min(Math.max(1, Math.floor(page)), total);
 

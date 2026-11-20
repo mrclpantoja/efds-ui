@@ -148,7 +148,7 @@ describe('filtro da table', () => {
     expect(todos.checked).toBe(false);
     expect(todos.indeterminate).toBe(false);
     const handler = vi.fn();
-    document.getElementById('tabela')?.addEventListener('eds:select-change', handler);
+    document.getElementById('tabela')?.addEventListener('eds:table-select-change', handler);
     await user.click(todos);
     expect(box(0).checked && box(2).checked).toBe(true);
     expect(box(1).checked).toBe(true);

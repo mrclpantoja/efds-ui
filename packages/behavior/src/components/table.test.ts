@@ -1,5 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { resetLocale, setLocale } from '../core/config';
 import { initTable, parseDate, parseNumber, sortRows } from './table';
 
 const html = `
@@ -88,10 +89,10 @@ describe('table', () => {
     expect(byId('th-total')).toHaveAttribute('aria-sort', 'none');
   });
 
-  it('eds:sort cancelável deixa a ordenação para o consumidor', async () => {
+  it('eds:table-sort cancelável deixa a ordenação para o consumidor', async () => {
     const user = userEvent.setup();
     const handler = vi.fn((e: Event) => e.preventDefault());
-    document.addEventListener('eds:sort', handler);
+    document.addEventListener('eds:table-sort', handler);
     await user.click(byId('th-cliente').querySelector('button') as HTMLElement);
     expect(handler).toHaveBeenCalledTimes(1);
     expect((handler.mock.calls[0]?.[0] as CustomEvent).detail).toMatchObject({
@@ -101,7 +102,7 @@ describe('table', () => {
     });
     expect(order()).toEqual(['r1', 'r2', 'r3']);
     expect(byId('status')).toBeEmptyDOMElement();
-    document.removeEventListener('eds:sort', handler);
+    document.removeEventListener('eds:table-sort', handler);
   });
 
   it('seleção: indeterminate, selecionar todos e anúncio com plural', async () => {
@@ -120,16 +121,16 @@ describe('table', () => {
     expect(byId('status')).toHaveTextContent('Nenhum item selecionado.');
   });
 
-  it('seleção dispara eds:select-change e ignora linhas desabilitadas', async () => {
+  it('seleção dispara eds:table-select-change e ignora linhas desabilitadas', async () => {
     const user = userEvent.setup();
     box(2).disabled = true;
     const handler = vi.fn();
-    document.addEventListener('eds:select-change', handler);
+    document.addEventListener('eds:table-select-change', handler);
     await user.click(byId('todos'));
     expect(box(2).checked).toBe(false);
     expect((handler.mock.calls[0]?.[0] as CustomEvent).detail.count).toBe(2);
     expect((byId('todos') as HTMLInputElement).checked).toBe(true);
-    document.removeEventListener('eds:select-change', handler);
+    document.removeEventListener('eds:table-select-change', handler);
   });
 
   it('cria a região de status quando não existe', () => {
@@ -168,5 +169,20 @@ describe('table', () => {
     expect(captionId).toBeTruthy();
     expect(wrap).toHaveAttribute('aria-labelledby', captionId);
     vi.unstubAllGlobals();
+  });
+});
+
+describe('locale da ordenação', () => {
+  afterEach(() => resetLocale());
+
+  it('usa o collator do locale configurado', () => {
+    document.body.innerHTML = `<table><tbody>
+      <tr id="a"><td>z</td></tr><tr id="b"><td>ä</td></tr><tr id="c"><td>a</td></tr></tbody></table>`;
+    const rows = Array.from(document.querySelectorAll('tr'));
+    setLocale('sv-SE');
+    // No sueco, "ä" vem depois do "z".
+    expect(sortRows(rows, 0, 'ascending').map((r) => r.id)).toEqual(['c', 'a', 'b']);
+    setLocale('de-DE');
+    expect(sortRows(rows, 0, 'ascending').map((r) => r.id)).toEqual(['b', 'c', 'a']);
   });
 });

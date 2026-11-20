@@ -28,13 +28,18 @@ export type { FieldsetProps } from './components/Fieldset';
 export { Input } from './components/Input';
 export type { InputMaskName, InputMaskOptions, InputProps, InputSize } from './components/Input';
 export { Textarea } from './components/Textarea';
-export type { TextareaProps } from './components/Textarea';
+export type { TextareaProps, TextareaSize } from './components/Textarea';
 export { Select } from './components/Select';
 export type { SelectProps, SelectSize } from './components/Select';
 export { Combobox } from './components/Combobox';
-export type { ComboboxProps, ComboboxOption, ComboboxSize } from './components/Combobox';
+export type {
+  ComboboxProps,
+  ComboboxOption,
+  ComboboxSize,
+  ComboboxTexts,
+} from './components/Combobox';
 export { MultiSelect } from './components/MultiSelect';
-export type { MultiSelectProps, MultiSelectSize } from './components/MultiSelect';
+export type { MultiSelectProps, MultiSelectSize, MultiSelectTexts } from './components/MultiSelect';
 export { FileInput } from './components/FileInput';
 export type { FileInputProps, FileInputSize } from './components/FileInput';
 export { FileUpload } from './components/FileUpload';
@@ -53,25 +58,26 @@ export type {
   DateRangeValue,
 } from './components/DateRangePicker';
 export { Checkbox } from './components/Checkbox';
-export type { CheckboxProps } from './components/Checkbox';
+export type { CheckboxProps, CheckboxSize } from './components/Checkbox';
 export { Radio } from './components/Radio';
-export type { RadioProps } from './components/Radio';
+export type { RadioProps, RadioSize } from './components/Radio';
 export { RadioGroup } from './components/RadioGroup';
 export type { RadioGroupProps } from './components/RadioGroup';
 export { Switch } from './components/Switch';
-export type { SwitchProps } from './components/Switch';
+export type { SwitchProps, SwitchSize } from './components/Switch';
 
 // Feedback
 export { Alert } from './components/Alert';
-export type { AlertProps, AlertVariant } from './components/Alert';
+export type { AlertProps, AlertTexts, AlertVariant } from './components/Alert';
 export { Badge } from './components/Badge';
-export type { BadgeProps, BadgeVariant } from './components/Badge';
+export type { BadgeProps, BadgeVariant, BadgeSize } from './components/Badge';
 export { Spinner } from './components/Spinner';
 export type { SpinnerProps, SpinnerSize } from './components/Spinner';
 export { PageLoader, PageLoaderProvider, usePageLoader } from './components/PageLoader';
 export type {
   PageLoaderProps,
   PageLoaderProviderProps,
+  PageLoaderTexts,
   PageLoaderApi,
   PageLoaderOptions,
 } from './components/PageLoader';
@@ -84,7 +90,9 @@ export type {
   AppShellProps,
   AppShellHeaderProps,
   AppShellNavToggleProps,
+  AppShellNavToggleTexts,
   AppShellState,
+  AppShellTexts,
 } from './components/AppShell';
 export { Navbar, NavbarBrand, NavbarNav, NavbarLink, NavbarActions } from './components/Navbar';
 export type {
@@ -97,6 +105,7 @@ export type {
 export { Sidebar, SidebarSection, SidebarItem } from './components/Sidebar';
 export type {
   SidebarProps,
+  SidebarTexts,
   SidebarSectionProps,
   SidebarItemProps,
   SidebarItemAsLinkProps,
@@ -135,6 +144,9 @@ export {
   TableEmpty,
   TableToolbar,
   TableFooter,
+  sortTableData,
+  filterTableData,
+  useTableFilter,
 } from './components/Table';
 export type {
   TableProps,
@@ -147,18 +159,26 @@ export type {
   TableToolbarProps,
   TableFooterProps,
   TableSort,
+  TableSortDirection,
+  TableSortState,
+  TableTexts,
   TableColumnKind,
+  SortTableDataOptions,
+  FilterTableDataOptions,
+  TableFilterTexts,
+  UseTableFilterOptions,
+  UseTableFilterResult,
 } from './components/Table';
 export { Pagination } from './components/Pagination';
-export type { PaginationProps, PaginationLabels } from './components/Pagination';
+export type { PaginationProps, PaginationTexts } from './components/Pagination';
 export { EmptyState } from './components/EmptyState';
 export type { EmptyStateProps } from './components/EmptyState';
 
 // Overlays e interativos
 export { Modal } from './components/Modal';
-export type { ModalProps, ModalSize } from './components/Modal';
+export type { ModalProps, ModalSize, ModalTexts } from './components/Modal';
 export { Drawer } from './components/Drawer';
-export type { DrawerProps, DrawerPlacement } from './components/Drawer';
+export type { DrawerProps, DrawerPlacement, DrawerTexts } from './components/Drawer';
 export { Dropdown, DropdownItem, DropdownSeparator } from './components/Dropdown';
 export type {
   DropdownProps,
@@ -170,7 +190,8 @@ export type {
 } from './components/Dropdown';
 export { Tabs, TabList, Tab, TabPanel } from './components/Tabs';
 export type { TabsProps, TabListProps, TabProps, TabPanelProps } from './components/Tabs';
-export { DialogProvider, useDialog } from './components/Dialog';
+export { ConfirmButton, DialogProvider, useDialog } from './components/Dialog';
+export type { ConfirmButtonProps } from './components/Dialog';
 export type {
   DialogApi,
   DialogInputType,
@@ -193,13 +214,19 @@ export type {
 export { Tree } from './components/Tree';
 export type { TreeProps, TreeNodeData, TreeChange, TreeAction, TreeTexts } from './components/Tree';
 export { ToastProvider, useToast } from './components/Toast';
-export type { ToastProviderProps, ToastOptions, ToastApi, ToastVariant } from './components/Toast';
+export type {
+  ToastProviderProps,
+  ToastTexts,
+  ToastOptions,
+  ToastApi,
+  ToastVariant,
+} from './components/Toast';
 
 // Exportação de tabelas (geradores do @eds-ui/behavior, sem o init)
 export { TableExport } from './components/TableExport';
 export type {
   TableExportProps,
-  TableExportMessages,
+  TableExportTexts,
   TableExportBeforeInfo,
   TableExportDoneInfo,
 } from './components/TableExport';
@@ -211,3 +238,7 @@ export type {
   ExportFormat,
   ExportOptions,
 } from '@eds-ui/behavior/export';
+
+// Locale
+export { LocaleProvider, useLocale } from './components/Locale';
+export type { LocaleProviderProps } from './components/Locale';

@@ -37,6 +37,18 @@ describe('dropdown', () => {
     expect(byId('gatilho')).toHaveAttribute('aria-expanded', 'false');
   });
 
+  it('emite dropdown-open e dropdown-close no menu', async () => {
+    const user = userEvent.setup();
+    const log: string[] = [];
+    byId('menu').addEventListener('eds:dropdown-open', () => log.push('open'));
+    byId('menu').addEventListener('eds:dropdown-close', () => log.push('close'));
+    await user.click(byId('gatilho'));
+    await flush();
+    await user.keyboard('{Escape}');
+    await flush();
+    expect(log).toEqual(['open', 'close']);
+  });
+
   it('Esc fecha e atualiza aria-expanded', async () => {
     const user = userEvent.setup();
     await user.click(byId('gatilho'));
@@ -93,9 +105,9 @@ describe('alert fechável', () => {
     expect(document.activeElement).toBe(byId('depois'));
   });
 
-  it('eds:dismiss cancelável mantém o aviso', async () => {
+  it('eds:alert-dismiss cancelável mantém o aviso', async () => {
     const user = userEvent.setup();
-    document.addEventListener('eds:dismiss', (e) => e.preventDefault(), { once: true });
+    document.addEventListener('eds:alert-dismiss', (e) => e.preventDefault(), { once: true });
     await user.click(byId('fechar'));
     expect(document.getElementById('aviso')).not.toBeNull();
   });

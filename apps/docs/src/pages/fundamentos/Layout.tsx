@@ -133,7 +133,7 @@ export default function Layout() {
               type: gapType,
               description: (
                 <>
-                  Espaçamento da escala do core. Sem a prop: <code>space-4</code>, que acompanha a
+                  Espaçamento da escala do core. Sem a prop: <code>inset-md</code>, que acompanha a
                   densidade.
                 </>
               ),
@@ -239,7 +239,8 @@ export default function Layout() {
               type: gapType,
               description: (
                 <>
-                  Espaçamento da escala do core. Sem a prop: <code>space-4</code>.
+                  Espaçamento da escala do core. Sem a prop: <code>inset-md</code>, que acompanha a
+                  densidade.
                 </>
               ),
             },

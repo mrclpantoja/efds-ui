@@ -2,7 +2,7 @@
  * Modal: <dialog> nativo aberto com showModal(). O navegador entrega foco preso, fundo inerte,
  * Esc para fechar e retorno do foco ao gatilho; este CSS só cuida da aparência.
  *
- *   <dialog class="eds-modal [eds-modal-sm | eds-modal-lg]" aria-labelledby="t">
+ *   <dialog class="eds-modal [eds-modal-sm | eds-modal-lg | eds-modal-full]" aria-labelledby="t">
  *     <header class="eds-modal-header">
  *       <h2 class="eds-modal-title" id="t">Título</h2>
  *       <form method="dialog">
@@ -19,8 +19,8 @@
  */
 @layer eds.components {
   .eds-modal {
-    --_modal-width: 35rem;
-    --_modal-gutter: var(--eds-space-4);
+    --_modal-width: var(--eds-layout-dialog-md);
+    --_modal-gutter: var(--eds-inset-md);
     --_modal-radius: var(--eds-radius-lg);
     --_modal-padding: var(--eds-space-5);
 
@@ -32,7 +32,7 @@
     padding: 0;
     overflow: hidden;
     overscroll-behavior: contain;
-    border: 1px solid var(--eds-color-border-default);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
     border-radius: var(--_modal-radius);
     background: var(--eds-color-bg-surface);
     color: var(--eds-color-text-primary);
@@ -86,11 +86,33 @@
   }
 
   .eds-modal-sm {
-    --_modal-width: 25rem;
+    --_modal-width: var(--eds-layout-dialog-sm);
   }
 
   .eds-modal-lg {
-    --_modal-width: 45rem;
+    --_modal-width: var(--eds-layout-dialog-lg);
+  }
+
+  /* Tela cheia: ocupa a viewport inteira (sem margem, raio nem borda) em telas estreitas; o
+     cabeçalho e o rodapé ficam fixos e só o corpo rola. A partir de 768px sobra a margem do
+     diálogo e o raio voltam, para o fundo inerte seguir visível como moldura. */
+  .eds-modal-full {
+    --_modal-radius: 0;
+    --_modal-gutter: 0rem;
+
+    inline-size: 100%;
+    block-size: 100dvh;
+    max-block-size: none;
+    border-width: 0;
+
+    @media (min-width: 768px) {
+      --_modal-radius: var(--eds-radius-lg);
+      --_modal-gutter: var(--eds-inset-md);
+
+      inline-size: calc(100% - 2 * var(--_modal-gutter));
+      block-size: calc(100dvh - 2 * var(--_modal-gutter));
+      border-width: var(--eds-border-width);
+    }
   }
 
   .eds-modal-header {
@@ -99,8 +121,8 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--eds-space-3);
-    padding: var(--eds-space-4) var(--_modal-padding);
-    min-block-size: calc(var(--eds-control-height-md) + 2 * var(--eds-space-4));
+    padding: var(--eds-inset-md) var(--_modal-padding);
+    min-block-size: calc(var(--eds-control-height-md) + 2 * var(--eds-inset-md));
   }
 
   /* Alinha o ícone de fechar à mesma distância da borda que o título (compensa o padding do botão). */
@@ -136,8 +158,8 @@
     align-items: center;
     justify-content: flex-end;
     gap: var(--eds-space-3);
-    padding: var(--eds-space-4) var(--_modal-padding);
-    border-block-start: 1px solid var(--eds-color-border-default);
+    padding: var(--eds-inset-md) var(--_modal-padding);
+    border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
   }
 
   /* Trava a rolagem da página enquanto há modal/drawer modal aberto (sem JS). */

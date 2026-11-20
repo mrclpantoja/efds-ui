@@ -1,17 +1,16 @@
 import { forwardRef, useRef, type ReactNode } from 'react';
 import {
-  exportData,
   format as fillTemplate,
   getMessages,
   type ExportData,
   type ExportFormat,
+  type ExportOptions,
 } from '@eds-ui/behavior/export';
 import { useAnnouncer } from '../../internal/announcer';
 import { DownloadGlyph } from '../../internal/glyphs-h';
 import { Button, type ButtonSize, type ButtonVariant } from '../Button';
 import { Dropdown, DropdownItem } from '../Dropdown';
-
-const ALL_FORMATS: readonly ExportFormat[] = ['csv', 'xlsx', 'json', 'pdf'];
+import { useLocale } from '../Locale';
 
 const DEFAULT_LABELS: Record<ExportFormat, string> = {
   csv: 'CSV',
@@ -20,8 +19,35 @@ const DEFAULT_LABELS: Record<ExportFormat, string> = {
   pdf: 'PDF',
 };
 
-/** Textos do anúncio. `{name}` e `{count}` são substituídos. Padrão: os do `@eds-ui/behavior`. */
-export interface TableExportMessages {
+/**
+ * Cada gerador é carregado só quando o formato é pedido (`import()`): quem exporta só CSV não
+ * baixa o código do XLSX e do PDF. O primeiro hover/foco no item já começa a carregar.
+ */
+type FormatModule = { exportFile: (data: ExportData, options?: ExportOptions) => string };
+const FORMAT_LOADERS: Record<ExportFormat, () => Promise<FormatModule>> = {
+  csv: () => import('@eds-ui/behavior/export/csv'),
+  xlsx: () => import('@eds-ui/behavior/export/xlsx'),
+  json: () => import('@eds-ui/behavior/export/json'),
+  pdf: () => import('@eds-ui/behavior/export/pdf'),
+};
+const preload = (fmt: ExportFormat) => {
+  FORMAT_LOADERS[fmt]().catch(() => undefined);
+};
+
+const ALL_FORMATS: readonly ExportFormat[] = ['csv', 'xlsx', 'json', 'pdf'];
+
+/**
+ * Textos do botão, do menu e do anúncio. `{name}` e `{count}` são substituídos. Os do anúncio
+ * (`done`, `doneOne`, `empty`, `failed`) têm por padrão os do `@eds-ui/behavior` (pt-BR).
+ */
+export interface TableExportTexts {
+  /** Texto do botão. Padrão: "Exportar". */
+  label: ReactNode;
+  /** Itens do menu. Padrão: "CSV", "Excel (.xlsx)", "JSON", "PDF". */
+  csv: string;
+  xlsx: string;
+  json: string;
+  pdf: string;
   /** "Arquivo {name} gerado ({count} linhas)." */
   done: string;
   /** Uma linha só: "Arquivo {name} gerado (1 linha)." */
@@ -62,12 +88,10 @@ interface TableExportOwnProps {
   onBeforeExport?: (data: ExportData, info: TableExportBeforeInfo) => ExportData | false | void;
   /** Depois de o arquivo ser gerado e entregue ao navegador. */
   onExport?: (info: TableExportDoneInfo) => void;
-  /** Texto do botão. Padrão: "Exportar". */
-  label?: ReactNode;
-  /** Rótulos dos itens do menu; os que faltarem usam o padrão. */
-  formatLabels?: Partial<Record<ExportFormat, string>>;
-  /** Textos do anúncio de resultado (leitor de tela). */
-  messages?: Partial<TableExportMessages>;
+  /** Textos do botão, do menu e do anúncio de resultado (padrões em pt-BR). */
+  texts?: Partial<TableExportTexts>;
+  /** Locale das datas e dos números do arquivo. Padrão: o do `LocaleProvider` (`pt-BR`). */
+  locale?: string;
   /** Padrão: `secondary`. */
   variant?: ButtonVariant;
   /** Padrão: `md`. */
@@ -97,9 +121,8 @@ export const TableExport = forwardRef<HTMLButtonElement, TableExportProps>(funct
     sheetName,
     onBeforeExport,
     onExport,
-    label = 'Exportar',
-    formatLabels,
-    messages,
+    texts,
+    locale: localeProp,
     variant = 'secondary',
     size = 'md',
     disabled = false,
@@ -108,17 +131,19 @@ export const TableExport = forwardRef<HTMLButtonElement, TableExportProps>(funct
   ref,
 ) {
   const { text: status, announce } = useAnnouncer();
+  const contextLocale = useLocale();
+  const locale = localeProp ?? contextLocale;
   // Sempre a versão mais recente das props, sem recriar os itens do menu.
   const latest = useRef({ data, getData, onBeforeExport, onExport });
   latest.current = { data, getData, onBeforeExport, onExport };
 
-  const run = (fmt: ExportFormat) => {
+  const run = async (fmt: ExportFormat) => {
     const m = getMessages();
     const words = {
-      done: messages?.done ?? m.exportDone,
-      doneOne: messages?.doneOne ?? m.exportDoneOne,
-      empty: messages?.empty ?? m.exportEmpty,
-      failed: messages?.failed ?? m.exportFailed,
+      done: texts?.done ?? m.exportDone,
+      doneOne: texts?.doneOne ?? m.exportDoneOne,
+      empty: texts?.empty ?? m.exportEmpty,
+      failed: texts?.failed ?? m.exportFailed,
     };
     let source: ExportData | undefined;
     try {
@@ -142,7 +167,8 @@ export const TableExport = forwardRef<HTMLButtonElement, TableExportProps>(funct
         announce(words.empty);
         return;
       }
-      exportData(finalData, fmt, { filename: base, title, subtitle, sheetName });
+      const { exportFile } = await FORMAT_LOADERS[fmt]();
+      exportFile(finalData, { filename: base, title, subtitle, sheetName, locale });
     } catch {
       announce(words.failed);
       return;
@@ -164,13 +190,18 @@ export const TableExport = forwardRef<HTMLButtonElement, TableExportProps>(funct
         trigger={
           <Button ref={ref} variant={variant} size={size} disabled={disabled} className={className}>
             <DownloadGlyph />
-            {label}
+            {texts?.label ?? 'Exportar'}
           </Button>
         }
       >
         {shown.map((fmt) => (
-          <DropdownItem key={fmt} onClick={() => run(fmt)}>
-            {formatLabels?.[fmt] ?? DEFAULT_LABELS[fmt]}
+          <DropdownItem
+            key={fmt}
+            onClick={() => void run(fmt)}
+            onPointerEnter={() => preload(fmt)}
+            onFocus={() => preload(fmt)}
+          >
+            {texts?.[fmt] ?? DEFAULT_LABELS[fmt]}
           </DropdownItem>
         ))}
       </Dropdown>

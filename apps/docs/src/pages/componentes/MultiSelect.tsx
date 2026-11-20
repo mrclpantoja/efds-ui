@@ -244,21 +244,23 @@ export default function MultiSelectPage() {
               ),
             },
             {
-              name: 'emptyMessage / loadingMessage',
-              type: 'ReactNode',
-              default: "'Nenhum resultado' / 'Carregando…'",
-              description: 'Textos da lista sem resultado e em busca.',
+              name: 'texts',
+              type: 'Partial<MultiSelectTexts>',
+              description: (
+                <>
+                  Textos internos, para outro idioma: <code>empty</code>, <code>loading</code>,{' '}
+                  <code>list</code> (nome da lista de opções), <code>tags</code> (nome da lista de
+                  etiquetas), <code>remove(label)</code> (botão de remover), <code>status</code>,{' '}
+                  <code>loadingStatus</code>, <code>selected</code>, <code>removed</code>,{' '}
+                  <code>max</code> e <code>required</code> (mensagem de validade).
+                </>
+              ),
             },
             {
-              name: 'tagsLabel / removeLabel / listLabel',
-              type: 'string / (label) => string / string',
+              name: 'readOnly',
+              type: 'boolean',
               description:
-                'Nomes acessíveis: lista de etiquetas, botão de remover e lista de opções.',
-            },
-            {
-              name: 'statusMessage, selectedStatus, removedStatus, maxStatus, requiredMessage',
-              type: 'funções e string',
-              description: 'Textos anunciados e a mensagem de validade, para outro idioma.',
+                'Somente leitura: a lista não abre e as escolhas não mudam (o remover das etiquetas fica desabilitado); o campo segue focável e lido.',
             },
           ]}
         />

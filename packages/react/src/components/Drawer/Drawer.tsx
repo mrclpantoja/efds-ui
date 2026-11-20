@@ -2,11 +2,15 @@ import { forwardRef } from 'react';
 import {
   DialogBase,
   type DialogBehaviorProps,
+  type DialogShellTexts,
   type DialogNativeProps,
 } from '../../internal/DialogBase';
 import { cx } from '../../utils/cx';
 
 export type DrawerPlacement = 'start' | 'end';
+
+/** Textos internos do Drawer (`close`). */
+export type DrawerTexts = DialogShellTexts;
 
 export interface DrawerProps extends DialogBehaviorProps, DialogNativeProps {
   /** Borda de ancoragem. Padrão: `end` (direita em LTR). */

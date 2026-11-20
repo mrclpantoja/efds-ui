@@ -195,7 +195,7 @@ describe('Modal', () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
     render(
-      <Modal open onClose={onClose} title="T" closeLabel="Close">
+      <Modal open onClose={onClose} title="T" texts={{ close: 'Close' }}>
         x
       </Modal>,
     );

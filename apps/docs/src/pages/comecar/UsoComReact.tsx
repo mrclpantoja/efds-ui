@@ -23,6 +23,19 @@ const toast = `import { ToastProvider, useToast } from '@eds-ui/react';
 // Envolva a aplicação uma vez; depois, em qualquer componente:
 // const toast = useToast();`;
 
+const idioma = `import { Alert, LocaleProvider, TableExport } from '@eds-ui/react';
+
+// Locale do Intl (nomes de mês e dia, ordem de texto, datas e números da exportação).
+<LocaleProvider locale="en-US">
+  <App />
+</LocaleProvider>
+
+// Textos internos de cada componente: um único objeto parcial, sempre com o nome texts.
+<Alert variant="danger" onClose={fechar} texts={{ close: 'Dismiss', severity: 'Error:' }}>
+  ...
+</Alert>
+<TableExport data={dados} texts={{ label: 'Export', csv: 'CSV file' }} />`;
+
 export default function UsoComReact() {
   return (
     <>
@@ -51,6 +64,10 @@ export default function UsoComReact() {
         />
       </Section>
 
+      <Section title="Idioma e textos">
+        <CodeBlock code={idioma} label="Código React: LocaleProvider e texts" />
+      </Section>
+
       <Section title="Convenções">
         <ul className="docs-list">
           <li>
@@ -71,8 +88,9 @@ export default function UsoComReact() {
             tabela exige <code>caption</code>, e assim por diante.
           </li>
           <li>
-            Textos internos (&quot;Fechar&quot;, &quot;Carregando&quot;) são substituíveis por prop,
-            para tradução.
+            Textos internos (&quot;Fechar&quot;, &quot;Carregando&quot;) são substituíveis pela prop{' '}
+            <code>texts</code> (objeto parcial, com padrões em pt-BR), com o mesmo nome em todos os
+            componentes. O <code>LocaleProvider</code> troca o idioma do <code>Intl</code>.
           </li>
           <li>
             Ícones ficam em <code>@eds-ui/icons</code>, um export nomeado por ícone (

@@ -1,6 +1,6 @@
 {
   "$selector": ":where(:root)",
-  "$description": "Raios no formato soft (padrão). O eixo shape sobrescreve radius-sm, radius-md e radius-lg.",
+  "$description": "Raios no formato soft (padrão). O eixo shape sobrescreve radius-sm, -md, -lg e -xl. radius-full (círculos: rádio, polegar do switch, pontos) não varia com a forma.",
   "radius-none": "0",
   "radius-sm": "4px",
   "radius-md": "8px",

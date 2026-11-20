@@ -28,12 +28,12 @@
    documento e na .eds-app-main (via :has), para que o foco rolado não fique sob a região. */
 @layer eds.components {
   .eds-toast-region {
-    /* Camada interna (não há token de z-index): acima de navbar/sidebar fixos. */
-    --_toast-z: 100;
+    /* Acima de navbar/sidebar fixos. */
+    --_toast-z: var(--eds-z-toast);
 
     position: fixed;
-    inset-block-end: var(--eds-space-4);
-    inset-inline: var(--eds-space-4);
+    inset-block-end: var(--eds-inset-md);
+    inset-inline: var(--eds-inset-md);
     z-index: var(--_toast-z);
     display: flex;
     flex-direction: column;
@@ -44,8 +44,8 @@
     pointer-events: none;
 
     @media (min-width: 640px) {
-      inset-inline: auto var(--eds-space-4);
-      inline-size: min(24rem, calc(100% - var(--eds-space-4) * 2));
+      inset-inline: auto var(--eds-inset-md);
+      inline-size: min(24rem, calc(100% - var(--eds-inset-md) * 2));
     }
   }
 
@@ -57,17 +57,17 @@
      --_drawer-footer-size (definido em drawer.css). Limitação: se o rodapé quebrar linha, ele
      cresce além dessa estimativa e o toast pode cobrir parte dele. */
   .eds-drawer .eds-toast-region {
-    inset-block-end: calc(var(--_drawer-footer-size) + var(--eds-space-4));
+    inset-block-end: calc(var(--_drawer-footer-size) + var(--eds-inset-md));
 
     @media (min-width: 640px) {
-      inset-block-end: var(--eds-space-4);
-      inset-inline: var(--eds-space-4) auto;
+      inset-block-end: var(--eds-inset-md);
+      inset-inline: var(--eds-inset-md) auto;
     }
   }
 
   .eds-drawer-start .eds-toast-region {
     @media (min-width: 640px) {
-      inset-inline: auto var(--eds-space-4);
+      inset-inline: auto var(--eds-inset-md);
     }
   }
 
@@ -83,7 +83,7 @@
     column-gap: var(--eds-space-3);
     box-sizing: border-box;
     padding: var(--eds-space-3);
-    border: 1px solid color-mix(in srgb, var(--_toast-accent) 30%, transparent);
+    border: var(--eds-border-width) solid color-mix(in srgb, var(--_toast-accent) 30%, transparent);
     border-radius: var(--eds-radius-md);
     background: var(--_toast-bg);
     box-shadow: var(--eds-shadow-md);
@@ -112,10 +112,10 @@
       content: '';
       grid-column: 1;
       grid-row: 1;
-      inline-size: 1.25rem;
+      inline-size: var(--eds-icon-size-md);
       block-size: var(--eds-line-height-body);
       background-color: currentColor;
-      mask: var(--_toast-icon) center / 1rem no-repeat;
+      mask: var(--_toast-icon) center / var(--eds-icon-size-sm) no-repeat;
     }
   }
 

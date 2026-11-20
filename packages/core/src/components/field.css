@@ -110,6 +110,14 @@
     }
   }
 
+  /* Toque: o rótulo inteiro vira o alvo (>= --eds-target-min de altura), sem mexer no desenho do
+     controle. As linhas ficam mais altas só em ponteiro grosso. */
+  @media (pointer: coarse) {
+    .eds-check {
+      padding-block: calc((var(--eds-target-min) - var(--eds-line-height-body)) / 2);
+    }
+  }
+
   @media (forced-colors: active) {
     .eds-error::before,
     .eds-success::before {

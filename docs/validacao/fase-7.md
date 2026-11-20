@@ -243,16 +243,17 @@ Rota: `#/componentes/page-loader`. (C)
 
 Rotas: `#/componentes/modal` e `#/componentes/drawer`. (R) (C) (S)
 
-| #   | O que fazer                                                       | Esperado                                                                                               | Resultado           |
-| --- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------- |
-| 1   | Tab até o botão que abre o modal; Enter.                          | Fala o título e "diálogo"; foco no primeiro campo (formulário) ou em Fechar (informativo).             | [ ] ok / [ ] falhou |
-| 2   | Tab e Shift+Tab repetidos.                                        | Foco circula só dentro do diálogo.                                                                     | [ ] ok / [ ] falhou |
-| 3   | Em navegação (setas), tente ler fora do diálogo.                  | O fundo **não** é lido.                                                                                | [ ] ok / [ ] falhou |
-| 4   | Esc.                                                              | Fecha; foco volta ao botão de origem; o NVDA fala o botão.                                             | [ ] ok / [ ] falhou |
-| 5   | Reabra o mesmo modal várias vezes seguidas.                       | **Validar**: título anunciado em toda abertura; sem silêncio e sem fala repetida da abertura anterior. | [ ] ok / [ ] falhou |
-| 6   | Mouse: pressione dentro do conteúdo, arraste e solte no backdrop. | Não fecha (só fecha se pressionar e soltar no backdrop).                                               | [ ] ok / [ ] falhou |
-| 7   | Corpo rolável (reduza a altura da janela).                        | O corpo recebe foco por Tab, é lido como "região" com o nome do título; setas rolam.                   | [ ] ok / [ ] falhou |
-| 8   | Drawer: repita 1, 2 e 4.                                          | Mesmo comportamento do modal.                                                                          | [ ] ok / [ ] falhou |
+| #   | O que fazer                                                                                                                                                  | Esperado                                                                                               | Resultado           |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------- |
+| 1   | Tab até o botão que abre o modal; Enter.                                                                                                                     | Fala o título e "diálogo"; foco no primeiro campo (formulário) ou em Fechar (informativo).             | [ ] ok / [ ] falhou |
+| 2   | Tab e Shift+Tab repetidos.                                                                                                                                   | Foco circula só dentro do diálogo.                                                                     | [ ] ok / [ ] falhou |
+| 3   | Em navegação (setas), tente ler fora do diálogo.                                                                                                             | O fundo **não** é lido.                                                                                | [ ] ok / [ ] falhou |
+| 4   | Esc.                                                                                                                                                         | Fecha; foco volta ao botão de origem; o NVDA fala o botão.                                             | [ ] ok / [ ] falhou |
+| 5   | Reabra o mesmo modal várias vezes seguidas.                                                                                                                  | **Validar**: título anunciado em toda abertura; sem silêncio e sem fala repetida da abertura anterior. | [ ] ok / [ ] falhou |
+| 6   | Mouse: pressione dentro do conteúdo, arraste e solte no backdrop.                                                                                            | Não fecha (só fecha se pressionar e soltar no backdrop).                                               | [ ] ok / [ ] falhou |
+| 7   | Corpo rolável (reduza a altura da janela).                                                                                                                   | O corpo recebe foco por Tab, é lido como "região" com o nome do título; setas rolam.                   | [ ] ok / [ ] falhou |
+| 8   | Drawer: repita 1, 2 e 4.                                                                                                                                     | Mesmo comportamento do modal.                                                                          | [ ] ok / [ ] falhou |
+| 9   | No console da demo HTML, ouça `eds:modal-open` e `eds:modal-close` (`eds:drawer-open` e `eds:drawer-close` no Drawer) e abra e feche por botão, Esc e fundo. | Um evento de abertura e um de fechamento por ciclo, qualquer que seja o caminho; sem evento duplicado. | [ ] ok / [ ] falhou |
 
 ### 2.4 Toast (cerca de 12 min)
 

@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { cx } from '../../utils/cx';
 import { FieldContext, useControlAttrs } from '../../internal/field-context';
+import { useLocale } from '../Locale';
 import { useAnnouncer } from '../../internal/announcer';
 import { mergeRefs } from '../../internal/refs-d';
 import { useControllable } from '../../internal/useControllable';
@@ -89,11 +90,13 @@ export interface DateRangePickerProps extends Omit<
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  /** Somente leitura: os campos seguem focáveis e lidos, mas o calendário não abre e o valor não muda. */
+  readOnly?: boolean;
   /** Padrão: `md`. */
   size?: DateRangePickerSize;
   invalid?: boolean;
   valid?: boolean;
-  /** Idioma dos nomes de mês e dia (`Intl`). Padrão: `pt-BR`. */
+  /** Idioma dos nomes de mês e dia (`Intl`). Padrão: o do `LocaleProvider` (`pt-BR`). */
   locale?: string;
   texts?: DateRangePickerTexts;
 }
@@ -121,10 +124,11 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
       placeholder = 'dd/mm/aaaa',
       required,
       disabled,
+      readOnly,
       size = 'md',
       invalid,
       valid,
-      locale = 'pt-BR',
+      locale: localeProp,
       texts: textsProp,
       className,
       ...rest
@@ -138,6 +142,8 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
       valid,
     });
     const ctx = useContext(FieldContext);
+    const contextLocale = useLocale();
+    const locale = localeProp ?? contextLocale;
     const generated = useId();
     const errStartId = `${generated}-err-start`;
     const errEndId = `${generated}-err-end`;
@@ -233,6 +239,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
     }, []);
 
     const openCalendar = (from: 'start' | 'end' = 'start') => {
+      if (readOnly) return;
       setOpenFrom(from);
       setPending(null);
       setOpen(true);
@@ -304,6 +311,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
       autoComplete: 'off',
       placeholder,
       disabled,
+      readOnly,
       required: attrs.required,
       'data-valid': attrs['data-valid'],
     };
@@ -335,7 +343,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
             onBlur={startField.inputProps.onBlur}
             onKeyDown={(event) => {
               if (event.key === 'Enter') startField.touch();
-              else if (event.key === 'ArrowDown' && event.altKey && !disabled) {
+              else if (event.key === 'ArrowDown' && event.altKey && !disabled && !readOnly) {
                 event.preventDefault();
                 openCalendar('start');
               }
@@ -355,7 +363,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
             onBlur={endField.inputProps.onBlur}
             onKeyDown={(event) => {
               if (event.key === 'Enter') endField.touch();
-              else if (event.key === 'ArrowDown' && event.altKey && !disabled) {
+              else if (event.key === 'ArrowDown' && event.altKey && !disabled && !readOnly) {
                 event.preventDefault();
                 openCalendar('end');
               }
@@ -373,7 +381,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
             aria-haspopup="dialog"
             aria-expanded={open}
             aria-controls={dialogId}
-            disabled={disabled}
+            disabled={disabled || readOnly}
             onClick={() => (open ? close(true) : openCalendar('start'))}
           >
             <CalendarGlyph />

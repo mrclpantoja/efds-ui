@@ -1,10 +1,11 @@
-import { ensureId, hidePopover, safeMatches } from '../core/dom';
+import { emit, ensureId, hidePopover, safeMatches } from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 
 /**
  * Dropdown (disclosure, sem `role="menu"`): sincroniza `aria-expanded` dos gatilhos
  * (`[popovertarget]`) com o evento `toggle`, fecha quando o foco sai por Tab (o popover `auto`
- * só fecha com Esc e clique fora) e ignora clique em item `aria-disabled`.
+ * só fecha com Esc e clique fora) e ignora clique em item `aria-disabled`. Emite
+ * `eds:dropdown-open` e `eds:dropdown-close` no menu.
  */
 export const dropdownBehavior: Behavior = {
   name: 'dropdown',
@@ -37,6 +38,7 @@ export const dropdownBehavior: Behavior = {
     const onToggle = (event: Event) => {
       const open = isOpen(event);
       setExpanded(open);
+      emit(menu, open ? 'dropdown-open' : 'dropdown-close', {});
       if (open) doc.addEventListener('focusin', onFocusIn);
       else doc.removeEventListener('focusin', onFocusIn);
     };

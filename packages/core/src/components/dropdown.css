@@ -13,7 +13,7 @@
     min-inline-size: var(--_dropdown-min-width);
     max-block-size: 80dvh;
     padding: var(--_dropdown-padding);
-    border: 1px solid var(--eds-color-border-default);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
     border-radius: var(--eds-radius-md);
     background: var(--eds-color-bg-surface);
     color: var(--eds-color-text-primary);
@@ -77,14 +77,18 @@
 
     & > svg {
       flex: none;
-      inline-size: 1rem;
-      block-size: 1rem;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
       color: var(--eds-color-text-muted);
     }
 
     &:hover:not(:disabled, [aria-disabled='true']),
     &:focus-visible {
       background: var(--eds-color-bg-subtle);
+    }
+
+    &:active:not(:disabled, [aria-disabled='true']) {
+      background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
     }
 
     /* Anel por dentro, para o overflow do menu não cortá-lo. */
@@ -111,6 +115,14 @@
     &:focus-visible {
       background: var(--eds-color-status-danger-subtle);
     }
+
+    &:active:not(:disabled, [aria-disabled='true']) {
+      background: color-mix(
+        in srgb,
+        var(--eds-color-status-danger-subtle),
+        var(--eds-color-text-primary) 8%
+      );
+    }
   }
 
   .eds-dropdown-separator {
@@ -118,7 +130,7 @@
     margin-block: var(--eds-space-1);
     margin-inline: 0;
     border: 0;
-    border-block-start: 1px solid var(--eds-color-border-default);
+    border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
   }
 
   /* Indicador de menu no gatilho (não em botão só de ícone); gira quando aria-expanded="true". */

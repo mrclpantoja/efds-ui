@@ -22,7 +22,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 
 ### @eds-ui/react
 
-- 26 componentes `forwardRef` sobre as classes do core, sem CSS próprio; peer React 18 ou 19.
+- Wrappers `forwardRef` sobre as classes do core para todos os componentes (42 diretórios de componente), sem CSS próprio; peer React 18 ou 19.
 - Exigências de acessibilidade no tipo (por exemplo `iconOnly` exige `aria-label`).
 - Modal e Drawer sobre `<dialog>`; Dropdown como disclosure; Toast via `ToastProvider` e `useToast`.
 - Fase 6e: `DialogProvider` e `useDialog()` (`alert`, `confirm`, `prompt` por Promise, textos configuráveis), `Sortable` e `SortableGroup` (arrastar e soltar com alternativa por teclado, quadro entre listas, `name` para formulário) e `Tree` (APG, edição, mover por teclado e arrasto, filhos sob demanda por `loadChildren`, desfazer exclusão); `ToastOptions.action` (botão no toast).
@@ -31,7 +31,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 
 ### @eds-ui/icons
 
-- 24 ícones como componentes React (SVG, `currentColor`), com tree shaking.
+- 24 ícones próprios como componentes React (SVG, `currentColor`), com tree shaking; catálogo com busca e cópia (React ou SVG para HTML) na página Fundamentos › Ícones.
 
 ### Empacotamento
 
@@ -52,7 +52,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - Table: filtro local de linhas por `data-eds-table-filter` (sem acento e sem caixa, `data-eds-filter-columns`, `data-eds-filter-ignore`, linha de vazio, status e evento `eds:table-filter`). Com filtro, "selecionar todos" e a contagem de selecionados olham só as linhas visíveis.
 - Fase 6e, diálogos rápidos: `alert(texto, título?, tipo?)`, `confirm(...)` e `prompt(texto, padrão?, título?)` por Promise (também em `window.EDS`), cinco tipos, fila de um diálogo por vez, prompt com `required`/`validate` e erro visível, `options` (`okText`, `cancelText`, `placeholder`, `inputType`...). `window.alert` só é trocado por opt-in (`data-eds-native-alert` ou `init(root, { nativeAlert: true })`) e **não bloqueia**.
 - Confirmação declarativa: `data-eds-confirm` (+ `-title`, `-variant`, `-ok`) em `button`, `a` e `form` (`initConfirm`): só prossegue confirmado; botão de envio usa `form.requestSubmit(submitter)`; não reentra no próprio interceptador.
-- Fase 6e, Sortable (`data-eds-sortable`, `initSortable`): reordenar e trocar itens entre contêineres do mesmo `data-eds-group` por Pointer Events (toque sem pegador exige segurar 400 ms) e por teclado (WCAG 2.5.7), orientação vertical/horizontal/grade, `data-eds-name` (hidden por item), `data-eds-disabled`; evento `eds:sortable-change` com `order` (mesmo nome do evento da Table).
+- Fase 6e, Sortable (`data-eds-sortable`, `initSortable`): reordenar e trocar itens entre contêineres do mesmo `data-eds-group` por Pointer Events (toque sem pegador exige segurar 400 ms) e por teclado (WCAG 2.5.7), orientação vertical/horizontal/grade, `data-eds-name` (hidden por item), `data-eds-disabled`; evento `eds:sortable-change` com `order` (distinto do `eds:table-sort` da Table).
 - Fase 6e, Tree (`data-eds-tree`, `initTree`): APG Tree View com type-ahead e multisseleção; edição (`data-eds-editable`: renomear, adicionar filho/irmão/pai, excluir com confirmação e "Desfazer" por 8 s, mover por Alt+setas ou arrastando por zonas, menu "⋯"); fonte por JSON (`data-eds-source`) e filhos sob demanda (`data-eds-children-url`); eventos `eds:tree-change`, `-beforechange` (cancelável), `-select`, `-activate`, `-toggle`.
 - Toast: opção `action: { label, onClick }` (botão que executa e fecha).
 - Exportação de tabelas, sem dependência: CSV (`;`, BOM, CRLF, proteção contra injeção de fórmula), JSON, XLSX (ZIP e OOXML escritos à mão: cabeçalho congelado em negrito, autofiltro, formatos de número, moeda, percentual e data) e PDF (A4, Helvetica padrão com larguras AFM, retrato ou paisagem, fonte reduzida a 7 pt quando as colunas não cabem, várias páginas com cabeçalho repetido e rodapé "Página N de M"). Ligação HTML por `data-eds-export` (+ `-target`, `-filename`, `-title`, `-subtitle`, `-scope`), `th[data-type]`, `td[data-value]` e `data-eds-export-ignore`; eventos `eds:table-beforeexport` (cancelável; `detail.data` pode ser alterado para mascarar) e `eds:table-export`. Datas anteriores a 01/03/1900 saem como texto no XLSX (o Excel desloca ou não representa essas séries).
@@ -79,3 +79,41 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - React: `TreeTexts.deleted(label, descendants)`, `undoHint`, `addedNamed`, `loadErrorInline`; `loadError` passa a ser `(label) => string`. `ToastOptions.onClose` novo.
 - Diálogos: `confirm` e `prompt` do tipo `danger` usam o prefixo oculto "Atenção:" ("Erro:" só no `alert`); o rótulo oculto do prompt é o título (ou o texto, sem título) e o campo usa `aria-required`, no behavior e no React.
 - Core: `.eds-error[hidden]`/`.eds-success[hidden]` ficam ocultos (o `display:flex` vencia o atributo); linhas da Tree sem seleção de texto ao arrastar; menu "⋯" da Tree ancorado ao botão com folga das bordas (sem anchor positioning, cai no centro); diálogos rápidos com título h3 e texto body-lg; lista vazia do Sortable tracejada (texto opcional `data-eds-empty`); item "pego" com fundo, sombra e elevação; destino proibido da Tree com contorno tracejado e ícone.
+
+### Lista de melhorias, onda A (contrato e correções)
+
+**@eds-ui/core e @eds-ui/themes**
+
+- Densidade varia toda a escala de controles: sm/md/lg = 28/32/36 px (compacto), 32/38/44 (confortável), 38/44/52 (espaçoso); `inset-sm/md/lg` semânticos no lugar de `space-4` variável; degraus de espaço de 2 e 20 px.
+- Tokens novos: `z-*` (camadas), `motion-duration-slow`, `border-width` e `border-width-strong`, `icon-size-sm..xl`, `target-min` (2,75 rem, alvo de toque), `layout-dialog-*`, `layout-table-min`, `layout-breakpoint-*`; `radius-xl` varia com `data-shape`. Literais de z-index, duração, borda e ícone saíram dos componentes.
+- Tipografia: primitivo `font-size-18` disponível; `h4` segue 16 px (Especificação Visual).
+- Estilos de impressão (`base/print.css`, `.eds-no-print`): sem navegação, toasts nem colunas de seleção e ações; app shell sem rolagem interna; cores legíveis em papel também a partir do modo escuro; tabelas com cabeçalho repetido e linhas inteiras; links externos com o endereço.
+- Toque: campos com 16 px em `pointer: coarse` (evita o zoom do iOS) e alvo mínimo em checkbox, radio, switch e seleção da Table.
+- Modal `.eds-modal-full`: tela cheia sem margem nem raio abaixo de 768 px, cabeçalho e rodapé fixos e corpo rolável; a partir de 768 px volta a margem e o raio do diálogo.
+- Select, Combobox e MultiSelect em somente leitura (`aria-readonly="true"`): fundo do Input readonly, sem hover, seta atenuada.
+- Seleção da Table: o checkbox dentro de `<label class="eds-check">` faz da célula inteira o alvo (mínimo `--eds-target-min` em ponteiro grosso), sem mudar a largura da coluna; o checkbox direto continua aceito.
+- Estado `:active` discreto (só tokens) em Navbar, Breadcrumb, opção do Combobox, dia do calendário, linha da Tree e ordenação da Table; tamanhos `-sm`/`-lg` de Textarea, Radio, Switch e Badge documentados.
+
+**@eds-ui/behavior**
+
+- Eventos no padrão `eds:<componente>-<ação>`: `eds:table-sort`, `eds:table-select-change` e `eds:alert-dismiss` (antes sem o prefixo do componente, sem camada de compatibilidade); novos `eds:modal-close`, `eds:drawer-open`, `eds:drawer-close`, `eds:dropdown-open` e `eds:dropdown-close`. `eds:modal-open` sai também quando o diálogo é aberto por `showModal()` no código (`detail.trigger = null`); os de fechamento saem por qualquer caminho, com `detail.returnValue`.
+- `configure({ locale })` (padrão `pt-BR`) e `resetLocale()`: collator da Table, nomes de mês e dia do calendário e exportador (ordem da data, separadores, formato de data do XLSX e `/Lang` do PDF); `ExportOptions.locale`. `Messages.dateLocale` removida.
+- `readonly` em Combobox, MultiSelect, DatePicker e DateRangePicker: não abrem a lista nem mudam o valor (também por colagem); `aria-readonly`.
+- Desempenho: auto-init com um seletor combinado por nó adicionado, e na remoção só os elementos ligados dentro dos nós removidos; Table com texto normalizado por linha em cache no filtro, cada valor interpretado uma vez e reinserção numa só operação na ordenação; Combobox com rótulos normalizados em cache, espera de 80 ms acima de 200 opções e reposicionamento no máximo uma vez por quadro; Tree com renumeração e JSON uma vez por lote e itens visíveis em cache; PageLoader sem criar objetos em chamadas excluídas. Tetos práticos documentados (Table ~1.000 linhas, Tree ~2.000 nós, Combobox local ~500 opções).
+- Novo `dist/eds-behavior-core.js`: o mesmo `window.EDS` sem o exportador e sem a máscara (~35 kB com gzip, contra ~48 kB do `eds-behavior.js`, que segue completo).
+- Subentradas `@eds-ui/behavior/export/{csv,json,xlsx,pdf}` (`exportFile(dados, opções)`) para carregar um formato sob demanda; `@eds-ui/behavior/export` continua igual.
+
+**@eds-ui/react**
+
+- Textos internos: todos os componentes usam a prop `texts` (objeto parcial, padrões em pt-BR); saem `severityLabel(s)`, `closeLabel`, `labels`, `messages`, `formatLabels`, `skipLinkLabel`, `collapseLabel` e as props soltas de mensagem do Combobox, MultiSelect e PageLoaderProvider.
+- `LocaleProvider` / `useLocale()` definem o idioma do `Intl` (DatePicker, DateRangePicker, TableExport); a prop `locale` do componente vence o provider.
+- Table: ordenação controlada (`sort`, `onSortChange`, `TableHeaderCell sortKey`, anúncio no status), utilitários `sortTableData` e `filterTableData` e o hook `useTableFilter`, com as mesmas regras do behavior (`core/data.ts`). Coluna de seleção com `<label class="eds-check">` ampliando o alvo.
+- `ConfirmButton` (equivalente do `data-eds-confirm`, exige `DialogProvider`); `readOnly` em Select, Combobox, MultiSelect e DateRangePicker; `size` em Textarea, Checkbox, Radio, Switch e Badge; Modal `size="full"`.
+- Publicado com um arquivo por módulo (`preserveModules`) para tree-shaking real; `dist/index.js` só reexporta.
+- `TableExport` carrega o gerador de cada formato sob demanda (`import()` no clique; hover e foco pré-carregam).
+
+**Revisão de UX da onda A**
+
+- `<select aria-readonly="true">` em HTML puro passa a ser de fato somente leitura (`initSelectReadonly` no behavior: a lista não abre e a escolha não muda; o campo segue focável e vai no envio).
+- Impressão: botões sólidos, caixas marcadas, chaves ligadas e o dia escolhido do calendário imprimem o fundo (`print-color-adjust: exact`), sem rótulo branco sobre papel branco.
+- Documentação: página Ícones com nome acessível nos botões de copiar ("React: copiar importação de X") e duas colunas a 320 px.

@@ -13,7 +13,7 @@ export default function Colapsavel() {
           brandLabel="Gestão Exemplo"
           collapsed={collapsed}
           onCollapsedChange={setCollapsed}
-          collapseLabel="Menu lateral"
+          texts={{ collapse: 'Menu lateral' }}
         >
           <SidebarItem href="/dashboard" icon={<DashboardIcon />} current>
             Dashboard

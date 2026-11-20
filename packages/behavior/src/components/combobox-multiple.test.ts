@@ -317,3 +317,40 @@ describe('combobox múltiplo (fonte remota)', () => {
     await flush();
   });
 });
+
+describe('combobox: somente leitura', () => {
+  let restore: () => void;
+  let destroy: () => void;
+  beforeEach(() => {
+    restore = installDomPolyfills();
+    document.body.innerHTML = markup('', 'readonly');
+    destroy = initCombobox(document);
+  });
+  afterEach(() => {
+    destroy();
+    restore();
+    document.body.innerHTML = '';
+  });
+
+  it('não abre a lista, não muda valor, mantém o foco e marca aria-readonly', async () => {
+    const user = userEvent.setup();
+    await user.click(input());
+    await user.keyboard('{ArrowDown}{Enter}{Backspace}{Escape}');
+    expect(document.activeElement).toBe(input());
+    expect(input()).toHaveAttribute('aria-readonly', 'true');
+    expect(input()).toHaveAttribute('aria-expanded', 'false');
+    expect(tags()).toEqual(['Porto Alegre']);
+    expect(hiddenValues()).toEqual(['cidades[]=poa']);
+    expect(document.querySelector('.eds-combobox-tag-remove')).toBeDisabled();
+  });
+
+  it('voltar a editável reativa a lista e o remover', async () => {
+    const user = userEvent.setup();
+    input().readOnly = false;
+    await flush();
+    expect(input()).not.toHaveAttribute('aria-readonly');
+    await user.click(input());
+    expect(input()).toHaveAttribute('aria-expanded', 'true');
+    expect(document.querySelector('.eds-combobox-tag-remove')).toBeEnabled();
+  });
+});

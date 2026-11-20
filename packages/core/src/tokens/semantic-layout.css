@@ -1,9 +1,13 @@
 /* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/semantic/layout.json */
-/* Estrutura de página. Breakpoints (documentação; custom properties não funcionam em @media): 640 / 768 / 1024 / 1280px. */
+/* Estrutura de página. Os 4 breakpoints do projeto (640 / 768 / 1024 / 1280px) existem como tokens só para documentação e leitura por JS: custom properties não funcionam em @media nem em @container, ali vale o número. layout-container-2xl é apenas uma largura máxima opcional, sem breakpoint próprio (acima de 1280px o conteúdo não ganha novas colunas). */
 
 /* prettier-ignore */
 @layer eds.tokens {
   :where(:root) {
+    --eds-layout-breakpoint-sm: 640px;
+    --eds-layout-breakpoint-md: 768px;
+    --eds-layout-breakpoint-lg: 1024px;
+    --eds-layout-breakpoint-xl: 1280px;
     --eds-layout-sidebar-width: 240px;
     --eds-layout-sidebar-width-collapsed: 72px;
     --eds-layout-navbar-height: 64px;
@@ -12,5 +16,9 @@
     --eds-layout-container-lg: 1024px;
     --eds-layout-container-xl: 1280px;
     --eds-layout-container-2xl: 1440px;
+    --eds-layout-dialog-sm: 25rem;
+    --eds-layout-dialog-md: 35rem;
+    --eds-layout-dialog-lg: 45rem;
+    --eds-layout-table-min: 36rem;
   }
 }

@@ -1,7 +1,7 @@
 export { TableExport } from './TableExport';
 export type {
   TableExportProps,
-  TableExportMessages,
+  TableExportTexts,
   TableExportBeforeInfo,
   TableExportDoneInfo,
 } from './TableExport';

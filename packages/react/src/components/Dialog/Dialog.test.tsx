@@ -52,12 +52,12 @@ describe('DialogProvider / useDialog', () => {
     expect(title).toHaveTextContent('Sucesso: Pedido');
     expect(d).toHaveAttribute('aria-labelledby', title.id);
     expect(d).toHaveAttribute('aria-describedby', d.querySelector('.eds-alert-dialog-text')!.id);
-    expect(screen.getByRole('button', { name: 'OK' })).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'OK' })).toHaveFocus());
     expect(screen.queryByRole('button', { name: 'Cancelar' })).toBeNull();
     await user.keyboard('{Enter}');
     await waitFor(() => expect(done).toHaveBeenCalledWith(undefined));
     expect(dialog()).toBeNull();
-    expect(screen.getByRole('button', { name: 'Abrir' })).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Abrir' })).toHaveFocus());
   });
 
   it('sem título o texto nomeia o diálogo e não há aria-describedby', async () => {
@@ -79,7 +79,7 @@ describe('DialogProvider / useDialog', () => {
     await waitFor(() => expect(dialog()).toBeTruthy());
     expect(dialog()).toHaveAttribute('data-variant', 'question');
     expect(dialog()).not.toHaveAttribute('role');
-    expect(screen.getByRole('button', { name: 'Confirmar' })).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Confirmar' })).toHaveFocus());
     await user.keyboard('{Enter}');
     await expect(p).resolves.toBe(true);
 
@@ -102,7 +102,7 @@ describe('DialogProvider / useDialog', () => {
     await waitFor(() => expect(dialog()).toBeTruthy());
     const d = dialog()!;
     expect(d).toHaveAttribute('role', 'alertdialog');
-    expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveFocus());
     expect(screen.getByRole('button', { name: 'Excluir' })).toHaveClass('eds-button-danger');
     await user.pointer([{ keys: '[MouseLeft>]', target: d }, { keys: '[/MouseLeft]' }]);
     expect(dialog()).not.toBeNull();
@@ -116,12 +116,17 @@ describe('DialogProvider / useDialog', () => {
     let p = api.confirm('Continuar?', 'Atenção', 'warning');
     await waitFor(() => expect(dialog()).toBeTruthy());
     expect(dialog()).toHaveAttribute('role', 'alertdialog');
-    expect(screen.getByRole('button', { name: 'Confirmar' })).toHaveFocus();
+    // O foco inicial vem de um efeito: espera por ele em vez de supor que já aconteceu.
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Confirmar' })).toHaveFocus());
     await user.keyboard('{Escape}');
     await expect(p).resolves.toBe(false);
+    // A Promise resolve antes de o diálogo sair do DOM: sem esperar, o segundo teste de fundo
+    // poderia clicar no diálogo antigo (já encerrado) em vez do novo.
+    await waitFor(() => expect(dialog()).toBeNull());
 
     p = api.confirm('Salvar?');
     await waitFor(() => expect(dialog()).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Confirmar' })).toHaveFocus());
     await user.pointer([{ keys: '[MouseLeft>]', target: dialog()! }, { keys: '[/MouseLeft]' }]);
     await expect(p).resolves.toBe(false);
   });
@@ -132,7 +137,7 @@ describe('DialogProvider / useDialog', () => {
     const p = api.prompt('Nome do arquivo', 'relatorio', 'Salvar como');
     await waitFor(() => expect(dialog()).toBeTruthy());
     const input = screen.getByRole('textbox', { name: 'Salvar como' }) as HTMLInputElement;
-    expect(input).toHaveFocus();
+    await waitFor(() => expect(input).toHaveFocus());
     expect(input.value).toBe('relatorio');
     expect(input.selectionStart).toBe(0);
     expect(input.selectionEnd).toBe(9);
@@ -166,7 +171,7 @@ describe('DialogProvider / useDialog', () => {
     expect(error).toHaveTextContent('Preencha este campo.');
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input).toHaveAttribute('aria-describedby', error.id);
-    expect(input).toHaveFocus();
+    await waitFor(() => expect(input).toHaveFocus());
     expect(error).toHaveAttribute('role', 'alert');
     expect(dialog()!.querySelector('[role="status"]')).toBeNull();
     expect(dialog()!.querySelectorAll('[role="alert"]')).toHaveLength(1);
@@ -241,7 +246,7 @@ describe('DialogProvider / useDialog', () => {
     await user.keyboard('{Enter}');
     await waitFor(() => expect(order).toEqual(['a', 'b:true', 'c:v']));
     // O foco volta ao elemento de antes da primeira chamada.
-    expect(screen.getByRole('button', { name: 'Abrir' })).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Abrir' })).toHaveFocus());
   });
 
   it('Esc num diálogo rápido sobre um Modal não fecha o Modal', async () => {
@@ -293,7 +298,7 @@ describe('DialogProvider / useDialog', () => {
     );
     const p = api.confirm('Ok?');
     await waitFor(() => expect(dialog()).toBeTruthy());
-    expect(screen.getByRole('button', { name: 'Confirmar' })).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Confirmar' })).toHaveFocus());
     await user.keyboard('{Enter}');
     await expect(p).resolves.toBe(true);
   });

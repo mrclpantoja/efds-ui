@@ -155,6 +155,23 @@ export default function DropdownPage() {
         />
       </Section>
 
+      <Section title="Eventos (HTML)">
+        <ClassTable
+          caption="Eventos do @eds-ui/behavior"
+          headers={['Evento', 'Quando']}
+          rows={[
+            {
+              name: 'eds:dropdown-open',
+              effect: 'O menu abre. Sai no próprio menu (.eds-dropdown), com bubble.',
+            },
+            {
+              name: 'eds:dropdown-close',
+              effect: 'O menu fecha (Esc, clique fora, foco que sai ou o item escolhido).',
+            },
+          ]}
+        />
+      </Section>
+
       <Section title="Acessibilidade">
         <Stack gap={3}>
           <ul className="docs-list">

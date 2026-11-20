@@ -70,6 +70,16 @@
     &:has(> :disabled, .eds-combobox-input:disabled) {
       --_combobox-arrow: var(--eds-color-text-muted);
     }
+
+    /* Somente leitura: a seta some do alcance do ponteiro (o JS não abre a lista). */
+    &:has(
+      > [readonly],
+      [aria-readonly='true'],
+      .eds-combobox-input[readonly],
+      .eds-combobox-input[aria-readonly='true']
+    ) {
+      --_combobox-arrow: var(--eds-color-text-muted);
+    }
   }
 
   .eds-combobox-sm {
@@ -98,7 +108,7 @@
     max-block-size: min(var(--_combobox-max-height), 80dvh);
     margin: 0;
     padding: var(--eds-space-1);
-    border: 1px solid var(--eds-color-border-default);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
     border-radius: var(--eds-radius-md);
     background: var(--eds-color-bg-surface);
     color: var(--eds-color-text-primary);
@@ -158,6 +168,10 @@
       background: var(--eds-color-bg-subtle);
     }
 
+    &:active:not([aria-disabled='true']) {
+      background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
+    }
+
     /* Destacada pelo teclado ou ponteiro (aria-activedescendant + aria-selected). O tom de
        fundo sozinho não chega a 3:1 (1.4.11): barra inicial em action-primary, como a linha
        selecionada da Table. */
@@ -214,7 +228,7 @@
     --_control-bg: var(--eds-color-bg-surface);
     --_control-border: var(--eds-color-border-strong);
     --_control-fg: var(--eds-color-text-primary);
-    --_tag-height: 1.5rem;
+    --_tag-height: var(--eds-icon-size-lg);
 
     display: flex;
     flex-wrap: wrap;
@@ -228,7 +242,7 @@
     padding-block: calc(var(--eds-space-1) / 2);
     padding-inline: var(--_combobox-padding-x)
       calc(var(--_combobox-padding-x) * 2 + var(--_combobox-arrow-size) * 2);
-    border: 1px solid var(--_control-border);
+    border: var(--eds-border-width) solid var(--_control-border);
     border-radius: var(--_control-radius);
     background: var(--_control-bg);
     color: var(--_control-fg);
@@ -238,6 +252,8 @@
     &:hover:not(
         :has(
           .eds-combobox-input:disabled,
+          .eds-combobox-input[readonly],
+          .eds-combobox-input[aria-readonly='true'],
           .eds-combobox-input[aria-invalid='true'],
           .eds-combobox-input[data-valid='true']
         )
@@ -262,6 +278,13 @@
 
     &:has(.eds-combobox-input[aria-invalid='true']) {
       --_control-border: var(--eds-color-status-danger);
+    }
+
+    /* Somente leitura: mesma aparência do Input readonly (fundo bg-subtle, borda e foco normais). */
+    &:has(.eds-combobox-input[readonly], .eds-combobox-input[aria-readonly='true']) {
+      --_control-bg: var(--eds-color-bg-subtle);
+
+      cursor: default;
     }
 
     &:has(.eds-combobox-input:disabled) {
@@ -324,7 +347,7 @@
     block-size: var(--_tag-height);
     margin: 0;
     padding: 0;
-    border: 1px solid transparent;
+    border: var(--eds-border-width) solid transparent;
     border-radius: var(--eds-radius-sm);
     background: transparent;
     color: var(--eds-color-text-secondary);
@@ -394,7 +417,7 @@
   /* Opção de lista múltipla: checkbox visual à esquerda (aria-selected = escolhida). O destaque
      usa data-active (regras de fundo + barra acima). */
   .eds-combobox-listbox[aria-multiselectable='true'] .eds-combobox-option {
-    --_option-check-size: 1.125rem;
+    --_option-check-size: calc(var(--eds-icon-size-sm) + var(--eds-space-0-5));
     --_option-check-bg: var(--eds-color-bg-surface);
     --_option-check-border: var(--eds-color-border-strong);
 
@@ -408,7 +431,7 @@
       box-sizing: border-box;
       inline-size: var(--_option-check-size);
       block-size: var(--_option-check-size);
-      border: 1px solid var(--_option-check-border);
+      border: var(--eds-border-width) solid var(--_option-check-border);
       border-radius: min(var(--eds-radius-sm), var(--eds-space-1));
       background: var(--_option-check-bg);
       translate: 0 -50%;
@@ -475,6 +498,13 @@
     }
   }
 
+  /* Toque: 16px evita o zoom automático do iOS ao focar (o campo simples já é .eds-input). */
+  @media (pointer: coarse) {
+    .eds-combobox-input {
+      font-size: 1rem;
+    }
+  }
+
   @media (forced-colors: active) {
     .eds-combobox {
       --_combobox-arrow: ButtonText;
@@ -520,7 +550,7 @@
     }
 
     .eds-combobox-tag {
-      border: 1px solid CanvasText;
+      border: var(--eds-border-width) solid CanvasText;
       color: CanvasText;
     }
 

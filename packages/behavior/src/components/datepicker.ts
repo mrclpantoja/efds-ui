@@ -1,4 +1,4 @@
-import { format, getMessages } from '../core/config';
+import { format, getLocale, getMessages } from '../core/config';
 import {
   addDays,
   addMonths,
@@ -72,7 +72,7 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
   const ac = new AbortController();
   const { signal } = ac;
   const m = () => getMessages();
-  const locale = () => m().dateLocale;
+  const locale = () => getLocale();
 
   let status = root.querySelector<HTMLElement>('[role="status"]');
   if (!status) {
@@ -307,6 +307,8 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
     input.addEventListener(
       'paste',
       (event) => {
+        // Somente leitura: o campo não muda de valor (nem por colagem).
+        if (input.readOnly || input.disabled) return;
         const text = event.clipboardData?.getData('text') ?? '';
         const parsed = parseAny(text);
         if (!parsed) return;

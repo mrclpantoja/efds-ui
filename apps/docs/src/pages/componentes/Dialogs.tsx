@@ -252,6 +252,30 @@ export default function DialogsPage() {
             },
           ]}
         />
+        <p>
+          <code>ConfirmButton</code> é o equivalente em React do <code>data-eds-confirm</code>: um{' '}
+          <code>Button</code> (ou link, com <code>href</code>) que pergunta antes de agir. Fica fora
+          do <code>Button</code> para que quem não confirma nada não carregue o diálogo. Exige um{' '}
+          <code>DialogProvider</code> acima.
+        </p>
+        <PropsTable
+          caption="Props de ConfirmButton (além das de Button)"
+          rows={[
+            {
+              name: 'confirm',
+              type: 'string',
+              required: true,
+              description:
+                'A pergunta. Só se o usuário confirmar, a ação segue: o botão de envio envia o formulário, o link navega e o onClick roda.',
+            },
+            {
+              name: 'confirmTitle / confirmVariant / confirmOkText',
+              type: "string / 'info' | 'success' | 'warning' | 'danger' | 'question' / string",
+              default: "— / 'question' / 'Confirmar'",
+              description: 'Título, tipo e texto do botão principal do diálogo.',
+            },
+          ]}
+        />
         <PropsTable
           caption="API de useDialog() (DialogApi)"
           rows={[

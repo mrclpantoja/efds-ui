@@ -233,7 +233,7 @@ describe('Combobox', () => {
         options={[]}
         filter={false}
         loading
-        loadingMessage="Buscando…"
+        texts={{ loading: 'Buscando…' }}
       />,
     );
     expect(screen.getByText(/Buscando/).closest('p')).not.toHaveAttribute('hidden');
@@ -380,7 +380,7 @@ describe('Combobox: auditoria de UX', () => {
   });
 
   it('texto sem escolha: customValidity até escolher uma opção', async () => {
-    const { user, input } = setup({ invalidChoiceMessage: 'Escolha na lista.' });
+    const { user, input } = setup({ texts: { invalidChoice: 'Escolha na lista.' } });
     expect(input.validity.customError).toBe(false);
     await user.type(input, 'zz');
     expect(input.validity.customError).toBe(true);
@@ -408,7 +408,7 @@ describe('Combobox: auditoria de UX', () => {
     );
     expect(screen.getByRole('listbox', { hidden: true })).toHaveAccessibleName('Município');
     unmount();
-    render(<Combobox aria-label="Cidade" listLabel="Cidades" options={cidades} />);
+    render(<Combobox aria-label="Cidade" texts={{ list: 'Cidades' }} options={cidades} />);
     expect(screen.getByRole('listbox', { hidden: true })).toHaveAccessibleName('Cidades');
   });
 

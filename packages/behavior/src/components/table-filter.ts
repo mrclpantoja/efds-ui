@@ -20,6 +20,17 @@ function parseColumns(value: string | null): Set<number> | null {
   return set.size > 0 ? set : null;
 }
 
+/** Texto normalizado por linha; invalida quando a linha muda (ver o observador em `watch`). */
+const rowCache = new WeakMap<HTMLTableRowElement, { key: string; text: string }>();
+
+function cachedRowText(row: HTMLTableRowElement, columns: Set<number> | null, key: string): string {
+  const hit = rowCache.get(row);
+  if (hit && hit.key === key) return hit.text;
+  const text = rowText(row, columns);
+  rowCache.set(row, { key, text });
+  return text;
+}
+
 /** Texto pesquisável da linha: células (ou as colunas pedidas), sem `data-eds-filter-ignore`. */
 export function rowText(row: HTMLTableRowElement, columns: Set<number> | null): string {
   const parts: string[] = [];
@@ -105,10 +116,11 @@ export const tableFilterBehavior: Behavior = {
       const raw = input.value.trim();
       const needle = normalizeText(raw);
       const columns = parseColumns(input.getAttribute('data-eds-filter-columns'));
+      const columnsKey = input.getAttribute('data-eds-filter-columns') ?? '';
       const rows = dataRows(table);
       let count = 0;
       for (const row of rows) {
-        const hide = needle !== '' && !rowText(row, columns).includes(needle);
+        const hide = needle !== '' && !cachedRowText(row, columns, columnsKey).includes(needle);
         if (row.hidden !== hide) row.hidden = hide;
         if (!hide) count += 1;
       }
@@ -153,8 +165,16 @@ export const tableFilterBehavior: Behavior = {
     function watch(t: HTMLTableElement) {
       if (observer) return;
       observer = new MutationObserver((records) => {
+        // Qualquer mudança dentro de uma linha descarta o texto em cache dela.
+        for (const record of records) {
+          const target =
+            record.target instanceof Element ? record.target : record.target.parentElement;
+          const row = target?.closest('tr');
+          if (row) rowCache.delete(row);
+        }
         const foreign = records.some(
           (record) =>
+            record.type === 'childList' &&
             !(created && created.contains(record.target)) &&
             [...record.addedNodes, ...record.removedNodes].some((node) => node !== created),
         );
@@ -165,7 +185,13 @@ export const tableFilterBehavior: Behavior = {
           if (!signal.aborted) apply(false);
         });
       });
-      observer.observe(t, { childList: true, subtree: true });
+      observer.observe(t, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+        attributes: true,
+        attributeFilter: ['data-eds-filter-ignore'],
+      });
     }
 
     const flush = () => {

@@ -1,5 +1,6 @@
 import { forwardRef, type HTMLAttributes, type MouseEventHandler, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
+import { mergeTexts } from '../../utils/texts';
 import { Button } from '../Button/Button';
 import { CloseGlyph } from '../../internal/glyphs';
 
@@ -12,15 +13,22 @@ const severityDefault: Record<AlertVariant, string> = {
   danger: 'Erro:',
 };
 
+export interface AlertTexts {
+  /**
+   * Severidade para leitores de tela, antes do título (a cor e o ícone não bastam). Padrão por
+   * variante: "Informação:", "Sucesso:", "Atenção:", "Erro:". Passe `false` quando o título já
+   * diz a severidade.
+   */
+  severity: string | false;
+  /** Nome acessível do botão de fechar. */
+  close: string;
+}
+
 export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Padrão: `info`. O ícone vem do core (decorativo): diga a severidade no texto ("Erro:"). */
   variant?: AlertVariant;
-  /**
-   * Severidade para leitores de tela, antes do título (a cor e o ícone não bastam). Padrão por
-   * variante: "Informação:", "Sucesso:", "Atenção:", "Erro:". Passe outro texto para trocar
-   * (i18n) ou `false` quando o título já diz a severidade.
-   */
-  severityLabel?: string | false;
+  /** Textos internos (padrões em pt-BR): `severity` (prefixo oculto) e `close`. */
+  texts?: Partial<AlertTexts>;
   /** Título opcional, em linha própria acima do conteúdo. */
   title?: ReactNode;
   /** Botões de ação (ex.: `<Button size="sm">`), à direita do conteúdo. */
@@ -31,8 +39,6 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
    * (ex.: o gatilho que reabre o aviso ou o próximo campo).
    */
   onClose?: MouseEventHandler<HTMLButtonElement>;
-  /** Nome acessível do botão de fechar. Padrão: "Fechar aviso". */
-  closeLabel?: string;
 }
 
 /**
@@ -40,21 +46,15 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
  * (urgente) ou `role="status"` (informativo).
  */
 export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  {
-    variant = 'info',
-    severityLabel,
-    title,
-    actions,
-    onClose,
-    closeLabel = 'Fechar aviso',
-    className,
-    children,
-    ...rest
-  },
+  { variant = 'info', texts, title, actions, onClose, className, children, ...rest },
   ref,
 ) {
   const hasTitle = title != null && title !== false;
-  const severity = severityLabel === false ? null : (severityLabel ?? severityDefault[variant]);
+  const t = mergeTexts(
+    { severity: severityDefault[variant], close: 'Fechar aviso' } as AlertTexts,
+    texts,
+  );
+  const severity = t.severity === false ? null : t.severity;
   const hidden = severity ? <span className="eds-visually-hidden">{severity} </span> : null;
   return (
     <div {...rest} ref={ref} className={cx('eds-alert', `eds-alert-${variant}`, className)}>
@@ -76,7 +76,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
           size="sm"
           iconOnly
           className="eds-alert-close"
-          aria-label={closeLabel}
+          aria-label={t.close}
           onClick={onClose}
         >
           <CloseGlyph />

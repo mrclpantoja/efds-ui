@@ -1,0 +1,14 @@
+/* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/core/tokens/semantic/layer.json */
+/* Camadas de empilhamento (z-index). Popups em popover/dialog vão para a top layer e dispensam z-index; estes valores servem a elementos posicionados no fluxo da página. */
+
+/* prettier-ignore */
+@layer eds.tokens {
+  :where(:root) {
+    --eds-z-raised: 1;
+    --eds-z-sticky: 10;
+    --eds-z-dropdown: 20;
+    --eds-z-overlay: 30;
+    --eds-z-toast: 40;
+    --eds-z-drag: 50;
+  }
+}

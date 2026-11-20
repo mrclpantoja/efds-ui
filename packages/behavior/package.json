@@ -30,15 +30,21 @@
       "types": "./dist/export-entry.d.ts",
       "default": "./dist/export-entry.js"
     },
+    "./export/*": {
+      "development": "./src/export/formats/*.ts",
+      "types": "./dist/export/formats/*.d.ts",
+      "default": "./dist/export/formats/*.js"
+    },
     "./mask": {
       "development": "./src/mask-entry.ts",
       "types": "./dist/mask-entry.d.ts",
       "default": "./dist/mask-entry.js"
     },
-    "./eds-behavior.js": "./dist/eds-behavior.js"
+    "./eds-behavior.js": "./dist/eds-behavior.js",
+    "./eds-behavior-core.js": "./dist/eds-behavior-core.js"
   },
   "scripts": {
-    "build": "vite build && vite build --config vite.iife.config.ts && tsc -p tsconfig.build.json",
+    "build": "vite build && vite build --config vite.iife.config.ts && vite build --config vite.iife-core.config.ts && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
@@ -63,11 +69,16 @@
         "types": "./dist/export-entry.d.ts",
         "default": "./dist/export-entry.js"
       },
+      "./export/*": {
+        "types": "./dist/export/formats/*.d.ts",
+        "default": "./dist/export/formats/*.js"
+      },
       "./mask": {
         "types": "./dist/mask-entry.d.ts",
         "default": "./dist/mask-entry.js"
       },
-      "./eds-behavior.js": "./dist/eds-behavior.js"
+      "./eds-behavior.js": "./dist/eds-behavior.js",
+      "./eds-behavior-core.js": "./dist/eds-behavior-core.js"
     }
   }
 }

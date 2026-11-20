@@ -61,7 +61,7 @@ const reactDatas = `// React: ISO como valor público; Date local (sem fuso) com
 
 const textos = `import { configure } from '@eds-ui/behavior';
 
-configure({ messages: { dateLocale: 'pt-BR', dateToday: 'Hoje', dateClose: 'Fechar' } });`;
+configure({ locale: 'pt-BR', messages: { dateToday: 'Hoje', dateClose: 'Fechar' } });`;
 
 export default function DatePickerPage() {
   return (

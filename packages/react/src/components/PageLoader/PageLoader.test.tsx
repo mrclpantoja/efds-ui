@@ -144,7 +144,7 @@ describe('PageLoaderProvider', () => {
   });
 
   it('track acompanha a promessa e devolve o resultado', async () => {
-    mount({ title: 'Padrão', text: 'Texto padrão' });
+    mount({ texts: { title: 'Padrão', text: 'Texto padrão' } });
     let resolve!: (v: number) => void;
     const promise = new Promise<number>((r) => (resolve = r));
     let result: Promise<number>;
@@ -377,7 +377,10 @@ describe('PageLoaderProvider: StrictMode, demora e opções', () => {
   });
 
   it('textos da demora configuráveis', () => {
-    mount({ slowAfter: 100, slowText: 'Slow', closeLabel: 'Close', continueLabel: 'Keep waiting' });
+    mount({
+      slowAfter: 100,
+      texts: { slowText: 'Slow', close: 'Close', continue: 'Keep waiting' },
+    });
     api.start();
     tick(400);
     expect(dialog()).toHaveAccessibleDescription('Slow');

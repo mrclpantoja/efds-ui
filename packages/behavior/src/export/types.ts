@@ -30,6 +30,8 @@ export interface ExportOptions {
   subtitle?: string;
   /** Nome da planilha do XLSX (máximo de 31 caracteres, sem `[ ] : * ? / \`). */
   sheetName?: string;
+  /** Locale BCP 47 de datas e números (e do `/Lang` do PDF). Padrão: o de `configure({ locale })` (pt-BR). */
+  locale?: string;
   /** Instante de "Gerado em" e da data dos arquivos. Padrão: agora. Útil em testes. */
   now?: Date;
 }

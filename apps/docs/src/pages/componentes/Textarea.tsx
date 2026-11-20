@@ -49,6 +49,12 @@ export default function TextareaPage() {
           caption="Props de Textarea"
           rows={[
             {
+              name: 'size',
+              type: "'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description: 'Tamanho. O padrão não emite classe.',
+            },
+            {
               name: 'invalid',
               type: 'boolean',
               description: (
@@ -79,6 +85,10 @@ export default function TextareaPage() {
               name: '.eds-textarea',
               effect:
                 'Base: largura total, altura mínima de duas linhas de controle, resize vertical.',
+            },
+            {
+              name: '.eds-textarea-sm / -lg',
+              effect: 'Altura mínima dos tamanhos pequeno e grande.',
             },
             { name: ':focus', effect: 'Borda na cor de ação e anel de foco.' },
             { name: '[aria-invalid="true"]', effect: 'Borda de perigo.' },

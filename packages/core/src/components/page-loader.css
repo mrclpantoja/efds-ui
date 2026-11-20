@@ -16,7 +16,7 @@
 
     box-sizing: border-box;
     inline-size: fit-content;
-    max-inline-size: min(var(--_loader-width), calc(100% - 2 * var(--eds-space-4)));
+    max-inline-size: min(var(--_loader-width), calc(100% - 2 * var(--eds-inset-md)));
     margin: auto;
     padding: var(--eds-space-5);
     border: 0;

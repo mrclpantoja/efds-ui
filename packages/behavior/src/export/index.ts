@@ -1,3 +1,4 @@
+import { MIME, downloadFile } from './download';
 import { toCsv } from './csv';
 import { toJson } from './json';
 import { fileName } from './model';
@@ -5,6 +6,7 @@ import { toPdf } from './pdf';
 import { toXlsx } from './xlsx';
 import type { ExportData, ExportFormat, ExportOptions } from './types';
 
+export { MIME, downloadFile };
 export { toCsv, toJson, toPdf, toXlsx };
 export type {
   ExportColumn,
@@ -14,13 +16,6 @@ export type {
   ExportOptions,
 } from './types';
 
-export const MIME: Record<ExportFormat, string> = {
-  csv: 'text/csv;charset=utf-8',
-  json: 'application/json;charset=utf-8',
-  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  pdf: 'application/pdf',
-};
-
 /** Gera o conteúdo do formato: texto (CSV, JSON) ou bytes (XLSX, PDF). */
 export function generate(
   data: ExportData,
@@ -29,7 +24,7 @@ export function generate(
 ): string | Uint8Array {
   switch (format) {
     case 'csv':
-      return toCsv(data);
+      return toCsv(data, options);
     case 'json':
       return toJson(data);
     case 'xlsx':
@@ -39,20 +34,6 @@ export function generate(
     default:
       throw new TypeError(`Formato de exportação desconhecido: ${String(format)}`);
   }
-}
-
-/** Entrega o arquivo ao usuário (Blob + `<a download>`) e libera a URL depois. */
-export function downloadFile(content: BlobPart, mime: string, name: string): void {
-  const blob = new Blob([content], { type: mime });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = name;
-  link.hidden = true;
-  document.body.append(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 /**

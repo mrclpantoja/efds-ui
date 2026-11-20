@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { resetMessages, setMessages } from '../core/config';
+import { resetLocale, resetMessages, setLocale, setMessages } from '../core/config';
 import { flush, installDomPolyfills } from '../test-utils/dom-polyfills';
 import { initDatepicker } from './datepicker';
 
@@ -57,6 +57,7 @@ afterEach(() => {
   destroy?.();
   vi.useRealTimers();
   resetMessages();
+  resetLocale();
   restore();
   document.body.innerHTML = '';
 });
@@ -573,7 +574,8 @@ describe('datepicker: calendário', () => {
   });
 
   it('textos configuráveis', async () => {
-    setMessages({ dateLocale: 'en-US', datePrevMonth: 'Previous month', dateToday: 'Today' });
+    setLocale('en-US');
+    setMessages({ datePrevMonth: 'Previous month', dateToday: 'Today' });
     await userEvent.setup().click(toggle());
     expect(title()).toHaveTextContent('March 2026');
     expect(document.querySelector('.eds-calendar-nav')).toHaveAttribute(

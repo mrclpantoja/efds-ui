@@ -1,5 +1,5 @@
 /* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/shape-soft.json */
-/* Forma soft: raios sm, md e lg. */
+/* Forma soft: raios sm, md, lg e xl (radius-full não varia). */
 
 /* prettier-ignore */
 @layer eds.tokens {
@@ -7,5 +7,6 @@
     --eds-radius-sm: 4px;
     --eds-radius-md: 8px;
     --eds-radius-lg: 12px;
+    --eds-radius-xl: 16px;
   }
 }

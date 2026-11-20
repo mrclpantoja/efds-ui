@@ -53,7 +53,7 @@ export default function Remoto() {
         filter={false}
         loading={loading}
         onInputChange={aoDigitar}
-        emptyMessage="Nenhum cliente encontrado"
+        texts={{ empty: 'Nenhum cliente encontrado' }}
       />
     </Field>
   );

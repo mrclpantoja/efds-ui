@@ -33,6 +33,32 @@ const mascararHtml = `<script type="module">
   });
 </script>`;
 
+const ordenarReact = `import { useState } from 'react';
+import {
+  Table, TableHeaderCell, sortTableData, useTableFilter, type TableSortState,
+} from '@eds-ui/react';
+
+function Pedidos({ pedidos }) {
+  const [ordem, setOrdem] = useState<TableSortState | null>(null);
+  const filtro = useTableFilter(pedidos, { columns: ['codigo', 'cliente'] });
+  const linhas = sortTableData(filtro.rows, ordem);
+
+  return (
+    <>
+      <Input aria-label="Buscar pedido" type="search" {...filtro.inputProps} />
+      <Table caption="Pedidos" sort={ordem} onSortChange={setOrdem} status={filtro.status}>
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell sortKey="codigo">Código</TableHeaderCell>
+            <TableHeaderCell sortKey="cliente">Cliente</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>{linhas.map(/* ... */)}</TableBody>
+      </Table>
+    </>
+  );
+}`;
+
 const mascararReact = `<TableExport
   getData={dados}
   filename="pedidos"
@@ -242,11 +268,24 @@ export default function TablePage() {
               description: 'Depois que o arquivo foi gerado.',
             },
             {
-              name: 'label / formatLabels / messages',
-              type: 'ReactNode / Partial<Record<format, string>> / Partial<TableExportMessages>',
-              default: "'Exportar'",
+              name: 'texts',
+              type: 'Partial<TableExportTexts>',
+              description: (
+                <>
+                  Textos substituíveis: <code>label</code> (botão, &quot;Exportar&quot;),{' '}
+                  <code>csv</code>, <code>xlsx</code>, <code>json</code> e <code>pdf</code> (itens
+                  do menu) e o anúncio de resultado (<code>done</code>, <code>doneOne</code>,{' '}
+                  <code>empty</code>, <code>failed</code>; <code>{'{name}'}</code> e{' '}
+                  <code>{'{count}'}</code>).
+                </>
+              ),
+            },
+            {
+              name: 'locale',
+              type: 'string',
+              default: 'o do LocaleProvider',
               description:
-                'Textos substituíveis: botão, itens do menu e anúncio de resultado (done, doneOne, empty, failed; {name} e {count}).',
+                'Locale das datas e dos números do arquivo (ordem da data, separadores decimal e de milhar e o /Lang do PDF).',
             },
             {
               name: 'variant / size / disabled / className',
@@ -304,6 +343,39 @@ export default function TablePage() {
           caption="Props de Table"
           rows={[
             {
+              name: 'sort / onSortChange',
+              type: '{ column: string; direction: "ascending" | "descending" } | null / (sort) => void',
+              description: (
+                <>
+                  Ordenação controlada, no padrão do behavior: com <code>onSortChange</code>, os{' '}
+                  <code>&lt;TableHeaderCell sortKey&gt;</code> derivam o <code>aria-sort</code>{' '}
+                  daqui e pedem a nova ordem ao serem acionados (crescente, depois alternando).
+                  Ordene os dados com <code>sortTableData</code>.
+                </>
+              ),
+            },
+            {
+              name: 'status',
+              type: 'string',
+              description: (
+                <>
+                  Texto lido em uma região <code>role=&quot;status&quot;</code> quando muda, como o{' '}
+                  <code>status</code> do <code>useTableFilter</code>. A ordenação a Table anuncia
+                  sozinha.
+                </>
+              ),
+            },
+            {
+              name: 'texts',
+              type: 'Partial<TableTexts>',
+              description: (
+                <>
+                  <code>sortedBy(coluna, direção)</code>: o anúncio da ordenação (&quot;Ordenado por
+                  Cliente, crescente.&quot;).
+                </>
+              ),
+            },
+            {
               name: 'caption',
               type: 'ReactNode',
               required: true,
@@ -336,6 +408,17 @@ export default function TablePage() {
         <PropsTable
           caption="Props de TableHeaderCell"
           rows={[
+            {
+              name: 'sortKey',
+              type: 'string',
+              description: (
+                <>
+                  Chave da coluna na ordenação controlada da{' '}
+                  <code>&lt;Table sort onSortChange&gt;</code>: <code>aria-sort</code> e o botão vêm
+                  do estado da tabela, sem <code>sort</code> nem <code>onSort</code> à mão.
+                </>
+              ),
+            },
             {
               name: 'sort',
               type: "'ascending' | 'descending' | 'none'",
@@ -409,6 +492,38 @@ export default function TablePage() {
         />
       </Section>
 
+      <Section title="Ordenar e filtrar no React">
+        <p>
+          No HTML, o <code>@eds-ui/behavior</code> ordena e filtra as linhas do DOM. No React a
+          fonte é o estado, então a mesma regra vem em funções que trabalham sobre o array:{' '}
+          <code>sortTableData(linhas, ordem, {'{ getValue, locale }'})</code> e{' '}
+          <code>filterTableData(linhas, texto, {'{ columns, getText }'})</code>. A ordem de números
+          (pt-BR ou ponto decimal), datas (dd/mm/aaaa ou ISO) e texto (sem diferenciar acento e
+          caixa; vazios por último) é a mesma do behavior. O hook <code>useTableFilter</code> cuida
+          do atraso (150 ms), do Esc para limpar e do anúncio da contagem, que vai para{' '}
+          <code>&lt;Table status&gt;</code>. Só alcançam as linhas que estão no array: com paginação
+          no servidor, filtre e ordene no servidor.
+        </p>
+        <CodeBlock code={ordenarReact} label="Código React: ordenação controlada e filtro local" />
+        <PropsTable
+          caption="useTableFilter(linhas, opções)"
+          rows={[
+            {
+              name: 'opções',
+              type: '{ columns?, getText?, delay?, texts? }',
+              description:
+                'columns (chaves pesquisadas) ou getText (texto da linha); delay em ms (150); texts: many, one, none, cleared, clearedOne.',
+            },
+            {
+              name: 'retorno',
+              type: '{ query, setQuery, rows, count, status, inputProps }',
+              description:
+                'inputProps (value, onChange e Esc) vai direto no campo de busca; status vai para a Table.',
+            },
+          ]}
+        />
+      </Section>
+
       <Section title="Classes CSS">
         <p>
           Quem usa só HTML aplica as classes diretamente; o React emite exatamente estas. A linha
@@ -445,7 +560,8 @@ export default function TablePage() {
             },
             {
               name: '.eds-table-check',
-              effect: 'Coluna estreita só com o checkbox de seleção.',
+              effect:
+                'Coluna estreita só com a seleção: o checkbox vai dentro de <label class="eds-check">, que preenche a célula e vira o alvo de clique e de toque.',
             },
             {
               name: '.eds-table-actions',
@@ -476,6 +592,25 @@ export default function TablePage() {
             },
           ]}
         />
+      </Section>
+
+      <Section title="Desempenho">
+        <p>Os números abaixo são uma referência de uso, não um limite imposto pelo código.</p>
+        <ul className="docs-list">
+          <li>
+            <strong>Referência prática:</strong> até cerca de 1.000 linhas no DOM, ordenar, filtrar
+            e selecionar respondem sem atraso perceptível. Acima disso, pagine e ordene/filtre no
+            servidor (<code>preventDefault</code> em <code>eds:table-sort</code>).
+          </li>
+          <li>
+            A ordenação move as linhas em uma única inserção e lê o tipo da coluna uma vez; o filtro
+            guarda o texto normalizado de cada linha e só o recalcula quando a linha muda.
+          </li>
+          <li>
+            Não há virtualização: toda linha existente ocupa DOM. Para listas muito grandes, a
+            paginação é o caminho.
+          </li>
+        </ul>
       </Section>
 
       <Section title="Acessibilidade">

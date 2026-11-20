@@ -68,8 +68,8 @@
 
     & > svg {
       flex: none;
-      inline-size: 1rem;
-      block-size: 1rem;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
     }
 
     &:hover:not(:disabled, [aria-disabled='true'], [aria-current='page']) {

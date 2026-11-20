@@ -121,10 +121,14 @@ export default function SidebarPage() {
               description: 'Chamado ao acionar o botão de colapsar.',
             },
             {
-              name: 'collapseLabel',
-              type: 'string',
-              default: "'Menu lateral'",
-              description: 'Rótulo fixo do botão de colapsar; não muda com o estado.',
+              name: 'texts',
+              type: 'Partial<SidebarTexts>',
+              description: (
+                <>
+                  Textos internos: <code>collapse</code> (&quot;Menu lateral&quot;), o rótulo fixo
+                  do botão de colapsar; não muda com o estado.
+                </>
+              ),
             },
             {
               name: 'collapseIcon',

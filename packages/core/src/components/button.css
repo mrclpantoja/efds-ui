@@ -3,8 +3,8 @@
   .eds-button {
     --_button-height: var(--eds-control-height-md);
     --_button-radius: var(--eds-radius-md);
-    --_button-padding-x: var(--eds-space-4);
-    --_button-icon-size: 1rem;
+    --_button-padding-x: var(--eds-inset-md);
+    --_button-icon-size: var(--eds-icon-size-sm);
     --_button-font-size: var(--eds-font-size-body);
     --_button-bg: var(--eds-color-bg-surface);
     --_button-bg-hover: var(--eds-color-bg-subtle);
@@ -21,7 +21,7 @@
     box-sizing: border-box;
     min-block-size: var(--_button-height);
     padding-inline: var(--_button-padding-x);
-    border: 1px solid var(--_button-border);
+    border: var(--eds-border-width) solid var(--_button-border);
     border-radius: var(--_button-radius);
     background: var(--_button-bg);
     color: var(--_button-fg);
@@ -86,7 +86,7 @@
         border-block-start-color: var(--_button-fg);
         border-inline-end-color: var(--_button-fg);
         border-radius: 50%;
-        animation: eds-button-spin calc(var(--eds-motion-duration-base) * 4) linear infinite;
+        animation: eds-button-spin var(--eds-motion-duration-slow) linear infinite;
       }
     }
   }
@@ -170,7 +170,7 @@
   .eds-button-lg {
     --_button-height: var(--eds-control-height-lg);
     --_button-padding-x: var(--eds-space-5);
-    --_button-icon-size: 1.25rem;
+    --_button-icon-size: var(--eds-icon-size-md);
   }
 
   /* Só ícone: quadrado (exige aria-label no HTML). */

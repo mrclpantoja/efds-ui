@@ -18,7 +18,7 @@
     padding-block: 0;
     padding-inline-start: var(--_select-padding-x);
     padding-inline-end: calc(var(--_select-padding-x) * 2 + var(--_select-arrow-size) * 2);
-    border: 1px solid var(--_select-border);
+    border: var(--eds-border-width) solid var(--_select-border);
     border-radius: var(--_select-radius);
     background-color: var(--_select-bg);
     background-image:
@@ -38,8 +38,24 @@
     transition: border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
 
     /* Hover escurece a borda para text-muted (decisão registrada: mais contraste que border-strong). */
-    &:hover:not(:disabled, [readonly], [aria-invalid='true'], [data-valid='true']) {
+    &:hover:not(
+        :disabled,
+        [readonly],
+        [aria-readonly='true'],
+        [aria-invalid='true'],
+        [data-valid='true']
+      ) {
       --_select-border: var(--eds-color-text-muted);
+    }
+
+    /* Somente leitura (o <select> não tem [readonly]: use aria-readonly="true"; o JS impede a
+       escolha). Mesma aparência do Input readonly: fundo bg-subtle, borda e foco normais. */
+    &[readonly],
+    &[aria-readonly='true'] {
+      --_select-bg: var(--eds-color-bg-subtle);
+      --_select-arrow: var(--eds-color-text-muted);
+
+      cursor: default;
     }
 
     &:focus {
@@ -72,6 +88,13 @@
 
   .eds-select-lg {
     --_select-height: var(--eds-control-height-lg);
+  }
+
+  /* Toque: 16px evita o zoom automático do iOS ao focar. */
+  @media (pointer: coarse) {
+    .eds-select {
+      font-size: 1rem;
+    }
   }
 
   @media (forced-colors: active) {

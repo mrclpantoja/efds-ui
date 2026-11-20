@@ -14,7 +14,7 @@
     min-block-size: var(--_input-height);
     padding-block: 0;
     padding-inline: var(--_input-padding-x);
-    border: 1px solid var(--_input-border);
+    border: var(--eds-border-width) solid var(--_input-border);
     border-radius: var(--_input-radius);
     background: var(--_input-bg);
     color: var(--_input-fg);
@@ -107,6 +107,15 @@
 
   .eds-input-lg {
     --_input-height: var(--eds-control-height-lg);
+  }
+
+  /* Toque: 16px evita o zoom automático do iOS ao focar. Cobre os campos que reutilizam o Input
+     (Combobox, DatePicker, FileInput de texto); Select, Textarea e o input do MultiSelect têm a
+     própria regra. */
+  @media (pointer: coarse) {
+    .eds-input {
+      font-size: 1rem;
+    }
   }
 
   @media (forced-colors: active) {

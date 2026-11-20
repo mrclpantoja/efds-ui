@@ -33,7 +33,7 @@
     min-block-size: calc(var(--eds-control-height-lg) + 2 * var(--_sortable-pad));
     margin: 0;
     padding: var(--_sortable-pad);
-    border: 1px solid transparent;
+    border: var(--eds-border-width) solid transparent;
     border-radius: var(--eds-radius-md);
     list-style: none;
 
@@ -81,7 +81,7 @@
     box-sizing: border-box;
     min-inline-size: 0;
     padding: var(--eds-space-2) var(--eds-space-3);
-    border: 1px solid var(--eds-color-border-default);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
     border-radius: var(--eds-radius-md);
     background: var(--eds-color-bg-surface);
     color: var(--eds-color-text-primary);
@@ -114,7 +114,7 @@
       border-color: var(--eds-color-action-primary);
       background: var(--eds-color-action-primary-subtle);
       box-shadow:
-        0 0 0 1px var(--eds-color-action-primary),
+        0 0 0 var(--eds-border-width) var(--eds-color-action-primary),
         var(--eds-shadow-lg);
       /* "Levantado": distinto do anel de foco (que é só contorno). */
       translate: 0 calc(-1 * var(--eds-space-1));
@@ -151,8 +151,8 @@
     touch-action: none;
 
     & > svg {
-      inline-size: 1rem;
-      block-size: 1rem;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
       fill: currentColor;
     }
 
@@ -190,14 +190,14 @@
     box-sizing: border-box;
     min-block-size: var(--eds-control-height-lg);
     min-inline-size: 0;
-    border: 2px dashed var(--eds-color-action-primary);
+    border: var(--eds-border-width-strong) dashed var(--eds-color-action-primary);
     border-radius: var(--eds-radius-md);
     background: var(--eds-color-action-primary-subtle);
   }
 
   /* Fantasma que segue o ponteiro: o JS define inline-size e a posição. */
   .eds-sortable-ghost {
-    --_ghost-z: 100; /* camada interna: não há token de z-index */
+    --_ghost-z: var(--eds-z-drag);
 
     position: fixed;
     inset-block-start: 0;
@@ -215,7 +215,7 @@
   .eds-sortable-board {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-    gap: var(--eds-space-4);
+    gap: var(--eds-inset-md);
     align-items: start;
   }
 
@@ -248,8 +248,8 @@
       [aria-pressed='true'],
       :has(> .eds-sortable-handle[aria-pressed='true'])
     ) {
-      outline: 2px solid Highlight;
-      outline-offset: 1px;
+      outline: var(--eds-border-width-strong) solid Highlight;
+      outline-offset: var(--eds-border-width);
     }
 
     .eds-sortable-handle[aria-pressed='true'] {

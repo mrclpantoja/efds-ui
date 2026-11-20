@@ -9,9 +9,15 @@ import {
   type RefObject,
 } from 'react';
 import { cx } from '../utils/cx';
+import { mergeTexts } from '../utils/texts';
 import { Button } from '../components/Button';
 import { CloseGlyph } from './glyphs';
 import { useScrollRegion } from './useScrollRegion';
+
+export interface DialogShellTexts {
+  /** Nome acessível do botão de fechar. */
+  close: string;
+}
 
 export interface DialogBehaviorProps {
   /** Abertura controlada: `true` chama `showModal()`, `false` chama `close()`. */
@@ -25,8 +31,8 @@ export interface DialogBehaviorProps {
   title: ReactNode;
   /** Rodapé com as ações. Omitido, o rodapé não é renderizado. */
   footer?: ReactNode;
-  /** Nome acessível do botão de fechar. Padrão: "Fechar". */
-  closeLabel?: string;
+  /** Textos internos (padrões em pt-BR): `close`, o nome do botão de fechar ("Fechar"). */
+  texts?: Partial<DialogShellTexts>;
   /**
    * Fecha ao clicar no backdrop, só se `pointerdown` e `click` ocorreram no próprio `<dialog>`
    * (WCAG 2.5.2). Padrão: `true`. Em formulário com dados a perder, use `false`.
@@ -59,7 +65,7 @@ export const DialogBase = forwardRef<HTMLDialogElement, DialogBaseProps>(functio
     onClose,
     title,
     footer,
-    closeLabel = 'Fechar',
+    texts,
     closeOnBackdrop = true,
     initialFocus,
     className,
@@ -179,7 +185,12 @@ export const DialogBase = forwardRef<HTMLDialogElement, DialogBaseProps>(functio
         <h2 className={`eds-${part}-title`} id={titleId}>
           {title}
         </h2>
-        <Button variant="ghost" iconOnly aria-label={closeLabel} onClick={() => onClose()}>
+        <Button
+          variant="ghost"
+          iconOnly
+          aria-label={mergeTexts({ close: 'Fechar' }, texts).close}
+          onClick={() => onClose()}
+        >
           <CloseGlyph />
         </Button>
       </header>

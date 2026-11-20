@@ -110,6 +110,12 @@ export default function RadioPage() {
           caption="Props de Radio"
           rows={[
             {
+              name: 'size',
+              type: "'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description: 'Tamanho. O padrão não emite classe.',
+            },
+            {
               name: 'children',
               type: 'ReactNode',
               required: true,
@@ -148,6 +154,7 @@ export default function RadioPage() {
               name: '.eds-radio',
               effect: 'O círculo: mesmas medidas do Checkbox, raio total, marca central.',
             },
+            { name: '.eds-radio-sm / -lg', effect: 'Círculo menor e maior.' },
             { name: '.eds-check', effect: 'Rótulo clicável com alvo mínimo de 24px.' },
             { name: ':checked', effect: 'Preenchido na cor de ação, com ponto central.' },
             { name: '[aria-invalid="true"]', effect: 'Borda de perigo.' },

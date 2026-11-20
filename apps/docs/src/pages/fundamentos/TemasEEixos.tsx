@@ -69,6 +69,43 @@ export default function TemasEEixos() {
         </p>
       </Section>
 
+      <Section title="Densidade e forma, em números">
+        <p>
+          A densidade muda as alturas dos controles, os recuos internos (<code>inset-*</code>) e a
+          altura da linha da Table. A escala <code>space-*</code> não varia: o que acompanha a
+          densidade é o token de recuo, nunca o degrau da escala. Em todas as densidades vale{' '}
+          <code>sm &lt; md &lt; lg</code>, e o menor controle nunca fica abaixo de 24px (WCAG
+          2.5.8).
+        </p>
+        <ClassTable
+          caption="Tokens por densidade"
+          headers={['Token', 'compact / comfortable / spacious']}
+          rows={[
+            { name: '--eds-control-height-sm', effect: '28px / 32px / 38px' },
+            { name: '--eds-control-height-md', effect: '32px / 38px / 44px' },
+            { name: '--eds-control-height-lg', effect: '36px / 44px / 52px' },
+            { name: '--eds-inset-sm', effect: '8px / 12px / 16px' },
+            { name: '--eds-inset-md', effect: '12px / 16px / 20px' },
+            { name: '--eds-inset-lg', effect: '16px / 24px / 32px' },
+            { name: '--eds-table-row-height', effect: '36px / 44px / 52px' },
+          ]}
+        />
+        <ClassTable
+          caption="Raios por forma"
+          headers={['Token', 'sharp / soft / rounded']}
+          rows={[
+            { name: '--eds-radius-sm', effect: '2px / 4px / 8px' },
+            { name: '--eds-radius-md', effect: '4px / 8px / 12px' },
+            { name: '--eds-radius-lg', effect: '6px / 12px / 16px' },
+            { name: '--eds-radius-xl', effect: '8px / 16px / 24px' },
+          ]}
+        />
+        <p>
+          O <code>--eds-radius-full</code> não muda com a forma: ele só desenha círculos (rádio,
+          polegar do switch, pontos de status).
+        </p>
+      </Section>
+
       <Section title="Os cinco temas">
         <p>
           Cada célula abaixo declara um <code>data-theme</code> diferente, nos dois modos (o{' '}
@@ -108,11 +145,44 @@ export default function TemasEEixos() {
         <CodeBlock code={importSeletivo} label="Importação seletiva de temas" />
       </Section>
 
+      <Section title="Impressão">
+        <p>
+          O core traz estilos de impressão (<code>@media print</code>) sem nada a configurar. No
+          papel, as cores viram preto e branco legíveis (inclusive a partir do modo escuro), as
+          sombras somem e o conteúdo corre pelas páginas.
+        </p>
+        <ul className="docs-list">
+          <li>
+            Ficam de fora: Sidebar, Navbar, Toasts, carregador, fundo dos diálogos, Pagination, a
+            barra de ferramentas da Table e as colunas de seleção e de ações. Para esconder outro
+            elemento, use <code>.eds-no-print</code>.
+          </li>
+          <li>
+            O app shell deixa de ter a altura da janela e a rolagem interna; a Table perde a rolagem
+            horizontal, quebra o texto das células e repete o cabeçalho em cada página.
+          </li>
+          <li>
+            Linhas de tabela, Cards, Alertas e itens de árvore não são cortados entre páginas, e
+            títulos não ficam sozinhos no fim da página.
+          </li>
+          <li>
+            Links externos dentro do conteúdo (<code>main</code> ou <code>.eds-app-main</code>)
+            mostram o endereço depois do texto. Botões e links de card ficam de fora.
+          </li>
+        </ul>
+      </Section>
+
       <Section title="Acessibilidade">
         <ul className="docs-list">
           <li>
             Todos os temas, nos dois modos, mantêm o contraste de texto de 4,5:1 e o foco visível
             (medido nas escalas de cor).
+          </li>
+          <li>
+            Com <code>prefers-contrast: more</code>, bordas e anel de foco ficam mais fortes sem
+            mudar nenhum componente. Em ponteiro grosso (<code>pointer: coarse</code>), campos de
+            texto passam a 16px (evita o zoom do iOS) e checkboxes, rádios e switches ganham o alvo
+            de <code>--eds-target-min</code>.
           </li>
           <li>
             O modo escuro ajusta <code>color-scheme</code>, então controles nativos e barras de

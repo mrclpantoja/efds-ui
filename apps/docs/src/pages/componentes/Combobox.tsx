@@ -179,20 +179,23 @@ export default function ComboboxPage() {
               ),
             },
             {
-              name: 'emptyMessage / loadingMessage',
-              type: 'ReactNode',
-              default: "'Nenhum resultado' / 'Carregando…'",
-              description: 'Textos da lista sem resultado e em busca.',
+              name: 'texts',
+              type: 'Partial<ComboboxTexts>',
+              description: (
+                <>
+                  Textos internos: <code>empty</code> (&quot;Nenhum resultado&quot;),{' '}
+                  <code>loading</code> (&quot;Carregando…&quot;), <code>list</code> (nome acessível
+                  da lista; padrão: o aria-label do campo), <code>status(count)</code> (anúncio de
+                  resultados), <code>loadingStatus</code>, <code>selected(label)</code> e{' '}
+                  <code>invalidChoice</code> (validade quando há texto sem opção escolhida).
+                </>
+              ),
             },
             {
-              name: 'listLabel',
-              type: 'string',
-              description: 'Nome acessível da lista. Padrão: o aria-label do campo.',
-            },
-            {
-              name: 'statusMessage',
-              type: '(count: number) => string',
-              description: 'Texto anunciado (N resultados disponíveis). Troque para outro idioma.',
+              name: 'readOnly',
+              type: 'boolean',
+              description:
+                'Somente leitura: a lista não abre e o valor não muda; o campo segue focável e lido (aria-readonly).',
             },
             {
               name: 'name',
@@ -294,6 +297,22 @@ export default function ComboboxPage() {
             },
           ]}
         />
+      </Section>
+
+      <Section title="Desempenho">
+        <p>Os números abaixo são uma referência de uso, não um limite imposto pelo código.</p>
+        <ul className="docs-list">
+          <li>
+            <strong>Referência prática:</strong> lista local de até cerca de 500 opções. Acima de
+            200 o filtro espera a pausa da digitação (80 ms) em vez de rodar a cada tecla; acima de
+            alguns milhares, troque por <code>data-eds-source</code> (busca no servidor).
+          </li>
+          <li>
+            O texto normalizado de cada opção fica em cache, e o popup se reposiciona no máximo uma
+            vez por quadro durante rolagem e redimensionamento.
+          </li>
+          <li>Não há virtualização da lista: toda opção local existe no DOM.</li>
+        </ul>
       </Section>
 
       <Section title="Acessibilidade">

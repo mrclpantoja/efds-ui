@@ -52,6 +52,12 @@ export default function SwitchPage() {
           caption="Props de Switch"
           rows={[
             {
+              name: 'size',
+              type: "'sm' | 'md' | 'lg'",
+              default: "'md'",
+              description: 'Tamanho. O padrão não emite classe.',
+            },
+            {
               name: 'children',
               type: 'ReactNode',
               required: true,
@@ -88,6 +94,7 @@ export default function SwitchPage() {
               name: '.eds-switch',
               effect: 'Trilho com um botão deslizante, desenhado em CSS sobre o checkbox.',
             },
+            { name: '.eds-switch-sm / -lg', effect: 'Trilho menor e maior.' },
             { name: '.eds-check', effect: 'Rótulo clicável com alvo mínimo de 24px.' },
             {
               name: ':checked',

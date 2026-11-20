@@ -1,5 +1,5 @@
-import { cellText, normalize } from './model';
-import type { ExportData } from './types';
+import { cellText, normalize, resolveLocale } from './model';
+import type { ExportData, ExportOptions } from './types';
 
 const SEPARATOR = ';';
 /** Marca de ordem de bytes UTF-8: o Excel só reconhece os acentos com ela. */
@@ -23,7 +23,7 @@ function field(text: string): string {
  * CSV para o Excel em português: separador `;`, BOM UTF-8, quebra CRLF, aspas duplicadas,
  * números com vírgula decimal e sem milhar, datas `dd/mm/aaaa`. Devolve texto (com o BOM).
  */
-export function toCsv(data: ExportData): string {
+export function toCsv(data: ExportData, options: ExportOptions = {}): string {
   const { columns, rows } = normalize(data);
   const lines: string[] = [];
   lines.push(columns.map((c) => field(guardFormula(c.label))).join(SEPARATOR));
@@ -31,7 +31,12 @@ export function toCsv(data: ExportData): string {
     lines.push(
       row
         .map((cell, i) => {
-          const text = cellText(cell, columns[i]?.type ?? 'text', 'csv');
+          const text = cellText(
+            cell,
+            columns[i]?.type ?? 'text',
+            'csv',
+            resolveLocale(options.locale),
+          );
           return field(cell.kind === 'text' ? guardFormula(text) : text);
         })
         .join(SEPARATOR),

@@ -23,7 +23,7 @@ export interface ToastOptions {
   variant?: ToastVariant;
   /**
    * Rótulo em destaque que diz a severidade (ex.: "Erro:"): a cor nunca é o único canal.
-   * Sem `title`, a severidade vai num prefixo oculto (ver `severityLabels` do `ToastProvider`).
+   * Sem `title`, a severidade vai num prefixo oculto (ver `texts.severity` do `ToastProvider`).
    */
   title?: string;
   message: string;
@@ -114,8 +114,8 @@ function useModalHost(): HTMLElement | null {
 interface ToastItemProps {
   toast: ToastEntry;
   paused: boolean;
-  closeLabel: string;
-  severityLabel: string;
+  closeText: string;
+  severityText: string;
   remaining: RefObject<Map<number, number>>;
   register: (id: number, el: HTMLElement | null) => void;
   onDismiss: (id: number) => void;
@@ -124,8 +124,8 @@ interface ToastItemProps {
 function ToastItem({
   toast,
   paused,
-  closeLabel,
-  severityLabel,
+  closeText,
+  severityText,
   remaining,
   register,
   onDismiss,
@@ -165,7 +165,7 @@ function ToastItem({
         {title ? (
           <strong className="eds-toast-title">{title}</strong>
         ) : (
-          <span className="eds-visually-hidden">{severityLabel} </span>
+          <span className="eds-visually-hidden">{severityText} </span>
         )}
         {title ? ' ' : null}
         {message}
@@ -188,7 +188,7 @@ function ToastItem({
         size="sm"
         iconOnly
         className="eds-toast-close"
-        aria-label={closeLabel}
+        aria-label={closeText}
         onClick={() => onDismiss(id)}
       >
         <CloseGlyph />
@@ -197,29 +197,29 @@ function ToastItem({
   );
 }
 
+export interface ToastTexts {
+  /** Nome acessível do botão de fechar de cada toast. */
+  close: string;
+  /**
+   * Prefixo oculto (só leitores de tela) que diz a severidade quando o toast não tem `title`,
+   * por variante. Padrão: "Informação:", "Sucesso:", "Atenção:", "Erro:".
+   */
+  severity: Partial<Record<ToastVariant, string>>;
+}
+
 export interface ToastProviderProps {
   children?: ReactNode;
-  /** Nome acessível do botão de fechar de cada toast. Padrão: "Fechar notificação". */
-  closeLabel?: string;
+  /** Textos internos (padrões em pt-BR): `close` ("Fechar notificação") e `severity` por variante. */
+  texts?: Partial<ToastTexts>;
   /** Toasts visíveis ao mesmo tempo; os demais esperam na fila. Padrão: 3. */
   maxVisible?: number;
-  /**
-   * Prefixo oculto (só leitores de tela) que diz a severidade quando o toast não tem `title`.
-   * Padrão: "Informação:", "Sucesso:", "Atenção:", "Erro:". Substitua por variante (i18n).
-   */
-  severityLabels?: Partial<Record<ToastVariant, string>>;
 }
 
 /**
  * Fila de toasts e região `aria-live="polite"` montada vazia desde o início. Com um
  * `dialog:modal` aberto, a região vai (portal) para dentro dele; fora disso fica na página.
  */
-export function ToastProvider({
-  children,
-  closeLabel = 'Fechar notificação',
-  maxVisible = 3,
-  severityLabels,
-}: ToastProviderProps) {
+export function ToastProvider({ children, texts, maxVisible = 3 }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastEntry[]>([]);
   const nextId = useRef(1);
   const elements = useRef(new Map<number, HTMLElement>());
@@ -338,8 +338,8 @@ export function ToastProvider({
       key={toast.id}
       toast={toast}
       paused={hover || focusWithin}
-      closeLabel={closeLabel}
-      severityLabel={severityLabels?.[toast.variant] ?? severityDefault[toast.variant]}
+      closeText={texts?.close ?? 'Fechar notificação'}
+      severityText={texts?.severity?.[toast.variant] ?? severityDefault[toast.variant]}
       remaining={remaining}
       register={register}
       onDismiss={dismiss}

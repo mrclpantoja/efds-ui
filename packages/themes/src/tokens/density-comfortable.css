@@ -1,11 +1,15 @@
 /* Gerado por scripts/build-tokens.ts — não edite. Fonte: packages/themes/tokens/density-comfortable.json */
-/* Densidade comfortable: altura de controle md, espaço 4 e linha de tabela. */
+/* Densidade comfortable: alturas de controle (sm < md < lg, alvo mínimo de 24px no compact), insets e linha de tabela. A escala space-* não varia. */
 
 /* prettier-ignore */
 @layer eds.tokens {
   [data-density="comfortable"] {
+    --eds-control-height-sm: 32px;
     --eds-control-height-md: 38px;
-    --eds-space-4: 16px;
+    --eds-control-height-lg: 44px;
+    --eds-inset-sm: var(--eds-space-3);
+    --eds-inset-md: var(--eds-space-4);
+    --eds-inset-lg: var(--eds-space-5);
     --eds-table-row-height: 44px;
   }
 }

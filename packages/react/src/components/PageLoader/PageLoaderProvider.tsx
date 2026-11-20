@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { mergeTexts } from '../../utils/texts';
 import { PageLoader } from './PageLoader';
 import { Button } from '../Button';
 import { Stack } from '../Stack';
@@ -25,6 +26,27 @@ export function usePageLoader(): PageLoaderApi {
   if (!api) throw new Error('usePageLoader deve ser usado dentro de <PageLoaderProvider>.');
   return api;
 }
+
+export interface PageLoaderTexts {
+  /** Título padrão ("Carregando…"). */
+  title: string;
+  /** Texto padrão ("Aguarde um instante."). */
+  text: string;
+  /** Texto na demora ("Está demorando mais que o esperado."). */
+  slowText: string;
+  /** Botão que libera a página na demora ("Fechar"). */
+  close: string;
+  /** Botão que reinicia a espera ("Continuar aguardando"). */
+  continue: string;
+}
+
+const defaultPageLoaderTexts: PageLoaderTexts = {
+  title: 'Carregando…',
+  text: 'Aguarde um instante.',
+  slowText: 'Está demorando mais que o esperado.',
+  close: 'Fechar',
+  continue: 'Continuar aguardando',
+};
 
 export interface PageLoaderProviderProps {
   children?: ReactNode;
@@ -55,16 +77,8 @@ export interface PageLoaderProviderProps {
    * "Continuar aguardando". Padrão: 20000.
    */
   slowAfter?: number;
-  /** Título padrão. Padrão: "Carregando…". */
-  title?: string;
-  /** Texto padrão. Padrão: "Aguarde um instante." */
-  text?: string;
-  /** Texto na demora. Padrão: "Está demorando mais que o esperado." */
-  slowText?: string;
-  /** Rótulo do botão que libera a página na demora. Padrão: "Fechar". */
-  closeLabel?: string;
-  /** Rótulo do botão que reinicia a espera. Padrão: "Continuar aguardando". */
-  continueLabel?: string;
+  /** Textos (padrões em pt-BR): título, texto, texto da demora e os dois botões da demora. */
+  texts?: Partial<PageLoaderTexts>;
   /** URLs ignoradas pelo modo `auto` (texto contido na URL ou expressão regular), ex.: polling. */
   exclude?: (string | RegExp)[];
 }
@@ -220,13 +234,10 @@ export function PageLoaderProvider({
   delay = 300,
   minVisible = 400,
   slowAfter = 20000,
-  title = 'Carregando…',
-  text = 'Aguarde um instante.',
-  slowText = 'Está demorando mais que o esperado.',
-  closeLabel = 'Fechar',
-  continueLabel = 'Continuar aguardando',
+  texts,
   exclude,
 }: PageLoaderProviderProps) {
+  const t = mergeTexts(defaultPageLoaderTexts, texts);
   const [shown, setShown] = useState<Shown | null>(null);
   const continueRef = useRef<HTMLButtonElement>(null);
 
@@ -346,16 +357,16 @@ export function PageLoaderProvider({
       {children}
       <PageLoader
         open={shown !== null}
-        title={shown?.title ?? title}
-        text={slow ? slowText : (shown?.text ?? text)}
+        title={shown?.title ?? t.title}
+        text={slow ? t.slowText : (shown?.text ?? t.text)}
       >
         {slow && (
           <Stack direction="row" gap={3} justify="center" wrap>
             <Button variant="secondary" onClick={() => engine.dismiss()}>
-              {closeLabel}
+              {t.close}
             </Button>
             <Button ref={continueRef} variant="primary" onClick={() => engine.keepWaiting()}>
-              {continueLabel}
+              {t.continue}
             </Button>
           </Stack>
         )}

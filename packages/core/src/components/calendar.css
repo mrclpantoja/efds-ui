@@ -17,7 +17,9 @@
     --_calendar-offset: var(--eds-space-1);
     --_calendar-padding: var(--eds-space-2);
     --_day-size: var(--eds-control-height-md);
-    --_calendar-width: calc(var(--_day-size) * 7 + var(--_calendar-padding) * 2 + 2px);
+    --_calendar-width: calc(
+      var(--_day-size) * 7 + var(--_calendar-padding) * 2 + 2 * var(--eds-border-width)
+    );
     --_calendar-gutter: var(--eds-space-2);
 
     /* O UA define display:none para popover fechado; só declaramos display no aberto. */
@@ -26,7 +28,7 @@
     max-block-size: 90dvh;
     margin: 0;
     padding: var(--_calendar-padding);
-    border: 1px solid var(--eds-color-border-default);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
     border-radius: var(--eds-radius-md);
     background: var(--eds-color-bg-surface);
     color: var(--eds-color-text-primary);
@@ -106,7 +108,7 @@
     block-size: var(--eds-control-height-sm);
     margin: 0;
     padding: 0;
-    border: 1px solid transparent;
+    border: var(--eds-border-width) solid transparent;
     border-radius: var(--eds-radius-md);
     background: transparent;
     color: var(--eds-color-text-secondary);
@@ -119,8 +121,8 @@
     /* Botão vazio: chevron por máscara (o primeiro aponta para o início, o último para o fim). */
     &:not(:has(> svg))::before {
       content: '';
-      inline-size: 1rem;
-      block-size: 1rem;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
       background-color: currentColor;
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M6 3l5 5-5 5' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
         center / contain no-repeat;
@@ -139,8 +141,8 @@
     }
 
     & > svg {
-      inline-size: 1rem;
-      block-size: 1rem;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
     }
 
     &:hover:not(:disabled, [aria-disabled='true']) {
@@ -197,10 +199,10 @@
     box-sizing: border-box;
     block-size: var(--_day-size);
     padding: 0;
-    border: 1px solid var(--_day-border);
+    border: var(--eds-border-width) solid var(--_day-border);
     border-radius: var(--_day-radius);
     background: var(--_day-bg);
-    box-shadow: inset 0 0 0 1px var(--_day-ring);
+    box-shadow: inset 0 0 0 var(--eds-border-width) var(--_day-ring);
     color: var(--_day-fg);
     font-size: var(--eds-font-size-body);
     line-height: var(--eds-line-height-body);
@@ -214,6 +216,10 @@
       &:hover:not([aria-selected='true'], [aria-disabled='true']) {
         --_day-bg: var(--eds-color-bg-subtle);
       }
+    }
+
+    &:active:not([aria-selected='true'], [aria-disabled='true']) {
+      --_day-bg: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
     }
 
     /* Hoje: anel + peso (não só cor). */
@@ -338,7 +344,7 @@
     gap: var(--eds-space-2);
     margin-block-start: var(--eds-space-2);
     padding-block-start: var(--eds-space-2);
-    border-block-start: 1px solid var(--eds-color-border-default);
+    border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
   }
 
   @media (prefers-reduced-motion: reduce) {

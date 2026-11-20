@@ -44,6 +44,36 @@ describe('modal e drawer', () => {
     document.removeEventListener('eds:modal-open', onOpen);
   });
 
+  it('emite modal-close ao fechar (Esc, botão) e modal-open ao abrir por código', async () => {
+    const user = userEvent.setup();
+    const log: string[] = [];
+    for (const name of ['modal-open', 'modal-close', 'drawer-open', 'drawer-close']) {
+      document.addEventListener(`eds:${name}`, () => log.push(name));
+    }
+    await user.click(document.getElementById('open') as HTMLElement);
+    await flush();
+    await user.keyboard('{Escape}');
+    await flush();
+    // Aberto por código, sem gatilho.
+    dialog('dlg').showModal();
+    await flush();
+    await user.click(document.getElementById('cancelar') as HTMLElement);
+    await flush();
+    // Drawer: nomes próprios.
+    await user.click(document.getElementById('open-static') as HTMLElement);
+    await flush();
+    dialog('dlg-static').close();
+    await flush();
+    expect(log).toEqual([
+      'modal-open',
+      'modal-close',
+      'modal-open',
+      'modal-close',
+      'drawer-open',
+      'drawer-close',
+    ]);
+  });
+
   it('Esc fecha (nativo)', async () => {
     const user = userEvent.setup();
     await user.click(document.getElementById('open') as HTMLElement);

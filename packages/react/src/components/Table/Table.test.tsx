@@ -97,9 +97,12 @@ describe('Table', () => {
     expect(screen.getByRole('columnheader', { name: 'Total' })).toHaveClass('eds-table-num');
     expect(screen.getByRole('cell', { name: 'R$ 10,00' })).toHaveClass('eds-table-num');
     expect(screen.getByRole('cell', { name: 'Editar' })).toHaveClass('eds-table-actions');
-    expect(screen.getByLabelText('Selecionar PED-0001').parentElement).toHaveClass(
+    expect(screen.getByLabelText('Selecionar PED-0001').closest('td')).toHaveClass(
       'eds-table-check',
     );
+    // O checkbox da seleção vai num label que amplia o alvo (o nome continua o aria-label).
+    expect(screen.getByLabelText('Selecionar PED-0001').parentElement).toHaveClass('eds-check');
+    expect(screen.getByLabelText('Selecionar todos').parentElement?.tagName).toBe('LABEL');
     expect(screen.getByTestId('toolbar')).toHaveClass('eds-table-toolbar');
     expect(screen.getByTestId('footer')).toHaveClass('eds-table-footer');
     expect(screen.getByRole('columnheader', { name: 'Situação' })).toHaveAttribute('scope', 'col');

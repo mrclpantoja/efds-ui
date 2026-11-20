@@ -162,6 +162,12 @@ export default function DateRangePickerPage() {
           caption="Props de DateRangePicker"
           rows={[
             {
+              name: 'readOnly',
+              type: 'boolean',
+              description:
+                'Somente leitura: os campos seguem focáveis e lidos, mas o calendário não abre e o valor não muda.',
+            },
+            {
               name: 'value / defaultValue',
               type: '{ start: string | null; end: string | null }',
               description: 'Período em ISO (controlado) ou inicial.',

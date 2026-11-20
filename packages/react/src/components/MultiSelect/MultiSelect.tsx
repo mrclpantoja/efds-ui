@@ -13,6 +13,7 @@ import {
   type ReactNode,
 } from 'react';
 import { cx } from '../../utils/cx';
+import { mergeTexts } from '../../utils/texts';
 import { FieldContext, useControlAttrs } from '../../internal/field-context';
 import {
   LOADING_STATUS_DELAY_MS,
@@ -80,31 +81,49 @@ export interface MultiSelectProps extends Omit<
   invalid?: boolean;
   /** Sucesso: `data-valid="true"`. */
   valid?: boolean;
-  /** Padrão: "Nenhum resultado". */
-  emptyMessage?: ReactNode;
-  /** Padrão: "Carregando…". */
-  loadingMessage?: ReactNode;
-  /** Nome acessível da lista de opções. Padrão: o `aria-label` do campo ou o rótulo do Field. */
-  listLabel?: string;
-  /** Nome acessível da lista de etiquetas. Padrão: "Selecionados". */
-  tagsLabel?: string;
-  /** Nome do botão de remover a etiqueta. Padrão: "Remover {rótulo}". */
-  removeLabel?: (label: string) => string;
-  /** Texto do status conforme a quantidade de resultados. */
-  statusMessage?: (count: number) => string;
-  /** Status anunciado após ~400 ms de `loading`. Padrão: "Carregando…". */
-  loadingStatus?: string;
-  /** Status ao escolher. Padrão: "{rótulo}: selecionado. {n} itens selecionados.". */
-  selectedStatus?: (label: string, count: number) => string;
-  /** Status ao remover. Padrão: "{rótulo}: removido. {n} itens selecionados.". */
-  removedStatus?: (label: string, count: number) => string;
-  /** Status ao atingir `maxSelected`. Padrão: "Limite de {n} itens atingido.". */
-  maxStatus?: (max: number) => string;
-  /** Mensagem de validade de `required`. Padrão: "Escolha ao menos uma opção.". */
-  requiredMessage?: string;
+  /** Textos internos (padrões em pt-BR). */
+  texts?: Partial<MultiSelectTexts>;
 }
 
 const countText = (n: number) => `${n} ${n === 1 ? 'item selecionado' : 'itens selecionados'}.`;
+
+export interface MultiSelectTexts {
+  /** Lista sem resultado. Padrão: "Nenhum resultado". */
+  empty: ReactNode;
+  /** Busca em andamento. Padrão: "Carregando…". */
+  loading: ReactNode;
+  /** Nome acessível da lista de opções. Padrão: o `aria-label` do campo ou o rótulo do Field. */
+  list?: string;
+  /** Nome acessível da lista de etiquetas. Padrão: "Selecionados". */
+  tags: string;
+  /** Nome do botão de remover a etiqueta. Padrão: "Remover {rótulo}". */
+  remove: (label: string) => string;
+  /** Texto do status conforme a quantidade de resultados. */
+  status: (count: number) => string;
+  /** Status anunciado após ~400 ms de `loading`. Padrão: "Carregando…". */
+  loadingStatus: string;
+  /** Status ao escolher. Padrão: "{rótulo}: selecionado. {n} itens selecionados.". */
+  selected: (label: string, count: number) => string;
+  /** Status ao remover. Padrão: "{rótulo}: removido. {n} itens selecionados.". */
+  removed: (label: string, count: number) => string;
+  /** Status ao atingir `maxSelected`. Padrão: "Limite de {n} itens atingido.". */
+  max: (max: number) => string;
+  /** Mensagem de validade de `required`. Padrão: "Escolha ao menos uma opção.". */
+  required: string;
+}
+
+const defaultTexts: MultiSelectTexts = {
+  empty: 'Nenhum resultado',
+  loading: 'Carregando…',
+  tags: 'Selecionados',
+  remove: (label) => `Remover ${label}`,
+  status: defaultStatus,
+  loadingStatus: 'Carregando…',
+  selected: (label, count) => `${label}: selecionado. ${countText(count)}`,
+  removed: (label, count) => `${label}: removido. ${countText(count)}`,
+  max: (max) => `Limite de ${max} ${max === 1 ? 'item' : 'itens'} atingido.`,
+  required: 'Escolha ao menos uma opção.',
+};
 
 /**
  * Seleção múltipla (Combobox com etiquetas). Foco sempre no `<input>`; o destaque do teclado é
@@ -129,17 +148,8 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
     invalid,
     valid,
     disabled,
-    emptyMessage = 'Nenhum resultado',
-    loadingMessage = 'Carregando…',
-    listLabel,
-    tagsLabel = 'Selecionados',
-    removeLabel = (label: string) => `Remover ${label}`,
-    statusMessage = defaultStatus,
-    loadingStatus = 'Carregando…',
-    selectedStatus = (label: string, count: number) => `${label}: selecionado. ${countText(count)}`,
-    removedStatus = (label: string, count: number) => `${label}: removido. ${countText(count)}`,
-    maxStatus = (max: number) => `Limite de ${max} ${max === 1 ? 'item' : 'itens'} atingido.`,
-    requiredMessage = 'Escolha ao menos uma opção.',
+    readOnly,
+    texts,
     className,
     onKeyDown,
     onBlur,
@@ -148,6 +158,19 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
   },
   ref,
 ) {
+  const {
+    empty: emptyMessage,
+    loading: loadingMessage,
+    list: listLabel,
+    tags: tagsLabel,
+    remove: removeLabel,
+    status: statusMessage,
+    loadingStatus,
+    selected: selectedStatus,
+    removed: removedStatus,
+    max: maxStatus,
+    required: requiredMessage,
+  } = mergeTexts(defaultTexts, texts);
   const { required, ...attrs } = useControlAttrs({
     id: rest.id,
     describedBy: rest['aria-describedby'],
@@ -315,6 +338,8 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
+    // Somente leitura: o campo continua focável e lido; a lista não abre e as escolhas não mudam.
+    if (readOnly) return;
     if (loading && open && ['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key) && !event.altKey) {
       event.preventDefault();
       return;
@@ -355,7 +380,7 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
         break;
       }
       case 'Backspace': {
-        if (text === '' && values.length > 0 && !event.currentTarget.readOnly) {
+        if (text === '' && values.length > 0 && !readOnly) {
           event.preventDefault();
           removeAt(values.length - 1, false);
         }
@@ -407,7 +432,7 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
                 className="eds-combobox-tag-remove"
                 aria-label={removeLabel(option.label)}
                 data-value={option.value}
-                disabled={disabled}
+                disabled={disabled || readOnly}
                 onClick={() => removeAt(i, true)}
               >
                 <CloseGlyph />
@@ -429,13 +454,14 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
           aria-required={required || undefined}
           aria-activedescendant={expanded && activeIndex >= 0 ? optionId(activeIndex) : undefined}
           disabled={disabled}
+          readOnly={readOnly}
+          aria-readonly={readOnly || undefined}
           value={text}
           onChange={handleInput}
           onKeyDown={handleKeyDown}
           onClick={(event) => {
             onClick?.(event);
-            if (!event.defaultPrevented && !disabled && !rest.readOnly && !open)
-              openFromArrow('none');
+            if (!event.defaultPrevented && !disabled && !readOnly && !open) openFromArrow('none');
           }}
           onBlur={(event) => {
             closeList();

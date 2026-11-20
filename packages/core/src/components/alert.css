@@ -22,8 +22,8 @@
     align-items: start;
     column-gap: var(--eds-space-3);
     box-sizing: border-box;
-    padding: var(--eds-space-3) var(--eds-space-4);
-    border: 1px solid color-mix(in srgb, var(--_alert-fg) 30%, transparent);
+    padding: var(--eds-space-3) var(--eds-inset-md);
+    border: var(--eds-border-width) solid color-mix(in srgb, var(--_alert-fg) 30%, transparent);
     border-radius: var(--eds-radius-md);
     background: var(--_alert-bg);
     color: var(--_alert-fg);
@@ -34,10 +34,10 @@
       content: '';
       grid-column: 1;
       grid-row: 1;
-      inline-size: 1.25rem;
+      inline-size: var(--eds-icon-size-md);
       block-size: var(--eds-line-height-body);
       background-color: currentColor;
-      mask: var(--_alert-icon) center / 1rem no-repeat;
+      mask: var(--_alert-icon) center / var(--eds-icon-size-sm) no-repeat;
     }
   }
 

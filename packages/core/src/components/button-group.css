@@ -9,7 +9,7 @@
       --_button-radius: 0;
 
       &:not(:nth-child(1 of .eds-button)) {
-        margin-inline-start: -1px;
+        margin-inline-start: calc(var(--eds-border-width) * -1);
         border-inline-start-color: var(--_button-divider, var(--_button-border));
       }
 
@@ -27,7 +27,7 @@
       &:hover,
       &:focus-visible,
       &[aria-expanded='true'] {
-        z-index: 1;
+        z-index: var(--eds-z-raised);
       }
     }
   }

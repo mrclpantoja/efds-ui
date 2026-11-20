@@ -8,7 +8,7 @@
  *   .eds-container-fluid              100% da largura disponível
  *   .eds-container-flush              sem padding lateral (ex.: tabela de ponta a ponta)
  *
- * O padding lateral acompanha a viewport (esqueleto da página): space-4 (varia com a
+ * O padding lateral acompanha a viewport (esqueleto da página): inset-md (varia com a
  * densidade) → space-5 a partir de 640px → space-6 a partir de 1024px.
  * A largura máxima inclui o padding (box-sizing: border-box do reset).
  *
@@ -17,7 +17,7 @@
 @layer eds.layout {
   .eds-container {
     --_container-max: var(--eds-layout-container-xl);
-    --_container-pad: var(--eds-space-4);
+    --_container-pad: var(--eds-inset-md);
 
     inline-size: 100%;
     max-inline-size: var(--_container-max);

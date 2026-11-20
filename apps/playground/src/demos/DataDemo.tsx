@@ -205,12 +205,14 @@ function InteractiveTable() {
             <thead>
               <tr>
                 <th scope="col" className="eds-table-check">
-                  <input
-                    type="checkbox"
-                    className="eds-checkbox"
-                    aria-label="Selecionar todos os pedidos"
-                    data-eds-select-all
-                  />
+                  <label className="eds-check">
+                    <input
+                      type="checkbox"
+                      className="eds-checkbox"
+                      aria-label="Selecionar todos os pedidos"
+                      data-eds-select-all
+                    />
+                  </label>
                 </th>
                 <th scope="col" aria-sort="ascending">
                   <button type="button" className="eds-table-sort">
@@ -237,13 +239,15 @@ function InteractiveTable() {
               {orders.map((row) => (
                 <tr key={row.code}>
                   <td className="eds-table-check">
-                    <input
-                      type="checkbox"
-                      className="eds-checkbox"
-                      aria-label={`Selecionar ${row.code}`}
-                      defaultChecked={row.code === 'PED-0003'}
-                      data-eds-select-row
-                    />
+                    <label className="eds-check">
+                      <input
+                        type="checkbox"
+                        className="eds-checkbox"
+                        aria-label={`Selecionar ${row.code}`}
+                        defaultChecked={row.code === 'PED-0003'}
+                        data-eds-select-row
+                      />
+                    </label>
                   </td>
                   <td>{row.code}</td>
                   <td>{row.client}</td>

@@ -115,7 +115,7 @@ describe('Toast', () => {
   it('o botão de fechar remove o toast; rótulo substituível', async () => {
     const user = setupUser();
     render(
-      <ToastProvider closeLabel="Dismiss">
+      <ToastProvider texts={{ close: 'Dismiss' }}>
         <Trigger options={{ variant: 'warning', message: 'Aviso.' }} />
       </ToastProvider>,
     );
@@ -332,10 +332,10 @@ describe('Toast', () => {
       expect(document.querySelector('.eds-toast-content')).toHaveTextContent('Sucesso: Salvo.');
     });
 
-    it('severityLabels substitui só as variantes informadas', async () => {
+    it('texts.severity substitui só as variantes informadas', async () => {
       const user = setupUser();
       render(
-        <ToastProvider severityLabels={{ success: 'Done:' }}>
+        <ToastProvider texts={{ severity: { success: 'Done:' } }}>
           <Trigger options={{ variant: 'success', message: 'Ok.' }} label="S" />
           <Trigger options={{ variant: 'warning', message: 'Cuidado.' }} label="W" />
         </ToastProvider>,

@@ -35,13 +35,23 @@ export function bindAll(root: ParentNode, behaviors: readonly Behavior[]): () =>
     mine.set(behavior, cleanup);
   };
 
+  // Um único seletor combinado: uma varredura por nó em vez de uma por comportamento.
+  const combined = behaviors.map((b) => b.selector).join(',');
+
   const scan = (node: ParentNode) => {
-    for (const behavior of behaviors) {
-      if (node instanceof HTMLElement && safeMatches(node, behavior.selector)) {
-        bindOne(behavior, node);
+    const found: HTMLElement[] = [];
+    if (node instanceof HTMLElement) found.push(node);
+    try {
+      for (const el of node.querySelectorAll<HTMLElement>(combined)) found.push(el);
+    } catch {
+      // Seletor combinado inválido: cai na varredura por comportamento.
+      for (const behavior of behaviors) {
+        for (const el of node.querySelectorAll<HTMLElement>(behavior.selector)) found.push(el);
       }
-      for (const el of node.querySelectorAll<HTMLElement>(behavior.selector)) {
-        bindOne(behavior, el);
+    }
+    for (const el of found) {
+      for (const behavior of behaviors) {
+        if (safeMatches(el, behavior.selector)) bindOne(behavior, el);
       }
     }
   };
@@ -59,17 +69,40 @@ export function bindAll(root: ParentNode, behaviors: readonly Behavior[]): () =>
   scan(root);
 
   const container = root as unknown as Node;
+  // O MutationObserver já entrega os registros em lote (um callback por microtask); não adiamos
+  // para rAF para que o comportamento esteja ligado antes da primeira pintura.
   const observer = new MutationObserver((records) => {
-    let removed = false;
+    const added = new Set<HTMLElement>();
+    const removedRoots: Node[] = [];
     for (const record of records) {
-      if (record.removedNodes.length > 0) removed = true;
-      for (const node of record.addedNodes) {
-        if (node instanceof HTMLElement) scan(node);
+      for (const node of record.removedNodes) removedRoots.push(node);
+      for (const node of record.addedNodes) if (node instanceof HTMLElement) added.add(node);
+    }
+    // Descarta nós cujo ancestral também está no lote (a varredura do ancestral já os cobre).
+    for (const node of added) {
+      for (let p = node.parentElement; p; p = p.parentElement) {
+        if (added.has(p)) {
+          added.delete(node);
+          break;
+        }
       }
     }
-    if (removed) {
-      // Só desliga o que de fato saiu do `root` (mover um nó = remover + inserir).
-      for (const el of [...owned.keys()]) if (!container.contains(el)) unbind(el);
+    for (const node of added) if (node.isConnected) scan(node);
+    if (removedRoots.length > 0 && owned.size > 0) {
+      // Só desliga o que de fato saiu do `root` (mover um nó = remover + inserir), olhando
+      // apenas os elementos ligados contidos nos nós removidos.
+      for (const node of removedRoots) {
+        if (!(node instanceof HTMLElement)) continue;
+        const candidates: HTMLElement[] = [node];
+        try {
+          for (const el of node.querySelectorAll<HTMLElement>(combined)) candidates.push(el);
+        } catch {
+          for (const el of owned.keys()) if (node.contains(el)) candidates.push(el);
+        }
+        for (const el of candidates) {
+          if (owned.has(el) && !container.contains(el)) unbind(el);
+        }
+      }
     }
   });
   observer.observe(container, { childList: true, subtree: true });

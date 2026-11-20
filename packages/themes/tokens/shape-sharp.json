@@ -1,7 +1,8 @@
 {
   "$selector": "[data-shape=\"sharp\"]",
-  "$description": "Forma sharp: raios sm, md e lg.",
+  "$description": "Forma sharp: raios sm, md, lg e xl (radius-full não varia).",
   "radius-sm": "2px",
   "radius-md": "4px",
-  "radius-lg": "6px"
+  "radius-lg": "6px",
+  "radius-xl": "8px"
 }

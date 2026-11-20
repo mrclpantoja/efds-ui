@@ -12,4 +12,7 @@ export type {
   ExportOptions,
 } from './export';
 // Textos pt-BR do anúncio (os mesmos do `configure({ messages })` do behavior).
-export { format, getMessages } from './core/config';
+export { format, getLocale, getMessages } from './core/config';
+// Regras de dados da Table sem DOM (ordenação e busca), as mesmas do behavior.
+export { normalizeText, sortValues } from './core/data';
+export type { SortDirection } from './core/data';

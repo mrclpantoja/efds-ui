@@ -76,8 +76,7 @@ export interface Messages {
   uploadSendingLabel: string;
   uploadBusy: string;
   uploadRequired: string;
-  /** DatePicker e DateRangePicker: locale do `Intl` e textos (`{date}`, `{min}`, `{max}`, `{start}`, `{end}`). */
-  dateLocale: string;
+  /** DatePicker e DateRangePicker: textos (`{date}`, `{min}`, `{max}`, `{start}`, `{end}`). */
   dateChoose: string;
   rangeChoose: string;
   datePrevMonth: string;
@@ -234,7 +233,6 @@ export const defaultMessages: Messages = {
   uploadSendingLabel: 'Enviando {name}',
   uploadBusy: 'Aguarde o envio dos arquivos.',
   uploadRequired: 'Envie ao menos um arquivo.',
-  dateLocale: 'pt-BR',
   dateChoose: 'Escolher data',
   rangeChoose: 'Escolher período',
   datePrevMonth: 'Mês anterior',
@@ -325,6 +323,28 @@ export const defaultMessages: Messages = {
   exportEmpty: 'Não há linhas para exportar.',
   exportFailed: 'Não foi possível gerar o arquivo.',
 };
+
+export const DEFAULT_LOCALE = 'pt-BR';
+let locale = DEFAULT_LOCALE;
+
+/** Locale BCP 47 do `Intl`: collator da Table, nomes de mês e dia do DatePicker, formatos da exportação. */
+export function getLocale(): string {
+  return locale;
+}
+
+/** Troca o locale; um valor inválido para o `Intl` é ignorado. Sem argumento, volta ao padrão. */
+export function setLocale(value: string | undefined): void {
+  if (value === undefined) return;
+  try {
+    locale = Intl.getCanonicalLocales(value)[0] ?? DEFAULT_LOCALE;
+  } catch {
+    /* tag inválida: mantém o locale atual */
+  }
+}
+
+export function resetLocale(): void {
+  locale = DEFAULT_LOCALE;
+}
 
 let messages: Messages = { ...defaultMessages };
 

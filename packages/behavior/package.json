@@ -30,6 +30,11 @@
       "types": "./dist/export-entry.d.ts",
       "default": "./dist/export-entry.js"
     },
+    "./mask": {
+      "development": "./src/mask-entry.ts",
+      "types": "./dist/mask-entry.d.ts",
+      "default": "./dist/mask-entry.js"
+    },
     "./eds-behavior.js": "./dist/eds-behavior.js"
   },
   "scripts": {
@@ -57,6 +62,10 @@
       "./export": {
         "types": "./dist/export-entry.d.ts",
         "default": "./dist/export-entry.js"
+      },
+      "./mask": {
+        "types": "./dist/mask-entry.d.ts",
+        "default": "./dist/mask-entry.js"
       },
       "./eds-behavior.js": "./dist/eds-behavior.js"
     }

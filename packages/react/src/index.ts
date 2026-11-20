@@ -26,7 +26,7 @@ export type { FieldProps } from './components/Field';
 export { Fieldset } from './components/Fieldset';
 export type { FieldsetProps } from './components/Fieldset';
 export { Input } from './components/Input';
-export type { InputProps, InputSize } from './components/Input';
+export type { InputMaskName, InputMaskOptions, InputProps, InputSize } from './components/Input';
 export { Textarea } from './components/Textarea';
 export type { TextareaProps } from './components/Textarea';
 export { Select } from './components/Select';

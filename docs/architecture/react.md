@@ -38,17 +38,17 @@ Vitest + Testing Library + `user-event` + matchers do jest-dom (já no setup do 
 
 ## Componentes
 
-| Componente                                                                 | Status | Lote |
-| -------------------------------------------------------------------------- | ------ | ---- |
-| Container, Grid (+ GridItem), Stack                                        | pronto | A    |
-| Button, ButtonGroup                                                        | pronto | A    |
-| Dropdown                                                                   | pronto | C    |
-| Input, Textarea, Select, Checkbox, Radio, Switch, Field (label/ajuda/erro) | pronto | B    |
-| Card, Modal, Drawer                                                        | pronto | C/D  |
-| App shell, Navbar, Sidebar, Tabs, Breadcrumb                               | pronto | C/D  |
-| Alert, Toast, Badge, Spinner, Skeleton                                     | pronto | B/C  |
-| Table, Pagination, EmptyState                                              | pronto | D    |
-| TableExport (exportar CSV, Excel, JSON, PDF)                               | pronto | H    |
+| Componente                                                                                          | Status | Lote |
+| --------------------------------------------------------------------------------------------------- | ------ | ---- |
+| Container, Grid (+ GridItem), Stack                                                                 | pronto | A    |
+| Button, ButtonGroup                                                                                 | pronto | A    |
+| Dropdown                                                                                            | pronto | C    |
+| Input (com máscara de entrada), Textarea, Select, Checkbox, Radio, Switch, Field (label/ajuda/erro) | pronto | B    |
+| Card, Modal, Drawer                                                                                 | pronto | C/D  |
+| App shell, Navbar, Sidebar, Tabs, Breadcrumb                                                        | pronto | C/D  |
+| Alert, Toast, Badge, Spinner, Skeleton                                                              | pronto | B/C  |
+| Table, Pagination, EmptyState                                                                       | pronto | D    |
+| TableExport (exportar CSV, Excel, JSON, PDF)                                                        | pronto | H    |
 
 Ícones (`@eds-ui/icons`): 18 prontos (busca, filtro, mais, editar, excluir, 4 chevrons, fechar, check, setas, menu, sino, usuário, download, adicionar). Demais sob demanda.
 
@@ -115,3 +115,12 @@ Vitest + Testing Library + `user-event` + matchers do jest-dom (já no setup do 
 - **Dependência react → behavior**: `@eds-ui/react` declara `"@eds-ui/behavior": "workspace:*"` em `dependencies` e importa apenas `@eds-ui/behavior/export` (sem `init`, auto-init ou os outros módulos); o build mantém `@eds-ui/*` como `external`. No monorepo, o `tsconfig.json` do react usa `customConditions: ["development"]` para ler o código-fonte do behavior (o typecheck não exige build prévio); o `tsconfig.build.json` zera as condições e lê os `.d.ts` do `dist` (o `pnpm build` constrói o behavior antes). Os apps (docs e playground) mapeiam `@eds-ui/behavior/export` por alias, **antes** do alias de prefixo `@eds-ui/behavior`.
 - **TableExport**: `Dropdown` (disclosure, `role="group"`) cujo gatilho é um `Button` com glifo de download e cujos itens são os formatos (`formats`, padrão `csv`, `xlsx`, `json`, `pdf`; rótulos em `formatLabels`). A fonte é o estado, não o DOM: `data` ou `getData()`, lido no clique. `onBeforeExport(data, { format, filename })` devolve os dados a exportar (a fonte do consumidor não é alterada), `false` cancela sem baixar nem anunciar. `onExport({ format, filename, count })` roda depois. Sem linhas (ou `onBeforeExport` que as zera): anuncia "Não há linhas para exportar." e não baixa; erro em `getData`, no `onBeforeExport` ou na geração: "Não foi possível gerar o arquivo.". Anúncio em `<span role="status">` irmão (`useAnnouncer`), com os textos do behavior (`getMessages`, então `configure({ messages })` vale) ou os de `messages`. O nome ganha a extensão do formato (uma extensão igual no `filename` não duplica) e **não** leva a data (diferente do HTML, que acrescenta `-aaaa-mm-dd`). O `ref` vai ao botão.
 - **LGPD**: o arquivo leva o que `data` contém; mascare ou retire colunas sensíveis em `onBeforeExport` (ou, melhor, no servidor) e use o mesmo gancho para auditoria.
+
+## Notas de comportamento (máscara de entrada)
+
+- **API**: `Input` ganha `mask`, `maskOptions`, `unmask` e `onValueChange(masked, raw)`; sem `mask` o componente se comporta exatamente como antes. O núcleo vem de `@eds-ui/behavior/mask` (mesma lógica do HTML por atributos, sem `init`); o hook é `internal/useInputMask.ts`.
+- **Markup**: emite `data-eds-mask="<nome ou padrão>"` (é o que o CSS do core usa para alinhar moeda e número), mais `inputmode`, `autocomplete` (telefone e CEP) e `maxlength` (nunca na moeda e no número) só quando o autor não os definiu. **Não chame `init` do behavior sobre markup do React**: o `Input` já faz a máscara.
+- **Controlado e não controlado**: `value` e `defaultValue` são exibidos mascarados (aceita o valor com ou sem máscara; na moeda, também o número com ponto decimal). O `onChange` do autor recebe `event.target.value` já mascarado, então `setValue(e.target.value)` funciona. O cursor é recolocado na hora e de novo num `useLayoutEffect`.
+- **Colar**: tratado em `onPaste` (sem o corte do `maxlength`); o valor entra pelo setter nativo e um evento `input` faz o React chamar `onChange`. Um `onPaste` do autor com `preventDefault` cancela a colagem.
+- **`unmask`**: com `name`, o visível perde o `name` e o componente devolve um fragmento com um `<input type="hidden">` (`name`, `form` e `disabled` do campo) com o valor limpo. A `ref` continua apontando para o campo visível. Um `reset` do formulário refaz o valor limpo.
+- **Limitações**: composição de IME não é mascarada até terminar; `maxlength` cheio impede inserir no meio, como em qualquer campo.

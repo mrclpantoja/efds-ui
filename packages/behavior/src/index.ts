@@ -7,6 +7,8 @@ import { initConfirm } from './components/confirm';
 import { comboboxBehavior, initCombobox } from './components/combobox';
 import { datepickerBehavior, daterangeBehavior, initDatepicker } from './components/datepicker';
 import { initNativeAlert } from './components/dialogs';
+// Máscara de entrada
+import { initMask, maskBehavior } from './components/mask';
 import { dropdownBehavior, initDropdown } from './components/dropdown';
 import { initLoader, loader, setLoaderConfig, type LoaderOptions } from './components/loader';
 import { dialogBehavior, initModal, modalTriggerBehavior } from './components/modal';
@@ -63,6 +65,8 @@ export function init(root: ParentNode = document, options?: BehaviorOptions): ()
       datepickerBehavior,
       daterangeBehavior,
       uploadBehavior,
+      // Máscara de entrada
+      maskBehavior,
       // Sortable e Tree
       sortableBehavior,
       treeBehavior,
@@ -105,6 +109,9 @@ export type {
   ExportFormat,
   ExportOptions,
 } from './export';
+// Máscara de entrada
+export { createMask } from './core/mask';
+export type { Mask, MaskName, MaskOptions } from './core/mask';
 export type { ExportScope } from './components/table-export';
 export type { TreeChangeAction, TreeNodeData } from './components/tree';
 export {
@@ -116,6 +123,8 @@ export {
   initDatepicker,
   initDropdown,
   initLoader,
+  // Máscara de entrada
+  initMask,
   initModal,
   initNativeAlert,
   initSidebar,

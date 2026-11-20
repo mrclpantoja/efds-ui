@@ -135,6 +135,33 @@ Gerados no navegador, sem dependência. Botões ou itens de menu apontam para a 
 
 Sem HTML, os geradores servem a qualquer código: `exportData(data, 'xlsx', { filename })`, `toCsv`, `toJson`, `toXlsx` e `toPdf`. Para importar só eles, sem o `init` nem os demais módulos, use o subcaminho `@eds-ui/behavior/export` (é o que o `@eds-ui/react` faz).
 
+## Máscara de entrada
+
+`data-eds-mask` num `<input>` formata o valor enquanto se digita. Valor enviado: o que aparece, com a máscara; com `data-eds-mask-unmask`, o campo visível perde o `name` e um hidden com o mesmo `name` leva só os caracteres significativos.
+
+```html
+<label class="eds-label" for="cpf">CPF</label>
+<input
+  id="cpf"
+  class="eds-input"
+  name="cpf"
+  data-eds-mask="cpf"
+  data-eds-mask-unmask
+  aria-describedby="cpf-ajuda"
+/>
+<p class="eds-helper" id="cpf-ajuda">Só números. Ex.: 123.456.789-00</p>
+```
+
+| Atributo                 | Efeito                                                                                                                                                                                                                |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-eds-mask`          | `telefone`, `cpf`, `cnpj` (aceita letras A-Z nas 12 primeiras posições), `cpf-cnpj`, `cep`, `moeda`, `numero` ou um padrão: `0` dígito, `A` letra, `*` letra ou dígito, `\` escapa, o resto é literal (`00.000-AAA`). |
+| `data-eds-mask-unmask`   | Hidden com o valor limpo (moeda: `1234.56`). Exige `name`.                                                                                                                                                            |
+| `data-eds-mask-decimals` | Moeda e número: casas decimais (0 a 8, padrão 2).                                                                                                                                                                     |
+| `data-eds-mask-prefix`   | Moeda e número: símbolo (padrão `"R$ "` na moeda; vazio é permitido).                                                                                                                                                 |
+| `data-eds-mask-negative` | Moeda e número: aceita negativo (a tecla `-` alterna o sinal).                                                                                                                                                        |
+
+O pacote define `inputmode`, `autocomplete` (telefone: `tel`, CEP: `postal-code`) e `maxlength` (menos na moeda e no número) só quando o autor não os pôs. Evento `eds:mask-change` (`{ value, raw }`). A máscara não valida (dígito verificador, faixa): continue com `required`, `pattern` e o servidor. Dados de exemplo, sempre fictícios (LGPD). Para importar só o núcleo, sem DOM: `import { createMask } from '@eds-ui/behavior/mask'`.
+
 ## Uso por módulo (Vue, Angular, bundlers)
 
 ```ts
@@ -159,7 +186,7 @@ Referência completa (atributos, eventos, opções, configuração do loader): [
 
 ## O que cada componente espera
 
-O markup é o contrato do core (`.eds-*`); o pacote detecta por classes e ARIA. Só acrescenta `data-eds-*` onde o markup não basta: `data-eds-open`, `data-eds-close`, `data-eds-backdrop="static"`, `data-eds-dismiss`, `data-eds-select-all`/`-row`, `data-eds-table-filter`, `data-eds-filter-columns`, `data-eds-filter-ignore`, `data-eds-sidebar-collapse`, `data-eds-source`, `data-eds-min-chars`, `data-eds-free-text`, `data-eds-multiple`, `data-eds-name`, `data-eds-max-selected`, `data-eds-upload`, `data-eds-max-size`, `data-eds-max-files`, `data-eds-upload-url`, `data-eds-upload-field`, `data-eds-confirm` (e `-title`, `-variant`, `-ok`), `data-eds-sortable`, `data-eds-group`, `data-eds-orientation`, `data-eds-editable`, `data-eds-multiselect`, `data-eds-tree`, `data-eds-children-url`, `data-eds-native-alert`, `data-eds-loader`.
+O markup é o contrato do core (`.eds-*`); o pacote detecta por classes e ARIA. Só acrescenta `data-eds-*` onde o markup não basta: `data-eds-open`, `data-eds-close`, `data-eds-backdrop="static"`, `data-eds-dismiss`, `data-eds-select-all`/`-row`, `data-eds-table-filter`, `data-eds-filter-columns`, `data-eds-filter-ignore`, `data-eds-sidebar-collapse`, `data-eds-source`, `data-eds-min-chars`, `data-eds-free-text`, `data-eds-multiple`, `data-eds-name`, `data-eds-max-selected`, `data-eds-upload`, `data-eds-max-size`, `data-eds-max-files`, `data-eds-upload-url`, `data-eds-upload-field`, `data-eds-confirm` (e `-title`, `-variant`, `-ok`), `data-eds-sortable`, `data-eds-group`, `data-eds-orientation`, `data-eds-editable`, `data-eds-multiselect`, `data-eds-tree`, `data-eds-children-url`, `data-eds-native-alert`, `data-eds-loader`, `data-eds-mask` (e `-unmask`, `-decimals`, `-prefix`, `-negative`).
 
 ## Scripts
 

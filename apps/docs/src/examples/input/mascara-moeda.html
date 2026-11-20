@@ -1,0 +1,21 @@
+<div class="eds-grid eds-grid-auto">
+  <div class="eds-field">
+    <label class="eds-label" for="mm-valor">Valor</label>
+    <input id="mm-valor" class="eds-input" name="valor" data-eds-mask="moeda" aria-describedby="mm-valor-ajuda" />
+    <p class="eds-helper" id="mm-valor-ajuda">Digite os números: os dois últimos são os centavos.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="mm-saldo">Saldo</label>
+    <input id="mm-saldo" class="eds-input" name="saldo" data-eds-mask="moeda" data-eds-mask-negative aria-describedby="mm-saldo-ajuda" />
+    <p class="eds-helper" id="mm-saldo-ajuda">Aceita negativo: digite &quot;-&quot; para alternar o sinal.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="mm-qtd">Quantidade</label>
+    <input id="mm-qtd" class="eds-input" name="quantidade" data-eds-mask="numero" data-eds-mask-decimals="3" aria-describedby="mm-qtd-ajuda" />
+    <p class="eds-helper" id="mm-qtd-ajuda">Número com 3 casas decimais, sem símbolo.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="mm-meta">Meta em dólares</label>
+    <input id="mm-meta" class="eds-input" name="meta" data-eds-mask="moeda" data-eds-mask-prefix="US$ " data-eds-mask-decimals="0" />
+  </div>
+</div>

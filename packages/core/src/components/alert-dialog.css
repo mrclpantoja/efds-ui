@@ -34,17 +34,22 @@
     overflow-y: auto;
     text-align: center;
 
-    /* Entrada sutil (escala + opacity) no lugar do deslocamento do modal. */
-    transform: scale(0.96);
+    /* Sem animação de entrada nem de saída (o .eds-modal anima as duas): o diálogo rápido
+       nasce e é destruído a cada chamada, muitas vezes em sequência (confirm → toast →
+       outro confirm). Com o esmaecimento, quadros intermediários mostravam um diálogo sobre
+       o outro. Aparece e some de uma vez, já com o conteúdo final. */
+    &,
+    &::backdrop {
+      transition: none;
+    }
 
     &[open] {
+      opacity: 1;
       transform: none;
     }
 
-    @starting-style {
-      &[open] {
-        transform: scale(0.96);
-      }
+    &[open]::backdrop {
+      opacity: 1;
     }
   }
 

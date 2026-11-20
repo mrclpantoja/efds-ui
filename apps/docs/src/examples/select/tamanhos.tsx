@@ -2,7 +2,7 @@ import { Field, Select, Stack } from '@eds-ui/react';
 
 export default function Tamanhos() {
   return (
-    <Stack direction="row" wrap align="end" gap={3}>
+    <Stack direction="row" wrap align="start" gap={3}>
       <Field label="Pequeno">
         <Select size="sm">
           <option>Opção A</option>

@@ -1,0 +1,12 @@
+<form class="eds-stack eds-gap-3" action="/cadastro" method="post">
+  <div class="eds-field">
+    <label class="eds-label" for="mu-cpf">CPF</label>
+    <input id="mu-cpf" class="eds-input" name="cpf" data-eds-mask="cpf" data-eds-mask-unmask aria-describedby="mu-cpf-ajuda" />
+    <p class="eds-helper" id="mu-cpf-ajuda">Aparece como 123.456.789-00 e o servidor recebe 12345678900.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="mu-valor">Valor</label>
+    <input id="mu-valor" class="eds-input" name="valor" data-eds-mask="moeda" data-eds-mask-unmask aria-describedby="mu-valor-ajuda" />
+    <p class="eds-helper" id="mu-valor-ajuda">Aparece como R$ 1.234,56 e o servidor recebe 1234.56.</p>
+  </div>
+</form>

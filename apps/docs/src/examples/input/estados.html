@@ -1,7 +1,8 @@
 <div class="eds-grid eds-grid-auto">
   <div class="eds-field">
     <label class="eds-label" for="in-erro">Telefone</label>
-    <input id="in-erro" class="eds-input" type="tel" autocomplete="tel" aria-invalid="true" aria-describedby="in-erro-msg" value="1234" />
+    <input id="in-erro" class="eds-input" type="tel" data-eds-mask="telefone" aria-invalid="true" aria-describedby="in-erro-ajuda in-erro-msg" value="(11) 9876" />
+    <p class="eds-helper" id="in-erro-ajuda">Com DDD. Ex.: (11) 98765-4321</p>
     <p class="eds-error" id="in-erro-msg">Informe o telefone com DDD.</p>
   </div>
   <div class="eds-field">

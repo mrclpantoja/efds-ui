@@ -94,6 +94,13 @@
     }
   }
 
+  /* Máscara de moeda/número (data-eds-mask no HTML e no React): o valor se alinha ao fim e os
+     algarismos têm largura fixa, para as casas decimais alinharem em colunas de formulário. */
+  .eds-input:is([data-eds-mask='moeda'], [data-eds-mask='numero']) {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
   .eds-input-sm {
     --_input-height: var(--eds-control-height-sm);
   }

@@ -18,7 +18,7 @@ init(root?: ParentNode = document, options?: BehaviorOptions): () => void  // de
 configure({ messages?, loader? }): void
 toast(options): number;  toast.dismiss(id);  toast.dismissAll()
 loader.start(opts?): () => void;  loader.track(promise, opts?): Promise;  loader.reset()
-initTabs | initModal | initDropdown | initAlert | initTable | initTableFilter | initSidebar | initCombobox | initDatepicker | initButtonBusy (root?) => destroy
+initTabs | initModal | initDropdown | initAlert | initTable | initTableFilter | initSidebar | initCombobox | initDatepicker | initButtonBusy | initMask (root?) => destroy
 initToast() | initLoader() => destroy   // sistemas globais, contados por referência
 ```
 
@@ -96,6 +96,8 @@ toXlsx(data, { title }); // Uint8Array    toPdf(data, { title, subtitle }); // U
 | PDF     | PDF 1.4 próprio, Helvetica e Helvetica-Bold (`WinAnsiEncoding`, sem fonte embutida). A4 retrato; **paisagem automática** se a largura natural das colunas passar da útil do retrato (fonte cai de 8,5 para 7 pt se ainda não couber). Título, subtítulo, "Gerado em dd/mm/aaaa hh:mm", cabeçalho repetido a cada página, linhas zebradas e grade finas, quebra de linha na célula (medida com as larguras AFM da Helvetica embutidas em `afm.ts`), números à direita, rodapé "Página N de M". **Caracteres fora do WinAnsi (emoji, ideogramas, símbolos raros) viram `?`**; acentos do português, `€` e aspas tipográficas do CP1252 funcionam. Uma linha mais alta que a página é cortada com reticências. Sem compressão: arquivos maiores que o necessário. |
 
 **Subcaminho `@eds-ui/behavior/export`**: `exports["./export"]` (`src/export-entry.ts`) reexporta só `exportData`, `toCsv`, `toJson`, `toXlsx`, `toPdf`, os tipos e os textos (`getMessages`, `format`). Não importa `init`, auto-init nem os outros módulos; o `@eds-ui/react` depende do behavior só por ele. Condições: `development` (código-fonte, para typecheck e testes do monorepo, via `customConditions` no tsconfig do react), `types` e `default` (`dist/export-entry.js`); `publishConfig.exports` tira a `development`. Com `sideEffects: false` o bundler leva só o que o consumidor usa.
+
+**Subcaminho `@eds-ui/behavior/mask`**: `exports["./mask"]` (`src/mask-entry.ts`) reexporta só `createMask`, `isMaskName`, `MASK_NAMES` e os tipos; mesmas condições do `/export`. Os apps do monorepo (docs e playground) precisam do alias `@eds-ui/behavior/mask` antes do `@eds-ui/behavior`.
 
 **Limites verificados nos geradores**: XLSX com data anterior a 01/03/1900 grava texto (o Excel conta um 29/02/1900 inexistente e não tem série para antes de 1900); PDF reduz a fonte do corpo de 8,5 para 7 pt, uma vez, quando as colunas não cabem na página (e, se ainda não couberem, a palavra é cortada na largura da coluna); as larguras da Helvetica e da Helvetica-Bold conferem com as tabelas AFM padrão (teste de referência em `export.test.ts`).
 
@@ -192,6 +194,18 @@ Padrão APG "combobox com lista, autocomplete=list". Markup em `packages/core/sr
 - Tamanho em pt-BR: "850 KB", "1,2 MB".
 - Eventos no `.eds-upload`: `eds:upload-change` (`detail`: `File[]` válidos), `eds:upload-progress` (`{ file, percent }`), `eds:upload-complete` (`{ file, response }`), `eds:upload-error` (`{ file, message }`).
 - Textos: `uploadAddedOne/Many`, `uploadRemoved`, `uploadSent`, `uploadRejected`, `uploadMaxFiles`, `uploadTooLarge`, `uploadBadType`, `uploadFailed`, `uploadSending`, `uploadDone`, `uploadRemove`, `uploadRetry`, `uploadRetryLabel`, `uploadDuplicate`, `uploadNotAddedOne/Many`, `uploadSingleOnly`, `uploadFailedPending`, `uploadSendingLabel`, `uploadBusy`, `uploadRequired` (em `configure({ messages })`).
+
+### Máscara de entrada (`data-eds-mask`)
+
+`input[data-eds-mask]` (`maskBehavior`, `initMask`). A lógica está no núcleo puro `core/mask.ts` (sem DOM, `createMask(spec, options)`), exposto no subcaminho `@eds-ui/behavior/mask` para o `@eds-ui/react` não duplicar nada.
+
+- **Modelo**: do texto do campo se extraem os caracteres significativos (dígitos, letras) e o texto mascarado é sempre reescrito a partir deles; a extração é consciente dos literais (um literal que também é dígito não vira significativo) e posicional (a posição 13 do CNPJ só aceita dígito). Os literais entram quando o próximo caractere é digitado e nunca sobram no fim.
+- **Cursor**: nas máscaras de padrão, o cursor volta para depois do n-ésimo significativo que havia antes dele (a técnica do `datepicker`); na moeda, conta os dígitos **depois** do cursor, porque os zeros à esquerda aparecem e somem. Edição sem mudar os significativos (`deleteContentBackward`/`Forward` sobre um literal) apaga o significativo vizinho: o Backspace sobre `-` apaga o dígito anterior.
+- **Colar**: o `paste` é tratado aqui (não passa pelo corte do `maxlength`) e dispara um `input` para frameworks. Telefone remove o `+55` ao colar no campo todo; moeda lê o texto como número (`1234.56`, `1.234,56` e `R$ 1.234,56` dão o mesmo; um inteiro como `1234` vale R$ 1.234,00, não 12,34).
+- **Valor**: por padrão o que aparece. `data-eds-mask-unmask` troca o `name` por um hidden (`data-eds-mask-raw`) que acompanha `disabled`; o `name` volta no `destroy`. Valor posto por script é refeito no `blur`, no `change` e no `submit`; `reset` do formulário refaz o valor inicial. Valor inicial vindo do servidor sem máscara também é formatado.
+- **Atributos**: `inputmode` (`tel`, `numeric`, `decimal`; `text` no CNPJ e CPF/CNPJ, pelas letras, e na moeda com negativo, para alcançar o `-`), `autocomplete` (só telefone e CEP) e `maxlength` (nunca na moeda e no número) só se o autor não os pôs; desfeitos no `destroy`.
+- **Sem anúncio por tecla** e sem validação; evento `eds:mask-change` (`{ value, raw }`). Composição de IME (`isComposing`) não é mascarada até terminar.
+- **Limitações**: o campo cheio não aceita dígito inserido no meio (o `maxlength` impede; selecionar e digitar por cima funciona); letras acentuadas perdem o acento nas posições de letra (`ç` vira `C`); não há máscara de data aqui (use DatePicker ou o campo de data nativo).
 
 ### Diálogos rápidos (alert, confirm, prompt)
 

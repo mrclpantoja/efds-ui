@@ -8,7 +8,7 @@ const cidades = [
 
 export default function Estados() {
   return (
-    <Stack direction="row" wrap align="end" gap={3}>
+    <Stack direction="row" wrap align="start" gap={3}>
       <Field label="Pequeno">
         <Combobox size="sm" options={cidades} />
       </Field>

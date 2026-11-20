@@ -385,7 +385,7 @@ export default function DialogsPage() {
             {
               name: '.eds-alert-dialog',
               effect:
-                'Com .eds-modal: caixa centralizada de cerca de 26rem (100% menos margens a 320px), conteúdo centralizado e entrada por escala e opacidade (sem animação em reduced-motion).',
+                'Com .eds-modal: caixa centralizada de cerca de 26rem (100% menos margens a 320px), conteúdo centralizado; aparece e some sem animação (o diálogo é criado e destruído a cada chamada, e chamadas em sequência não se sobrepõem).',
             },
             {
               name: '.eds-alert-dialog[data-variant="info | success | warning | danger | question"]',

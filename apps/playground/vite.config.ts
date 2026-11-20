@@ -11,8 +11,9 @@ export default defineConfig({
   server: { host: '127.0.0.1' },
   resolve: {
     alias: {
-      // O subpath vem antes: o alias de prefixo pegaria '@eds-ui/behavior/export'.
+      // O subpath vem antes: o alias de prefixo pegaria '@eds-ui/behavior/export' e '/mask'.
       '@eds-ui/behavior/export': fromSource('../../packages/behavior/src/export-entry.ts'),
+      '@eds-ui/behavior/mask': fromSource('../../packages/behavior/src/mask-entry.ts'),
       '@eds-ui/behavior': fromSource('../../packages/behavior/src/index.ts'),
       '@eds-ui/react': fromSource('../../packages/react/src/index.ts'),
       '@eds-ui/icons': fromSource('../../packages/icons/src/index.ts'),

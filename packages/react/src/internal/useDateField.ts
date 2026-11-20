@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   type ChangeEvent,
+  type ClipboardEvent,
   type RefObject,
 } from 'react';
 import { formatBR, isoToBRIfPasted, maskBR, parseBR, toIso } from './calendar-shared';
@@ -75,6 +76,16 @@ export function useDateField({
       input.setSelectionRange(pos, pos);
   }, [caretTick, inputRef]);
 
+  const apply = (masked: string) => {
+    setText(masked);
+    const date = parseBR(masked);
+    const next = date && !check(date) ? toIso(date) : '';
+    if (next !== iso) {
+      lastIso.current = next;
+      commit(next);
+    }
+  };
+
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const raw = isoToBRIfPasted(event.target.value);
     const masked = maskBR(raw);
@@ -83,13 +94,17 @@ export function useDateField({
       caret.current = caretAfterDigits(masked, raw.slice(0, cursor).replace(/\D/g, '').length);
       setCaretTick((n) => n + 1);
     }
-    setText(masked);
-    const date = parseBR(masked);
-    const next = date && !check(date) ? toIso(date) : '';
-    if (next !== iso) {
-      lastIso.current = next;
-      commit(next);
-    }
+    apply(masked);
+  };
+
+  // Colar uma data reconhecível (dd/mm/aaaa ou ISO, com espaços em volta) substitui o campo
+  // inteiro sem passar pelo maxlength, que cortaria o texto antes da máscara. Igual ao behavior.
+  const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
+    if (event.defaultPrevented) return;
+    const pasted = isoToBRIfPasted(event.clipboardData.getData('text')).trim();
+    if (!parseBR(pasted)) return;
+    event.preventDefault();
+    apply(pasted);
   };
 
   return {
@@ -106,6 +121,7 @@ export function useDateField({
     inputProps: {
       value: text,
       onChange,
+      onPaste,
       onBlur: () => setTouched(true),
     },
   };

@@ -16,6 +16,13 @@ export interface Messages {
   selectedNone: string;
   selectedOne: string;
   selectedMany: string;
+  /** Filtro da Table: `{count}` e `{query}`. */
+  tableFilterMany: string;
+  tableFilterOne: string;
+  tableFilterNone: string;
+  tableFilterCleared: string;
+  tableFilterClearedOne: string;
+  tableFilterEmpty: string;
   /** Combobox: `{count}`. */
   comboResultsMany: string;
   comboResultsOne: string;
@@ -105,6 +112,12 @@ export const defaultMessages: Messages = {
   selectedNone: 'Nenhum item selecionado.',
   selectedOne: '1 item selecionado.',
   selectedMany: '{count} itens selecionados.',
+  tableFilterMany: '{count} resultados.',
+  tableFilterOne: '1 resultado.',
+  tableFilterNone: 'Nenhum resultado.',
+  tableFilterCleared: 'Filtro removido. {count} linhas.',
+  tableFilterClearedOne: 'Filtro removido. 1 linha.',
+  tableFilterEmpty: 'Nenhum resultado para "{query}".',
   comboResultsMany: '{count} resultados disponíveis.',
   comboResultsOne: '1 resultado disponível.',
   comboNoResults: 'Nenhum resultado.',

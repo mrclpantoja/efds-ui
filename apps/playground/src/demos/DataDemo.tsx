@@ -1,9 +1,7 @@
-import { useId, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
+import { useId, type CSSProperties, type ReactNode } from 'react';
 
 type Status = 'success' | 'warning' | 'danger' | 'neutral';
 type Order = { code: string; client: string; status: Status; label: string; total: number };
-type SortKey = 'code' | 'client' | 'total';
-type SortDir = 'ascending' | 'descending';
 
 const orders: Order[] = [
   { code: 'PED-0001', client: 'Atelier Exemplo', status: 'success', label: 'Pago', total: 1280.5 },
@@ -163,44 +161,14 @@ function Pagination({
 
 /* --------------------------- Tabela interativa --------------------------- */
 
+/* Marcação do contrato (HTML cru): ordenação, seleção e filtro vêm do @eds-ui/behavior
+   (`data-eds-live` marca a raiz que o playground liga). Os demais exemplos seguem estáticos. */
 function InteractiveTable() {
-  const captionId = useId();
-  const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({
-    key: 'code',
-    dir: 'ascending',
-  });
-  const [selected, setSelected] = useState<Set<string>>(new Set(['PED-0003']));
-
-  const rows = useMemo(() => {
-    const sorted = [...orders].sort((a, b) => {
-      const result =
-        sort.key === 'total' ? a.total - b.total : a[sort.key].localeCompare(b[sort.key], 'pt-BR');
-      return sort.dir === 'ascending' ? result : -result;
-    });
-    return sorted;
-  }, [sort]);
-
-  const allSelected = selected.size === rows.length;
-  const someSelected = selected.size > 0 && !allSelected;
-
-  const ariaSort = (key: SortKey) => (sort.key === key ? sort.dir : 'none');
-  const toggleSort = (key: SortKey) =>
-    setSort((prev) =>
-      prev.key === key
-        ? { key, dir: prev.dir === 'ascending' ? 'descending' : 'ascending' }
-        : { key, dir: 'ascending' },
-    );
-  const toggleRow = (code: string) =>
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(code)) next.delete(code);
-      else next.add(code);
-      return next;
-    });
-
+  const tableId = useId();
+  const captionId = `${tableId}-cap`;
   return (
     <Section title="Table: ordenação, seleção, números e ações">
-      <div>
+      <div data-eds-live="">
         <div className="eds-table-toolbar">
           <div
             className="eds-stack eds-stack-row eds-stack-wrap eds-gap-2"
@@ -211,6 +179,8 @@ function InteractiveTable() {
               className="eds-input eds-input-sm"
               placeholder="Buscar pedido"
               aria-label="Buscar pedido"
+              aria-controls={tableId}
+              data-eds-table-filter={tableId}
             />
             <button type="button" className="eds-button eds-button-secondary eds-button-sm">
               Filtros
@@ -220,11 +190,6 @@ function InteractiveTable() {
             className="eds-stack eds-stack-row eds-stack-wrap eds-gap-2"
             style={{ alignItems: 'center' }}
           >
-            {selected.size > 0 ? (
-              <span role="status" className="eds-text-small">
-                {selected.size} selecionado{selected.size > 1 ? 's' : ''}
-              </span>
-            ) : null}
             <button type="button" className="eds-button eds-button-primary eds-button-sm">
               Novo pedido
             </button>
@@ -233,7 +198,7 @@ function InteractiveTable() {
 
         {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- região rolável precisa de foco (WCAG 2.1.1) */}
         <div className="eds-table-wrap" role="region" aria-labelledby={captionId} tabIndex={0}>
-          <table className="eds-table">
+          <table className="eds-table" id={tableId}>
             <caption id={captionId} className="eds-table-caption eds-visually-hidden">
               Pedidos recentes, ordenáveis por código, cliente e total
             </caption>
@@ -244,40 +209,22 @@ function InteractiveTable() {
                     type="checkbox"
                     className="eds-checkbox"
                     aria-label="Selecionar todos os pedidos"
-                    checked={allSelected}
-                    ref={(el) => {
-                      if (el) el.indeterminate = someSelected;
-                    }}
-                    onChange={() =>
-                      setSelected(allSelected ? new Set() : new Set(rows.map((r) => r.code)))
-                    }
+                    data-eds-select-all
                   />
                 </th>
-                <th scope="col" aria-sort={ariaSort('code')}>
-                  <button
-                    type="button"
-                    className="eds-table-sort"
-                    onClick={() => toggleSort('code')}
-                  >
+                <th scope="col" aria-sort="ascending">
+                  <button type="button" className="eds-table-sort">
                     Código <SortIcon />
                   </button>
                 </th>
-                <th scope="col" aria-sort={ariaSort('client')}>
-                  <button
-                    type="button"
-                    className="eds-table-sort"
-                    onClick={() => toggleSort('client')}
-                  >
+                <th scope="col" aria-sort="none">
+                  <button type="button" className="eds-table-sort">
                     Cliente <SortIcon />
                   </button>
                 </th>
                 <th scope="col">Situação</th>
-                <th scope="col" className="eds-table-num" aria-sort={ariaSort('total')}>
-                  <button
-                    type="button"
-                    className="eds-table-sort"
-                    onClick={() => toggleSort('total')}
-                  >
+                <th scope="col" className="eds-table-num" aria-sort="none">
+                  <button type="button" className="eds-table-sort">
                     Total <SortIcon />
                   </button>
                 </th>
@@ -287,15 +234,15 @@ function InteractiveTable() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row) => (
+              {orders.map((row) => (
                 <tr key={row.code}>
                   <td className="eds-table-check">
                     <input
                       type="checkbox"
                       className="eds-checkbox"
                       aria-label={`Selecionar ${row.code}`}
-                      checked={selected.has(row.code)}
-                      onChange={() => toggleRow(row.code)}
+                      defaultChecked={row.code === 'PED-0003'}
+                      data-eds-select-row
                     />
                   </td>
                   <td>{row.code}</td>
@@ -304,7 +251,7 @@ function InteractiveTable() {
                     <span className={`eds-badge eds-badge-${row.status}`}>{row.label}</span>
                   </td>
                   <td className="eds-table-num">{money.format(row.total)}</td>
-                  <td className="eds-table-actions">
+                  <td className="eds-table-actions" data-eds-filter-ignore="">
                     <button
                       type="button"
                       className="eds-button eds-button-ghost eds-button-icon eds-button-sm"
@@ -320,10 +267,14 @@ function InteractiveTable() {
         </div>
 
         <div className="eds-table-footer">
-          <p>1–{rows.length} de 248</p>
+          <p>1–{orders.length} de 248</p>
           <Pagination current={1} total={25} />
         </div>
       </div>
+      <p className="eds-helper">
+        Interativa com @eds-ui/behavior: ordenar, selecionar e buscar (tente &quot;clin&quot;). O
+        filtro alcança só as linhas desta página. As demais tabelas são estáticas.
+      </p>
     </Section>
   );
 }

@@ -39,6 +39,8 @@ describe('DateRangePicker: markup e API', () => {
     expect(ref.current).toBe(group);
     expect(group).toHaveClass('eds-datepicker', 'eds-daterange', 'extra');
     expect(start).toHaveClass('eds-input', 'eds-datepicker-input');
+    expect(start).toHaveAttribute('maxlength', '10');
+    expect(end).toHaveAttribute('maxlength', '10');
     expect(start).toHaveValue('03/03/2026');
     expect(end).toHaveValue('15/03/2026');
     expect(container.querySelector('.eds-daterange-sep')).toHaveAttribute('aria-hidden', 'true');

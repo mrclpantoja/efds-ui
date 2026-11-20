@@ -41,6 +41,7 @@ describe('DatePicker: markup e API', () => {
     expect(container.querySelector('.eds-datepicker')).toBeInTheDocument();
     expect(input).toHaveClass('eds-input', 'eds-input-lg', 'eds-datepicker-input', 'extra');
     expect(input).toHaveAttribute('inputmode', 'numeric');
+    expect(input).toHaveAttribute('maxlength', '10');
     expect(input).toHaveAttribute('placeholder', 'dd/mm/aaaa');
     expect(input).toHaveAttribute('autocomplete', 'off');
     expect(input).toHaveValue('15/03/2026');
@@ -481,6 +482,18 @@ describe('DatePicker: campo de texto', () => {
     expect(input).toHaveValue('16/03/2026');
   });
 
+  it('colar data com espaços em volta não é cortada pelo maxlength', async () => {
+    const onChange = vi.fn();
+    const { user, input } = setup({ onChange });
+    input.focus();
+    await user.paste('  15/03/2026  ');
+    expect(input).toHaveValue('15/03/2026');
+    expect(onChange).toHaveBeenLastCalledWith('2026-03-15', expect.any(Date));
+    await user.clear(input);
+    await user.paste(' 2026-03-16 ');
+    expect(input).toHaveValue('16/03/2026');
+  });
+
   it('data inexistente: erro só depois do blur; mensagem nativa; hidden vazio', async () => {
     const { user, input, container } = setup({ name: 'v' });
     await user.type(input, '31022026');
@@ -602,7 +615,8 @@ describe('DatePicker: auditoria UX', () => {
 
   it('máscara preserva o cursor ao editar no meio', async () => {
     const { user, input } = setup();
-    await user.type(input, '10032026');
+    // 7 dígitos: o campo ainda não atingiu o maxlength (10) e aceita a inserção no meio.
+    await user.type(input, '1003202');
     await user.type(input, '5', { initialSelectionStart: 1, initialSelectionEnd: 1 });
     expect(input).toHaveValue('15/00/3202');
     expect(input.selectionStart).toBe(2);

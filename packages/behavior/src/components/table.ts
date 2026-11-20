@@ -167,8 +167,11 @@ export const tableBehavior: Behavior = {
 
     // ---- Seleção -----------------------------------------------------------------------
     const selectAll = () => table.querySelector<HTMLInputElement>('input[data-eds-select-all]');
-    const rowBoxes = () =>
+    const allBoxes = () =>
       Array.from(table.querySelectorAll<HTMLInputElement>('input[data-eds-select-row]'));
+    // Regra com filtro: o cabeçalho, "selecionar todos" e a contagem olham só as linhas
+    // visíveis; uma linha oculta e marcada continua marcada (e segue no envio do form).
+    const rowBoxes = () => allBoxes().filter((box) => !box.closest('tr')?.hidden);
 
     const syncAll = (): number => {
       const boxes = rowBoxes().filter((box) => !box.disabled);
@@ -205,10 +208,13 @@ export const tableBehavior: Behavior = {
         const rows = rowBoxes()
           .filter((box) => box.checked)
           .map((box) => box.closest('tr'));
-        emit(table, 'select-change', { count, rows });
+        const total = allBoxes().filter((box) => box.checked).length;
+        emit(table, 'select-change', { count, rows, total });
       },
       { signal },
     );
+    // O filtro mudou as linhas visíveis: o cabeçalho reflete as visíveis.
+    table.addEventListener('eds:table-filtered', () => void syncAll(), { signal });
     syncAll();
 
     return () => {

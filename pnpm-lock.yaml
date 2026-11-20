@@ -305,6 +305,9 @@ importers:
 
   apps/playground:
     dependencies:
+      '@eds-ui/behavior':
+        specifier: workspace:*
+        version: link:../../packages/behavior
       '@eds-ui/core':
         specifier: workspace:*
         version: link:../../packages/core

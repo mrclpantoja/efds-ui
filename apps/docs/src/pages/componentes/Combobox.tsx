@@ -85,7 +85,7 @@ export default function ComboboxPage() {
         />
       </Section>
 
-      <Section title="Fonte remota">
+      <Section title="Fonte remota (autocomplete)">
         <p>
           Quando a lista é grande ou muda no servidor, o HTML não traz as opções: aponte o{' '}
           <code>.eds-combobox</code> para um endereço com <code>data-eds-source</code>. A cada
@@ -111,7 +111,7 @@ export default function ComboboxPage() {
         </ul>
         <CodeBlock code={remotoHtml} label="Código HTML: fonte remota" />
         <Example
-          title="Busca remota (React)"
+          title="Busca remota com autocomplete (React)"
           description="No React, você busca: onInputChange recebe o texto, loading mostra o carregamento e filter={false} desliga o filtro local. Aqui a busca é simulada com uma base fictícia (Pa, Ate, Com…). Não há preview HTML da fonte remota porque este site não tem servidor."
           react={{ Component: Remoto, source: remotoSource }}
         />

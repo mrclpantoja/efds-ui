@@ -18,14 +18,14 @@ init(root?: ParentNode = document, options?: BehaviorOptions): () => void  // de
 configure({ messages?, loader? }): void
 toast(options): number;  toast.dismiss(id);  toast.dismissAll()
 loader.start(opts?): () => void;  loader.track(promise, opts?): Promise;  loader.reset()
-initTabs | initModal | initDropdown | initAlert | initTable | initSidebar | initCombobox | initDatepicker (root?) => destroy
+initTabs | initModal | initDropdown | initAlert | initTable | initTableFilter | initSidebar | initCombobox | initDatepicker (root?) => destroy
 initToast() | initLoader() => destroy   // sistemas globais, contados por referência
 ```
 
 - `init` liga tudo que existe em `root` e observa `root` com `MutationObserver`: elementos que entram são ligados, os que saem (de fato fora do `root`) são desligados. **Nada fora do `root` é ligado.** Cada elemento é ligado uma única vez por comportamento (guarda interna em `WeakMap`, sem atributo no DOM), mesmo com `init` repetido ou `root`s sobrepostos.
 - `destroy()` remove ouvintes, para o observador, aborta requisições do Combobox e, quando é o último `init`, desmonta o toast e o PageLoader (restaurando `fetch` e `XMLHttpRequest`). É idempotente.
 - Markup renderizado pelo `@eds-ui/react` não deve ser ligado por este pacote: chame `init` só no `root` do HTML cru (o site de docs usa `init(previewEl)`).
-- Textos em pt-BR; `configure({ messages })` troca qualquer um (chaves em `Messages`: `toastClose`, `severity*`, `sortedBy`, `sortAscending`, `sortDescending`, `selectedNone|One|Many`, `comboResultsMany|One`, `comboNoResults`, `comboError`, `loaderTitle`, `loaderText`). Os modelos usam `{count}`, `{column}` e `{direction}`.
+- Textos em pt-BR; `configure({ messages })` troca qualquer um (chaves em `Messages`: `toastClose`, `severity*`, `sortedBy`, `sortAscending`, `sortDescending`, `selectedNone|One|Many`, `tableFilterMany|One|None|Cleared|ClearedOne|Empty`, `comboResultsMany|One`, `comboNoResults`, `comboError`, `loaderTitle`, `loaderText`). Os modelos usam `{count}`, `{column}` e `{direction}`.
 
 ## Componentes
 
@@ -58,7 +58,8 @@ Evento `eds:tabs-change` em `.eds-tabs`: `detail { tab, panel, id }`.
 `table.eds-table`:
 
 - **Ordenação**: `button.eds-table-sort` em `th`. Ordena o `tbody` no cliente pelo texto da célula ou `data-sort-value` do `td`; reconhece número (pt-BR ou ponto decimal), data (`dd/mm/aaaa` ou ISO) e texto (`Intl.Collator('pt-BR')`, sem diferenciar acento/caixa); vazios por último. Atualiza `aria-sort` (`none` nas demais ordenáveis) e anuncia no `[role=status]`. `eds:sort` (cancelável, na tabela, `detail { column, label, direction, th }`) sai antes: com `preventDefault` o consumidor ordena (e atualiza `aria-sort`) no servidor.
-- **Seleção**: `input[data-eds-select-all]` e `input[data-eds-select-row]`: `indeterminate`, linhas desabilitadas ignoradas, contagem com plural no status. `eds:select-change`: `detail { count, rows }`.
+- **Seleção**: `input[data-eds-select-all]` e `input[data-eds-select-row]`: `indeterminate`, linhas desabilitadas ignoradas, contagem com plural no status. `eds:select-change`: `detail { count, rows, total }`. **Com filtro**, só as linhas visíveis (sem `hidden`) contam: "selecionar todos", o estado do cabeçalho, `count` e `rows` olham as visíveis; uma linha oculta e marcada continua marcada (e segue no envio do formulário), e `total` traz a contagem de marcadas incluindo as ocultas.
+- **Filtro local**: `input[data-eds-table-filter="ID-DA-TABELA"]` (com `aria-controls` e nome acessível) liga o campo a `<table id>`, mesmo fora dela (ex.: `.eds-table-toolbar`). Filtra as linhas do `tbody` por substring sem acento e sem caixa (`normalizeText`, o mesmo do Combobox) sobre o texto de todas as células, menos as com `data-eds-filter-ignore`; `data-eds-filter-columns="1,2"` (base 1) restringe as colunas. Linha que não casa recebe `hidden`. Debounce de 150 ms no `input`; Esc com texto limpa e reaplica na hora (`stopPropagation`, não fecha um Modal em volta). A ordenação mantém o filtro; linhas acrescentadas ou reordenadas depois passam pelo filtro (`MutationObserver`). Vazio: a linha com `.eds-table-empty` do próprio markup é exibida quando nada casa e oculta caso contrário; sem ela, o JS cria `tr[data-eds-filter-empty] > td.eds-table-empty[colspan] > .eds-empty > p.eds-empty-text` ("Nenhum resultado para "X"."). Status em região `role=status` própria, criada vazia logo depois do campo, só após o debounce: "3 resultados." / "1 resultado." / "Nenhum resultado." e, ao limpar, "Filtro removido. 8 linhas.". Evento `eds:table-filter` no campo: `detail { query, count }`. **Só alcança as linhas que estão no DOM**: com paginação no servidor, filtre no servidor (o campo deve enviar a consulta). Internamente a Table recebe `eds:table-filtered` (na tabela) para reler a seleção.
 - **Região de status**: a indicada por `data-eds-status="ID"` na tabela, o `[role=status]` irmão do `.eds-table-wrap` ou, na falta, um novo (oculto, vazio) logo depois do wrap.
 - **Rolagem**: `.eds-table-wrap` ganha `tabindex=0`, `role=region` e `aria-labelledby` (o `caption`) só quando rola (`ResizeObserver`).
 

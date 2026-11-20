@@ -237,6 +237,17 @@ export default function Comportamento() {
               ),
             },
             {
+              name: 'data-eds-table-filter="ID" / data-eds-filter-columns / data-eds-filter-ignore',
+              effect: (
+                <>
+                  Campo de busca (<code>input type=&quot;search&quot;</code>) que filtra as linhas
+                  da tabela <code>ID</code> no cliente, sem acento nem caixa; as colunas (base 1) e
+                  as células a ignorar são opcionais. Só alcança as linhas que estão no DOM.{' '}
+                  <a href={toHref('/componentes/table')}>Table</a>.
+                </>
+              ),
+            },
+            {
               name: 'data-eds-sidebar-collapse',
               effect: (
                 <>

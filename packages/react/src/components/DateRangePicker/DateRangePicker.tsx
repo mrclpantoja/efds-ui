@@ -300,6 +300,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
     const common = {
       type: 'text' as const,
       inputMode: 'numeric' as const,
+      maxLength: 10,
       autoComplete: 'off',
       placeholder,
       disabled,

@@ -7,6 +7,9 @@ import { UseCases } from '../../components/UseCases';
 import Basica from '../../examples/table/basica';
 import basicaHtml from '../../examples/table/basica.html?raw';
 import basicaSource from '../../examples/table/basica.tsx?raw';
+import Filtro from '../../examples/table/filtro';
+import filtroHtml from '../../examples/table/filtro.html?raw';
+import filtroSource from '../../examples/table/filtro.tsx?raw';
 import Interativa from '../../examples/table/interativa';
 import interativaHtml from '../../examples/table/interativa.html?raw';
 import interativaSource from '../../examples/table/interativa.tsx?raw';
@@ -60,6 +63,23 @@ export default function TablePage() {
           }
           html={interativaHtml}
           react={{ Component: Interativa, source: interativaSource }}
+        />
+        <Example
+          title="Busca local (filtro de linhas)"
+          description={
+            <>
+              Digite &quot;clin&quot; ou &quot;CLINICA&quot;: a busca ignora acento e caixa e olha
+              todas as células, menos as marcadas com <code>data-eds-filter-ignore</code> (ações).
+              No HTML, <code>data-eds-table-filter=&quot;ID-DA-TABELA&quot;</code> no campo liga o
+              filtro do <code>@eds-ui/behavior</code> (com o campo na toolbar ou onde for);{' '}
+              <code>data-eds-filter-columns=&quot;2,3&quot;</code> restringe às colunas 2 e 3. O
+              resultado é anunciado depois de uma pausa na digitação, e Esc limpa o campo. O filtro
+              só alcança as linhas que estão no DOM: com paginação no servidor, filtre no servidor.
+              No React, o mesmo filtro é estado do seu componente (sem API nova).
+            </>
+          }
+          html={filtroHtml}
+          react={{ Component: Filtro, source: filtroSource }}
         />
         <Example
           title="Tabela vazia"

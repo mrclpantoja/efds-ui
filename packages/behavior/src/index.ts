@@ -8,6 +8,7 @@ import { initLoader, loader, setLoaderConfig, type LoaderOptions } from './compo
 import { dialogBehavior, initModal, modalTriggerBehavior } from './components/modal';
 import { initSidebar, sidebarBehavior, sidebarCollapseBehavior } from './components/sidebar';
 import { initTable, tableBehavior } from './components/table';
+import { initTableFilter, tableFilterBehavior } from './components/table-filter';
 import { initTabs, tabsBehavior } from './components/tabs';
 import { initToast, toast } from './components/toast';
 import { initUpload, uploadBehavior } from './components/upload';
@@ -39,6 +40,7 @@ export function init(root: ParentNode = document, options?: BehaviorOptions): ()
       dropdownBehavior,
       alertDismissBehavior,
       tableBehavior,
+      tableFilterBehavior,
       sidebarBehavior,
       sidebarCollapseBehavior,
       comboboxBehavior,
@@ -77,6 +79,7 @@ export {
   initModal,
   initSidebar,
   initTable,
+  initTableFilter,
   initTabs,
   initToast,
   initUpload,

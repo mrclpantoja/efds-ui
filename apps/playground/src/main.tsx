@@ -1,5 +1,6 @@
 import { StrictMode, useEffect, useRef, useState, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
+import { init } from '@eds-ui/behavior';
 import '@fontsource-variable/inter';
 import '@eds-ui/core/index.css';
 import '@eds-ui/themes/index.css';
@@ -42,6 +43,20 @@ function Router() {
     document.title = PLAYGROUND_TITLE;
     document.getElementById('playground-titulo')?.focus();
   }, [hash]);
+
+  // O @eds-ui/behavior liga só as raízes marcadas com `data-eds-live` (exemplos em HTML cru:
+  // upload, datas, combobox, filtro da tabela). Os demais demos têm JS próprio em React e os
+  // estados forçados ficam estáticos. O loader automático fica desligado.
+  const showsPlayground = screens[hash] === undefined;
+  useEffect(() => {
+    if (!showsPlayground) return undefined;
+    const stops = Array.from(document.querySelectorAll<HTMLElement>('[data-eds-live]')).map(
+      (root) => init(root, { loader: { mode: 'manual' } }),
+    );
+    return () => {
+      for (const stop of stops) stop();
+    };
+  }, [showsPlayground]);
 
   const Screen = screens[hash];
   return Screen ? <Screen key={hash} /> : <App />;

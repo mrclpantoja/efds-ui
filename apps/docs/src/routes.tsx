@@ -126,7 +126,12 @@ export const routes: readonly DocRoute[] = [
   },
   { path: '/componentes/card', title: 'Card', section: 'componentes', page: CardPage },
   { path: '/componentes/checkbox', title: 'Checkbox', section: 'componentes', page: CheckboxPage },
-  { path: '/componentes/combobox', title: 'Combobox', section: 'componentes', page: ComboboxPage },
+  {
+    path: '/componentes/combobox',
+    title: 'Combobox (autocomplete)',
+    section: 'componentes',
+    page: ComboboxPage,
+  },
   {
     path: '/componentes/date-input',
     title: 'Date Input',

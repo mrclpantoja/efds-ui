@@ -29,7 +29,7 @@ export interface ExampleProps {
 
 /** Atributos cujo valor é (lista de) id ou referência a id. */
 const ID_ATTRS =
-  /(\s(?:id|for|form|aria-labelledby|aria-describedby|aria-controls|aria-owns|aria-activedescendant|aria-errormessage|popovertarget|list|data-eds-open|data-eds-status)=)"([^"]*)"/g;
+  /(\s(?:id|for|form|aria-labelledby|aria-describedby|aria-controls|aria-owns|aria-activedescendant|aria-errormessage|popovertarget|list|data-eds-open|data-eds-status|data-eds-table-filter)=)"([^"]*)"/g;
 
 /**
  * Dá a cada id do exemplo um sufixo único por instância, para o mesmo exemplo poder aparecer

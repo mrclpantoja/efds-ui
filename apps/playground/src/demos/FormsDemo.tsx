@@ -41,6 +41,7 @@ function ComboboxDemo({
   invalid,
   disabled,
   placement,
+  live,
 }: {
   id: string;
   label: string;
@@ -49,6 +50,8 @@ function ComboboxDemo({
   invalid?: boolean;
   disabled?: boolean;
   placement?: 'top';
+  /** Fechado e interativo: o @eds-ui/behavior assume (sem estado forçado). */
+  live?: boolean;
 }) {
   const field = useRef<HTMLDivElement>(null);
   const popup = useRef<HTMLDivElement>(null);
@@ -83,7 +86,7 @@ function ComboboxDemo({
   ];
 
   return (
-    <div className="eds-field">
+    <div className="eds-field" data-eds-live={live ? '' : undefined}>
       <label className="eds-label" htmlFor={id}>
         {label}
       </label>
@@ -118,9 +121,9 @@ function ComboboxDemo({
                 className="eds-combobox-option"
                 role="option"
                 data-value={value}
-                aria-selected={i === 1 ? 'true' : 'false'}
+                aria-selected={live ? undefined : i === 1 ? 'true' : 'false'}
                 aria-disabled={i === 3 ? 'true' : undefined}
-                data-current={i === 0 ? '' : undefined}
+                data-current={!live && i === 0 ? '' : undefined}
               >
                 {text}
               </li>
@@ -186,6 +189,7 @@ function CalendarDemo({
   disabled,
   size,
   open = true,
+  live,
 }: {
   id: string;
   label: string;
@@ -198,6 +202,8 @@ function CalendarDemo({
   disabled?: boolean;
   size?: 'sm' | 'lg';
   open?: boolean;
+  /** Fechado e interativo: o @eds-ui/behavior monta o calendário. */
+  live?: boolean;
 }) {
   const box = useRef<HTMLDivElement>(null);
   const pop = useRef<HTMLDivElement>(null);
@@ -291,7 +297,7 @@ function CalendarDemo({
   );
 
   return (
-    <div className="eds-field">
+    <div className="eds-field" data-eds-live={live ? '' : undefined}>
       {isRange ? (
         <span className="eds-label" id={`${id}-l`}>
           {label}
@@ -306,6 +312,8 @@ function CalendarDemo({
         ref={box}
         role={isRange ? 'group' : undefined}
         aria-labelledby={isRange ? `${id}-l` : undefined}
+        data-eds-datepicker={live && !isRange ? '' : undefined}
+        data-eds-daterange={live && isRange ? '' : undefined}
       >
         {isRange ? (
           <>
@@ -313,6 +321,7 @@ function CalendarDemo({
               className={`eds-input eds-datepicker-input${sizeCls}`}
               type="text"
               inputMode="numeric"
+              maxLength={10}
               aria-label="Data inicial"
               placeholder="dd/mm/aaaa"
               autoComplete="off"
@@ -326,6 +335,7 @@ function CalendarDemo({
               className={`eds-input eds-datepicker-input${sizeCls}`}
               type="text"
               inputMode="numeric"
+              maxLength={10}
               aria-label="Data final"
               placeholder="dd/mm/aaaa"
               autoComplete="off"
@@ -343,6 +353,7 @@ function CalendarDemo({
               className={`eds-input eds-datepicker-input${sizeCls}`}
               type="text"
               inputMode="numeric"
+              maxLength={10}
               placeholder="dd/mm/aaaa"
               autoComplete="off"
               defaultValue={
@@ -364,45 +375,49 @@ function CalendarDemo({
           ref={pop}
           data-placement={placement}
         >
-          <div className="eds-calendar-header">
-            <button type="button" className="eds-calendar-nav" aria-label="Mês anterior" />
-            <h2 className="eds-calendar-title" id={`${id}-cal-t`} aria-live="polite">
-              {MES}
-            </h2>
-            <button type="button" className="eds-calendar-nav" aria-label="Próximo mês" />
-          </div>
-          <div className="eds-calendar-jump">
-            <select className="eds-select eds-select-sm" aria-label="Mês" defaultValue="2">
-              <option value="1">fevereiro</option>
-              <option value="2">março</option>
-              <option value="3">abril</option>
-            </select>
-            <select className="eds-select eds-select-sm" aria-label="Ano" defaultValue="2026">
-              <option value="2025">2025</option>
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
-            </select>
-          </div>
-          <table className="eds-calendar-grid" role="grid" aria-labelledby={`${id}-cal-t`}>
-            <thead>
-              <tr>
-                {DIAS_SEMANA.map(([letra, nome]) => (
-                  <th key={nome} scope="col" abbr={nome} className="eds-calendar-weekday">
-                    {letra}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>{cells}</tbody>
-          </table>
-          <div className="eds-calendar-footer">
-            <button type="button" className="eds-button eds-button-ghost eds-button-sm">
-              Hoje
-            </button>
-            <button type="button" className="eds-button eds-button-secondary eds-button-sm">
-              Fechar
-            </button>
-          </div>
+          {!live && (
+            <>
+              <div className="eds-calendar-header">
+                <button type="button" className="eds-calendar-nav" aria-label="Mês anterior" />
+                <h2 className="eds-calendar-title" id={`${id}-cal-t`} aria-live="polite">
+                  {MES}
+                </h2>
+                <button type="button" className="eds-calendar-nav" aria-label="Próximo mês" />
+              </div>
+              <div className="eds-calendar-jump">
+                <select className="eds-select eds-select-sm" aria-label="Mês" defaultValue="2">
+                  <option value="1">fevereiro</option>
+                  <option value="2">março</option>
+                  <option value="3">abril</option>
+                </select>
+                <select className="eds-select eds-select-sm" aria-label="Ano" defaultValue="2026">
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                </select>
+              </div>
+              <table className="eds-calendar-grid" role="grid" aria-labelledby={`${id}-cal-t`}>
+                <thead>
+                  <tr>
+                    {DIAS_SEMANA.map(([letra, nome]) => (
+                      <th key={nome} scope="col" abbr={nome} className="eds-calendar-weekday">
+                        {letra}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>{cells}</tbody>
+              </table>
+              <div className="eds-calendar-footer">
+                <button type="button" className="eds-button eds-button-ghost eds-button-sm">
+                  Hoje
+                </button>
+                <button type="button" className="eds-button eds-button-secondary eds-button-sm">
+                  Fechar
+                </button>
+              </div>
+            </>
+          )}
         </div>
         <span className="eds-visually-hidden" role="status" />
       </div>
@@ -522,6 +537,7 @@ function UploadDemo({
   invalid,
   disabled,
   compact,
+  live,
   children,
 }: {
   id: string;
@@ -531,16 +547,21 @@ function UploadDemo({
   invalid?: boolean;
   disabled?: boolean;
   compact?: boolean;
+  /** Interativo: o @eds-ui/behavior liga arrastar e soltar, lista e validação. */
+  live?: boolean;
   children?: ReactNode;
 }) {
   return (
-    <div className="eds-field">
+    <div className="eds-field" data-eds-live={live ? '' : undefined}>
       <span className="eds-label" id={`${id}-l`}>
         {label}
       </span>
       <div
         className={`eds-upload${compact ? ' eds-upload-compact' : ''}`}
         data-dragover={dragover ? '' : undefined}
+        data-eds-upload={live ? '' : undefined}
+        data-eds-max-size={live ? 5 * 1024 * 1024 : undefined}
+        data-eds-max-files={live ? 5 : undefined}
       >
         <input
           id={id}
@@ -595,6 +616,7 @@ function MultiSelectDemo({
   invalid,
   disabled,
   placeholder,
+  live,
 }: {
   id: string;
   label: string;
@@ -606,6 +628,8 @@ function MultiSelectDemo({
   invalid?: boolean;
   disabled?: boolean;
   placeholder?: string;
+  /** Fechado e interativo: o @eds-ui/behavior assume. */
+  live?: boolean;
 }) {
   const box = useRef<HTMLDivElement>(null);
   const popup = useRef<HTMLDivElement>(null);
@@ -634,7 +658,7 @@ function MultiSelectDemo({
 
   const tags = cidadesMulti.filter(([v]) => chosen.includes(v));
   return (
-    <div className="eds-field">
+    <div className="eds-field" data-eds-live={live ? '' : undefined}>
       <label className="eds-label" htmlFor={id}>
         {label}
       </label>
@@ -833,15 +857,19 @@ export function FormsDemo() {
       </Section>
 
       <Section title="Combobox (autocomplete)">
+        <p className="eds-helper">
+          Interativos (com @eds-ui/behavior): Pequeno, Grande e Com erro. Os demais são estados
+          fixos.
+        </p>
         <div style={cols}>
           <ComboboxDemo id="cb-aberto" label="Cidade (aberto)" />
           <ComboboxDemo id="cb-vazio" label="Sem resultado" state="empty" />
           <ComboboxDemo id="cb-carregando" label="Carregando" state="loading" />
         </div>
         <div style={cols}>
-          <ComboboxDemo id="cb-sm" label="Pequeno" size="sm" />
-          <ComboboxDemo id="cb-lg" label="Grande" size="lg" />
-          <ComboboxDemo id="cb-erro" label="Com erro" invalid />
+          <ComboboxDemo id="cb-sm" label="Pequeno" size="sm" live />
+          <ComboboxDemo id="cb-lg" label="Grande" size="lg" live />
+          <ComboboxDemo id="cb-erro" label="Com erro" invalid live />
           <ComboboxDemo id="cb-dis" label="Desabilitado" disabled />
         </div>
         <div style={{ paddingBlockStart: '14rem' }}>
@@ -904,13 +932,17 @@ export function FormsDemo() {
       </Section>
 
       <Section title="FileUpload (arrastar e soltar)">
+        <p className="eds-helper">
+          Interativos (com @eds-ui/behavior): Documentos do contrato e a versão de uma linha. Os
+          demais são estados fixos.
+        </p>
         <div style={cols}>
-          <UploadDemo id="up-vazio" label="Documentos do contrato" />
+          <UploadDemo id="up-vazio" label="Documentos do contrato" live />
           <UploadDemo id="up-drag" label="Arrastando sobre a área (simulado)" dragover />
           <UploadDemo id="up-err" label="Com erro" invalid />
           <UploadDemo id="up-dis" label="Desabilitado" disabled />
         </div>
-        <UploadDemo id="up-compact" label="Versão de uma linha" hint="PDF até 5 MB" compact />
+        <UploadDemo id="up-compact" label="Versão de uma linha" hint="PDF até 5 MB" compact live />
         <UploadDemo id="up-lista" label="Todos os estados dos itens">
           <UploadItem
             name="proposta-comercial.pdf"
@@ -936,25 +968,30 @@ export function FormsDemo() {
       </Section>
 
       <Section title="MultiSelect (combobox múltiplo)">
+        <p className="eds-helper">
+          Interativos (com @eds-ui/behavior): Sem escolha, Com escolhidas, Com erro, Pequeno e
+          Grande. Os demais são estados fixos.
+        </p>
         <div style={cols}>
           <MultiSelectDemo
             id="ms-vazio"
             label="Sem escolha"
             chosen={[]}
             placeholder="Digite uma cidade"
+            live
           />
-          <MultiSelectDemo id="ms-escolhidas" label="Com escolhidas" chosen={['poa', 'pel']} />
+          <MultiSelectDemo id="ms-escolhidas" label="Com escolhidas" chosen={['poa', 'pel']} live />
           <MultiSelectDemo
             id="ms-quebra"
             label="Etiquetas quebram de linha"
             chosen={['poa', 'pel', 'pf', 'cax', 'sm']}
           />
-          <MultiSelectDemo id="ms-erro" label="Com erro" chosen={[]} invalid />
+          <MultiSelectDemo id="ms-erro" label="Com erro" chosen={[]} invalid live />
           <MultiSelectDemo id="ms-dis" label="Desabilitado" chosen={['poa', 'pf']} disabled />
         </div>
         <div style={cols}>
-          <MultiSelectDemo id="ms-sm" label="Pequeno" chosen={['poa']} size="sm" />
-          <MultiSelectDemo id="ms-lg" label="Grande" chosen={['poa']} size="lg" />
+          <MultiSelectDemo id="ms-sm" label="Pequeno" chosen={['poa']} size="sm" live />
+          <MultiSelectDemo id="ms-lg" label="Grande" chosen={['poa']} size="lg" live />
         </div>
         <div style={{ ...cols, paddingBlockEnd: '21rem' }}>
           <MultiSelectDemo
@@ -1078,15 +1115,19 @@ export function FormsDemo() {
           <CalendarDemo id="dp-aberto" label="Vencimento (aberto)" chosen={15} focusDay={12} />
         </div>
         <div style={cols}>
-          <CalendarDemo id="dp-fechado" label="Fechado" open={false} />
-          <CalendarDemo id="dp-erro" label="Com erro" open={false} invalid />
-          <CalendarDemo id="dp-dis" label="Desabilitado" open={false} disabled />
-          <CalendarDemo id="dp-sm" label="Pequeno" open={false} size="sm" />
-          <CalendarDemo id="dp-lg" label="Grande" open={false} size="lg" />
+          <CalendarDemo id="dp-fechado" label="Fechado" open={false} live />
+          <CalendarDemo id="dp-erro" label="Com erro" open={false} invalid live />
+          <CalendarDemo id="dp-dis" label="Desabilitado" open={false} disabled live />
+          <CalendarDemo id="dp-sm" label="Pequeno" open={false} size="sm" live />
+          <CalendarDemo id="dp-lg" label="Grande" open={false} size="lg" live />
         </div>
         <p className="eds-helper">
           Março de 2026: hoje = 18, escolhido = 15, indisponíveis = 4, 21 e 28. O anel de foco
           aparece ao navegar com Tab e setas.
+        </p>
+        <p className="eds-helper">
+          Interativos (com @eds-ui/behavior): Fechado, Com erro, Desabilitado, Pequeno e Grande.
+          Estados fixos, sem JavaScript: o calendário aberto e "Abre para cima".
         </p>
         <div style={{ paddingBlockStart: '25rem' }}>
           <CalendarDemo id="dp-topo" label="Abre para cima" chosen={15} placement="top" />
@@ -1112,9 +1153,13 @@ export function FormsDemo() {
           />
         </div>
         <div style={cols}>
-          <CalendarDemo id="dr-fechado" label="Fechado" mode="range" open={false} />
-          <CalendarDemo id="dr-dis" label="Desabilitado" mode="range" open={false} disabled />
+          <CalendarDemo id="dr-fechado" label="Fechado" mode="range" open={false} live />
+          <CalendarDemo id="dr-dis" label="Desabilitado" mode="range" open={false} disabled live />
         </div>
+        <p className="eds-helper">
+          Interativos (com @eds-ui/behavior): Fechado e Desabilitado. Estados fixos, sem JavaScript:
+          o período escolhido e a prévia, com o calendário aberto.
+        </p>
       </Section>
 
       <Section title="Textarea e Select">

@@ -226,6 +226,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
           ref={mergeRefs(ref, inputRef)}
           type="text"
           inputMode="numeric"
+          maxLength={10}
           placeholder={placeholder}
           className={cx(
             'eds-input',
@@ -239,6 +240,10 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
           disabled={disabled}
           readOnly={readOnly}
           {...field.inputProps}
+          onPaste={(event) => {
+            rest.onPaste?.(event);
+            field.inputProps.onPaste(event);
+          }}
           onBlur={(event) => {
             field.inputProps.onBlur();
             onBlur?.(event);

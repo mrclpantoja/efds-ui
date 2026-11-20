@@ -278,6 +278,7 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
   fields.forEach((input) => {
     if (!input.hasAttribute('autocomplete')) input.setAttribute('autocomplete', 'off');
     if (!input.hasAttribute('inputmode')) input.setAttribute('inputmode', 'numeric');
+    if (!input.hasAttribute('maxlength')) input.setAttribute('maxlength', '10');
     input.addEventListener(
       'input',
       () => {

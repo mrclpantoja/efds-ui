@@ -93,6 +93,7 @@ describe('datepicker: campo de texto', () => {
     const user = userEvent.setup();
     await user.type(input(), '1a5/0b3/20269999');
     expect(input()).toHaveValue('15/03/2026');
+    expect(input()).toHaveAttribute('maxlength', '10');
   });
 
   it('cola dd/mm/aaaa e ISO', async () => {

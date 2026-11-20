@@ -50,7 +50,7 @@ CHANGELOG.md    histórico de versões
 
 ## Publicação
 
-Os pacotes `@eds-ui/core`, `@eds-ui/themes`, `@eds-ui/react`, `@eds-ui/icons` e `@eds-ui/behavior` estão na versão 0.1.0, mas **não são publicados**: seguem `"private": true` até a verificação do nome/escopo `@eds-ui` no npm. Licença: [MIT](LICENSE). `pnpm pack:check` garante que cada tarball é consumível (alvos de `exports` existem, sem testes, `src` ou `workspace:` dentro).
+Os pacotes `@eds-ui/core`, `@eds-ui/themes`, `@eds-ui/react`, `@eds-ui/icons` e `@eds-ui/behavior` estão na versão 0.1.0, mas **não são publicados**: seguem `"private": true` até a verificação do nome/escopo `@eds-ui` no npm. Licença: [MIT](LICENSE); o texto da documentação está sob CC BY 4.0 ([`apps/docs/LICENSE.md`](apps/docs/LICENSE.md)). `pnpm pack:check` garante que cada tarball é consumível (alvos de `exports` existem, sem testes, `src` ou `workspace:` dentro).
 
 Nos pacotes de CSS (`core`, `themes`), o `package.json` do repositório mantém a condição `development` (aponta para `src`, útil no monorepo); o tarball a remove via `publishConfig.exports` e leva só `dist/`. O `@eds-ui/react` não importa CSS: o consumidor importa o do core.
 

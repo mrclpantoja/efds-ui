@@ -8,7 +8,8 @@ const fromSource = (path: string) => fileURLToPath(new URL(path, import.meta.url
 export default defineConfig({
   plugins: [react()],
   // IPv4 explícito: o Firefox resolve localhost para 127.0.0.1 e o padrão do Vite escuta só em ::1.
-  server: { host: '127.0.0.1' },
+  // Porta fixa: o playground usa a 5173 e os roteiros apontam para a 5199.
+  server: { host: '127.0.0.1', port: 5199 },
   resolve: {
     alias: {
       // O subpath vem antes: o alias de prefixo pegaria '@eds-ui/behavior/export'.

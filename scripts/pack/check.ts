@@ -101,7 +101,7 @@ export function checkTarball(
   if (expectedVersion && manifest.version !== expectedVersion) {
     problems.push(`versão ${manifest.version ?? '(ausente)'} (esperada ${expectedVersion})`);
   }
-  for (const required of ['package.json', 'README.md']) {
+  for (const required of ['package.json', 'README.md', 'LICENSE']) {
     if (!files.includes(required)) problems.push(`falta ${required}`);
   }
   if (!files.some((f) => f.startsWith('dist/'))) problems.push('falta dist/');

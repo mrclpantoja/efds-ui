@@ -11,6 +11,21 @@ Use **somente os dados fictícios** do site. Não digite dados reais em nenhum c
 - Na fala, o "esperado" é aproximado: o que importa é a informação (nome, papel, estado), não a palavra exata. O NVDA fala "botão", "caixa de combinação", "alerta" etc.
 - Nos itens marcados "Validar", anote também se o anúncio saiu duplicado, ausente ou tardio, mesmo que o resultado pareça aceitável.
 
+## Ordem sugerida em sessões curtas
+
+O roteiro inteiro leva cerca de 3 h 30. Faça-o em sessões, na ordem abaixo: as primeiras não exigem aprender o NVDA e já cobrem o que mais pode quebrar (Firefox e os arquivos exportados). Ao fim de cada sessão, envie as falhas no modelo da seção 6; elas são corrigidas antes da sessão seguinte.
+
+| Sessão | Tempo   | O que fazer                                                                                                      | Precisa de                    |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| 1      | ~40 min | Seção 3, coluna **Firefox** (só teclado e olhos) + seção 2.13 (abrir os arquivos exportados)                     | Firefox, Excel ou LibreOffice |
+| 2      | ~30 min | Seção 4 (alto contraste, animação reduzida, zoom 200% e 320px) em Firefox e Edge                                 | Configurações do Windows      |
+| 3      | ~60 min | Seção 1.2 (instalar o NVDA) + seções 2.1 a 2.8 com NVDA + Firefox (é o critério de saída da Fase 7)              | NVDA                          |
+| 4      | ~60 min | Seções 2.9 a 2.12 com NVDA + Firefox (diálogos rápidos, Sortable e Tree, os componentes mais novos)              | NVDA                          |
+| 5      | ~20 min | Toque real: 2.11 e 2.12 num celular ou tablet (segurar 400 ms para pegar, arrastar, rolar a página sem arrastar) | Celular na mesma rede Wi-Fi   |
+| 6      | opc.    | Seção 3, colunas Chrome/Edge (itens restantes) e seção 1.4 (Safari/VoiceOver), se houver Mac ou iPhone           | —                             |
+
+Para a sessão 5, o site precisa aceitar conexões da rede local (por padrão escuta só em `127.0.0.1`). Rode `pnpm --filter @eds-ui/docs dev --host 0.0.0.0`, abra no celular o endereço "Network" que o terminal mostrar e **pare o servidor ao terminar** (Ctrl+C), para não deixá-lo exposto na rede.
+
 ## 1. Preparação (cerca de 15 min)
 
 ### 1.1 Servidores
@@ -21,7 +36,7 @@ No terminal, na raiz do projeto:
 pnpm docs:dev
 ```
 
-Site em `http://localhost:5173` (ou `5199` se já houver outro servidor; leia a porta que o terminal mostrar). As rotas usam hash: `http://localhost:5173/#/componentes/combobox`.
+Site em `http://127.0.0.1:5199` (use `127.0.0.1`, não `localhost`: o servidor escuta só em IPv4 e o Firefox pode não alcançar `localhost`). As rotas usam hash: `http://127.0.0.1:5199/#/componentes/combobox`. Se o terminal disser que a porta já está em uso, o site já está no ar: abra o endereço direto.
 
 Em outro terminal:
 
@@ -29,7 +44,7 @@ Em outro terminal:
 pnpm dev
 ```
 
-Playground com as telas de referência: `#/dashboard`, `#/listagem`, `#/formulario` (use a porta mostrada). Anote as duas portas:
+Playground com as telas de referência em `http://127.0.0.1:5173`: `#/dashboard`, `#/listagem`, `#/formulario`. Se o terminal mostrar outra porta, anote:
 
 - Docs: `________`
 - Playground: `________`

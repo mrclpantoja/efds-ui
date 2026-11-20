@@ -4,3 +4,6 @@ coverage
 *.log
 .DS_Store
 documentos do projeto/
+
+# Documento interno de negócios (decisão do usuário: fora do repositório)
+docs/ParecerNegocios.md

@@ -4,7 +4,7 @@ Todas as mudanças relevantes do eDS.ui. Mantido à mão. Versão única para `@
 
 ## 0.1.0 (MVP, ainda não publicado)
 
-Pré-lançamento: os pacotes seguem `private` e `UNLICENSED` até a decisão de licença e de nome/escopo `@eds-ui`.
+Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escopo `@eds-ui`. Licença: MIT.
 
 ### @eds-ui/core
 
@@ -33,7 +33,8 @@ Pré-lançamento: os pacotes seguem `private` e `UNLICENSED` até a decisão de 
 
 ### Empacotamento
 
-- Tarballs só com `dist/` (mais `package.json` e `README.md`); `pnpm pack:check` valida o conteúdo, os alvos de `exports` e a ausência de `workspace:`.
+- Tarballs só com `dist/` (mais `package.json`, `README.md` e `LICENSE`); `pnpm pack:check` valida o conteúdo, exige o `LICENSE`, confere os alvos de `exports` e a ausência de `workspace:`.
+- Licença MIT: `LICENSE` na raiz e em cada pacote publicável; `"license": "MIT"` em todos os `package.json`.
 - A fonte Inter e o CSS do core ficam por conta do consumidor.
 
 ### @eds-ui/behavior

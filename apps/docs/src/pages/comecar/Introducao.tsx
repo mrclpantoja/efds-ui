@@ -112,6 +112,15 @@ export default function Introducao() {
           npm. Todos os dados de exemplo são fictícios.
         </p>
       </Section>
+
+      <Section title="Licença">
+        <p>
+          O código dos pacotes e os exemplos de código desta documentação estão sob a licença MIT. O
+          texto da documentação está sob a licença Creative Commons Atribuição 4.0 Internacional (CC
+          BY 4.0): pode ser copiado e adaptado, inclusive para uso comercial, desde que se dê o
+          crédito ao eDS.ui.
+        </p>
+      </Section>
     </>
   );
 }

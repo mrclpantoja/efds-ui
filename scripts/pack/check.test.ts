@@ -17,7 +17,13 @@ const cssManifest: PackManifest = {
     './components/*.css': './dist/components/*.css',
   },
 };
-const cssFiles = ['package.json', 'README.md', 'dist/index.css', 'dist/components/button.css'];
+const cssFiles = [
+  'package.json',
+  'README.md',
+  'LICENSE',
+  'dist/index.css',
+  'dist/components/button.css',
+];
 
 describe('manifestTargets', () => {
   it('reúne exports aninhados, main e types, sem repetir', () => {
@@ -90,9 +96,14 @@ describe('checkTarball', () => {
       ]),
     );
   });
-  it('exige README, package.json e dist/', () => {
+  it('exige README, LICENSE, package.json e dist/', () => {
     expect(checkTarball({ version: '0.1.0' }, [])).toEqual(
-      expect.arrayContaining(['falta package.json', 'falta README.md', 'falta dist/']),
+      expect.arrayContaining([
+        'falta package.json',
+        'falta README.md',
+        'falta LICENSE',
+        'falta dist/',
+      ]),
     );
   });
   it('acusa workspace: no manifest empacotado', () => {

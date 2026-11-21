@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent } from 'react';
-import { Field, Grid, Input, InputGroup, Spinner, useCep } from '@eds-ui/react';
+import { Field, Grid, Input, InputGroup, Spinner, useCep } from '@efds-ui/react';
 
 // O serviço de CEP é escolha de quem implanta: aqui, um mock local da documentação (dados
 // fictícios; 90010100 existe, 00000000 não e 99999999 simula falha de rede).

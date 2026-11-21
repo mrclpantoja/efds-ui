@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Stack } from '@eds-ui/react';
+import { Button, ButtonGroup, Stack } from '@efds-ui/react';
 
 export default function Variantes() {
   return (

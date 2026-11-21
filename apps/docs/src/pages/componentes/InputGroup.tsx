@@ -91,7 +91,7 @@ export default function InputGroupPage() {
           rows={[
             {
               name: 'data-eds-number',
-              effect: 'No .eds-number: liga os botões e o teclado (@eds-ui/behavior).',
+              effect: 'No .eds-number: liga os botões e o teclado (@efds-ui/behavior).',
             },
             {
               name: 'min, max, step (no input) ou data-eds-number-min/-max/-step',

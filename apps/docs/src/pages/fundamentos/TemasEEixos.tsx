@@ -10,10 +10,10 @@ import Subarvore from '../../examples/temas/subarvore';
 import subarvoreHtml from '../../examples/temas/subarvore.html?raw';
 import subarvoreSource from '../../examples/temas/subarvore.tsx?raw';
 
-const importSeletivo = `import '@eds-ui/themes/theme-green.css';   // só o tema verde
-import '@eds-ui/themes/mode-dark.css';      // só o modo escuro`;
+const importSeletivo = `import '@efds-ui/themes/theme-green.css';   // só o tema verde
+import '@efds-ui/themes/mode-dark.css';      // só o modo escuro`;
 
-const usoTemaPorCor = `import { createTheme, applyTheme } from '@eds-ui/behavior/theme';
+const usoTemaPorCor = `import { createTheme, applyTheme } from '@efds-ui/behavior/theme';
 
 // Só gera (CSS em string, para guardar no servidor ou injetar)
 const { css, checks, adjusted } = createTheme('#2F6F5E');
@@ -176,8 +176,9 @@ export default function TemasEEixos() {
 
       <Section title="Importação seletiva">
         <p>
-          O <code>@eds-ui/themes/index.css</code> traz todos os valores. Para reduzir o CSS, importe
-          só os que a aplicação usa; mantenha os valores padrão se a aplicação puder voltar a eles.
+          O <code>@efds-ui/themes/index.css</code> traz todos os valores. Para reduzir o CSS,
+          importe só os que a aplicação usa; mantenha os valores padrão se a aplicação puder voltar
+          a eles.
         </p>
         <CodeBlock code={importSeletivo} label="Importação seletiva de temas" />
       </Section>

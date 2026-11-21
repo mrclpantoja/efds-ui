@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -43,7 +43,7 @@ export default function PopoverPage() {
           <p>
             O botão usa <code>popovertarget</code> e o painel <code>popover</code> (modo{' '}
             <code>auto</code>). Com <code>data-eds-popover</code> no botão, o{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> posiciona o painel (
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> posiciona o painel (
             <code>--_popover-x</code> e <code>--_popover-y</code>, já com folga e dentro da
             viewport), sincroniza <code>aria-expanded</code> e devolve o foco ao botão ao fechar. O
             valor do atributo pede o lado (<code>data-eds-popover=&quot;top&quot;</code>;{' '}

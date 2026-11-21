@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -51,7 +51,7 @@ export default function AccordionPage() {
           <p>
             Abrir, fechar, o teclado (Enter e Espaço no <code>&lt;summary&gt;</code>) e o grupo
             exclusivo (<code>name</code>) são do navegador. Só o item indisponível precisa do{' '}
-            <code>@eds-ui/behavior</code>, que impede o <code>aria-disabled=&quot;true&quot;</code>{' '}
+            <code>@efds-ui/behavior</code>, que impede o <code>aria-disabled=&quot;true&quot;</code>{' '}
             de alternar; sem ele o item abriria mesmo marcado como indisponível.
           </p>
         </Alert>

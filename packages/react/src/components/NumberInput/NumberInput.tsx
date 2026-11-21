@@ -11,8 +11,8 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from 'react';
-import { clampNumber, decimalsOf, stepNumber } from '@eds-ui/behavior/fields';
-import { createMask } from '@eds-ui/behavior/mask';
+import { clampNumber, decimalsOf, stepNumber } from '@efds-ui/behavior/fields';
+import { createMask } from '@efds-ui/behavior/mask';
 import { useAnnouncer } from '../../internal/announcer';
 import { MinusGlyph, PlusGlyph } from '../../internal/glyphs-c1';
 import { mergeRefs } from '../../internal/refs-d';

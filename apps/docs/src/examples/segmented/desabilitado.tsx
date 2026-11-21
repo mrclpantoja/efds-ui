@@ -1,4 +1,4 @@
-import { SegmentedControl, Stack } from '@eds-ui/react';
+import { SegmentedControl, Stack } from '@efds-ui/react';
 
 export default function Desabilitado() {
   return (

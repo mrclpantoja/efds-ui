@@ -1,6 +1,6 @@
 /**
  * Formatadores de exibição (funções puras, sem DOM), usados pelo behavior (`data-eds-format`) e
- * reexportados pelo `@eds-ui/react`. Todos aceitam `locale` (padrão: o do `configure`, `pt-BR`).
+ * reexportados pelo `@efds-ui/react`. Todos aceitam `locale` (padrão: o do `configure`, `pt-BR`).
  * Valor ausente ou que não se reconhece vira `''`, nunca "NaN" nem "Invalid Date".
  *
  * Datas só com dia (`2026-03-15` ou `15/03/2026`) são locais, sem deslocamento de fuso.

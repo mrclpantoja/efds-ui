@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { Section } from '../../components/Section';
@@ -36,7 +36,7 @@ export default function ConditionalPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Behavior @eds-ui/behavior">
+        <Alert variant="info" title="Behavior @efds-ui/behavior">
           <p>
             O elemento oculto recebe <code>hidden</code> e os campos dentro dele ficam{' '}
             <code>disabled</code> (não vão no envio nem entram na validação); ao reaparecer, voltam

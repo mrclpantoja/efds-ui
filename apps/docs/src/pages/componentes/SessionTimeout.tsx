@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -51,7 +51,7 @@ export default function SessionTimeoutPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Behavior @eds-ui/behavior">
+        <Alert variant="info" title="Behavior @efds-ui/behavior">
           <p>
             Qualquer atividade (ponteiro, teclado, rolagem) reinicia a contagem. Faltando{' '}
             <code>warnBefore</code> segundos abre um <code>alertdialog</code> modal com{' '}

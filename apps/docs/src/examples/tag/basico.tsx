@@ -1,4 +1,4 @@
-import { Tag } from '@eds-ui/react';
+import { Tag } from '@efds-ui/react';
 
 export default function Basico() {
   return (

@@ -1,4 +1,4 @@
-import { Button } from '@eds-ui/react';
+import { Button } from '@efds-ui/react';
 
 /** Estado "copiado" estático, só para ver o visual: o CopyButton aplica `data-copied` por 2 s. */
 export default function Copiado() {

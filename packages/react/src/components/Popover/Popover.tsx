@@ -7,7 +7,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { popoverBehavior, type Placement } from '@eds-ui/behavior/balloon';
+import { popoverBehavior, type Placement } from '@efds-ui/behavior/balloon';
 import { cx } from '../../utils/cx';
 
 export type PopoverPlacement = Placement;
@@ -41,7 +41,7 @@ export type PopoverProps = PopoverBase &
 
 /**
  * Popover nativo (`popover="auto"`): clique fora e Esc fecham sem JS. O posicionamento, o
- * `aria-expanded` e o foco de volta ao gatilho vêm do mesmo código do `@eds-ui/behavior`.
+ * `aria-expanded` e o foco de volta ao gatilho vêm do mesmo código do `@efds-ui/behavior`.
  * Conteúdo curto e opcional: nada essencial só aqui.
  */
 export function Popover({

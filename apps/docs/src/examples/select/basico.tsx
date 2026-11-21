@@ -1,4 +1,4 @@
-import { Field, Grid, Select } from '@eds-ui/react';
+import { Field, Grid, Select } from '@efds-ui/react';
 
 export default function Basico() {
   return (

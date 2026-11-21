@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -31,7 +31,7 @@ const markup = `
 </div>
 `;
 
-const provider = `import { ToastProvider } from '@eds-ui/react';
+const provider = `import { ToastProvider } from '@efds-ui/react';
 
 // Um único provider na raiz do app. Os padrões bastam para a maioria dos casos.
 <ToastProvider maxVisible={2} texts={{ severity: { danger: 'Falha:' } }}>
@@ -39,7 +39,7 @@ const provider = `import { ToastProvider } from '@eds-ui/react';
 </ToastProvider>`;
 
 const behaviorApi = `// Com o eds-behavior.js carregado por <script> (window.EDS) ou por módulo:
-import { toast } from '@eds-ui/behavior';
+import { toast } from '@efds-ui/behavior';
 
 const id = toast({
   variant: 'success',            // info (padrão) | success | warning | danger
@@ -126,11 +126,11 @@ export default function ToastPage() {
           <CodeBlock code={provider} label="Código React: ToastProvider com opções" />
         </div>
         <div className="docs-example">
-          <h3 className="eds-text-h4">HTML puro: API do @eds-ui/behavior</h3>
+          <h3 className="eds-text-h4">HTML puro: API do @efds-ui/behavior</h3>
           <p className="docs-muted">
             No HTML, o toast é disparado por JavaScript: <code>EDS.toast()</code>, do{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> (o botão do exemplo HTML
-            acima chama exatamente essa função). Ele cria a região <code>aria-live</code> sob
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> (o botão do exemplo
+            HTML acima chama exatamente essa função). Ele cria a região <code>aria-live</code> sob
             demanda, cuida da fila (máximo de 3 visíveis), do tempo, da pausa em hover e foco, do
             Esc e do foco ao fechar, e renderiza dentro do <code>dialog</code> modal aberto. O
             markup gerado é o do core, mostrado abaixo.

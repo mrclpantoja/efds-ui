@@ -1,4 +1,4 @@
-import { Field, Grid, Textarea } from '@eds-ui/react';
+import { Field, Grid, Textarea } from '@efds-ui/react';
 
 export default function Basico() {
   return (

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Button, Sortable, Stack, useToast, type SortableItemData } from '@eds-ui/react';
+import { Button, Sortable, Stack, useToast, type SortableItemData } from '@efds-ui/react';
 
 export default function Formulario() {
   const toast = useToast();

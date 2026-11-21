@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Tag } from '@eds-ui/react';
+import { Tag } from '@efds-ui/react';
 
 const inicial = [
   { nome: 'Financeiro', tom: 'info' as const },

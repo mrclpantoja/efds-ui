@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { Section } from '../../components/Section';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
@@ -194,7 +194,7 @@ export default function EventosPage() {
   return (
     <>
       <p className="eds-text-body-lg docs-muted">
-        Todos os eventos do <code>@eds-ui/behavior</code> são <code>CustomEvent</code> com nome{' '}
+        Todos os eventos do <code>@efds-ui/behavior</code> são <code>CustomEvent</code> com nome{' '}
         <code>eds:&lt;componente&gt;-&lt;ação&gt;</code>, fazem bubble e levam os dados em{' '}
         <code>event.detail</code>. O ouvinte pode ficar no próprio elemento ou em qualquer
         ancestral, como o <code>document</code>.

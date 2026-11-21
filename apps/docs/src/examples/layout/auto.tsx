@@ -1,4 +1,4 @@
-import { Card, CardBody, Grid } from '@eds-ui/react';
+import { Card, CardBody, Grid } from '@efds-ui/react';
 
 export default function Automatico() {
   return (

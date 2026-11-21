@@ -1,4 +1,4 @@
-import { Field, Grid, Lookup, type LookupItem } from '@eds-ui/react';
+import { Field, Grid, Lookup, type LookupItem } from '@efds-ui/react';
 
 const produtos: LookupItem[] = [{ code: 'P-0042', description: 'Caderno universitário 96 folhas' }];
 

@@ -8,8 +8,8 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react';
-import { init } from '@eds-ui/behavior';
-import { Button, Tab, TabList, TabPanel, Tabs } from '@eds-ui/react';
+import { init } from '@efds-ui/behavior';
+import { Button, Tab, TabList, TabPanel, Tabs } from '@efds-ui/react';
 import { CodeBlock } from './CodeBlock';
 
 export interface ReactExample {
@@ -76,7 +76,7 @@ function HtmlPreview({ html }: { html: string }) {
   const suffix = useId().replace(/[^A-Za-z0-9_-]/g, '');
   const scoped = useMemo(() => scopeIds(html, suffix), [html, suffix]);
   const ref = useRef<HTMLDivElement | null>(null);
-  // O comportamento do `@eds-ui/behavior` liga só o markup HTML do preview (nunca o `document`:
+  // O comportamento do `@efds-ui/behavior` liga só o markup HTML do preview (nunca o `document`:
   // o resto do site é React e não pode ser ligado duas vezes). O loader automático fica
   // desligado, para não bloquear a navegação da documentação.
   useEffect(() => {
@@ -184,7 +184,7 @@ function Body({ kind, title, tabbed, html, react }: BodyProps) {
 
 /**
  * Exemplo vivo: preview + código. Com HTML e React, abas "HTML" | "React" (Tabs do
- * `@eds-ui/react`); cada aba mostra o preview renderizado a partir do seu próprio código.
+ * `@efds-ui/react`); cada aba mostra o preview renderizado a partir do seu próprio código.
  */
 export function Example({ title, description, html, react }: ExampleProps) {
   const titleId = useId();

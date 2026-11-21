@@ -7,7 +7,7 @@ import {
   CardLink,
   CardTitle,
   Grid,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 
 export default function Interativo() {
   return (

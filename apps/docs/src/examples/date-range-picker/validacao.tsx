@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Button, DateRangePicker, Field, Stack, type DateRangeValue } from '@eds-ui/react';
+import { Button, DateRangePicker, Field, Stack, type DateRangeValue } from '@efds-ui/react';
 
 export default function Validacao() {
   const [range, setRange] = useState<DateRangeValue>({ start: null, end: null });

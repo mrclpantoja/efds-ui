@@ -1,14 +1,14 @@
-# @eds-ui/behavior
+# @efds-ui/behavior
 
-Comportamento interativo do eDS.ui em JavaScript puro (zero dependências), para quem usa só HTML: PHP, Java, .NET, Vue, Angular. O visual vem do `@eds-ui/core` (CSS); este pacote liga o que o CSS e a plataforma não entregam: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Button em carregamento (`aria-busy` não ativa por Enter/Espaço), Table (ordenação, seleção e filtro local), Sidebar, Combobox (simples e múltiplo), DatePicker e DateRangePicker (calendário próprio, máscara dd/mm/aaaa), FileUpload (arrastar e soltar, modo formulário e imediato), diálogos rápidos (`alert`, `confirm`, `prompt`) e o PageLoader automático.
+Comportamento interativo do efDS.ui em JavaScript puro (zero dependências), para quem usa só HTML: PHP, Java, .NET, Vue, Angular. O visual vem do `@efds-ui/core` (CSS); este pacote liga o que o CSS e a plataforma não entregam: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Button em carregamento (`aria-busy` não ativa por Enter/Espaço), Table (ordenação, seleção e filtro local), Sidebar, Combobox (simples e múltiplo), DatePicker e DateRangePicker (calendário próprio, máscara dd/mm/aaaa), FileUpload (arrastar e soltar, modo formulário e imediato), diálogos rápidos (`alert`, `confirm`, `prompt`) e o PageLoader automático.
 
-> Pré-lançamento (0.1.0): ainda não publicado (`private`) até a verificação do nome/escopo `@eds-ui`. Licença MIT.
+> Pré-lançamento (0.1.0): ainda não publicado (`private`) até a criação do escopo `@efds-ui` no npm. Licença MIT.
 
 ## Uso por `<script>` (CDN, PHP, Java, .NET)
 
 ```html
-<link rel="stylesheet" href=".../@eds-ui/core/dist/index.css" />
-<script src=".../@eds-ui/behavior/dist/eds-behavior.js" defer></script>
+<link rel="stylesheet" href=".../@efds-ui/core/dist/index.css" />
+<script src=".../@efds-ui/behavior/dist/eds-behavior.js" defer></script>
 ```
 
 Liga tudo sozinho quando o DOM está pronto e expõe `window.EDS`. Opções na própria tag:
@@ -40,7 +40,7 @@ const nome = await EDS.prompt('Nome do arquivo', 'relatorio', 'Salvar como'); //
 
 Assinaturas: `alert(texto, título?, tipo?, opções?)`, `confirm(texto, título?, tipo?, opções?)`, `prompt(texto, valorPadrão?, título?, opções?)`. `tipo`: `info` (padrão do alert), `success`, `warning`, `danger`, `question` (padrão do confirm e do prompt). `opções`: `okText`, `cancelText`, `placeholder`, `required`, `inputType` (`text`, `email`, `number`, `password`, `textarea`), `validate(valor)` (devolve a mensagem de erro ou `''`) e `variant` (tipo do prompt). Chamadas simultâneas entram numa fila: um diálogo por vez. Enter confirma, Esc e o clique no fundo cancelam (`danger` não fecha no fundo). O texto vai como texto, nunca como HTML. Textos dos botões em `configure({ messages })`: `dialogOk`, `dialogCancel`, `dialogConfirm`, `dialogRequired`.
 
-`window.alert` só é trocado se você pedir (`data-eds-native-alert` na tag ou `init(document, { nativeAlert: true })`; com `data-eds-manual`, use a opção do `init`). Atenção: o `alert` do navegador **bloqueia** e o do eDS.ui não: o código depois do `alert(...)` roda sem esperar o usuário fechar. `confirm` e `prompt` nativos nunca são trocados (são síncronos): use `await EDS.confirm(...)`.
+`window.alert` só é trocado se você pedir (`data-eds-native-alert` na tag ou `init(document, { nativeAlert: true })`; com `data-eds-manual`, use a opção do `init`). Atenção: o `alert` do navegador **bloqueia** e o do efDS.ui não: o código depois do `alert(...)` roda sem esperar o usuário fechar. `confirm` e `prompt` nativos nunca são trocados (são síncronos): use `await EDS.confirm(...)`.
 
 ### Confirmação declarativa
 
@@ -133,7 +133,7 @@ Gerados no navegador, sem dependência. Botões ou itens de menu apontam para a 
 
 `data-eds-export="csv|xlsx|json|pdf"`, `-target` (id da tabela), `-filename`, `-title`, `-subtitle` e `-scope="auto|visible|selected|all"`. `th[data-type="text|number|currency|date|percent"]`, `td[data-value]` e `data-eds-export-ignore` descrevem colunas e células. O evento `eds:table-beforeexport` (cancelável) deixa mascarar `detail.data` (CPF, colunas sensíveis) antes de gerar; `eds:table-export` sai depois. Só o que está no DOM é exportado.
 
-Sem HTML, os geradores servem a qualquer código: `exportData(data, 'xlsx', { filename })`, `toCsv`, `toJson`, `toXlsx` e `toPdf`. Para importar só eles, sem o `init` nem os demais módulos, use o subcaminho `@eds-ui/behavior/export` (é o que o `@eds-ui/react` faz).
+Sem HTML, os geradores servem a qualquer código: `exportData(data, 'xlsx', { filename })`, `toCsv`, `toJson`, `toXlsx` e `toPdf`. Para importar só eles, sem o `init` nem os demais módulos, use o subcaminho `@efds-ui/behavior/export` (é o que o `@efds-ui/react` faz).
 
 ## Máscara de entrada
 
@@ -160,12 +160,12 @@ Sem HTML, os geradores servem a qualquer código: `exportData(data, 'xlsx', { fi
 | `data-eds-mask-prefix`   | Moeda e número: símbolo (padrão `"R$ "` na moeda; vazio é permitido).                                                                                                                                                 |
 | `data-eds-mask-negative` | Moeda e número: aceita negativo (a tecla `-` alterna o sinal).                                                                                                                                                        |
 
-O pacote define `inputmode`, `autocomplete` (telefone: `tel`, CEP: `postal-code`) e `maxlength` (menos na moeda e no número) só quando o autor não os pôs. Evento `eds:mask-change` (`{ value, raw }`). A máscara não valida (dígito verificador, faixa): continue com `required`, `pattern` e o servidor. Dados de exemplo, sempre fictícios (LGPD). Para importar só o núcleo, sem DOM: `import { createMask } from '@eds-ui/behavior/mask'`.
+O pacote define `inputmode`, `autocomplete` (telefone: `tel`, CEP: `postal-code`) e `maxlength` (menos na moeda e no número) só quando o autor não os pôs. Evento `eds:mask-change` (`{ value, raw }`). A máscara não valida (dígito verificador, faixa): continue com `required`, `pattern` e o servidor. Dados de exemplo, sempre fictícios (LGPD). Para importar só o núcleo, sem DOM: `import { createMask } from '@efds-ui/behavior/mask'`.
 
 ## Uso por módulo (Vue, Angular, bundlers)
 
 ```ts
-import { init, toast, loader } from '@eds-ui/behavior';
+import { init, toast, loader } from '@efds-ui/behavior';
 
 const destroy = init(document.querySelector('#app')!, {
   loader: {

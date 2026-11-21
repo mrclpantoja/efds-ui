@@ -7,7 +7,7 @@ import {
   TableHeaderCell,
   TableRow,
   type BadgeVariant,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 
 const faturas: { codigo: string; cliente: string; situacao: string; variant: BadgeVariant }[] = [
   { codigo: 'FAT-0001', cliente: 'Cliente Exemplo A', situacao: 'Pago', variant: 'success' },

@@ -1,4 +1,4 @@
-import { DatePicker, Field } from '@eds-ui/react';
+import { DatePicker, Field } from '@efds-ui/react';
 
 export default function Limites() {
   return (

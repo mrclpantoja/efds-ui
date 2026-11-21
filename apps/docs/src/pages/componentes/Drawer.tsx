@@ -1,4 +1,4 @@
-import { Alert, Stack } from '@eds-ui/react';
+import { Alert, Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -35,10 +35,10 @@ export default function DrawerPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="HTML: precisa do @eds-ui/behavior">
+        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             No HTML, o diálogo só é modal quando aberto com <code>showModal()</code>. O pacote{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> faz isso por atributos:{' '}
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> faz isso por atributos:{' '}
             <code>data-eds-open=&quot;ID&quot;</code> no botão e <code>data-autofocus</code> no
             elemento que recebe o foco. Sem ele, chame <code>showModal()</code> você mesmo. O
             preview HTML abaixo está ligado a ele.
@@ -171,7 +171,7 @@ export default function DrawerPage() {
 
       <Section title="Eventos (HTML)">
         <ClassTable
-          caption="Eventos do @eds-ui/behavior"
+          caption="Eventos do @efds-ui/behavior"
           headers={['Evento', 'Quando']}
           rows={[
             {

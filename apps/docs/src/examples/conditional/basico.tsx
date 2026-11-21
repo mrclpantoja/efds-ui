@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Checkbox, Field, Input, Select, Stack } from '@eds-ui/react';
+import { Checkbox, Field, Input, Select, Stack } from '@efds-ui/react';
 
 /**
  * No React o padrão é o estado: o que não deve aparecer nem ir no envio simplesmente não é

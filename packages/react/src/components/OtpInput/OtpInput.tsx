@@ -9,7 +9,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
-import { otpFill, otpSanitize, type OtpKind } from '@eds-ui/behavior/fields';
+import { otpFill, otpSanitize, type OtpKind } from '@efds-ui/behavior/fields';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 

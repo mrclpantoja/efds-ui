@@ -7,8 +7,8 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from '@eds-ui/react';
-import { SearchIcon } from '@eds-ui/icons';
+} from '@efds-ui/react';
+import { SearchIcon } from '@efds-ui/icons';
 
 export default function Vazia() {
   return (

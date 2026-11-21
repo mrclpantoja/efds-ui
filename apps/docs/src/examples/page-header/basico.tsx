@@ -1,4 +1,4 @@
-import { Badge, Breadcrumb, BreadcrumbItem, Button, Page, PageHeader } from '@eds-ui/react';
+import { Badge, Breadcrumb, BreadcrumbItem, Button, Page, PageHeader } from '@efds-ui/react';
 
 export default function Basico() {
   return (

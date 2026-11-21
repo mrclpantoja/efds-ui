@@ -22,7 +22,7 @@ const containerHtml = `<main class="eds-container eds-container-lg">
   …
 </main>`;
 
-const containerReact = `import { Container } from '@eds-ui/react';
+const containerReact = `import { Container } from '@efds-ui/react';
 
 <Container as="main" size="lg">
   <h1 className="eds-text-h1">Clientes</h1>

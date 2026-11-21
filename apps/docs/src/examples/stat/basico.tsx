@@ -1,4 +1,4 @@
-import { Stat } from '@eds-ui/react';
+import { Stat } from '@efds-ui/react';
 
 export default function Basico() {
   return (

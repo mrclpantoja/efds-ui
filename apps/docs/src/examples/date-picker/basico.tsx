@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DatePicker, Field } from '@eds-ui/react';
+import { DatePicker, Field } from '@efds-ui/react';
 
 export default function Basico() {
   const [iso, setIso] = useState<string | null>(null);

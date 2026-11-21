@@ -6,8 +6,8 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from '@eds-ui/react';
-import { EditIcon } from '@eds-ui/icons';
+} from '@efds-ui/react';
+import { EditIcon } from '@efds-ui/icons';
 
 const pedidos = [
   { codigo: 'PED-0001', cliente: 'Atelier Exemplo', total: 'R$ 1.280,50' },

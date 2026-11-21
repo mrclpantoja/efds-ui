@@ -1,4 +1,4 @@
-import { Field, Select, Stack } from '@eds-ui/react';
+import { Field, Select, Stack } from '@efds-ui/react';
 
 export default function Tamanhos() {
   return (

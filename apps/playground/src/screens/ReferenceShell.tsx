@@ -16,8 +16,8 @@ import {
   Sidebar,
   SidebarItem,
   SidebarSection,
-} from '@eds-ui/react';
-import { ArrowLeftIcon, BellIcon, DashboardIcon, UserPlusIcon, UsersIcon } from '@eds-ui/icons';
+} from '@efds-ui/react';
+import { ArrowLeftIcon, BellIcon, DashboardIcon, UserPlusIcon, UsersIcon } from '@efds-ui/icons';
 
 export type ScreenId = 'dashboard' | 'listagem' | 'formulario';
 
@@ -73,7 +73,7 @@ interface ReferenceShellProps {
 }
 
 /**
- * App shell das telas de referência sobre `@eds-ui/react`: um único <main>, sidebar compacta
+ * App shell das telas de referência sobre `@efds-ui/react`: um único <main>, sidebar compacta
  * na faixa 768–1023 e off-canvas (Popover API) abaixo de 768. O que sobra aqui é da tela:
  * itens de navegação, preferência de colapso e foco no h1 ao trocar de rota.
  */
@@ -89,7 +89,7 @@ export function ReferenceShell({
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    document.title = `${title} · eDS.ui`;
+    document.title = `${title} · efDS.ui`;
   }, [title]);
 
   useEffect(() => {

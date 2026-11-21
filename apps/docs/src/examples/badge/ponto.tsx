@@ -1,4 +1,4 @@
-import { Badge, Stack } from '@eds-ui/react';
+import { Badge, Stack } from '@efds-ui/react';
 
 export default function Ponto() {
   return (

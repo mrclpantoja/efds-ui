@@ -1,9 +1,9 @@
 import { StrictMode, useEffect, useRef, useState, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
-import { init } from '@eds-ui/behavior';
+import { init } from '@efds-ui/behavior';
 import '@fontsource-variable/inter';
-import '@eds-ui/core/index.css';
-import '@eds-ui/themes/index.css';
+import '@efds-ui/core/index.css';
+import '@efds-ui/themes/index.css';
 import './foundations.css';
 import { App } from './App';
 import { Dashboard } from './screens/Dashboard';
@@ -18,7 +18,7 @@ const screens: Partial<Record<string, ComponentType>> = {
   '#/formulario': Formulario,
 };
 
-const PLAYGROUND_TITLE = 'eDS.ui Playground';
+const PLAYGROUND_TITLE = 'efDS.ui Playground';
 
 function Router() {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -44,7 +44,7 @@ function Router() {
     document.getElementById('playground-titulo')?.focus();
   }, [hash]);
 
-  // O @eds-ui/behavior liga só as raízes marcadas com `data-eds-live` (exemplos em HTML cru:
+  // O @efds-ui/behavior liga só as raízes marcadas com `data-eds-live` (exemplos em HTML cru:
   // upload, datas, combobox, filtro da tabela). Os demais demos têm JS próprio em React e os
   // estados forçados ficam estáticos. O loader automático fica desligado.
   const showsPlayground = screens[hash] === undefined;

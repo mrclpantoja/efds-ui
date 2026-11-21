@@ -1,4 +1,4 @@
-import { Checkbox, Stack } from '@eds-ui/react';
+import { Checkbox, Stack } from '@efds-ui/react';
 
 export default function Estados() {
   return (

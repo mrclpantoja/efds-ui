@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Field, Input, Wizard } from '@eds-ui/react';
+import { Alert, Field, Input, Wizard } from '@efds-ui/react';
 
 export default function WizardExemplo() {
   const [enviado, setEnviado] = useState<string | null>(null);

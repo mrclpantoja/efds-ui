@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -53,7 +53,7 @@ export default function DateInputPage() {
       <Section title="Exemplos">
         <Alert variant="info" title="Sem JavaScript">
           <p>
-            Nada aqui depende do <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a>:
+            Nada aqui depende do <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>:
             basta o <code>type</code> certo e a classe <code>eds-input</code>. No React, é o próprio{' '}
             <a href={toHref('/componentes/input')}>Input</a> com <code>type=&quot;date&quot;</code>.
           </p>
@@ -87,7 +87,7 @@ export default function DateInputPage() {
           </li>
           <li>
             <strong>Calendário:</strong> a aparência e o teclado do calendário aberto são do
-            navegador e mudam entre Chrome, Edge, Firefox e Safari; o eDS.ui não os estiliza. Só o
+            navegador e mudam entre Chrome, Edge, Firefox e Safari; o efDS.ui não os estiliza. Só o
             campo fechado (altura, borda, foco, erro) segue o sistema.
           </li>
           <li>
@@ -182,7 +182,7 @@ export default function DateInputPage() {
           <li>
             <strong>Teclado:</strong> é o do navegador. Em geral, ←/→ trocam de parte (dia, mês,
             ano), ↑/↓ alteram o valor da parte e dígitos preenchem direto; Alt+↓ ou o botão de
-            calendário abrem o seletor. O foco visível do eDS.ui aparece no campo fechado.
+            calendário abrem o seletor. O foco visível do efDS.ui aparece no campo fechado.
           </li>
           <li>
             <strong>Leitor de tela:</strong> o campo é anunciado como &quot;editor de data&quot; ou

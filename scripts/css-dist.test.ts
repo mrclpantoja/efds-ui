@@ -31,7 +31,7 @@ const expectedFiles = (pkg: 'core' | 'themes'): string[] => {
   ];
 };
 
-describe.each(['core', 'themes'] as const)('dist de @eds-ui/%s', (pkg) => {
+describe.each(['core', 'themes'] as const)('dist de @efds-ui/%s', (pkg) => {
   const dist = resolve(ROOT, pkg, 'dist');
   const files = expectedFiles(pkg);
 

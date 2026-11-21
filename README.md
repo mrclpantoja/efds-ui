@@ -1,6 +1,6 @@
-# eDS.ui
+# efDS.ui
 
-Empresarial Design System UI Framework: design system leve para aplicações empresariais (SaaS, ERP, CRM, painéis). HTML/CSS primeiro, React depois.
+Empresarial Framework Design System UI: design system leve para aplicações empresariais (SaaS, ERP, CRM, painéis). HTML/CSS primeiro, React depois.
 
 ## Comandos
 
@@ -23,11 +23,11 @@ Requer Node >= 20 e pnpm 12 (versão fixada em `packageManager`).
 Além do `index.css` completo, cada pacote publica um CSS por arquivo-fonte. Cada arquivo começa com a declaração de ordem de `@layer`, então a cascata não depende da ordem dos imports.
 
 ```ts
-import '@eds-ui/core/tokens.css'; // todos os tokens
-import '@eds-ui/core/base.css'; // reset, root, tipografia, acessibilidade
-import '@eds-ui/core/layout/stack.css'; // um arquivo de layout
-import '@eds-ui/core/components/button.css'; // um componente
-import '@eds-ui/themes/theme-blue.css'; // um valor de eixo (theme, mode, density, shape)
+import '@efds-ui/core/tokens.css'; // todos os tokens
+import '@efds-ui/core/base.css'; // reset, root, tipografia, acessibilidade
+import '@efds-ui/core/layout/stack.css'; // um arquivo de layout
+import '@efds-ui/core/components/button.css'; // um componente
+import '@efds-ui/themes/theme-blue.css'; // um valor de eixo (theme, mode, density, shape)
 ```
 
 ## Estrutura
@@ -51,8 +51,8 @@ CHANGELOG.md    histórico de versões
 
 ## Publicação
 
-Os pacotes `@eds-ui/core`, `@eds-ui/themes`, `@eds-ui/react`, `@eds-ui/icons` e `@eds-ui/behavior` estão na versão 0.1.0, mas **não são publicados**: seguem `"private": true` até a verificação do nome/escopo `@eds-ui` no npm. Licença: [MIT](LICENSE); o texto da documentação está sob CC BY 4.0 ([`apps/docs/LICENSE.md`](apps/docs/LICENSE.md)). `pnpm pack:check` garante que cada tarball é consumível (alvos de `exports` existem, sem testes, `src` ou `workspace:` dentro).
+Os pacotes `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons` e `@efds-ui/behavior` estão na versão 0.1.0, mas **não são publicados**: seguem `"private": true` até a criação do escopo `@efds-ui` no npm. Licença: [MIT](LICENSE); o texto da documentação está sob CC BY 4.0 ([`apps/docs/LICENSE.md`](apps/docs/LICENSE.md)). `pnpm pack:check` garante que cada tarball é consumível (alvos de `exports` existem, sem testes, `src` ou `workspace:` dentro).
 
-Nos pacotes de CSS (`core`, `themes`), o `package.json` do repositório mantém a condição `development` (aponta para `src`, útil no monorepo); o tarball a remove via `publishConfig.exports` e leva só `dist/`. O `@eds-ui/react` não importa CSS: o consumidor importa o do core.
+Nos pacotes de CSS (`core`, `themes`), o `package.json` do repositório mantém a condição `development` (aponta para `src`, útil no monorepo); o tarball a remove via `publishConfig.exports` e leva só `dist/`. O `@efds-ui/react` não importa CSS: o consumidor importa o do core.
 
-Dependências: `core` <- `themes`, `core` <- `react` <- `icons`, `behavior` (só `@eds-ui/behavior/export`) <- `react`; `behavior` não depende de nenhum pacote.
+Dependências: `core` <- `themes`, `core` <- `react` <- `icons`, `behavior` (só `@efds-ui/behavior/export`) <- `react`; `behavior` não depende de nenhum pacote.

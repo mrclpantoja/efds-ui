@@ -1,4 +1,4 @@
-import { Button } from '@eds-ui/react';
+import { Button } from '@efds-ui/react';
 
 export default function Link() {
   return (

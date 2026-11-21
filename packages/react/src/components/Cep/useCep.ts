@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { cepDigits, lookupCep, type CepAddress } from '@eds-ui/behavior/fields';
+import { cepDigits, lookupCep, type CepAddress } from '@efds-ui/behavior/fields';
 
 export type CepStatus = 'idle' | 'loading' | 'found' | 'notfound' | 'error';
 

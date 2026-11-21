@@ -1,4 +1,4 @@
-import { EmptyState } from '@eds-ui/react';
+import { EmptyState } from '@efds-ui/react';
 
 export default function SemAcao() {
   return (

@@ -1,7 +1,7 @@
 /**
- * Entrada `@eds-ui/behavior/export`: só os geradores de arquivo (CSV, JSON, XLSX, PDF) e os
+ * Entrada `@efds-ui/behavior/export`: só os geradores de arquivo (CSV, JSON, XLSX, PDF) e os
  * tipos. Não importa `init`, o auto-init nem nenhum outro módulo de comportamento, para o
- * `@eds-ui/react` (e qualquer bundler) levar só o que usa.
+ * `@efds-ui/react` (e qualquer bundler) levar só o que usa.
  */
 export { exportData, toCsv, toJson, toPdf, toXlsx } from './export';
 export type {

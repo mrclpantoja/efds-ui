@@ -52,11 +52,11 @@ describe('unresolvedDeps', () => {
   it('acusa workspace: e ignora versões resolvidas', () => {
     expect(
       unresolvedDeps({
-        dependencies: { '@eds-ui/core': 'workspace:*' },
+        dependencies: { '@efds-ui/core': 'workspace:*' },
         peerDependencies: { react: '^18.0.0' },
       }),
-    ).toEqual(['dependencies.@eds-ui/core=workspace:*']);
-    expect(unresolvedDeps({ dependencies: { '@eds-ui/core': '0.1.0' } })).toEqual([]);
+    ).toEqual(['dependencies.@efds-ui/core=workspace:*']);
+    expect(unresolvedDeps({ dependencies: { '@efds-ui/core': '0.1.0' } })).toEqual([]);
   });
 });
 

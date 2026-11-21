@@ -10,7 +10,7 @@ import {
   TableRow,
   TableToolbar,
   type ExportData,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 
 interface Pedido {
   codigo: string;

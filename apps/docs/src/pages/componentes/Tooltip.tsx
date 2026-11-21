@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -40,7 +40,7 @@ export default function TooltipPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="O comportamento vem do @eds-ui/behavior">
+        <Alert variant="info" title="O comportamento vem do @efds-ui/behavior">
           <p>
             Marque o gatilho com <code>data-eds-tooltip</code> e ligue-o ao balão por{' '}
             <code>aria-describedby</code>. O balão é <code>role=&quot;tooltip&quot;</code> com{' '}

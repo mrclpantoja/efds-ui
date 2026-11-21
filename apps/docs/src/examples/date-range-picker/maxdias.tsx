@@ -1,4 +1,4 @@
-import { DateRangePicker, Field } from '@eds-ui/react';
+import { DateRangePicker, Field } from '@efds-ui/react';
 
 export default function MaxDias() {
   return (

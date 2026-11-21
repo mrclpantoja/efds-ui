@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Stack } from '@eds-ui/react';
+import { Button, Card, CardBody, Stack } from '@efds-ui/react';
 
 export default function Subarvore() {
   return (

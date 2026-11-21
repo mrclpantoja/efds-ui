@@ -11,41 +11,41 @@ export default defineConfig({
   server: { host: '127.0.0.1' },
   resolve: {
     alias: [
-      // Mais específicos primeiro: o alias de prefixo pegaria '@eds-ui/behavior/export', '/mask', '/fields' e '/format'.
+      // Mais específicos primeiro: o alias de prefixo pegaria '@efds-ui/behavior/export', '/mask', '/fields' e '/format'.
       {
-        find: /^@eds-ui\/behavior\/export\/(csv|json|xlsx|pdf)$/,
+        find: /^@efds-ui\/behavior\/export\/(csv|json|xlsx|pdf)$/,
         replacement: fromSource('../../packages/behavior/src/export/formats/$1.ts'),
       },
       {
-        find: '@eds-ui/behavior/export',
+        find: '@efds-ui/behavior/export',
         replacement: fromSource('../../packages/behavior/src/export-entry.ts'),
       },
       {
-        find: '@eds-ui/behavior/balloon',
+        find: '@efds-ui/behavior/balloon',
         replacement: fromSource('../../packages/behavior/src/balloon-entry.ts'),
       },
       {
-        find: '@eds-ui/behavior/theme',
+        find: '@efds-ui/behavior/theme',
         replacement: fromSource('../../packages/behavior/src/theme-entry.ts'),
       },
       {
-        find: '@eds-ui/behavior/fields',
+        find: '@efds-ui/behavior/fields',
         replacement: fromSource('../../packages/behavior/src/fields-entry.ts'),
       },
       {
-        find: '@eds-ui/behavior/format',
+        find: '@efds-ui/behavior/format',
         replacement: fromSource('../../packages/behavior/src/format-entry.ts'),
       },
       {
-        find: '@eds-ui/behavior/mask',
+        find: '@efds-ui/behavior/mask',
         replacement: fromSource('../../packages/behavior/src/mask-entry.ts'),
       },
       {
-        find: '@eds-ui/behavior',
+        find: '@efds-ui/behavior',
         replacement: fromSource('../../packages/behavior/src/index.ts'),
       },
-      { find: '@eds-ui/react', replacement: fromSource('../../packages/react/src/index.ts') },
-      { find: '@eds-ui/icons', replacement: fromSource('../../packages/icons/src/index.ts') },
+      { find: '@efds-ui/react', replacement: fromSource('../../packages/react/src/index.ts') },
+      { find: '@efds-ui/icons', replacement: fromSource('../../packages/icons/src/index.ts') },
     ],
   },
 });

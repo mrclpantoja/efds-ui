@@ -1,10 +1,10 @@
 {
-  "name": "@eds-ui/core",
+  "name": "@efds-ui/core",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "type": "module",
-  "description": "CSS puro do eDS.ui: tokens, base, layout e componentes.",
+  "description": "CSS puro do efDS.ui: tokens, base, layout e componentes.",
   "keywords": [
     "design-system",
     "css",

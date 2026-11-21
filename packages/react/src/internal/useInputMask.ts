@@ -8,7 +8,7 @@ import {
   type ClipboardEvent,
   type RefObject,
 } from 'react';
-import { createMask, type Mask, type MaskEditResult } from '@eds-ui/behavior/mask';
+import { createMask, type Mask, type MaskEditResult } from '@efds-ui/behavior/mask';
 
 export interface InputMaskOptions {
   /** Casas decimais de `moeda` e `numero` (0 a 8). Padrão 2. */
@@ -54,7 +54,7 @@ function setNativeValue(input: HTMLInputElement, value: string): void {
 }
 
 /**
- * Máscara de entrada do Input: mesma lógica do `@eds-ui/behavior` (núcleo `@eds-ui/behavior/mask`).
+ * Máscara de entrada do Input: mesma lógica do `@efds-ui/behavior` (núcleo `@efds-ui/behavior/mask`).
  * Sem `spec` não faz nada. Controlado (`value`) ou não (`defaultValue`); o `onChange` do autor
  * recebe `event.target.value` já mascarado.
  */

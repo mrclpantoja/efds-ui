@@ -1,4 +1,4 @@
-import { Field, Grid, PasswordInput } from '@eds-ui/react';
+import { Field, Grid, PasswordInput } from '@efds-ui/react';
 
 // Valores fictícios só para mostrar os níveis; o medidor é calculado no navegador.
 const niveis = ['abc', 'boaresposta2', 'BoaResposta9', 'Cavalo-Azul-77!'];

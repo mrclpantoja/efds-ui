@@ -61,12 +61,12 @@ describe('copy', () => {
   });
 
   it('usa o texto de elemento comum como alvo e [data-eds-copy-label]', async () => {
-    document.body.innerHTML = `<code id="c"> npm i @eds-ui/react </code>
+    document.body.innerHTML = `<code id="c"> npm i @efds-ui/react </code>
       <button id="b" type="button" data-eds-copy="#c"><svg></svg><span class="eds-copy-label">Copiar</span></button>`;
     destroy = initCopy(document);
     (document.getElementById('b') as HTMLElement).click();
     await settle();
-    expect(written).toEqual(['npm i @eds-ui/react']);
+    expect(written).toEqual(['npm i @efds-ui/react']);
     expect(document.querySelector('.eds-copy-label')?.textContent).toBe('Copiado');
   });
 

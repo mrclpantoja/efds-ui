@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -17,7 +17,7 @@ import tiposHtml from '../../examples/dialogs/tipos.html?raw';
 import Tipos from '../../examples/dialogs/tipos';
 import tiposSource from '../../examples/dialogs/tipos.tsx?raw';
 
-const provider = `import { DialogProvider } from '@eds-ui/react';
+const provider = `import { DialogProvider } from '@efds-ui/react';
 
 // Um único provider na raiz do app. Os textos são substituíveis (outro idioma, outro tom).
 <DialogProvider texts={{ cancel: 'Voltar', confirm: 'Sim', severity: { danger: 'Falha:' } }}>
@@ -38,7 +38,7 @@ if (nome !== null) {
 }`;
 
 const behaviorApi = `// Com o eds-behavior.js carregado por <script> (window.EDS) ou por módulo:
-import { alert, confirm, prompt } from '@eds-ui/behavior';
+import { alert, confirm, prompt } from '@efds-ui/behavior';
 
 await alert('Pedido salvo com sucesso.', 'Pedido', 'success');               // -> undefined
 
@@ -51,12 +51,12 @@ const nome = await prompt('Nome do arquivo', 'relatorio', 'Salvar como', {
   validate: (valor) => (valor.includes('/') ? 'Não use a barra no nome.' : ''),
 });                                                                           // -> string | null`;
 
-const nativeAlert = `<!-- window.alert(msg) passa a abrir o diálogo do eDS.ui, sem mudar o seu código antigo. -->
+const nativeAlert = `<!-- window.alert(msg) passa a abrir o diálogo do efDS.ui, sem mudar o seu código antigo. -->
 <script src="/assets/eds/behavior/eds-behavior.js" data-eds-native-alert defer></script>
 
 <!-- Ou, por módulo: -->
 <script type="module">
-  import { init } from '@eds-ui/behavior';
+  import { init } from '@efds-ui/behavior';
   const destroy = init(document, { nativeAlert: true });   // destroy() devolve o window.alert original
 </script>`;
 
@@ -85,7 +85,7 @@ const markup = `<dialog class="eds-modal eds-alert-dialog" data-variant="danger"
   </div>
 </dialog>`;
 
-const mensagens = `import { configure } from '@eds-ui/behavior';
+const mensagens = `import { configure } from '@efds-ui/behavior';
 
 configure({
   messages: {
@@ -102,7 +102,7 @@ export default function DialogsPage() {
     <>
       <p className="eds-text-body-lg docs-muted">
         Substitutos de <code>alert</code>, <code>confirm</code> e <code>prompt</code> do navegador,
-        com a aparência do eDS.ui e a resposta por <code>Promise</code>: cinco tipos (informação,
+        com a aparência do efDS.ui e a resposta por <code>Promise</code>: cinco tipos (informação,
         sucesso, atenção, erro e pergunta), campo de texto com validação, fila e teclado completo.
         Usam o <code>&lt;dialog&gt;</code> modal.
       </p>
@@ -197,10 +197,10 @@ export default function DialogsPage() {
           <CodeBlock code={reactUse} label="Código React: useDialog" />
         </div>
         <div className="docs-example">
-          <h3 className="eds-text-h4">HTML puro: API do @eds-ui/behavior</h3>
+          <h3 className="eds-text-h4">HTML puro: API do @efds-ui/behavior</h3>
           <p className="docs-muted">
             No HTML, as três funções são exportadas pelo{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> e ficam em{' '}
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> e ficam em{' '}
             <code>window.EDS</code> quando o script é carregado por <code>&lt;script&gt;</code>.
             Chamadas simultâneas formam uma fila: um diálogo por vez, na ordem.
           </p>
@@ -212,7 +212,7 @@ export default function DialogsPage() {
           <p className="docs-muted">
             Com <code>data-eds-native-alert</code> na tag do script (ou{' '}
             <code>init(root, {'{ nativeAlert: true }'})</code>), <code>window.alert(msg)</code> abre
-            o diálogo do eDS.ui. É só o <code>alert</code>: <code>confirm</code> e{' '}
+            o diálogo do efDS.ui. É só o <code>alert</code>: <code>confirm</code> e{' '}
             <code>prompt</code> nativos <strong>nunca</strong> são trocados, porque devolvem o valor
             de forma síncrona e o código que os chama não saberia esperar. Por isso a troca{' '}
             <strong>não bloqueia</strong> como o nativo: o código seguinte ao <code>alert</code>{' '}
@@ -349,7 +349,7 @@ export default function DialogsPage() {
         />
       </Section>
 
-      <Section title="API HTML (@eds-ui/behavior)">
+      <Section title="API HTML (@efds-ui/behavior)">
         <p>
           As mesmas assinaturas e os mesmos retornos, como funções (<code>alert</code>,{' '}
           <code>confirm</code>, <code>prompt</code>), com as mesmas <code>DialogOptions</code>. Os

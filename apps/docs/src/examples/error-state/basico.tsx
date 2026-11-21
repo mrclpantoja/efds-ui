@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ErrorState } from '@eds-ui/react';
+import { ErrorState } from '@efds-ui/react';
 
 export default function Basico() {
   const [retrying, setRetrying] = useState(false);

@@ -176,7 +176,7 @@ Modelo da seção 6 do roteiro. Tema padrão (blue, claro, densidade padrão), s
   4. Tab.
 - Esperado: o movimento é cancelado, o item volta e sai "Movimento cancelado." (é o que a aba HTML faz).
 - Obtido: o foco vai ao próximo pegador, o item continua deslocado e o pegador anterior continua com `aria-pressed="true"`. Nenhum anúncio.
-- Causa provável: o `focusout` que cancela existe só no `@eds-ui/behavior` (`sortable.ts:411`).
+- Causa provável: o `focusout` que cancela existe só no `@efds-ui/behavior` (`sortable.ts:411`).
 - Frequência: sempre
 - Severidade sugerida: importante
 

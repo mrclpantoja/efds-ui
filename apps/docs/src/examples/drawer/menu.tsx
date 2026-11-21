@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button, Drawer, Sidebar, SidebarItem, SidebarSection } from '@eds-ui/react';
-import { BellIcon, DashboardIcon, DownloadIcon, UserIcon, UsersIcon } from '@eds-ui/icons';
+import { Button, Drawer, Sidebar, SidebarItem, SidebarSection } from '@efds-ui/react';
+import { BellIcon, DashboardIcon, DownloadIcon, UserIcon, UsersIcon } from '@efds-ui/icons';
 
 export default function Menu() {
   const [open, setOpen] = useState(false);

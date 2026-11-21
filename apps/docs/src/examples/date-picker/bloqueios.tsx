@@ -1,4 +1,4 @@
-import { DatePicker, Field } from '@eds-ui/react';
+import { DatePicker, Field } from '@efds-ui/react';
 
 const feriados = ['2026-11-20', '2026-12-25', '2027-01-01'];
 

@@ -1,4 +1,4 @@
-import { Card, CardBody, Grid, GridItem, Stack } from '@eds-ui/react';
+import { Card, CardBody, Grid, GridItem, Stack } from '@efds-ui/react';
 
 const indicadores = ['Receita', 'Pedidos', 'Clientes', 'Ticket médio'];
 

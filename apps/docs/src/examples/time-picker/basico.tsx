@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Field, TimePicker } from '@eds-ui/react';
+import { Field, TimePicker } from '@efds-ui/react';
 
 export default function Basico() {
   const [hora, setHora] = useState('');

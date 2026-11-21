@@ -8,8 +8,8 @@ import primeiroSource from '../../examples/comecar/primeiro-componente.tsx?raw';
 const entrada = `import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/inter';
-import '@eds-ui/core/index.css';
-import '@eds-ui/themes/index.css';
+import '@efds-ui/core/index.css';
+import '@efds-ui/themes/index.css';
 import { App } from './App';
 
 createRoot(document.getElementById('root')!).render(
@@ -18,12 +18,12 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );`;
 
-const toast = `import { ToastProvider, useToast } from '@eds-ui/react';
+const toast = `import { ToastProvider, useToast } from '@efds-ui/react';
 
 // Envolva a aplicação uma vez; depois, em qualquer componente:
 // const toast = useToast();`;
 
-const idioma = `import { Alert, LocaleProvider, TableExport } from '@eds-ui/react';
+const idioma = `import { Alert, LocaleProvider, TableExport } from '@efds-ui/react';
 
 // Locale do Intl (nomes de mês e dia, ordem de texto, datas e números da exportação).
 <LocaleProvider locale="en-US">
@@ -40,7 +40,7 @@ export default function UsoComReact() {
   return (
     <>
       <p className="eds-text-body-lg">
-        <code>@eds-ui/react</code> são wrappers sobre as classes do core. Eles não têm visual
+        <code>@efds-ui/react</code> são wrappers sobre as classes do core. Eles não têm visual
         próprio: montam o <code>className</code> e os atributos ARIA, e acrescentam o comportamento
         que o CSS não entrega.
       </p>
@@ -93,7 +93,7 @@ export default function UsoComReact() {
             componentes. O <code>LocaleProvider</code> troca o idioma do <code>Intl</code>.
           </li>
           <li>
-            Ícones ficam em <code>@eds-ui/icons</code>, um export nomeado por ícone (
+            Ícones ficam em <code>@efds-ui/icons</code>, um export nomeado por ícone (
             <code>PlusIcon</code>, <code>EditIcon</code>…).
           </li>
         </ul>

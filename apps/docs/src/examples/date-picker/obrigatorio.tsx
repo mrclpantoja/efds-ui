@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Button, DatePicker, Field, Stack } from '@eds-ui/react';
+import { Button, DatePicker, Field, Stack } from '@efds-ui/react';
 
 export default function Obrigatorio() {
   const [iso, setIso] = useState<string | null>(null);

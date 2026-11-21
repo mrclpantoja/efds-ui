@@ -1,4 +1,4 @@
-import { Alert, Button, Stack } from '@eds-ui/react';
+import { Alert, Button, Stack } from '@efds-ui/react';
 
 export default function PrimeiroComponente() {
   return (

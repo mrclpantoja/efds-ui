@@ -7,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
   Grid,
-} from '@eds-ui/react';
-import { CloseIcon } from '@eds-ui/icons';
+} from '@efds-ui/react';
+import { CloseIcon } from '@efds-ui/icons';
 
 export default function Variantes() {
   return (

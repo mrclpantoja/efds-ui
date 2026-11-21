@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -59,7 +59,7 @@ const reactDatas = `// React: ISO como valor público; Date local (sem fuso) com
   onChange={(iso, date) => setVencimento(iso)}
 />`;
 
-const textos = `import { configure } from '@eds-ui/behavior';
+const textos = `import { configure } from '@efds-ui/behavior';
 
 configure({ locale: 'pt-BR', messages: { dateToday: 'Hoje', dateClose: 'Fechar' } });`;
 
@@ -97,10 +97,10 @@ export default function DatePickerPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="HTML: precisa do @eds-ui/behavior">
+        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             O calendário, a máscara e a validação são JavaScript: no HTML vêm do{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a>, que liga o{' '}
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que liga o{' '}
             <code>.eds-datepicker</code> com <code>data-eds-datepicker</code> e monta o conteúdo do{' '}
             <code>.eds-calendar</code> (o markup só traz o contêiner vazio). Os previews HTML abaixo
             estão ligados a ele; no React, o <code>DatePicker</code> faz tudo sozinho.

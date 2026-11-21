@@ -1,4 +1,4 @@
-import { CopyButton, Stack } from '@eds-ui/react';
+import { CopyButton, Stack } from '@efds-ui/react';
 
 export default function Basico() {
   return (

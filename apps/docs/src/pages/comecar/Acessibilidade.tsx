@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Section } from '../../components/Section';
 import { toHref } from '../../router';
@@ -7,7 +7,7 @@ export default function AcessibilidadePage() {
   return (
     <>
       <p className="eds-text-body-lg docs-muted">
-        O eDS.ui mira a WCAG 2.2 nível AA. Esta página reúne o compromisso, o que os componentes já
+        O efDS.ui mira a WCAG 2.2 nível AA. Esta página reúne o compromisso, o que os componentes já
         fazem e o que continua sendo do seu código. A seção &quot;Acessibilidade&quot; de cada
         componente traz o detalhe.
       </p>

@@ -1,4 +1,4 @@
-import { Field, Input, InputGroup, Spinner } from '@eds-ui/react';
+import { Field, Input, InputGroup, Spinner } from '@efds-ui/react';
 
 export default function Carregando() {
   return (

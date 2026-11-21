@@ -1,4 +1,4 @@
-import { Checkbox, Fieldset } from '@eds-ui/react';
+import { Checkbox, Fieldset } from '@efds-ui/react';
 
 export default function Erro() {
   return (

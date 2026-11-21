@@ -1,5 +1,5 @@
 /*
- * Tom e iniciais do Avatar. O mesmo algoritmo do `@eds-ui/behavior` (`avatarTone` e
+ * Tom e iniciais do Avatar. O mesmo algoritmo do `@efds-ui/behavior` (`avatarTone` e
  * `avatarInitials`): a mesma pessoa tem a mesma cor no HTML e no React. Os dois pacotes
  * conferem os mesmos valores em teste.
  */

@@ -8,8 +8,8 @@ import {
   Sidebar,
   SidebarItem,
   SidebarSection,
-} from '@eds-ui/react';
-import { BellIcon, DashboardIcon, UsersIcon } from '@eds-ui/icons';
+} from '@efds-ui/react';
+import { BellIcon, DashboardIcon, UsersIcon } from '@efds-ui/icons';
 
 export default function Aplicacao() {
   return (

@@ -1,4 +1,4 @@
-import { Alert, Stack } from '@eds-ui/react';
+import { Alert, Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -12,7 +12,7 @@ import dialogoHtml from '../../examples/page-loader/dialogo.html?raw';
 import { toHref } from '../../router';
 
 const scriptTag = `<script
-  src=".../@eds-ui/behavior/dist/eds-behavior.js"
+  src=".../@efds-ui/behavior/dist/eds-behavior.js"
   defer
   data-eds-loader="auto"
   data-eds-loader-title="Carregando…"
@@ -45,7 +45,7 @@ const excecoes = `<!-- Não mostra o loader neste envio / link / botão -->
   fetch('/api/status', { headers: { 'X-EDS-Loader': 'off' } });
 </script>`;
 
-const esm = `import { init, configure, loader } from '@eds-ui/behavior';
+const esm = `import { init, configure, loader } from '@efds-ui/behavior';
 
 init(document, {
   loader: {
@@ -61,7 +61,7 @@ init(document, {
 
 configure({ loader: { mode: 'manual' } }); // vale também depois do init`;
 
-const react = `import { PageLoaderProvider, usePageLoader } from '@eds-ui/react';
+const react = `import { PageLoaderProvider, usePageLoader } from '@efds-ui/react';
 
 // Um único provider, na raiz. Com auto (padrão), todo fetch e XMLHttpRequest o aciona.
 <PageLoaderProvider exclude={[/\\/api\\/poll/]} texts={{ title: 'Carregando…' }}>
@@ -118,7 +118,7 @@ export default function PageLoaderPage() {
 
       <Section title="Modo automático (HTML)">
         <p>
-          Com o <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> carregado, o modo{' '}
+          Com o <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> carregado, o modo{' '}
           <code>auto</code> (padrão) mostra o loader sem você escrever código, em:
         </p>
         <ul className="docs-list">
@@ -188,7 +188,7 @@ export default function PageLoaderPage() {
           <code>usePageLoader()</code>, que devolve <code>{'{ start, track }'}</code> (lança um erro
           fora do provider). Com <code>auto</code> (padrão <code>true</code>) faz o mesmo patch de{' '}
           <code>fetch</code> e <code>XMLHttpRequest</code> enquanto montado e o restaura ao
-          desmontar. O <code>@eds-ui/react</code> não depende do <code>@eds-ui/behavior</code>.
+          desmontar. O <code>@efds-ui/react</code> não depende do <code>@efds-ui/behavior</code>.
         </p>
         <CodeBlock code={react} label="Código React: PageLoaderProvider" />
         <PropsTable
@@ -260,7 +260,7 @@ export default function PageLoaderPage() {
         <p>
           <code>PageLoader</code> serve a quem quer só o visual, sem atraso nem contagem; o fluxo
           completo é o do provider. Quando <code>PageLoaderProvider</code> e{' '}
-          <code>@eds-ui/behavior</code> estiverem na mesma página, ligue um só deles em modo{' '}
+          <code>@efds-ui/behavior</code> estiverem na mesma página, ligue um só deles em modo{' '}
           <code>auto</code>.
         </p>
       </Section>

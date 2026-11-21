@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Button, Stack } from '@eds-ui/react';
+import { Alert, Button, Stack } from '@efds-ui/react';
 
 export default function Dinamico() {
   const [saved, setSaved] = useState(false);

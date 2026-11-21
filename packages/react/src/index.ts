@@ -255,7 +255,7 @@ export type {
   ToastVariant,
 } from './components/Toast';
 
-// Exportação de tabelas (geradores do @eds-ui/behavior, sem o init)
+// Exportação de tabelas (geradores do @efds-ui/behavior, sem o init)
 export { TableExport } from './components/TableExport';
 export type {
   TableExportProps,
@@ -263,14 +263,14 @@ export type {
   TableExportBeforeInfo,
   TableExportDoneInfo,
 } from './components/TableExport';
-export { exportData, toCsv, toJson, toPdf, toXlsx } from '@eds-ui/behavior/export';
+export { exportData, toCsv, toJson, toPdf, toXlsx } from '@efds-ui/behavior/export';
 export type {
   ExportColumn,
   ExportColumnType,
   ExportData,
   ExportFormat,
   ExportOptions,
-} from '@eds-ui/behavior/export';
+} from '@efds-ui/behavior/export';
 
 // Locale
 export { LocaleProvider, useLocale } from './components/Locale';
@@ -289,8 +289,8 @@ export { Lookup } from './components/Lookup';
 export type { LookupColumn, LookupItem, LookupProps, LookupTexts } from './components/Lookup';
 export { useCep } from './components/Cep';
 export type { CepStatus, UseCepOptions, UseCepResult } from './components/Cep';
-export type { CepAddress } from '@eds-ui/behavior/fields';
-// Formatadores (funções puras do @eds-ui/behavior/format, sem componente)
+export type { CepAddress } from '@efds-ui/behavior/fields';
+// Formatadores (funções puras do @efds-ui/behavior/format, sem componente)
 export {
   formatCep,
   formatCnpj,
@@ -305,7 +305,7 @@ export {
   maskCpf,
   parseDate,
   parseNumber,
-} from '@eds-ui/behavior/format';
+} from '@efds-ui/behavior/format';
 export type {
   CurrencyFormatOptions,
   DateFormatOptions,
@@ -313,7 +313,7 @@ export type {
   FormatOptions,
   NumberFormatOptions,
   RelativeFormatOptions,
-} from '@eds-ui/behavior/format';
+} from '@efds-ui/behavior/format';
 
 // Onda C: página e feedback
 export { Progress } from './components/Progress';

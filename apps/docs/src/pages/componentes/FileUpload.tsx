@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -111,12 +111,12 @@ export default function FileUploadPage() {
       />
 
       <Section title="Modo formulário">
-        <Alert variant="info" title="HTML: precisa do @eds-ui/behavior">
+        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             Sem JavaScript o componente continua funcionando: o <code>label</code> abre o seletor
             nativo e o formulário envia o input. A lista, a validação visível, o acúmulo entre
             seleções e o arrastar e soltar vêm do{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a>, que detecta o{' '}
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que detecta o{' '}
             <code>[data-eds-upload]</code>. Os previews HTML abaixo estão ligados a ele; no React, o{' '}
             <code>FileUpload</code> faz tudo sozinho.
           </p>
@@ -150,8 +150,8 @@ export default function FileUploadPage() {
         </p>
         <ul className="docs-list">
           <li>
-            O <code>@eds-ui/behavior</code> faz um <code>POST</code> multipart por arquivo, no campo
-            de <code>data-eds-upload-field</code> (padrão <code>file</code>), com{' '}
+            O <code>@efds-ui/behavior</code> faz um <code>POST</code> multipart por arquivo, no
+            campo de <code>data-eds-upload-field</code> (padrão <code>file</code>), com{' '}
             <code>Accept: application/json</code>. O envio <strong>não aciona o PageLoader</strong>{' '}
             (cabeçalho <code>X-EDS-Loader: off</code>): a lista já mostra o progresso.
           </li>

@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -253,8 +253,8 @@ export default function TreePage() {
         />
         <p>
           Se houver um <code>DialogProvider</code> acima, a confirmação de exclusão usa o diálogo do
-          eDS.ui; sem ele, o <code>window.confirm</code>. Se houver um <code>ToastProvider</code>, o
-          &quot;Desfazer&quot; aparece num toast de 8 s; sem ele, a exclusão não oferece desfazer.
+          efDS.ui; sem ele, o <code>window.confirm</code>. Se houver um <code>ToastProvider</code>,
+          o &quot;Desfazer&quot; aparece num toast de 8 s; sem ele, a exclusão não oferece desfazer.
         </p>
       </Section>
 

@@ -1,26 +1,26 @@
-import { Card, CardBody, CardHeader, CardTitle, Grid, GridItem } from '@eds-ui/react';
+import { Card, CardBody, CardHeader, CardTitle, Grid, GridItem } from '@efds-ui/react';
 import { Section } from '../../components/Section';
 import { toHref } from '../../router';
 
 const packages = [
   {
-    name: '@eds-ui/core',
+    name: '@efds-ui/core',
     text: 'CSS puro: tokens, base, layout e um arquivo por componente. Não depende de nada e não conhece React.',
   },
   {
-    name: '@eds-ui/themes',
+    name: '@efds-ui/themes',
     text: 'Os eixos de aparência (tema, modo, densidade e forma), aplicados por atributos data-*.',
   },
   {
-    name: '@eds-ui/behavior',
+    name: '@efds-ui/behavior',
     text: 'Comportamento em JavaScript puro, sem dependências, para quem usa só HTML (PHP, Java, .NET, Vue, Angular): Tabs, Modal, Toast, Table, Combobox, DatePicker, FileUpload e o PageLoader.',
   },
   {
-    name: '@eds-ui/react',
+    name: '@efds-ui/react',
     text: 'Wrappers React sobre as classes do core: API pequena, acessibilidade forçada nos tipos.',
   },
   {
-    name: '@eds-ui/icons',
+    name: '@efds-ui/icons',
     text: 'Ícones SVG como componentes React, um export por ícone.',
   },
 ] as const;
@@ -29,9 +29,9 @@ export default function Introducao() {
   return (
     <>
       <p className="eds-text-body-lg">
-        O eDS.ui (Empresarial Design System) é um design system leve para aplicações empresariais:
-        SaaS, ERP, CRM e painéis. Começa pelo HTML e pelo CSS; o React é uma camada opcional por
-        cima.
+        O efDS.ui (Empresarial Framework Design System) é um design system leve para aplicações
+        empresariais: SaaS, ERP, CRM e painéis. Começa pelo HTML e pelo CSS; o React é uma camada
+        opcional por cima.
       </p>
 
       <Section title="Princípios">
@@ -108,7 +108,7 @@ export default function Introducao() {
 
       <Section title="Estado do projeto">
         <p>
-          O eDS.ui está em pré-lançamento (v0.1.0, MVP). Os pacotes ainda não foram publicados no
+          O efDS.ui está em pré-lançamento (v0.1.0, MVP). Os pacotes ainda não foram publicados no
           npm. Todos os dados de exemplo são fictícios.
         </p>
       </Section>
@@ -118,7 +118,7 @@ export default function Introducao() {
           O código dos pacotes e os exemplos de código desta documentação estão sob a licença MIT. O
           texto da documentação está sob a licença Creative Commons Atribuição 4.0 Internacional (CC
           BY 4.0): pode ser copiado e adaptado, inclusive para uso comercial, desde que se dê o
-          crédito ao eDS.ui.
+          crédito ao efDS.ui.
         </p>
       </Section>
     </>

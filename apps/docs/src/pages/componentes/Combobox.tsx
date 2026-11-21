@@ -1,4 +1,4 @@
-import { Alert, Stack } from '@eds-ui/react';
+import { Alert, Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -57,10 +57,10 @@ export default function ComboboxPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="HTML: precisa do @eds-ui/behavior">
+        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             O teclado, o filtro, o foco e o posicionamento do popup são JavaScript: no HTML vêm do{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a>, que detecta o{' '}
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que detecta o{' '}
             <code>.eds-combobox</code> pelo próprio markup. Os previews HTML abaixo estão ligados a
             ele; no React, o <code>Combobox</code> faz tudo sozinho.
           </p>
@@ -89,7 +89,7 @@ export default function ComboboxPage() {
         <p>
           Quando a lista é grande ou muda no servidor, o HTML não traz as opções: aponte o{' '}
           <code>.eds-combobox</code> para um endereço com <code>data-eds-source</code>. A cada
-          digitação (com <em>debounce</em> de 300 ms) o <code>@eds-ui/behavior</code> faz um{' '}
+          digitação (com <em>debounce</em> de 300 ms) o <code>@efds-ui/behavior</code> faz um{' '}
           <code>GET</code> no endereço com o texto digitado, codificado, no fim:{' '}
           <code>/clientes/busca?q=pa</code>. A resposta é JSON:
         </p>

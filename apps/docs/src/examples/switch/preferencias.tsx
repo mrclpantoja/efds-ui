@@ -1,4 +1,4 @@
-import { Fieldset, Switch } from '@eds-ui/react';
+import { Fieldset, Switch } from '@efds-ui/react';
 
 export default function Preferencias() {
   return (

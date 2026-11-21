@@ -15,8 +15,8 @@ import {
   sortTableData,
   type BadgeVariant,
   type TableSortState,
-} from '@eds-ui/react';
-import { EditIcon } from '@eds-ui/icons';
+} from '@efds-ui/react';
+import { EditIcon } from '@efds-ui/icons';
 
 interface Pedido {
   codigo: string;

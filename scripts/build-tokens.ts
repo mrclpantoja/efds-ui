@@ -1,5 +1,5 @@
 /**
- * Gerador de tokens JSON → CSS do eDS.ui. Contrato: docs/architecture/tokens.md.
+ * Gerador de tokens JSON → CSS do efDS.ui. Contrato: docs/architecture/tokens.md.
  *
  *   node scripts/build-tokens.ts            gera/atualiza os CSS (e remove os órfãos)
  *   node scripts/build-tokens.ts --check    não escreve; sai com 1 se algo estiver desatualizado

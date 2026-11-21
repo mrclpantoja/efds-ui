@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem } from '@eds-ui/react';
+import { Accordion, AccordionItem } from '@efds-ui/react';
 
 export default function Exclusivo() {
   return (

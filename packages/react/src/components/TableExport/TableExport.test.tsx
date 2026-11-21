@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TableExport } from './TableExport';
-import type { ExportData } from '@eds-ui/behavior/export';
+import type { ExportData } from '@efds-ui/behavior/export';
 
 const data: ExportData = {
   columns: [

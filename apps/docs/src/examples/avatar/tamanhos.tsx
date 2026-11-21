@@ -1,4 +1,4 @@
-import { Avatar, Stack } from '@eds-ui/react';
+import { Avatar, Stack } from '@efds-ui/react';
 
 export default function Tamanhos() {
   return (

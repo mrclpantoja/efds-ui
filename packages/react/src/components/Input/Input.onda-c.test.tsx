@@ -54,7 +54,7 @@ describe('Input: máscaras hora, competência e processo', () => {
 });
 
 describe('formatadores reexportados', () => {
-  it('são as mesmas funções do @eds-ui/behavior/format', () => {
+  it('são as mesmas funções do @efds-ui/behavior/format', () => {
     expect(formatCpf('12345678900')).toBe('123.456.789-00');
     expect(maskCpf('12345678900')).toBe('***.456.789-**');
     expect(formatCurrency(1280.5).replace(new RegExp(String.fromCharCode(160), 'g'), ' ')).toBe(

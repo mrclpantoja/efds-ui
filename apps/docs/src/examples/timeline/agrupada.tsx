@@ -1,4 +1,4 @@
-import { Timeline } from '@eds-ui/react';
+import { Timeline } from '@efds-ui/react';
 
 export default function Agrupada() {
   return (

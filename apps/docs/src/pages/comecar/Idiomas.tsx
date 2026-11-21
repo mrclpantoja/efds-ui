@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { defaultMessages } from '@eds-ui/behavior';
+import { defaultMessages } from '@efds-ui/behavior';
 import {
   Alert,
   Field,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Section } from '../../components/Section';
 import { toHref } from '../../router';
@@ -34,7 +34,7 @@ const html = `<script src="eds-behavior.js" data-eds-manual defer></script>
   });
 </script>`;
 
-const react = `import { LocaleProvider, DatePicker, CommandPalette } from '@eds-ui/react';
+const react = `import { LocaleProvider, DatePicker, CommandPalette } from '@efds-ui/react';
 
 <LocaleProvider locale="en-US">
   {/* nomes de mês e dia, ordem de texto e exportação */}
@@ -68,7 +68,7 @@ export default function Idiomas() {
         <Alert variant="info" title="Sem pacotes de idioma por enquanto">
           <p>
             O pacote não traz mensagens em inglês ou espanhol. São mais de duzentas chaves no{' '}
-            <code>@eds-ui/behavior</code> e outros textos espalhados pelos componentes React;
+            <code>@efds-ui/behavior</code> e outros textos espalhados pelos componentes React;
             entregar traduções sem revisão de falante nativo, num produto para órgãos públicos,
             seria pior do que não entregar. Em vez disso, esta página lista todas as chaves para
             você traduzir, e <code>defaultMessages</code> é exportado para servir de modelo. O que
@@ -103,7 +103,7 @@ export default function Idiomas() {
         <CodeBlock code={react} label="Código React: LocaleProvider e texts" />
       </Section>
 
-      <Section title="Chaves do @eds-ui/behavior">
+      <Section title="Chaves do @efds-ui/behavior">
         <p>
           Valores com <code>{'{chave}'}</code> recebem o dado no lugar. O padrão é pt-BR.
         </p>

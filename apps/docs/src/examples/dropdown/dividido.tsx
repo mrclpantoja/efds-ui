@@ -1,5 +1,5 @@
-import { ChevronDownIcon } from '@eds-ui/icons';
-import { Button, ButtonGroup, Dropdown, DropdownItem } from '@eds-ui/react';
+import { ChevronDownIcon } from '@efds-ui/icons';
+import { Button, ButtonGroup, Dropdown, DropdownItem } from '@efds-ui/react';
 
 export default function Dividido() {
   return (

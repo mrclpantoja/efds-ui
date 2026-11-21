@@ -1,6 +1,6 @@
 /*
  * Varredura do site: zero `style=` / `style={` e zero cor literal no CSS próprio.
- * Uso: pnpm --filter @eds-ui/docs check:visual
+ * Uso: pnpm --filter @efds-ui/docs check:visual
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';

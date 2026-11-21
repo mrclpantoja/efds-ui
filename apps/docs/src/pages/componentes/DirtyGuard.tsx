@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -37,12 +37,12 @@ export default function DirtyGuardPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Behavior @eds-ui/behavior">
+        <Alert variant="info" title="Behavior @efds-ui/behavior">
           <p>
             Ponha <code>data-eds-dirty-guard</code> no <code>&lt;form&gt;</code>. O behavior compara
             os campos com o estado inicial. Com alterações, fechar a aba mostra o aviso nativo do
             navegador (o texto dele não é configurável) e um link interno abre a confirmação do
-            eDS.ui (<code>confirm</code>), com o texto de <code>data-eds-dirty-message</code>. O
+            efDS.ui (<code>confirm</code>), com o texto de <code>data-eds-dirty-message</code>. O
             envio comum do formulário tira o aviso. Para envio por fetch, dispare{' '}
             <code>eds:dirty-reset</code> no formulário depois do sucesso.{' '}
             <code>data-eds-dirty-ignore</code> tira um campo ou bloco da comparação. O formulário
@@ -107,7 +107,7 @@ export default function DirtyGuardPage() {
         <ul className="docs-list">
           <li>
             <strong>Diálogo:</strong> a confirmação por link é um <code>alertdialog</code> do
-            eDS.ui, com foco no botão seguro e Esc para continuar editando.
+            efDS.ui, com foco no botão seguro e Esc para continuar editando.
           </li>
           <li>
             <strong>WCAG 3.3.4 (prevenção de erros):</strong> o aviso evita perda de dados sem

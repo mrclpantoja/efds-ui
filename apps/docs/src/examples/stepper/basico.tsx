@@ -1,4 +1,4 @@
-import { Stepper } from '@eds-ui/react';
+import { Stepper } from '@efds-ui/react';
 
 export default function Basico() {
   return (

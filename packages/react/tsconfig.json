@@ -1,5 +1,5 @@
 {
-  "extends": "@eds-ui/typescript-config/react.json",
+  "extends": "@efds-ui/typescript-config/react.json",
   "compilerOptions": {
     "types": ["@testing-library/jest-dom/vitest"],
     "customConditions": ["development"]

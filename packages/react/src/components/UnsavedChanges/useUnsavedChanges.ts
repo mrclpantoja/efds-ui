@@ -22,7 +22,7 @@ export interface UnsavedChangesOptions {
   /** Texto da pergunta (atalho de `texts.message`). */
   message?: string;
   /**
-   * Perguntar também ao clicar em links internos (com `DialogProvider`, no diálogo do eDS.ui;
+   * Perguntar também ao clicar em links internos (com `DialogProvider`, no diálogo do efDS.ui;
    * sem ele, em `window.confirm`). Fechar a aba sempre usa o aviso nativo. Padrão: `true`.
    */
   confirmLinks?: boolean;

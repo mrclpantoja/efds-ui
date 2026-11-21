@@ -2,7 +2,7 @@ import './interaction-demo.css';
 import type { ReactNode } from 'react';
 
 /* Estados estáticos da Fase 6e (diálogos rápidos, Sortable, Tree). O markup abaixo é o CONTRATO
-   que o JS (@eds-ui/behavior) gera/consome e que o React reproduz. Dados fictícios. */
+   que o JS (@efds-ui/behavior) gera/consome e que o React reproduz. Dados fictícios. */
 
 function Frame({
   caption,

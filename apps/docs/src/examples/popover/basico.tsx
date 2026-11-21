@@ -1,4 +1,4 @@
-import { Button, Popover } from '@eds-ui/react';
+import { Button, Popover } from '@efds-ui/react';
 
 export default function Basico() {
   return (

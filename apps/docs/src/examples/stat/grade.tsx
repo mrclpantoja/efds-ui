@@ -1,4 +1,4 @@
-import { Stat, StatGrid } from '@eds-ui/react';
+import { Stat, StatGrid } from '@efds-ui/react';
 
 export default function Grade() {
   return (

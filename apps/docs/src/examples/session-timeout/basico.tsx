@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, SessionTimeout, Stack } from '@eds-ui/react';
+import { Button, SessionTimeout, Stack } from '@efds-ui/react';
 
 /**
  * Em produção o tempo é o da política do sistema (`timeout={900} warnBefore={60}`). Aqui a

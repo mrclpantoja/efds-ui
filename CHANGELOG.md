@@ -1,12 +1,12 @@
 # Changelog
 
-Todas as mudanças relevantes do eDS.ui. Mantido à mão. Versão única para `@eds-ui/core`, `@eds-ui/themes`, `@eds-ui/react`, `@eds-ui/icons` e `@eds-ui/behavior`.
+Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons` e `@efds-ui/behavior`.
 
 ## 0.1.0 (MVP, ainda não publicado)
 
-Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escopo `@eds-ui`. Licença: MIT.
+Pré-lançamento: os pacotes seguem `private` até a criação do escopo `@efds-ui` no npm. Licença: MIT.
 
-### @eds-ui/core
+### @efds-ui/core
 
 - Tokens em três níveis (Primitive, Semantic, Component), gerados de JSON (`pnpm tokens`).
 - Eixos do Adaptive Surface por atributo: `data-theme`, `data-mode`, `data-density`, `data-shape`.
@@ -16,20 +16,20 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - Fase 6e: `alert-dialog.css` (diálogos rápidos sobre `.eds-modal`: ícone por tipo, ações empilhadas abaixo de 400px, sem animação de entrada ou saída), `sortable.css` (item, pegador, placeholder, fantasma, alvo de soltar, quadro) e `tree.css` (linha, guias por nível, chevron, ações "⋯", indicadores de soltar, fantasma); `.eds-toast-action` no Toast.
 - Máscara de entrada: `.eds-input[data-eds-mask='moeda'|'numero']` alinha o valor ao fim, com algarismos tabulares (seletor por atributo; só tokens semânticos).
 
-### @eds-ui/themes
+### @efds-ui/themes
 
 - Temas blue, green, purple, orange e neutral; modos light e dark; densidades compact, comfortable e spacious; formas sharp, soft e rounded. Cores com contraste WCAG 2.2 AA calculado.
 
-### @eds-ui/react
+### @efds-ui/react
 
 - Wrappers `forwardRef` sobre as classes do core para todos os componentes (42 diretórios de componente), sem CSS próprio; peer React 18 ou 19.
 - Exigências de acessibilidade no tipo (por exemplo `iconOnly` exige `aria-label`).
 - Modal e Drawer sobre `<dialog>`; Dropdown como disclosure; Toast via `ToastProvider` e `useToast`.
 - Fase 6e: `DialogProvider` e `useDialog()` (`alert`, `confirm`, `prompt` por Promise, textos configuráveis), `Sortable` e `SortableGroup` (arrastar e soltar com alternativa por teclado, quadro entre listas, `name` para formulário) e `Tree` (APG, edição, mover por teclado e arrasto, filhos sob demanda por `loadChildren`, desfazer exclusão); `ToastOptions.action` (botão no toast).
-- Exportação de tabelas: `TableExport` (botão "Exportar" com menu em Dropdown, formatos `csv`, `xlsx`, `json`, `pdf`; a fonte é o estado, por `data` ou `getData`; `onBeforeExport` altera os dados (mascarar CPF, retirar colunas) ou cancela com `false`; `onExport`; textos e rótulos substituíveis; anúncio do resultado em `role="status"`) e as funções `exportData`, `toCsv`, `toJson`, `toXlsx` e `toPdf` com seus tipos. **Passa a depender de `@eds-ui/behavior`** (`workspace:*`), mas importa só o subcaminho `@eds-ui/behavior/export` (sem `init`, sem auto-init, sem os outros módulos).
-- Máscara de entrada no `Input`: `mask` (`telefone`, `cpf`, `cnpj` com letras, `cpf-cnpj`, `cep`, `moeda`, `numero` ou um padrão como `"00.000-AAA"`), `maskOptions` (`decimals`, `prefix`, `negative`), `unmask` (hidden com o valor limpo quando há `name`) e `onValueChange(masked, raw)`. Controlado e não controlado; `onChange` recebe o valor já mascarado; emite `data-eds-mask`, `inputmode`, `autocomplete` (telefone e CEP) e `maxlength` sem sobrescrever os do autor. Usa o núcleo `@eds-ui/behavior/mask`.
+- Exportação de tabelas: `TableExport` (botão "Exportar" com menu em Dropdown, formatos `csv`, `xlsx`, `json`, `pdf`; a fonte é o estado, por `data` ou `getData`; `onBeforeExport` altera os dados (mascarar CPF, retirar colunas) ou cancela com `false`; `onExport`; textos e rótulos substituíveis; anúncio do resultado em `role="status"`) e as funções `exportData`, `toCsv`, `toJson`, `toXlsx` e `toPdf` com seus tipos. **Passa a depender de `@efds-ui/behavior`** (`workspace:*`), mas importa só o subcaminho `@efds-ui/behavior/export` (sem `init`, sem auto-init, sem os outros módulos).
+- Máscara de entrada no `Input`: `mask` (`telefone`, `cpf`, `cnpj` com letras, `cpf-cnpj`, `cep`, `moeda`, `numero` ou um padrão como `"00.000-AAA"`), `maskOptions` (`decimals`, `prefix`, `negative`), `unmask` (hidden com o valor limpo quando há `name`) e `onValueChange(masked, raw)`. Controlado e não controlado; `onChange` recebe o valor já mascarado; emite `data-eds-mask`, `inputmode`, `autocomplete` (telefone e CEP) e `maxlength` sem sobrescrever os do autor. Usa o núcleo `@efds-ui/behavior/mask`.
 
-### @eds-ui/icons
+### @efds-ui/icons
 
 - 24 ícones próprios como componentes React (SVG, `currentColor`), com tree shaking; catálogo com busca e cópia (React ou SVG para HTML) na página Fundamentos › Ícones.
 
@@ -39,7 +39,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - Licença MIT: `LICENSE` na raiz e em cada pacote publicável; `"license": "MIT"` em todos os `package.json`.
 - A fonte Inter e o CSS do core ficam por conta do consumidor.
 
-### @eds-ui/behavior
+### @efds-ui/behavior
 
 - Comportamento em JavaScript puro (zero dependências) para quem usa só HTML: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Table (ordenação e seleção), Sidebar e Combobox.
 - `init(root, options)` devolve `destroy()`, observa o `root` (MutationObserver) e não liga nada fora dele. ESM tree-shakeable (`initTabs`, `initCombobox`...) e IIFE `dist/eds-behavior.js` com `window.EDS` e auto-init (`data-eds-manual` desliga).
@@ -56,9 +56,9 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - Fase 6e, Tree (`data-eds-tree`, `initTree`): APG Tree View com type-ahead e multisseleção; edição (`data-eds-editable`: renomear, adicionar filho/irmão/pai, excluir com confirmação e "Desfazer" por 8 s, mover por Alt+setas ou arrastando por zonas, menu "⋯"); fonte por JSON (`data-eds-source`) e filhos sob demanda (`data-eds-children-url`); eventos `eds:tree-change`, `-beforechange` (cancelável), `-select`, `-activate`, `-toggle`.
 - Toast: opção `action: { label, onClick }` (botão que executa e fecha).
 - Exportação de tabelas, sem dependência: CSV (`;`, BOM, CRLF, proteção contra injeção de fórmula), JSON, XLSX (ZIP e OOXML escritos à mão: cabeçalho congelado em negrito, autofiltro, formatos de número, moeda, percentual e data) e PDF (A4, Helvetica padrão com larguras AFM, retrato ou paisagem, fonte reduzida a 7 pt quando as colunas não cabem, várias páginas com cabeçalho repetido e rodapé "Página N de M"). Ligação HTML por `data-eds-export` (+ `-target`, `-filename`, `-title`, `-subtitle`, `-scope`), `th[data-type]`, `td[data-value]` e `data-eds-export-ignore`; eventos `eds:table-beforeexport` (cancelável; `detail.data` pode ser alterado para mascarar) e `eds:table-export`. Datas anteriores a 01/03/1900 saem como texto no XLSX (o Excel desloca ou não representa essas séries).
-- Subcaminho `@eds-ui/behavior/export` (só os geradores e os tipos, sem DOM além do download), usado pelo `@eds-ui/react`; `exports` com a condição `development` apontando ao código-fonte e `publishConfig.exports` para o `dist/`.
+- Subcaminho `@efds-ui/behavior/export` (só os geradores e os tipos, sem DOM além do download), usado pelo `@efds-ui/react`; `exports` com a condição `development` apontando ao código-fonte e `publishConfig.exports` para o `dist/`.
 - Máscara de entrada (`input[data-eds-mask]`, `initMask`): máscaras prontas `telefone` (8 ou 9 dígitos), `cpf`, `cnpj` (alfanumérico: 12 primeiras posições aceitam A-Z e 0-9, letras viram maiúsculas), `cpf-cnpj` (alterna pelo tamanho), `cep`, `moeda` (centavos primeiro; `data-eds-mask-decimals`, `-prefix`, `-negative`) e `numero`; padrão personalizado (`0` dígito, `A` letra, `*` letra ou dígito, `\\` escapa). Cursor preservado ao digitar, apagar no meio e apagar literal (Backspace/Delete sobre o literal apagam o dígito vizinho); colar com ou sem máscara nunca é bloqueado (o `maxlength` não corta o texto colado; "+55" some do telefone; moeda lê o texto colado como número); `data-eds-mask-unmask` troca o `name` por um hidden com o valor limpo (moeda: `1234.56`); valor atribuído por script é refeito no blur, no `change` e no envio; evento `eds:mask-change`; sem anúncio por tecla e sem validação.
-- Subcaminho `@eds-ui/behavior/mask` (só o núcleo da máscara, sem DOM), usado pelo `@eds-ui/react` para os dois se comportarem igual.
+- Subcaminho `@efds-ui/behavior/mask` (só o núcleo da máscara, sem DOM), usado pelo `@efds-ui/react` para os dois se comportarem igual.
 
 ### Correções da Fase 7 (validação)
 
@@ -82,7 +82,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 
 ### Lista de melhorias, onda A (contrato e correções)
 
-**@eds-ui/core e @eds-ui/themes**
+**@efds-ui/core e @efds-ui/themes**
 
 - Densidade varia toda a escala de controles: sm/md/lg = 28/32/36 px (compacto), 32/38/44 (confortável), 38/44/52 (espaçoso); `inset-sm/md/lg` semânticos no lugar de `space-4` variável; degraus de espaço de 2 e 20 px.
 - Tokens novos: `z-*` (camadas), `motion-duration-slow`, `border-width` e `border-width-strong`, `icon-size-sm..xl`, `target-min` (2,75 rem, alvo de toque), `layout-dialog-*`, `layout-table-min`, `layout-breakpoint-*`; `radius-xl` varia com `data-shape`. Literais de z-index, duração, borda e ícone saíram dos componentes.
@@ -94,16 +94,16 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - Seleção da Table: o checkbox dentro de `<label class="eds-check">` faz da célula inteira o alvo (mínimo `--eds-target-min` em ponteiro grosso), sem mudar a largura da coluna; o checkbox direto continua aceito.
 - Estado `:active` discreto (só tokens) em Navbar, Breadcrumb, opção do Combobox, dia do calendário, linha da Tree e ordenação da Table; tamanhos `-sm`/`-lg` de Textarea, Radio, Switch e Badge documentados.
 
-**@eds-ui/behavior**
+**@efds-ui/behavior**
 
 - Eventos no padrão `eds:<componente>-<ação>`: `eds:table-sort`, `eds:table-select-change` e `eds:alert-dismiss` (antes sem o prefixo do componente, sem camada de compatibilidade); novos `eds:modal-close`, `eds:drawer-open`, `eds:drawer-close`, `eds:dropdown-open` e `eds:dropdown-close`. `eds:modal-open` sai também quando o diálogo é aberto por `showModal()` no código (`detail.trigger = null`); os de fechamento saem por qualquer caminho, com `detail.returnValue`.
 - `configure({ locale })` (padrão `pt-BR`) e `resetLocale()`: collator da Table, nomes de mês e dia do calendário e exportador (ordem da data, separadores, formato de data do XLSX e `/Lang` do PDF); `ExportOptions.locale`. `Messages.dateLocale` removida.
 - `readonly` em Combobox, MultiSelect, DatePicker e DateRangePicker: não abrem a lista nem mudam o valor (também por colagem); `aria-readonly`.
 - Desempenho: auto-init com um seletor combinado por nó adicionado, e na remoção só os elementos ligados dentro dos nós removidos; Table com texto normalizado por linha em cache no filtro, cada valor interpretado uma vez e reinserção numa só operação na ordenação; Combobox com rótulos normalizados em cache, espera de 80 ms acima de 200 opções e reposicionamento no máximo uma vez por quadro; Tree com renumeração e JSON uma vez por lote e itens visíveis em cache; PageLoader sem criar objetos em chamadas excluídas. Tetos práticos documentados (Table ~1.000 linhas, Tree ~2.000 nós, Combobox local ~500 opções).
 - Novo `dist/eds-behavior-core.js`: o mesmo `window.EDS` sem o exportador e sem a máscara (~41 kB com gzip, contra ~54 kB do `eds-behavior.js` completo, medidos após a onda B).
-- Subentradas `@eds-ui/behavior/export/{csv,json,xlsx,pdf}` (`exportFile(dados, opções)`) para carregar um formato sob demanda; `@eds-ui/behavior/export` continua igual.
+- Subentradas `@efds-ui/behavior/export/{csv,json,xlsx,pdf}` (`exportFile(dados, opções)`) para carregar um formato sob demanda; `@efds-ui/behavior/export` continua igual.
 
-**@eds-ui/react**
+**@efds-ui/react**
 
 - Textos internos: todos os componentes usam a prop `texts` (objeto parcial, padrões em pt-BR); saem `severityLabel(s)`, `closeLabel`, `labels`, `messages`, `formatLabels`, `skipLinkLabel`, `collapseLabel` e as props soltas de mensagem do Combobox, MultiSelect e PageLoaderProvider.
 - `LocaleProvider` / `useLocale()` definem o idioma do `Intl` (DatePicker, DateRangePicker, TableExport); a prop `locale` do componente vence o provider.
@@ -120,7 +120,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 
 ### Lista de melhorias, onda B (componentes de tela)
 
-**@eds-ui/core**
+**@efds-ui/core**
 
 - Accordion (`<details>` nativo, grupo exclusivo por `name`, variante `-flush`, item desabilitado por `aria-disabled`).
 - Tooltip e Popover (`popover` nativo, posicionados pelo JS via `--_tooltip-x/-y` e `--_popover-x/-y` com `data-placement`; ponte para o ponteiro passar ao tooltip).
@@ -132,13 +132,13 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - O `:active` do item de Dropdown e da ordenação da Table não usa mais ícone muted sobre o fundo pressionado (ficava abaixo de 3:1 no escuro). Sem tokens novos.
 - `[hidden]` passa a vencer o `display` dos componentes (regra na camada `eds.utilities`); antes um `<button class="eds-button" hidden>` continuava visível.
 
-**@eds-ui/behavior**
+**@efds-ui/behavior**
 
 - Novos comportamentos no `init` e nos dois IIFE: Tooltip (`data-eds-tooltip`, WCAG 1.4.13: hover com atraso de 300 ms, foco, Esc dispensa sem fechar o diálogo em volta, pairável), Popover (`data-eds-popover`: posição, `aria-expanded`, foco de volta ao gatilho, `eds:popover-open` e `eds:popover-close`), Wizard (`form[data-eds-wizard]`: validação por painel, foco no título da etapa, anúncio "Etapa 2 de 4: Endereço.", atualiza o `.eds-stepper`, `eds:wizard-beforechange` cancelável e `eds:wizard-change`), Barra de filtros (`form[data-eds-filter-bar]`: chips dos campos aplicados, remover, limpar de verdade, contador de "Mais filtros", `eds:filter-change`) e Accordion (item `aria-disabled` não alterna).
 - Select somente leitura no toque também bloqueia `pointerdown` e `touchend`.
-- Subcaminho `@eds-ui/behavior/balloon` (posicionamento de Tooltip e Popover, usado pelo React). Textos novos em `configure({ messages })`: `wizard*` e `filter*`.
+- Subcaminho `@efds-ui/behavior/balloon` (posicionamento de Tooltip e Popover, usado pelo React). Textos novos em `configure({ messages })`: `wizard*` e `filter*`.
 
-**@eds-ui/react**
+**@efds-ui/react**
 
 - Novos componentes: `Accordion` e `AccordionItem`, `Tooltip`, `Popover`, `Stepper`, `Wizard`, `Stat` e `StatGrid`, `FilterBar`, `Page`, `PageHeader`, `PageToolbar`, `PageBody`, `PageFooter`. Tooltip e Popover usam o mesmo código do behavior.
 - `Table` ganha `loading` (`aria-busy` e anúncio `texts.loading`), `loadingOverlay` e `TableLoadingRows`.
@@ -162,37 +162,37 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 
 ### Lista de melhorias, onda C (campos, feedback e comportamentos de página)
 
-**@eds-ui/core**
+**@efds-ui/core**
 
 - InputGroup (prefixo/sufixo de texto e botões encaixados, foco e erro no grupo, carregando com Spinner), NumberInput (`.eds-number`, botões − e +), medidor de força e regras de senha (`.eds-password-strength`, `.eds-password-rules`), OTP (`.eds-otp` com células ou `.eds-otp-single`), Lookup (código + busca + descrição).
 - Progress (`progress.eds-progress` nativo estilizado, indeterminado com listras fixas em reduced-motion, sm/md e `data-tone`), ErrorState (`.eds-empty-error`), Copy (`data-copied`) e Secret, Timeline (marcador com tom, compacta e agrupada por dia), Notificações (sino com contagem e lista no Popover, não lida por texto + ponto) e `.eds-session-countdown`.
 - Utilitários de texto `.eds-text-mono` e `.eds-text-tabular`.
 
-**@eds-ui/behavior (página e feedback)**
+**@efds-ui/behavior (página e feedback)**
 
 - Copiar: `data-eds-copy` / `data-eds-copy-text` (Clipboard API com reserva `execCommand`), rótulo "Copiado" por 2 s, anúncio, eventos `eds:copy` e `eds:copy-fail`; `EDS.copyText`.
 - Notificações (sino sobre o Popover): leitura individual e "Marcar todas como lidas", contagem no nome do botão, eventos `eds:notifications-read` e `eds:notifications-read-all`.
 - Alterações não salvas: `form[data-eds-dirty-guard]` com `beforeunload`, confirmação ao sair por link (inclui rotas por hash), `eds:dirty-change`, `eds:dirty-reset` e `EDS.markClean`.
 - Sessão por inatividade: `EDS.session()` ou `data-eds-session-timeout`; aviso em `alertdialog` com contagem acessível (anúncio por minuto e aos 10 s; WCAG 2.2.1 e 2.2.6), sincronização entre abas, sem rede salvo `keepAliveUrl`; eventos `eds:session-extend` e `eds:session-expire`.
 - Campos condicionais: `data-eds-show-if` / `data-eds-require-if` (`=`, `!=`, presença, `!campo`, `a|b`), oculto com `hidden` e campos `disabled`, compatível com CSP; `eds:conditional-change`.
-- Tema por cor da organização: `@eds-ui/behavior/theme` (`createTheme`, `applyTheme`, `contrastRatio`) gera a escala de acento em OKLCH com contraste AA garantido nos dois modos; `data-eds-theme-color` para demonstração (só no pacote completo).
+- Tema por cor da organização: `@efds-ui/behavior/theme` (`createTheme`, `applyTheme`, `contrastRatio`) gera a escala de acento em OKLCH com contraste AA garantido nos dois modos; `data-eds-theme-color` para demonstração (só no pacote completo).
 
-**@eds-ui/react (página e feedback)**
+**@efds-ui/react (página e feedback)**
 
 - `Progress`, `ErrorState`, `CopyButton` (e `copyToClipboard`), `SecretField`, `Timeline` (com `groups`), `NotificationBell`, `SessionTimeout` / `useSessionTimeout` e `useUnsavedChanges`; campos condicionais por estado (padrão documentado, sem API nova).
 
-**@eds-ui/behavior (campos)**
+**@efds-ui/behavior (campos)**
 
 - Senha (`data-eds-password`): mostrar/ocultar com `aria-pressed`, força 0–4 por heurística local, regras atendidas/pendentes em texto, anúncio no blur ou após pausa; evento `eds:password-strength`.
 - Código de verificação (`data-eds-otp`): células com colar e preenchimento por SMS, campo único como reserva sem JS; eventos `eds:otp-change` e `eds:otp-complete`.
 - NumberInput (`data-eds-number`): padrão spinbutton (setas, PageUp/PageDown, Home/End, repetição ao segurar), máscara `numero` nas casas decimais; `eds:number-change`.
 - Lookup (`data-eds-lookup`): código + descrição + busca em modal, fonte remota ou local; `eds:lookup-change`.
 - Máscaras `hora`, `competencia` e `processo` (CNJ), com `data-eds-mask-validate` opcional (faixa e dígito verificador).
-- Formatadores (`@eds-ui/behavior/format`, `data-eds-format`): moeda, número, data, data e hora, relativo, CPF, CNPJ, telefone, CEP e `maskCpf` (LGPD).
+- Formatadores (`@efds-ui/behavior/format`, `data-eds-format`): moeda, número, data, data e hora, relativo, CPF, CNPJ, telefone, CEP e `maskCpf` (LGPD).
 - CEP (`data-eds-cep`, `data-eds-cep-fill`): `cepUrl` vazio por padrão, sem chamada externa até o autor configurar; estados carregando, não encontrado e falha com tentar de novo; `eds:cep-result`.
-- Subentrada `@eds-ui/behavior/fields` (regras puras compartilhadas com o React). Tamanhos do IIFE após a onda C: `eds-behavior.js` ~221 kB (72 kB gzip), `eds-behavior-core.js` ~177 kB (56 kB gzip; sem CEP, formatadores, exportação e tema).
+- Subentrada `@efds-ui/behavior/fields` (regras puras compartilhadas com o React). Tamanhos do IIFE após a onda C: `eds-behavior.js` ~221 kB (72 kB gzip), `eds-behavior-core.js` ~177 kB (56 kB gzip; sem CEP, formatadores, exportação e tema).
 
-**@eds-ui/react (campos)**
+**@efds-ui/react (campos)**
 
 - `PasswordInput`, `OtpInput`, `InputGroup`, `NumberInput`, `Lookup` (nunca chama a rede sozinho) e `useCep`.
 - `Input`: máscaras `hora`, `competencia` e `processo`; `maskValidate` e `maskInvalidMessage`.
@@ -209,7 +209,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 
 ### Lista de melhorias, onda D (complementos)
 
-**@eds-ui/core**
+**@efds-ui/core**
 
 - Avatar e AvatarGroup (tons `.eds-avatar-tone-1..6` com contraste AA nos 5 temas e 2 modos, mínimo 4,79:1; status com forma além da cor), Tag (`.eds-tag` com `data-tone` e remoção), Divider (horizontal, vertical e com rótulo).
 - Paleta de comandos (`.eds-command` sobre o Modal), Agenda mensal (grade que vira lista por dia em contêiner estreito), TimePicker (lista de horários no padrão combobox; `type=time` nativo estilizado), SegmentedControl (rádios nativos), DescriptionList (colunas por contêiner, horizontal, divided, striped) e Banner de sistema (área própria no app shell).
@@ -217,7 +217,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - `prefers-contrast: more`: Badge, Tag, Avatar e Banner ganham borda legível (o ajuste de tokens já existia em `base/accessibility.css`).
 - Correção: controles dentro de `.eds-card` não perdem mais o `position` próprio (o botão do DatePicker num Card ficava fora do lugar).
 
-**@eds-ui/behavior**
+**@efds-ui/behavior**
 
 - Paleta de comandos (`data-eds-command`): Ctrl/Cmd+K configurável (`data-eds-command-shortcut`, `off` desliga), padrão APG combobox/listbox, grupos, itens da marcação, JSON ou fonte remota, "Recentes" opcional (só ids em localStorage), `eds:command-select` cancelável. Só no IIFE completo.
 - Agenda mensal (`data-eds-agenda`): navegação por mês, "+N mais" com Popover, eventos por JSON ou fonte remota (`{from}`/`{to}`), `eds:agenda-month-change` e `eds:agenda-event-click`. Só no IIFE completo.
@@ -228,7 +228,7 @@ Pré-lançamento: os pacotes seguem `private` até a verificação do nome/escop
 - Idiomas: `defaultMessages` exportado como modelo de tradução; página "Idiomas e textos" lista as chaves. Sem pacotes de idioma prontos (dependem de revisão de falante nativo).
 - Tamanhos após a onda D: `eds-behavior.js` ~251 kB (81 kB gzip), `eds-behavior-core.js` ~189 kB (59 kB gzip).
 
-**@eds-ui/react**
+**@efds-ui/react**
 
 - `Avatar`, `AvatarGroup` (`aria-label` obrigatório), `Tag`, `Divider`, `SegmentedControl`, `DescriptionList`, `Banner`, `TimePicker`, `CommandPalette` e `Agenda`; `AppShell` ganha o slot `banner`; `NotificationBell` com "Marcar todas" desabilitado sem não lidas.
 

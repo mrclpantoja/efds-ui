@@ -1,5 +1,5 @@
-import { Button, EmptyState } from '@eds-ui/react';
-import { SearchIcon } from '@eds-ui/icons';
+import { Button, EmptyState } from '@efds-ui/react';
+import { SearchIcon } from '@efds-ui/icons';
 
 export default function Basico() {
   return (

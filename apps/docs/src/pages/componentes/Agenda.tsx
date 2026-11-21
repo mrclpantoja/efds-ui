@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -46,7 +46,7 @@ export default function AgendaPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="@eds-ui/behavior">
+        <Alert variant="info" title="@efds-ui/behavior">
           <p>
             Um <code>.eds-agenda</code> com <code>data-eds-agenda</code> e o mês em{' '}
             <code>data-eds-agenda-month=&quot;2026-03&quot;</code>. Há dois modos:

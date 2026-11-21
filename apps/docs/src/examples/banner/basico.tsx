@@ -1,4 +1,4 @@
-import { Banner, Button, Stack } from '@eds-ui/react';
+import { Banner, Button, Stack } from '@efds-ui/react';
 
 export default function Basico() {
   return (

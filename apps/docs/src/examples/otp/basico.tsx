@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { OtpInput } from '@eds-ui/react';
+import { OtpInput } from '@efds-ui/react';
 
 export default function Basico() {
   const [codigo, setCodigo] = useState('');

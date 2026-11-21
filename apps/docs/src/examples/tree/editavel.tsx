@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Tree, type TreeChange, type TreeNodeData } from '@eds-ui/react';
+import { Tree, type TreeChange, type TreeNodeData } from '@efds-ui/react';
 
 const categorias: TreeNodeData[] = [
   {

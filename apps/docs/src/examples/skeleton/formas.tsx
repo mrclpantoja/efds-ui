@@ -1,4 +1,4 @@
-import { Skeleton, Stack } from '@eds-ui/react';
+import { Skeleton, Stack } from '@efds-ui/react';
 
 export default function Formas() {
   return (

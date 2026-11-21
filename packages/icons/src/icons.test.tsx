@@ -5,7 +5,7 @@ import * as icons from './index';
 
 const all = Object.entries(icons).filter(([name]) => name.endsWith('Icon'));
 
-describe('@eds-ui/icons', () => {
+describe('@efds-ui/icons', () => {
   it('exporta o conjunto mínimo', () => {
     expect(all.length).toBe(24);
   });

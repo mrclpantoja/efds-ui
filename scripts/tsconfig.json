@@ -1,5 +1,5 @@
 {
-  "extends": "@eds-ui/typescript-config/base.json",
+  "extends": "@efds-ui/typescript-config/base.json",
   "compilerOptions": {
     "lib": ["ES2023"],
     "types": ["node"],

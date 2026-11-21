@@ -1,4 +1,4 @@
-import { Field, FileUpload, type FileUploadUploadOptions } from '@eds-ui/react';
+import { Field, FileUpload, type FileUploadUploadOptions } from '@efds-ui/react';
 
 /**
  * Upload simulado: não há servidor. Em produção, `enviar` faria um fetch/XHR ao seu endpoint e

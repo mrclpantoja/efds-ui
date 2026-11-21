@@ -1,4 +1,4 @@
-import { Button, Divider, Stack } from '@eds-ui/react';
+import { Button, Divider, Stack } from '@efds-ui/react';
 
 export default function Rotulo() {
   return (

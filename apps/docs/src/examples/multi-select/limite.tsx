@@ -1,4 +1,4 @@
-import { Field, MultiSelect } from '@eds-ui/react';
+import { Field, MultiSelect } from '@efds-ui/react';
 
 const filiais = [
   { value: 'poa', label: 'Porto Alegre' },

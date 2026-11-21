@@ -1,4 +1,4 @@
-import { Badge, Button, Stack } from '@eds-ui/react';
+import { Badge, Button, Stack } from '@efds-ui/react';
 
 export default function Pilha() {
   return (

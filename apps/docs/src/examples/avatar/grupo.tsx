@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup } from '@eds-ui/react';
+import { Avatar, AvatarGroup } from '@efds-ui/react';
 
 export default function Grupo() {
   return (

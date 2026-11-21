@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';

@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -53,7 +53,7 @@ export default function SidebarPage() {
           Código para o React: o botão de colapsar (rótulo fixo, <code>aria-expanded</code> e{' '}
           <code>aria-controls</code>) já vem na sidebar. Controle <code>collapsed</code> para
           persistir a escolha. No HTML, o{' '}
-          <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> liga um botão com{' '}
+          <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> liga um botão com{' '}
           <code>data-eds-sidebar-collapse</code> dentro da <code>.eds-sidebar</code>: ele alterna{' '}
           <code>data-collapsed</code> e <code>aria-expanded</code> (o exemplo HTML acima tem esse
           botão; sem o pacote, ponha <code>data-collapsed</code> você mesmo). Dentro do app shell, o

@@ -1,4 +1,4 @@
-import { Field, TimePicker } from '@eds-ui/react';
+import { Field, TimePicker } from '@efds-ui/react';
 
 export default function Erro() {
   return (

@@ -1,10 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/inter';
-import '@eds-ui/core/index.css';
-import '@eds-ui/themes/index.css';
+import '@efds-ui/core/index.css';
+import '@efds-ui/themes/index.css';
 import './site.css';
-import { alert, configure, confirm, loader, prompt, toast } from '@eds-ui/behavior';
+import { alert, configure, confirm, loader, prompt, toast } from '@efds-ui/behavior';
 import { Layout } from './Layout';
 import { installDocsMocks } from './mock-api';
 

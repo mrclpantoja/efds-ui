@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -110,7 +110,7 @@ export default function SelectPage() {
             {
               name: '[aria-readonly="true"]',
               effect:
-                'Somente leitura: fundo suave como o Input readonly, seta atenuada, sem hover. Em HTML, o @eds-ui/behavior impede abrir a lista e mudar a escolha (o campo segue focável e vai no envio); sem o JS, só o visual muda.',
+                'Somente leitura: fundo suave como o Input readonly, seta atenuada, sem hover. Em HTML, o @efds-ui/behavior impede abrir a lista e mudar a escolha (o campo segue focável e vai no envio); sem o JS, só o visual muda.',
             },
             { name: '[aria-invalid="true"]', effect: 'Borda de perigo.' },
             { name: '[data-valid="true"]', effect: 'Borda de sucesso.' },

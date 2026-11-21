@@ -1,4 +1,4 @@
-import { Button, Stack, useDialog, useToast } from '@eds-ui/react';
+import { Button, Stack, useDialog, useToast } from '@efds-ui/react';
 
 export default function Prompt() {
   const dialog = useDialog();

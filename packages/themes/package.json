@@ -1,10 +1,10 @@
 {
-  "name": "@eds-ui/themes",
+  "name": "@efds-ui/themes",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "type": "module",
-  "description": "Temas e eixos (theme, mode, density, shape) do eDS.ui.",
+  "description": "Temas e eixos (theme, mode, density, shape) do efDS.ui.",
   "keywords": [
     "design-system",
     "css",
@@ -30,7 +30,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@eds-ui/core": "workspace:*"
+    "@efds-ui/core": "workspace:*"
   },
   "devDependencies": {
     "vite": "catalog:"

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sortable, SortableGroup, type SortableItemData } from '@eds-ui/react';
+import { Sortable, SortableGroup, type SortableItemData } from '@efds-ui/react';
 
 const colunas = [
   { id: 'afazer', titulo: 'A fazer' },

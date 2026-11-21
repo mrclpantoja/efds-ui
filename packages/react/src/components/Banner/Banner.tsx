@@ -39,7 +39,7 @@ interface BannerBase extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | '
   dismissible?: boolean;
   /**
    * Lembra o fechamento no `localStorage` (só `1`, na chave `eds:banner:<id>`, a mesma do
-   * `@eds-ui/behavior`) e não mostra o banner nas próximas visitas. Sem isso, volta a cada carga.
+   * `@efds-ui/behavior`) e não mostra o banner nas próximas visitas. Sem isso, volta a cada carga.
    */
   rememberId?: string;
   /** O banner foi fechado pelo usuário. */

@@ -1,4 +1,4 @@
-import { Button, Stack } from '@eds-ui/react';
+import { Button, Stack } from '@efds-ui/react';
 
 export default function Tamanhos() {
   return (

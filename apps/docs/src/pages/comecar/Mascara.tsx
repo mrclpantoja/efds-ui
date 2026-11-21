@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { Section } from '../../components/Section';
@@ -89,7 +89,7 @@ export default function MascaraPage() {
           rows={[
             {
               name: 'data-eds-mask="nome"',
-              effect: 'Liga a máscara (HTML, via @eds-ui/behavior).',
+              effect: 'Liga a máscara (HTML, via @efds-ui/behavior).',
             },
             {
               name: 'data-eds-mask-unmask',

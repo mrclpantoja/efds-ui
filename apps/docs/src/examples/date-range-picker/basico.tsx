@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DateRangePicker, Field, type DateRangeValue } from '@eds-ui/react';
+import { DateRangePicker, Field, type DateRangeValue } from '@efds-ui/react';
 
 export default function Basico() {
   const [range, setRange] = useState<DateRangeValue>({ start: null, end: null });

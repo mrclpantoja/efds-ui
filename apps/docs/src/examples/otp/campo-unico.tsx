@@ -1,4 +1,4 @@
-import { Field, Input } from '@eds-ui/react';
+import { Field, Input } from '@efds-ui/react';
 
 // Fallback sem JS: um só campo (o `OtpInput` do React já entrega as células).
 export default function CampoUnico() {

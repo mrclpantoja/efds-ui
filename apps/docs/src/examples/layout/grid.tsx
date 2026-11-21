@@ -1,4 +1,4 @@
-import { Card, CardBody, Grid, GridItem } from '@eds-ui/react';
+import { Card, CardBody, Grid, GridItem } from '@efds-ui/react';
 
 export default function GridColunas() {
   return (

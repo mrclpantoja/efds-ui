@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -50,7 +50,7 @@ export default function DropdownPage() {
           Em HTML puro o <code>aria-expanded</code> do gatilho não se atualiza sozinho: o navegador
           já expõe o estado de abertura ao leitor de tela pelo <code>popovertarget</code>, mas o
           giro da seta do gatilho depende de <code>aria-expanded</code>, que o React sincroniza no
-          evento <code>toggle</code>. Em HTML, o <code>@eds-ui/behavior</code> faz essa
+          evento <code>toggle</code>. Em HTML, o <code>@efds-ui/behavior</code> faz essa
           sincronização (e fecha o menu quando o foco sai dele); os previews acima já estão ligados
           a ele. Sem o pacote, sincronize-o com um pequeno script.
         </p>
@@ -157,7 +157,7 @@ export default function DropdownPage() {
 
       <Section title="Eventos (HTML)">
         <ClassTable
-          caption="Eventos do @eds-ui/behavior"
+          caption="Eventos do @efds-ui/behavior"
           headers={['Evento', 'Quando']}
           rows={[
             {

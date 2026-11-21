@@ -1,4 +1,4 @@
-import { Combobox, Field } from '@eds-ui/react';
+import { Combobox, Field } from '@efds-ui/react';
 
 const cidades = [
   { value: 'poa', label: 'Porto Alegre' },

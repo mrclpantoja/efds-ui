@@ -161,7 +161,7 @@ function Pagination({
 
 /* --------------------------- Tabela interativa --------------------------- */
 
-/* Marcação do contrato (HTML cru): ordenação, seleção e filtro vêm do @eds-ui/behavior
+/* Marcação do contrato (HTML cru): ordenação, seleção e filtro vêm do @efds-ui/behavior
    (`data-eds-live` marca a raiz que o playground liga). Os demais exemplos seguem estáticos. */
 function InteractiveTable() {
   const tableId = useId();
@@ -276,7 +276,7 @@ function InteractiveTable() {
         </div>
       </div>
       <p className="eds-helper">
-        Interativa com @eds-ui/behavior: ordenar, selecionar e buscar (tente &quot;clin&quot;). O
+        Interativa com @efds-ui/behavior: ordenar, selecionar e buscar (tente &quot;clin&quot;). O
         filtro alcança só as linhas desta página. As demais tabelas são estáticas.
       </p>
     </Section>

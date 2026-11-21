@@ -36,7 +36,7 @@ export function App() {
   return (
     <main>
       <h1 className="eds-text-h1" id="playground-titulo" tabIndex={-1}>
-        eDS.ui Playground
+        efDS.ui Playground
       </h1>
       <p>Escolha os eixos abaixo; eles são aplicados como atributos no elemento html.</p>
       <nav aria-label="Telas de referência">

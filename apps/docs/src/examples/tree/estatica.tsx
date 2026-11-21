@@ -1,4 +1,4 @@
-import { Tree, type TreeNodeData } from '@eds-ui/react';
+import { Tree, type TreeNodeData } from '@efds-ui/react';
 
 const estrutura: TreeNodeData[] = [
   {

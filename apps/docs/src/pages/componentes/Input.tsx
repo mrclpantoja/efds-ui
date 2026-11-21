@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -71,7 +71,7 @@ export default function InputPage() {
         <p>
           A máscara formata o valor enquanto a pessoa digita, sem mudar o que o campo é: continua um{' '}
           <code>&lt;input&gt;</code> de texto. No HTML ela vem do atributo{' '}
-          <code>data-eds-mask</code> (ligado pelo <code>@eds-ui/behavior</code>); no React, da prop{' '}
+          <code>data-eds-mask</code> (ligado pelo <code>@efds-ui/behavior</code>); no React, da prop{' '}
           <code>mask</code>, que emite o mesmo atributo. O valor enviado é o que aparece, com a
           máscara, a menos que você peça o valor limpo com <code>unmask</code>.
         </p>
@@ -129,7 +129,7 @@ export default function InputPage() {
           react={{ Component: MascaraUnmask, source: mascaraUnmaskSource }}
         />
         <ClassTable
-          caption="Atributos HTML da máscara (@eds-ui/behavior)"
+          caption="Atributos HTML da máscara (@efds-ui/behavior)"
           rows={[
             {
               name: 'data-eds-mask="nome"',
@@ -161,7 +161,7 @@ export default function InputPage() {
           ]}
         />
         <PropsTable
-          caption="Props de máscara de Input (@eds-ui/react)"
+          caption="Props de máscara de Input (@efds-ui/react)"
           rows={[
             {
               name: 'mask',

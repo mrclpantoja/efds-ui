@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 
 /** Corpo das rotas que ainda não têm página (o h1 vem do Layout, a partir do registro). */
 export function ComingSoon() {

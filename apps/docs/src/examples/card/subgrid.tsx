@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader, CardTitle, Grid } from '@eds-ui/react';
+import { Card, CardBody, CardFooter, CardHeader, CardTitle, Grid } from '@efds-ui/react';
 
 const projetos = [
   {

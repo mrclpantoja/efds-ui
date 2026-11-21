@@ -1,4 +1,4 @@
-import { Button, Field, MultiSelect, Stack } from '@eds-ui/react';
+import { Button, Field, MultiSelect, Stack } from '@efds-ui/react';
 
 const regioes = [
   { value: 'norte', label: 'Norte' },

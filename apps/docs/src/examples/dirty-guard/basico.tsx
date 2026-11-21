@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Button, Field, Input, Stack, Textarea, useUnsavedChanges } from '@eds-ui/react';
+import { Button, Field, Input, Stack, Textarea, useUnsavedChanges } from '@efds-ui/react';
 
 export default function Basico() {
   const [titulo, setTitulo] = useState('Projeto Aurora');

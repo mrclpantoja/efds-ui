@@ -1,4 +1,4 @@
-import { Button, useToast } from '@eds-ui/react';
+import { Button, useToast } from '@efds-ui/react';
 
 /** O `ToastProvider` vem de fora: um único, na raiz do app (neste site, em Layout.tsx). */
 export default function Acao() {

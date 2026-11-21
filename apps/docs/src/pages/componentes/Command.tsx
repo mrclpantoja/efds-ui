@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -46,7 +46,7 @@ export default function CommandPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="@eds-ui/behavior">
+        <Alert variant="info" title="@efds-ui/behavior">
           <p>
             Um <code>dialog.eds-modal.eds-command</code> com <code>data-eds-command</code>. Os itens
             podem estar na marcação (<code>.eds-command-item</code> com <code>data-value</code>,{' '}

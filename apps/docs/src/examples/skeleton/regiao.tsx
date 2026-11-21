@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Card, CardBody, Skeleton, SkeletonRegion, Stack } from '@eds-ui/react';
+import { Button, Card, CardBody, Skeleton, SkeletonRegion, Stack } from '@efds-ui/react';
 
 export default function Regiao() {
   const [loading, setLoading] = useState(true);

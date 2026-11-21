@@ -1,4 +1,4 @@
-/* @eds-ui/core - agregador da base (usado por index.css e como entrada isolada base.css). */
+/* @efds-ui/core - agregador da base (usado por index.css e como entrada isolada base.css). */
 @import './base/reset.css';
 @import './base/root.css';
 @import './base/typography.css';

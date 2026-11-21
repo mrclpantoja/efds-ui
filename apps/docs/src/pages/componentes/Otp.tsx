@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -42,7 +42,7 @@ export default function OtpPage() {
         />
         <Example
           title="Fallback: um campo só"
-          description="Sem JS, um único input com pattern e one-time-code funciona. No HTML, com data-eds-otp no contêiner, o @eds-ui/behavior o transforma em células; o hidden recebe o código."
+          description="Sem JS, um único input com pattern e one-time-code funciona. No HTML, com data-eds-otp no contêiner, o @efds-ui/behavior o transforma em células; o hidden recebe o código."
           html={campoUnicoHtml}
           react={{ Component: CampoUnico, source: campoUnicoSource }}
         />

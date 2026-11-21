@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Button, Checkbox, Field, Input, Modal, Select, Stack, Textarea } from '@eds-ui/react';
+import { Button, Checkbox, Field, Input, Modal, Select, Stack, Textarea } from '@efds-ui/react';
 
 export default function Formulario() {
   const [open, setOpen] = useState(false);

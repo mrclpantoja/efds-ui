@@ -1,5 +1,5 @@
-import { SegmentedControl, Stack } from '@eds-ui/react';
-import { MenuIcon, DashboardIcon } from '@eds-ui/icons';
+import { SegmentedControl, Stack } from '@efds-ui/react';
+import { MenuIcon, DashboardIcon } from '@efds-ui/icons';
 
 export default function Icones() {
   return (

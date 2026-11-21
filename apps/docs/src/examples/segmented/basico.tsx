@@ -1,4 +1,4 @@
-import { SegmentedControl } from '@eds-ui/react';
+import { SegmentedControl } from '@efds-ui/react';
 
 export default function Basico() {
   return (

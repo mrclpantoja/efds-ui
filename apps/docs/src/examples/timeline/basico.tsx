@@ -1,4 +1,4 @@
-import { Timeline, type TimelineItem } from '@eds-ui/react';
+import { Timeline, type TimelineItem } from '@efds-ui/react';
 
 const check = (
   <svg

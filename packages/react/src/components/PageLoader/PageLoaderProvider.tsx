@@ -55,7 +55,7 @@ export interface PageLoaderProviderProps {
    * desmontar). Padrão: `true`; `auto={false}` desliga (só `start`/`track`).
    *
    * Só intercepta `fetch` e `XHR` (SPA). Envio de `<form>` e navegação por link recarregam a
-   * página e não passam por aqui; para isso, use o `@eds-ui/behavior` ou chame `start()`.
+   * página e não passam por aqui; para isso, use o `@efds-ui/behavior` ou chame `start()`.
    *
    * Exceções: `fetch(url, { edsLoader: false })`, cabeçalho `X-EDS-Loader: off` (removido antes de
    * enviar) e `exclude`. Por requisição, `fetch(url, { edsLoader: { title, text } })` define os

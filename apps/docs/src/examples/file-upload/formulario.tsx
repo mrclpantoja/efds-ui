@@ -1,4 +1,4 @@
-import { Field, FileUpload } from '@eds-ui/react';
+import { Field, FileUpload } from '@efds-ui/react';
 
 export default function Formulario() {
   return (

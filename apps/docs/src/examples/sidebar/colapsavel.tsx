@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { AppShell, AppShellHeader, AppShellNavToggle, Sidebar, SidebarItem } from '@eds-ui/react';
-import { DashboardIcon, UsersIcon } from '@eds-ui/icons';
+import { AppShell, AppShellHeader, AppShellNavToggle, Sidebar, SidebarItem } from '@efds-ui/react';
+import { DashboardIcon, UsersIcon } from '@efds-ui/icons';
 
 /** Sidebar com o estado de colapso controlado (por exemplo, para lembrar a escolha). */
 export default function Colapsavel() {

@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -38,7 +38,7 @@ export default function TabsPage() {
       <Section title="Exemplos">
         <Example
           title="Básico"
-          description="Não controlado: defaultValue define a aba inicial. Setas, Home e End navegam. No HTML, o @eds-ui/behavior liga o mesmo markup (a aba Anexos é indisponível)."
+          description="Não controlado: defaultValue define a aba inicial. Setas, Home e End navegam. No HTML, o @efds-ui/behavior liga o mesmo markup (a aba Anexos é indisponível)."
           html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
         />
@@ -60,10 +60,10 @@ export default function TabsPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="No HTML, o comportamento vem do @eds-ui/behavior">
+        <Alert variant="info" title="No HTML, o comportamento vem do @efds-ui/behavior">
           <p>
             O CSS só estiliza. Roving tabindex, setas, Home/End e a troca de painéis são JavaScript:
-            carregue o <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a>, que detecta{' '}
+            carregue o <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que detecta{' '}
             <code>.eds-tabs</code> pelo próprio markup (<code>role</code>,{' '}
             <code>aria-selected</code> e <code>aria-controls</code>), sem atributo extra. O estado
             inicial vem de <code>aria-selected</code> e <code>aria-disabled</code>; a troca dispara{' '}

@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -42,7 +42,7 @@ export default function NotificationsPage() {
           <p>
             O painel é o <a href={toHref('/componentes/popover')}>Popover</a> (abrir, Esc, foco e
             posição). Com <code>data-eds-notifications</code> no painel, o{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> liga: clicar no link de
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> liga: clicar no link de
             um item <code>data-unread=&quot;true&quot;</code> o marca como lido; o botão{' '}
             <code>data-eds-notifications-read-all</code> marca todos; a contagem e o nome do sino se
             atualizam; o <code>.eds-notifications-empty</code> aparece sem itens. Eventos no painel:{' '}

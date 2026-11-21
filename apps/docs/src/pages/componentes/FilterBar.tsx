@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -48,10 +48,10 @@ export default function FilterBarPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Chips e contador pelo @eds-ui/behavior">
+        <Alert variant="info" title="Chips e contador pelo @efds-ui/behavior">
           <p>
             Marque o <code>&lt;form&gt;</code> com <code>data-eds-filter-bar</code>. O{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> monta os chips a partir
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> monta os chips a partir
             dos campos preenchidos, atualiza o contador de &quot;Mais filtros&quot; enquanto se
             digita e trata os chips e o botão Limpar. Remover um chip limpa o campo e envia o
             formulário (<code>requestSubmit</code>); <code>reset</code> vira &quot;limpar de

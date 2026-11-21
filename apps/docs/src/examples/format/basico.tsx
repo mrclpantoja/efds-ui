@@ -7,7 +7,7 @@ import {
   formatPhone,
   formatRelative,
   maskCpf,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 
 // Dados fictícios. As funções são as mesmas do `data-eds-format` do HTML.
 const linhas: [string, string, string?][] = [

@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -63,7 +63,7 @@ export default function StepperPage() {
             No <code>&lt;form&gt;</code>, <code>data-eds-wizard</code>; em cada painel,{' '}
             <code>data-eds-wizard-step</code> (os outros ficam <code>hidden</code>); nos botões,{' '}
             <code>data-eds-wizard-prev</code> e <code>data-eds-wizard-next</code>. O{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a> valida com{' '}
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> valida com{' '}
             <code>checkValidity</code> e <code>reportValidity</code>, troca os painéis, atualiza o{' '}
             <code>.eds-stepper</code> do formulário e anuncia a etapa. O título do painel é o{' '}
             <code>data-eds-wizard-title</code>, o primeiro cabeçalho ou o valor de{' '}

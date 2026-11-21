@@ -1,4 +1,4 @@
-/* @eds-ui/core - agregador dos tokens (usado por index.css e como entrada isolada tokens.css). */
+/* @efds-ui/core - agregador dos tokens (usado por index.css e como entrada isolada tokens.css). */
 @import './tokens/primitives-colors.css';
 @import './tokens/primitives-spacing.css';
 @import './tokens/primitives-typography.css';

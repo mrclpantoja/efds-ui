@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { createTheme } from '@eds-ui/behavior/theme';
-import { Badge, Button, Field, Input, Stack } from '@eds-ui/react';
+import { createTheme } from '@efds-ui/behavior/theme';
+import { Badge, Button, Field, Input, Stack } from '@efds-ui/react';
 
 /**
  * `createTheme(hex)` gera `--eds-accent-50..900` com contraste AA nos dois modos. Aqui as

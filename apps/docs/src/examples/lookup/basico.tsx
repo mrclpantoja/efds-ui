@@ -1,4 +1,4 @@
-import { Field, Lookup, type LookupItem } from '@eds-ui/react';
+import { Field, Lookup, type LookupItem } from '@efds-ui/react';
 
 // Dados fictícios. Num sistema real, `search` e `resolve` chamam a sua API.
 const clientes: LookupItem[] = [

@@ -1,3 +1,3 @@
-import edsConfig from '@eds-ui/eslint-config';
+import edsConfig from '@efds-ui/eslint-config';
 
 export default edsConfig;

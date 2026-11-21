@@ -1,5 +1,5 @@
 /*
- * Horários `hh:mm`: o mesmo código de `@eds-ui/behavior` (`parseTime`, `formatTime`, `maskTime`),
+ * Horários `hh:mm`: o mesmo código de `@efds-ui/behavior` (`parseTime`, `formatTime`, `maskTime`),
  * conferido pelos mesmos casos nos testes dos dois pacotes.
  */
 

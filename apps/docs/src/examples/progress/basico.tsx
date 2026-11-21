@@ -1,4 +1,4 @@
-import { Progress, Stack } from '@eds-ui/react';
+import { Progress, Stack } from '@efds-ui/react';
 
 export default function Basico() {
   return (

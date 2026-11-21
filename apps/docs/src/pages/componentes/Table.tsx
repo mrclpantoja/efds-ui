@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -41,7 +41,7 @@ const mascararHtml = `<script type="module">
 const ordenarReact = `import { useState } from 'react';
 import {
   Table, TableHeaderCell, sortTableData, useTableFilter, type TableSortState,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 
 function Pedidos({ pedidos }) {
   const [ordem, setOrdem] = useState<TableSortState | null>(null);
@@ -116,7 +116,7 @@ export default function TablePage() {
             <>
               Clique nos cabeçalhos para ordenar, marque linhas (a seleção atravessa as páginas) e
               troque de página. Cada mudança é anunciada em uma região de status única. No HTML, o{' '}
-              <code>@eds-ui/behavior</code> cuida da ordenação e da seleção (
+              <code>@efds-ui/behavior</code> cuida da ordenação e da seleção (
               <code>data-eds-select-all</code> e <code>data-eds-select-row</code>); a barra de
               ferramentas e a paginação são do seu código.
             </>
@@ -131,7 +131,7 @@ export default function TablePage() {
               Digite &quot;clin&quot; ou &quot;CLINICA&quot;: a busca ignora acento e caixa e olha
               todas as células, menos as marcadas com <code>data-eds-filter-ignore</code> (ações).
               No HTML, <code>data-eds-table-filter=&quot;ID-DA-TABELA&quot;</code> no campo liga o
-              filtro do <code>@eds-ui/behavior</code> (com o campo na toolbar ou onde for);{' '}
+              filtro do <code>@efds-ui/behavior</code> (com o campo na toolbar ou onde for);{' '}
               <code>data-eds-filter-columns=&quot;2,3&quot;</code> restringe às colunas 2 e 3. O
               resultado é anunciado depois de uma pausa na digitação, e Esc limpa o campo. O filtro
               só alcança as linhas que estão no DOM: com paginação no servidor, filtre no servidor.
@@ -207,7 +207,7 @@ export default function TablePage() {
           react={{ Component: Exportar, source: exportarSource }}
         />
         <ClassTable
-          caption="Atributos HTML da exportação (@eds-ui/behavior)"
+          caption="Atributos HTML da exportação (@efds-ui/behavior)"
           rows={[
             {
               name: 'data-eds-export="csv|xlsx|json|pdf"',
@@ -336,8 +336,8 @@ export default function TablePage() {
         <p>
           Sem o componente, as funções <code>exportData</code>, <code>toCsv</code>,{' '}
           <code>toJson</code>, <code>toXlsx</code> e <code>toPdf</code> também saem de{' '}
-          <code>@eds-ui/react</code> (e de <code>@eds-ui/behavior</code>). O React usa só o
-          subcaminho <code>@eds-ui/behavior/export</code>: não leva o <code>init</code> nem os
+          <code>@efds-ui/react</code> (e de <code>@efds-ui/behavior</code>). O React usa só o
+          subcaminho <code>@efds-ui/behavior/export</code>: não leva o <code>init</code> nem os
           outros módulos.
         </p>
         <Stack gap={3}>
@@ -552,7 +552,7 @@ export default function TablePage() {
 
       <Section title="Ordenar e filtrar no React">
         <p>
-          No HTML, o <code>@eds-ui/behavior</code> ordena e filtra as linhas do DOM. No React a
+          No HTML, o <code>@efds-ui/behavior</code> ordena e filtra as linhas do DOM. No React a
           fonte é o estado, então a mesma regra vem em funções que trabalham sobre o array:{' '}
           <code>sortTableData(linhas, ordem, {'{ getValue, locale }'})</code> e{' '}
           <code>filterTableData(linhas, texto, {'{ columns, getText }'})</code>. A ordem de números

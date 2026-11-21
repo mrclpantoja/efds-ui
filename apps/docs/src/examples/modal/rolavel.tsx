@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Modal, Stack } from '@eds-ui/react';
+import { Button, Modal, Stack } from '@efds-ui/react';
 
 export default function Rolavel() {
   const [open, setOpen] = useState(false);

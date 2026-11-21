@@ -30,7 +30,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 /* Combobox: demo estático do contrato de markup. O popup é aberto na carga e posicionado como o
-   JS do @eds-ui/behavior fará (propriedades --_combobox-* em px, recalculadas em scroll/resize). */
+   JS do @efds-ui/behavior fará (propriedades --_combobox-* em px, recalculadas em scroll/resize). */
 type ComboState = 'options' | 'empty' | 'loading';
 
 function ComboboxDemo({
@@ -50,7 +50,7 @@ function ComboboxDemo({
   invalid?: boolean;
   disabled?: boolean;
   placement?: 'top';
-  /** Fechado e interativo: o @eds-ui/behavior assume (sem estado forçado). */
+  /** Fechado e interativo: o @efds-ui/behavior assume (sem estado forçado). */
   live?: boolean;
 }) {
   const field = useRef<HTMLDivElement>(null);
@@ -144,7 +144,7 @@ function ComboboxDemo({
 
 /* DatePicker / DateRangePicker: demo estático do contrato de markup (março de 2026, dados
    fictícios; hoje = 18). O calendário é aberto na carga e posicionado como o JS do
-   @eds-ui/behavior fará (--_calendar-x/-y em px, recalculadas em scroll/resize). */
+   @efds-ui/behavior fará (--_calendar-x/-y em px, recalculadas em scroll/resize). */
 type RangeMode = 'done' | 'preview';
 
 const MES = 'março de 2026';
@@ -202,7 +202,7 @@ function CalendarDemo({
   disabled?: boolean;
   size?: 'sm' | 'lg';
   open?: boolean;
-  /** Fechado e interativo: o @eds-ui/behavior monta o calendário. */
+  /** Fechado e interativo: o @efds-ui/behavior monta o calendário. */
   live?: boolean;
 }) {
   const box = useRef<HTMLDivElement>(null);
@@ -547,7 +547,7 @@ function UploadDemo({
   invalid?: boolean;
   disabled?: boolean;
   compact?: boolean;
-  /** Interativo: o @eds-ui/behavior liga arrastar e soltar, lista e validação. */
+  /** Interativo: o @efds-ui/behavior liga arrastar e soltar, lista e validação. */
   live?: boolean;
   children?: ReactNode;
 }) {
@@ -628,7 +628,7 @@ function MultiSelectDemo({
   invalid?: boolean;
   disabled?: boolean;
   placeholder?: string;
-  /** Fechado e interativo: o @eds-ui/behavior assume. */
+  /** Fechado e interativo: o @efds-ui/behavior assume. */
   live?: boolean;
 }) {
   const box = useRef<HTMLDivElement>(null);
@@ -858,7 +858,7 @@ export function FormsDemo() {
 
       <Section title="Combobox (autocomplete)">
         <p className="eds-helper">
-          Interativos (com @eds-ui/behavior): Pequeno, Grande e Com erro. Os demais são estados
+          Interativos (com @efds-ui/behavior): Pequeno, Grande e Com erro. Os demais são estados
           fixos.
         </p>
         <div style={cols}>
@@ -933,7 +933,7 @@ export function FormsDemo() {
 
       <Section title="FileUpload (arrastar e soltar)">
         <p className="eds-helper">
-          Interativos (com @eds-ui/behavior): Documentos do contrato e a versão de uma linha. Os
+          Interativos (com @efds-ui/behavior): Documentos do contrato e a versão de uma linha. Os
           demais são estados fixos.
         </p>
         <div style={cols}>
@@ -969,7 +969,7 @@ export function FormsDemo() {
 
       <Section title="MultiSelect (combobox múltiplo)">
         <p className="eds-helper">
-          Interativos (com @eds-ui/behavior): Sem escolha, Com escolhidas, Com erro, Pequeno e
+          Interativos (com @efds-ui/behavior): Sem escolha, Com escolhidas, Com erro, Pequeno e
           Grande. Os demais são estados fixos.
         </p>
         <div style={cols}>
@@ -1126,7 +1126,7 @@ export function FormsDemo() {
           aparece ao navegar com Tab e setas.
         </p>
         <p className="eds-helper">
-          Interativos (com @eds-ui/behavior): Fechado, Com erro, Desabilitado, Pequeno e Grande.
+          Interativos (com @efds-ui/behavior): Fechado, Com erro, Desabilitado, Pequeno e Grande.
           Estados fixos, sem JavaScript: o calendário aberto e "Abre para cima".
         </p>
         <div style={{ paddingBlockStart: '25rem' }}>
@@ -1157,8 +1157,8 @@ export function FormsDemo() {
           <CalendarDemo id="dr-dis" label="Desabilitado" mode="range" open={false} disabled live />
         </div>
         <p className="eds-helper">
-          Interativos (com @eds-ui/behavior): Fechado e Desabilitado. Estados fixos, sem JavaScript:
-          o período escolhido e a prévia, com o calendário aberto.
+          Interativos (com @efds-ui/behavior): Fechado e Desabilitado. Estados fixos, sem
+          JavaScript: o período escolhido e a prévia, com o calendário aberto.
         </p>
       </Section>
 

@@ -5,7 +5,7 @@ import {
   type ExportData,
   type ExportFormat,
   type ExportOptions,
-} from '@eds-ui/behavior/export';
+} from '@efds-ui/behavior/export';
 import { useAnnouncer } from '../../internal/announcer';
 import { DownloadGlyph } from '../../internal/glyphs-h';
 import { Button, type ButtonSize, type ButtonVariant } from '../Button';
@@ -25,10 +25,10 @@ const DEFAULT_LABELS: Record<ExportFormat, string> = {
  */
 type FormatModule = { exportFile: (data: ExportData, options?: ExportOptions) => string };
 const FORMAT_LOADERS: Record<ExportFormat, () => Promise<FormatModule>> = {
-  csv: () => import('@eds-ui/behavior/export/csv'),
-  xlsx: () => import('@eds-ui/behavior/export/xlsx'),
-  json: () => import('@eds-ui/behavior/export/json'),
-  pdf: () => import('@eds-ui/behavior/export/pdf'),
+  csv: () => import('@efds-ui/behavior/export/csv'),
+  xlsx: () => import('@efds-ui/behavior/export/xlsx'),
+  json: () => import('@efds-ui/behavior/export/json'),
+  pdf: () => import('@efds-ui/behavior/export/pdf'),
 };
 const preload = (fmt: ExportFormat) => {
   FORMAT_LOADERS[fmt]().catch(() => undefined);
@@ -38,7 +38,7 @@ const ALL_FORMATS: readonly ExportFormat[] = ['csv', 'xlsx', 'json', 'pdf'];
 
 /**
  * Textos do botão, do menu e do anúncio. `{name}` e `{count}` são substituídos. Os do anúncio
- * (`done`, `doneOne`, `empty`, `failed`) têm por padrão os do `@eds-ui/behavior` (pt-BR).
+ * (`done`, `doneOne`, `empty`, `failed`) têm por padrão os do `@efds-ui/behavior` (pt-BR).
  */
 export interface TableExportTexts {
   /** Texto do botão. Padrão: "Exportar". */

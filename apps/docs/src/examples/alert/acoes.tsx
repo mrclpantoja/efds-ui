@@ -1,4 +1,4 @@
-import { Alert, Button } from '@eds-ui/react';
+import { Alert, Button } from '@efds-ui/react';
 
 export default function Acoes() {
   return (

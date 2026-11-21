@@ -1,4 +1,4 @@
-import { Pagination } from '@eds-ui/react';
+import { Pagination } from '@efds-ui/react';
 
 export default function Links() {
   // Com getHref, cada controle é um <a href>: a página fica na URL e o clique navega.

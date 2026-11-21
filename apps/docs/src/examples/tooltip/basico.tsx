@@ -1,5 +1,5 @@
-import { Button, Stack, Tooltip } from '@eds-ui/react';
-import { EditIcon } from '@eds-ui/icons';
+import { Button, Stack, Tooltip } from '@efds-ui/react';
+import { EditIcon } from '@efds-ui/icons';
 
 export default function Basico() {
   return (

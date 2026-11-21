@@ -1,4 +1,4 @@
-import { Radio, RadioGroup } from '@eds-ui/react';
+import { Radio, RadioGroup } from '@efds-ui/react';
 
 export default function Prazo() {
   return (

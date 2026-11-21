@@ -9,7 +9,7 @@ import {
   type FocusEvent,
   type ReactNode,
 } from 'react';
-import { checkPassword, type PasswordLevel, type PasswordRuleId } from '@eds-ui/behavior/fields';
+import { checkPassword, type PasswordLevel, type PasswordRuleId } from '@efds-ui/behavior/fields';
 import { useAnnouncer } from '../../internal/announcer';
 import { EyeGlyph, EyeOffGlyph } from '../../internal/glyphs-c1';
 import { mergeRefs } from '../../internal/refs-d';

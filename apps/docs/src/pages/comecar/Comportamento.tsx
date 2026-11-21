@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Section } from '../../components/Section';
@@ -24,7 +24,7 @@ const manual = `<!-- data-eds-manual: não liga sozinho; você chama EDS.init() 
   document.addEventListener('DOMContentLoaded', () => EDS.init());
 </script>`;
 
-const esm = `import { init, configure, toast } from '@eds-ui/behavior';
+const esm = `import { init, configure, toast } from '@efds-ui/behavior';
 
 // Liga o que existe em #app e o que entrar nele depois. Nada fora de #app é tocado.
 const destroy = init(document.querySelector('#app')!);
@@ -35,7 +35,7 @@ destroy();
 toast({ variant: 'info', message: 'Sincronização concluída.' });`;
 
 const porComponente = `// Só o que usa (tree shaking): cada um devolve o seu destroy().
-import { initTabs, initModal, initCombobox } from '@eds-ui/behavior';
+import { initTabs, initModal, initCombobox } from '@efds-ui/behavior';
 
 const stops = [initTabs(root), initModal(root), initCombobox(root)];`;
 
@@ -101,7 +101,7 @@ const loaderEsm = `init(document, {
   loader: { mode: 'auto', delay: 300, minVisible: 400, exclude: [/\\/api\\/poll/] },
 });`;
 
-const mensagens = `import { configure } from '@eds-ui/behavior';
+const mensagens = `import { configure } from '@efds-ui/behavior';
 
 // Os textos padrão estão em pt-BR. Troque qualquer um (ex.: outro idioma).
 configure({
@@ -131,10 +131,10 @@ export default function Comportamento() {
       <p className="eds-text-body-lg">
         O CSS do core estiliza; o que o CSS e a plataforma não entregam (abrir um Modal, trocar
         Tabs, ordenar uma Table, filtrar um Combobox, escolher datas, enviar arquivos, exportar
-        tabelas, o carregamento de página) vem do <code>@eds-ui/behavior</code>: JavaScript puro,{' '}
+        tabelas, o carregamento de página) vem do <code>@efds-ui/behavior</code>: JavaScript puro,{' '}
         <strong>zero dependências</strong>, para quem usa só HTML (PHP, Java, .NET, Vue, Angular).
         Quem usa React não precisa dele:{' '}
-        <a href={toHref('/comecar/uso-com-react')}>@eds-ui/react</a> já traz o mesmo comportamento.
+        <a href={toHref('/comecar/uso-com-react')}>@efds-ui/react</a> já traz o mesmo comportamento.
       </p>
 
       <Alert variant="warning" title="Pré-lançamento">
@@ -150,9 +150,9 @@ export default function Comportamento() {
           O pacote tem duas saídas: um <strong>script clássico</strong> (
           <code>eds-behavior.js</code>, para <code>&lt;script src&gt;</code>, cerca de 72 kB com
           gzip, no pacote completo) e um <strong>módulo ESM</strong> tree-shakeable. O visual
-          continua vindo do <code>@eds-ui/core</code>: o pacote não carrega CSS.
+          continua vindo do <code>@efds-ui/core</code>: o pacote não carrega CSS.
         </p>
-        <CodeBlock code="pnpm add @eds-ui/behavior" label="Instalação do behavior" />
+        <CodeBlock code="pnpm add @efds-ui/behavior" label="Instalação do behavior" />
       </Section>
 
       <Section title="Uso por script (CDN, PHP, Java, .NET)">
@@ -188,7 +188,7 @@ export default function Comportamento() {
           <code>destroy()</code>. Ele <strong>não toca em nada fora do root</strong>: é por isso que
           este site de documentação, que é React, chama <code>init(previewEl)</code> só nos previews
           HTML, nunca <code>init(document)</code>. Markup renderizado pelo{' '}
-          <code>@eds-ui/react</code> não deve ser ligado duas vezes.
+          <code>@efds-ui/react</code> não deve ser ligado duas vezes.
         </p>
         <CodeBlock code={esm} label="Código TypeScript: init e destroy" />
         <CodeBlock code={porComponente} label="Código TypeScript: por componente" />
@@ -365,8 +365,8 @@ export default function Comportamento() {
               name: 'data-eds-native-alert',
               effect: (
                 <>
-                  Na tag do script: <code>window.alert</code> passa a abrir o diálogo do eDS.ui, sem
-                  bloquear.
+                  Na tag do script: <code>window.alert</code> passa a abrir o diálogo do efDS.ui,
+                  sem bloquear.
                 </>
               ),
             },

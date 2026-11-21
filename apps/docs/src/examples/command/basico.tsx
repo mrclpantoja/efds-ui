@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button, CommandPalette, type CommandPaletteItem } from '@eds-ui/react';
-import { PlusIcon, SearchIcon, UsersIcon } from '@eds-ui/icons';
+import { Button, CommandPalette, type CommandPaletteItem } from '@efds-ui/react';
+import { PlusIcon, SearchIcon, UsersIcon } from '@efds-ui/icons';
 
 const itens: CommandPaletteItem[] = [
   {

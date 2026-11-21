@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -79,7 +79,7 @@ export default function EmptyStatePage() {
               type: 'ReactNode',
               description: (
                 <>
-                  Um <code>&lt;svg&gt;</code> (por exemplo de <code>@eds-ui/icons</code>): recebe{' '}
+                  Um <code>&lt;svg&gt;</code> (por exemplo de <code>@efds-ui/icons</code>): recebe{' '}
                   <code>.eds-empty-icon</code> e <code>aria-hidden</code>.
                 </>
               ),

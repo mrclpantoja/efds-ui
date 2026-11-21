@@ -1,4 +1,4 @@
-import { Field, Grid, Input } from '@eds-ui/react';
+import { Field, Grid, Input } from '@efds-ui/react';
 
 export default function MascaraPersonalizada() {
   return (

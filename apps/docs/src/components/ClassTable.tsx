@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '@eds-ui/react';
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '@efds-ui/react';
 
 export interface ClassRow {
   /** Classe do core (`.eds-button-primary`) ou atributo de estado (`[aria-busy="true"]`). */

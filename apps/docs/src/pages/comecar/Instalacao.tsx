@@ -1,20 +1,20 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Section } from '../../components/Section';
 import { toHref } from '../../router';
 
-const addPnpm = 'pnpm add @eds-ui/core @eds-ui/themes @eds-ui/react @eds-ui/icons';
-const addNpm = 'npm install @eds-ui/core @eds-ui/themes @eds-ui/react @eds-ui/icons';
-const addHtml = 'pnpm add @eds-ui/core @eds-ui/themes @eds-ui/behavior';
+const addPnpm = 'pnpm add @efds-ui/core @efds-ui/themes @efds-ui/react @efds-ui/icons';
+const addNpm = 'npm install @efds-ui/core @efds-ui/themes @efds-ui/react @efds-ui/icons';
+const addHtml = 'pnpm add @efds-ui/core @efds-ui/themes @efds-ui/behavior';
 
-const importAll = `import '@eds-ui/core/index.css';    // tokens, base, layout e todos os componentes
-import '@eds-ui/themes/index.css';  // os eixos: tema, modo, densidade e forma`;
+const importAll = `import '@efds-ui/core/index.css';    // tokens, base, layout e todos os componentes
+import '@efds-ui/themes/index.css';  // os eixos: tema, modo, densidade e forma`;
 
-const importSelective = `import '@eds-ui/core/tokens.css';             // todos os tokens
-import '@eds-ui/core/base.css';               // reset, root, tipografia, acessibilidade
-import '@eds-ui/core/layout/stack.css';       // um arquivo de layout
-import '@eds-ui/core/components/button.css';  // um componente
-import '@eds-ui/themes/theme-blue.css';       // um valor de eixo`;
+const importSelective = `import '@efds-ui/core/tokens.css';             // todos os tokens
+import '@efds-ui/core/base.css';               // reset, root, tipografia, acessibilidade
+import '@efds-ui/core/layout/stack.css';       // um arquivo de layout
+import '@efds-ui/core/components/button.css';  // um componente
+import '@efds-ui/themes/theme-blue.css';       // um valor de eixo`;
 
 const fontSnippet = `import '@fontsource-variable/inter';`;
 
@@ -25,7 +25,7 @@ export default function Instalacao() {
     <>
       <Alert variant="warning" title="Pré-lançamento">
         <p>
-          Os pacotes <code>@eds-ui/*</code> ainda não estão publicados no npm: os comandos abaixo
+          Os pacotes <code>@efds-ui/*</code> ainda não estão publicados no npm: os comandos abaixo
           valem a partir da primeira publicação. Até lá, o uso é dentro do monorepo, com{' '}
           <code>workspace:*</code>.
         </p>
@@ -34,10 +34,10 @@ export default function Instalacao() {
       <Section title="Instalar os pacotes">
         <p>
           Cinco pacotes. <code>react</code> e <code>react-dom</code> (18 ou 19) são peer
-          dependencies de <code>@eds-ui/react</code> e <code>@eds-ui/icons</code>. Quem usa só HTML
-          instala <code>@eds-ui/core</code> e <code>@eds-ui/themes</code> (CSS) e, para o
+          dependencies de <code>@efds-ui/react</code> e <code>@efds-ui/icons</code>. Quem usa só
+          HTML instala <code>@efds-ui/core</code> e <code>@efds-ui/themes</code> (CSS) e, para o
           comportamento de Tabs, Modal, Toast, Table, Combobox, DatePicker, FileUpload e PageLoader,{' '}
-          <code>@eds-ui/behavior</code> (JavaScript puro, sem dependências).
+          <code>@efds-ui/behavior</code> (JavaScript puro, sem dependências).
         </p>
         <CodeBlock code={addPnpm} label="Instalação com pnpm" />
         <CodeBlock code={addNpm} label="Instalação com npm" />

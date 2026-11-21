@@ -9,7 +9,7 @@ import {
   Select,
   Stack,
   Switch,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 
 export default function Filtros() {
   const [open, setOpen] = useState(false);

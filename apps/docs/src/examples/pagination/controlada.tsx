@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pagination } from '@eds-ui/react';
+import { Pagination } from '@efds-ui/react';
 
 export default function Controlada() {
   const [pagina, setPagina] = useState(3);

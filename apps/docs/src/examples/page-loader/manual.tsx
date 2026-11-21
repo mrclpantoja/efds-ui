@@ -1,4 +1,4 @@
-import { Button, PageLoaderProvider, usePageLoader } from '@eds-ui/react';
+import { Button, PageLoaderProvider, usePageLoader } from '@efds-ui/react';
 
 function BuscarProcesso() {
   const loader = usePageLoader();

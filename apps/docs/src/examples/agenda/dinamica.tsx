@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Agenda, type AgendaEvent } from '@eds-ui/react';
+import { Agenda, type AgendaEvent } from '@efds-ui/react';
 
 // Em produção, os eventos vêm do servidor a cada troca de mês; aqui, uma lista fictícia filtrada.
 const todos: AgendaEvent[] = [

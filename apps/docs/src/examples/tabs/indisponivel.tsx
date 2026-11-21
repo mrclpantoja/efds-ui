@@ -1,4 +1,4 @@
-import { Tab, TabList, TabPanel, Tabs } from '@eds-ui/react';
+import { Tab, TabList, TabPanel, Tabs } from '@efds-ui/react';
 
 export default function Indisponivel() {
   return (

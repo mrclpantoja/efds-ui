@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { AppShell, AppShellHeader, AppShellNavToggle, useAppShell } from '@eds-ui/react';
+import { AppShell, AppShellHeader, AppShellNavToggle, useAppShell } from '@efds-ui/react';
 
 /**
  * `useAppShell` só funciona dentro do <AppShell>. Em SPA, feche o off-canvas ao trocar de rota

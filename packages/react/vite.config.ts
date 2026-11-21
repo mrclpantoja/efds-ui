@@ -4,7 +4,7 @@ export default defineConfig({
   build: {
     lib: { entry: 'src/index.ts', formats: ['es'], fileName: 'index' },
     rolldownOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime', /^@eds-ui\//],
+      external: ['react', 'react-dom', 'react/jsx-runtime', /^@efds-ui\//],
       // Um arquivo por módulo (espelha src/): o bundler do consumidor descarta o que não usa.
       output: {
         preserveModules: true,

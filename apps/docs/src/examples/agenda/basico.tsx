@@ -1,4 +1,4 @@
-import { Agenda, type AgendaEvent } from '@eds-ui/react';
+import { Agenda, type AgendaEvent } from '@efds-ui/react';
 
 const eventos: AgendaEvent[] = [
   {

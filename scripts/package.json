@@ -1,5 +1,5 @@
 {
-  "name": "@eds-ui/scripts",
+  "name": "@efds-ui/scripts",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@eds-ui/typescript-config": "workspace:*",
+    "@efds-ui/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

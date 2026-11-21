@@ -45,7 +45,7 @@ describe('useUnsavedChanges', () => {
     expect(beforeUnload()).toBe(false);
   });
 
-  it('link interno pergunta no diálogo do eDS.ui; "Continuar editando" não navega', async () => {
+  it('link interno pergunta no diálogo do efDS.ui; "Continuar editando" não navega', async () => {
     const user = userEvent.setup();
     const { reached, stop } = watchLink();
     render(

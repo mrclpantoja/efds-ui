@@ -241,10 +241,10 @@ importers:
 
   .:
     devDependencies:
-      '@eds-ui/eslint-config':
+      '@efds-ui/eslint-config':
         specifier: workspace:*
         version: link:tooling/eslint-config
-      '@eds-ui/typescript-config':
+      '@efds-ui/typescript-config':
         specifier: workspace:*
         version: link:tooling/typescript-config
       eslint:
@@ -259,19 +259,19 @@ importers:
 
   apps/docs:
     dependencies:
-      '@eds-ui/behavior':
+      '@efds-ui/behavior':
         specifier: workspace:*
         version: link:../../packages/behavior
-      '@eds-ui/core':
+      '@efds-ui/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@eds-ui/icons':
+      '@efds-ui/icons':
         specifier: workspace:*
         version: link:../../packages/icons
-      '@eds-ui/react':
+      '@efds-ui/react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@eds-ui/themes':
+      '@efds-ui/themes':
         specifier: workspace:*
         version: link:../../packages/themes
       react:
@@ -281,7 +281,7 @@ importers:
         specifier: 'catalog:'
         version: 19.3.1(react@19.3.1)
     devDependencies:
-      '@eds-ui/typescript-config':
+      '@efds-ui/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@fontsource-variable/inter':
@@ -305,19 +305,19 @@ importers:
 
   apps/playground:
     dependencies:
-      '@eds-ui/behavior':
+      '@efds-ui/behavior':
         specifier: workspace:*
         version: link:../../packages/behavior
-      '@eds-ui/core':
+      '@efds-ui/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@eds-ui/icons':
+      '@efds-ui/icons':
         specifier: workspace:*
         version: link:../../packages/icons
-      '@eds-ui/react':
+      '@efds-ui/react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@eds-ui/themes':
+      '@efds-ui/themes':
         specifier: workspace:*
         version: link:../../packages/themes
       react:
@@ -327,7 +327,7 @@ importers:
         specifier: 'catalog:'
         version: 19.3.1(react@19.3.1)
     devDependencies:
-      '@eds-ui/typescript-config':
+      '@efds-ui/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@fontsource-variable/inter':
@@ -351,10 +351,10 @@ importers:
 
   packages/behavior:
     devDependencies:
-      '@eds-ui/typescript-config':
+      '@efds-ui/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
-      '@eds-ui/vitest-config':
+      '@efds-ui/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
       '@testing-library/dom':
@@ -387,10 +387,10 @@ importers:
 
   packages/icons:
     devDependencies:
-      '@eds-ui/typescript-config':
+      '@efds-ui/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
-      '@eds-ui/vitest-config':
+      '@efds-ui/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
       '@testing-library/dom':
@@ -429,17 +429,17 @@ importers:
 
   packages/react:
     dependencies:
-      '@eds-ui/behavior':
+      '@efds-ui/behavior':
         specifier: workspace:*
         version: link:../behavior
-      '@eds-ui/core':
+      '@efds-ui/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
-      '@eds-ui/typescript-config':
+      '@efds-ui/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
-      '@eds-ui/vitest-config':
+      '@efds-ui/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
       '@testing-library/dom':
@@ -481,7 +481,7 @@ importers:
 
   packages/themes:
     dependencies:
-      '@eds-ui/core':
+      '@efds-ui/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -491,7 +491,7 @@ importers:
 
   scripts:
     devDependencies:
-      '@eds-ui/typescript-config':
+      '@efds-ui/typescript-config':
         specifier: workspace:*
         version: link:../tooling/typescript-config
       '@types/node':

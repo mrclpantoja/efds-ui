@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from 'react';
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 
 interface SectionProps {
   title: string;

@@ -1,4 +1,4 @@
-import { Button, Stack, useDialog } from '@eds-ui/react';
+import { Button, Stack, useDialog } from '@efds-ui/react';
 
 /** O `DialogProvider` vem de fora: um único, na raiz do app (neste site, em Layout.tsx). */
 export default function Tipos() {

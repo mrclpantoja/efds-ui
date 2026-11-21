@@ -14,14 +14,14 @@ import {
   DialogProvider,
   ToastProvider,
   useAppShell,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 import { AppearanceMenu } from './AppearanceMenu';
 import { NotFound } from './pages/NotFound';
 import { ComingSoon } from './pages/ComingSoon';
 import { findRoute, routes, sections, type DocRoute } from './routes';
 import { navigation, toHref, useRoutePath } from './router';
 
-const SITE_NAME = 'eDS.ui';
+const SITE_NAME = 'efDS.ui';
 
 /** Marca do site (não é ícone do framework). */
 function BrandMark() {

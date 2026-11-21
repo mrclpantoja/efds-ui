@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
-import * as icons from '@eds-ui/icons';
-import type { IconComponent } from '@eds-ui/icons';
-import { Button, Field, Input } from '@eds-ui/react';
+import * as icons from '@efds-ui/icons';
+import type { IconComponent } from '@efds-ui/icons';
+import { Button, Field, Input } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -22,9 +22,9 @@ const normalize = (text: string) =>
     .replace(/\p{Diacritic}/gu, '')
     .toLowerCase();
 
-const instalacao = `pnpm add @eds-ui/icons`;
+const instalacao = `pnpm add @efds-ui/icons`;
 
-const importacao = `import { SearchIcon, PlusIcon } from '@eds-ui/icons';
+const importacao = `import { SearchIcon, PlusIcon } from '@efds-ui/icons';
 
 <SearchIcon />                         // decorativo: aria-hidden
 <SearchIcon title="Buscar" />          // com nome: role="img" + <title>`;
@@ -57,7 +57,7 @@ function IconCell({
           variant="ghost"
           aria-label={`React: copiar importação de ${name}`}
           onClick={() =>
-            onCopy(`import { ${name} } from '@eds-ui/icons';`, `importação de ${name}`)
+            onCopy(`import { ${name} } from '@efds-ui/icons';`, `importação de ${name}`)
           }
         >
           React
@@ -106,7 +106,7 @@ export default function Icones() {
   return (
     <>
       <p className="eds-text-body-lg docs-muted">
-        O eDS.ui tem um conjunto próprio de {all.length} ícones de traço, desenhados para o projeto
+        O efDS.ui tem um conjunto próprio de {all.length} ícones de traço, desenhados para o projeto
         (nenhuma biblioteca de terceiros). Todos usam viewBox de 24, traço de 2 e{' '}
         <code>currentColor</code>, então herdam a cor do texto e se ajustam ao tema e ao modo.
       </p>

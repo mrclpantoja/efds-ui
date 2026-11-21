@@ -1,5 +1,5 @@
-import { Button, Navbar, NavbarActions, NavbarBrand, NavbarLink, NavbarNav } from '@eds-ui/react';
-import { DashboardIcon } from '@eds-ui/icons';
+import { Button, Navbar, NavbarActions, NavbarBrand, NavbarLink, NavbarNav } from '@efds-ui/react';
+import { DashboardIcon } from '@efds-ui/icons';
 
 export default function Portal() {
   return (

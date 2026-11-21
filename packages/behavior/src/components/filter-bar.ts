@@ -5,7 +5,7 @@ import { createAnnouncer } from '../core/status';
 
 type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
-/** Campo montado por um widget do eDS.ui (Combobox, MultiSelect, DatePicker, DateRangePicker). */
+/** Campo montado por um widget do efDS.ui (Combobox, MultiSelect, DatePicker, DateRangePicker). */
 const WIDGET = '.eds-combobox, .eds-datepicker, .eds-daterange';
 const SKIP_TYPES = new Set(['submit', 'reset', 'button', 'image', 'file', 'password']);
 

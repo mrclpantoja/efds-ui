@@ -1,4 +1,4 @@
-import { Alert, Stack } from '@eds-ui/react';
+import { Alert, Stack } from '@efds-ui/react';
 
 export default function Variantes() {
   return (

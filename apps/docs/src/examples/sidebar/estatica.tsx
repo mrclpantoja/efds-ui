@@ -1,5 +1,5 @@
-import { Sidebar, SidebarItem, SidebarSection } from '@eds-ui/react';
-import { DashboardIcon, DownloadIcon, EditIcon, UsersIcon } from '@eds-ui/icons';
+import { Sidebar, SidebarItem, SidebarSection } from '@efds-ui/react';
+import { DashboardIcon, DownloadIcon, EditIcon, UsersIcon } from '@efds-ui/icons';
 
 export default function Estatica() {
   return (

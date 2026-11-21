@@ -28,7 +28,7 @@ O roteiro inteiro leva cerca de 3 h 30. Faça-o em sessões, na ordem abaixo: as
 | 5      | ~20 min | Toque real: 2.11 e 2.12 num celular ou tablet (segurar 400 ms para pegar, arrastar, rolar a página sem arrastar) | Celular na mesma rede Wi-Fi   |
 | 6      | opc.    | Seção 3, colunas Chrome/Edge (itens restantes) e seção 1.4 (Safari/VoiceOver), se houver Mac ou iPhone           | —                             |
 
-Para a sessão 5, o site precisa aceitar conexões da rede local (por padrão escuta só em `127.0.0.1`). Rode `pnpm --filter @eds-ui/docs dev --host 0.0.0.0`, abra no celular o endereço "Network" que o terminal mostrar e **pare o servidor ao terminar** (Ctrl+C), para não deixá-lo exposto na rede.
+Para a sessão 5, o site precisa aceitar conexões da rede local (por padrão escuta só em `127.0.0.1`). Rode `pnpm --filter @efds-ui/docs dev --host 0.0.0.0`, abra no celular o endereço "Network" que o terminal mostrar e **pare o servidor ao terminar** (Ctrl+C), para não deixá-lo exposto na rede.
 
 ## 1. Preparação (cerca de 15 min)
 
@@ -53,7 +53,7 @@ Playground com as telas de referência em `http://127.0.0.1:5173`: `#/dashboard`
 - Docs: `________`
 - Playground: `________`
 
-Nas páginas de componente do site cada exemplo tem duas abas: **HTML** (usa `@eds-ui/behavior`) e **React** (usa `@eds-ui/react`). Os itens da seção 2 valem para as duas; teste primeiro o HTML e faça só uma conferência rápida do React nos itens marcados (R).
+Nas páginas de componente do site cada exemplo tem duas abas: **HTML** (usa `@efds-ui/behavior`) e **React** (usa `@efds-ui/react`). Os itens da seção 2 valem para as duas; teste primeiro o HTML e faça só uma conferência rápida do React nos itens marcados (R).
 
 ### 1.2 NVDA (leitor de tela gratuito, Windows)
 

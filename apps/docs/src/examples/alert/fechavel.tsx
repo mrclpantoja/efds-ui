@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Button, Stack } from '@eds-ui/react';
+import { Alert, Button, Stack } from '@efds-ui/react';
 
 export default function Fechavel() {
   const [open, setOpen] = useState(true);

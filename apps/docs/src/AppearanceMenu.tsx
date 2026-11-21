@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, Field, Select, Stack } from '@eds-ui/react';
+import { Button, Dropdown, Field, Select, Stack } from '@efds-ui/react';
 
 const axes = [
   {

@@ -19,7 +19,7 @@ import {
   Stack,
   Switch,
   Textarea,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 import { segmentos } from './data';
 import { ReferenceShell } from './ReferenceShell';
 

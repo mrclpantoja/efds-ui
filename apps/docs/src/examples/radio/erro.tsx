@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Radio, RadioGroup } from '@eds-ui/react';
+import { Radio, RadioGroup } from '@efds-ui/react';
 
 export default function Erro() {
   // Controlado: `value` e `onValueChange` (o grupo também funciona sem eles).

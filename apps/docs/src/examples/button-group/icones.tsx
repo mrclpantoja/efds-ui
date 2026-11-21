@@ -1,5 +1,5 @@
-import { DownloadIcon, EditIcon, TrashIcon } from '@eds-ui/icons';
-import { Button, ButtonGroup } from '@eds-ui/react';
+import { DownloadIcon, EditIcon, TrashIcon } from '@efds-ui/icons';
+import { Button, ButtonGroup } from '@efds-ui/react';
 
 export default function Icones() {
   return (

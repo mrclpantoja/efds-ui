@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, CommandPalette, type CommandPaletteItem } from '@eds-ui/react';
+import { Button, CommandPalette, type CommandPaletteItem } from '@efds-ui/react';
 
 /** Base fictícia. Em produção, `carregar` seria um fetch ao seu servidor. */
 const base: CommandPaletteItem[] = [

@@ -1,7 +1,7 @@
 /*
  * CSS do site de documentação: o mínimo que o core não cobre (moldura dos exemplos, código,
  * links e listas do texto corrido). Só tokens semânticos (--eds-*): nenhum valor literal de
- * cor, espaço, raio ou altura. Verificado por `pnpm --filter @eds-ui/docs check:visual`.
+ * cor, espaço, raio ou altura. Verificado por `pnpm --filter @efds-ui/docs check:visual`.
  */
 
 .docs-muted {

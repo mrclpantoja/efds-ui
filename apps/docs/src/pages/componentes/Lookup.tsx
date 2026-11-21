@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -48,7 +48,7 @@ export default function LookupPage() {
 
       <Section title="HTML puro">
         <p>
-          O <code>@eds-ui/behavior</code> liga <code>[data-eds-lookup]</code>. Nenhuma consulta é
+          O <code>@efds-ui/behavior</code> liga <code>[data-eds-lookup]</code>. Nenhuma consulta é
           feita sem a fonte que você configurar; o diálogo de busca é criado sozinho (ou use o seu,
           com <code>[data-eds-lookup-search]</code> e <code>tbody[data-eds-lookup-results]</code>).
         </p>

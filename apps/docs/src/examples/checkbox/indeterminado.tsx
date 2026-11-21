@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Checkbox, Fieldset } from '@eds-ui/react';
+import { Checkbox, Fieldset } from '@efds-ui/react';
 
 const canais = ['E-mail', 'Mensagem no aplicativo', 'SMS'];
 

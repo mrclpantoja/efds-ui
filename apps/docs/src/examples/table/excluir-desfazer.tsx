@@ -8,8 +8,8 @@ import {
   TableHeaderCell,
   TableRow,
   useToast,
-} from '@eds-ui/react';
-import { TrashIcon } from '@eds-ui/icons';
+} from '@efds-ui/react';
+import { TrashIcon } from '@efds-ui/icons';
 
 interface Pedido {
   codigo: string;

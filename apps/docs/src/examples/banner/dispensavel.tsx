@@ -1,4 +1,4 @@
-import { Banner, Button } from '@eds-ui/react';
+import { Banner, Button } from '@efds-ui/react';
 
 export default function Dispensavel() {
   return (

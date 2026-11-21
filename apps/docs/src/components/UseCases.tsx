@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Card, CardBody, CardHeader, CardTitle, Grid, GridItem } from '@eds-ui/react';
+import { Card, CardBody, CardHeader, CardTitle, Grid, GridItem } from '@efds-ui/react';
 
 interface UseCasesProps {
   use: readonly ReactNode[];

@@ -12,7 +12,7 @@ import {
   type TdHTMLAttributes,
   type ThHTMLAttributes,
 } from 'react';
-import { format, getMessages } from '@eds-ui/behavior/export';
+import { format, getMessages } from '@efds-ui/behavior/export';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { useAnnouncer } from '../../internal/announcer';

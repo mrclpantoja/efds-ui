@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -298,7 +298,7 @@ export default function SortablePage() {
 
       <Section title="Atributos e eventos HTML">
         <p>
-          Com o <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a>, o contêiner leva{' '}
+          Com o <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, o contêiner leva{' '}
           <code>data-eds-sortable</code> e os itens, <code>.eds-sortable-item</code> com{' '}
           <code>data-id</code>. A instrução de teclado (&quot;Espaço pega o item…&quot;), a região
           de status e os <code>aria-*</code> são criados pelo JS.

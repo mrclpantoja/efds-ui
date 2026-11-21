@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -58,7 +58,7 @@ export default function CopyPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Behavior @eds-ui/behavior">
+        <Alert variant="info" title="Behavior @efds-ui/behavior">
           <p>
             <code>data-eds-copy=&quot;#alvo&quot;</code> copia o valor (campo) ou o texto do
             elemento; <code>data-eds-copy-text=&quot;...&quot;</code> copia um texto fixo. O texto

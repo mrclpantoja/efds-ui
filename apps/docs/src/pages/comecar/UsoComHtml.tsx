@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
 import { Section } from '../../components/Section';
@@ -11,10 +11,10 @@ const pagina = `<!doctype html>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minha página</title>
-    <link rel="stylesheet" href="/caminho/para/@eds-ui/core/index.css" />
-    <link rel="stylesheet" href="/caminho/para/@eds-ui/themes/index.css" />
+    <link rel="stylesheet" href="/caminho/para/@efds-ui/core/index.css" />
+    <link rel="stylesheet" href="/caminho/para/@efds-ui/themes/index.css" />
     <!-- Opcional: comportamento de Tabs, Modal, Toast, Table, Combobox, DatePicker, FileUpload... -->
-    <script src="/caminho/para/@eds-ui/behavior/dist/eds-behavior.js" defer></script>
+    <script src="/caminho/para/@efds-ui/behavior/dist/eds-behavior.js" defer></script>
   </head>
   <body>
     <main>
@@ -51,16 +51,16 @@ export default function UsoComHtml() {
       </Section>
 
       <Section title="O que o CSS não faz">
-        <Alert variant="info" title="Comportamento vem do @eds-ui/behavior">
+        <Alert variant="info" title="Comportamento vem do @efds-ui/behavior">
           <p>
             Alguns componentes dependem de JavaScript para o teclado e o foco: Tabs (setas e roving
             tabindex), Toast (fila e temporizador), abrir Modal e Drawer, ordenação e seleção da
             Table, Combobox, DatePicker, FileUpload e o PageLoader. Para HTML puro, carregue o{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a>: uma linha de{' '}
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>: uma linha de{' '}
             <code>&lt;script&gt;</code>, sem build e sem dependências, que liga tudo pelo próprio
-            markup. Em React, o <a href={toHref('/comecar/uso-com-react')}>@eds-ui/react</a> já traz
-            esse comportamento. Modal, Drawer e Dropdown se apoiam em <code>&lt;dialog&gt;</code> e
-            na Popover API do navegador.
+            markup. Em React, o <a href={toHref('/comecar/uso-com-react')}>@efds-ui/react</a> já
+            traz esse comportamento. Modal, Drawer e Dropdown se apoiam em{' '}
+            <code>&lt;dialog&gt;</code> e na Popover API do navegador.
           </p>
         </Alert>
       </Section>

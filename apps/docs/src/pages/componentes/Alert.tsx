@@ -1,4 +1,4 @@
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -60,7 +60,7 @@ export default function AlertPage() {
             <>
               O Alert não se remove sozinho: no React, o consumidor o desmonta e leva o foco para um
               elemento lógico, já que o botão que tinha o foco sai do DOM. No HTML, o{' '}
-              <code>@eds-ui/behavior</code> faz isso com <code>data-eds-dismiss</code> no botão (e
+              <code>@efds-ui/behavior</code> faz isso com <code>data-eds-dismiss</code> no botão (e
               dispara <code>eds:alert-dismiss</code>, cancelável).
             </>
           }

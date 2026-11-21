@@ -1,10 +1,10 @@
 {
-  "name": "@eds-ui/react",
+  "name": "@efds-ui/react",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "type": "module",
-  "description": "Componentes React do eDS.ui: wrappers sobre as classes do core.",
+  "description": "Componentes React do efDS.ui: wrappers sobre as classes do core.",
   "keywords": [
     "design-system",
     "react",
@@ -29,16 +29,16 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@eds-ui/behavior": "workspace:*",
-    "@eds-ui/core": "workspace:*"
+    "@efds-ui/behavior": "workspace:*",
+    "@efds-ui/core": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@eds-ui/typescript-config": "workspace:*",
-    "@eds-ui/vitest-config": "workspace:*",
+    "@efds-ui/typescript-config": "workspace:*",
+    "@efds-ui/vitest-config": "workspace:*",
     "@testing-library/dom": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",

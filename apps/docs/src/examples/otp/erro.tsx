@@ -1,4 +1,4 @@
-import { OtpInput } from '@eds-ui/react';
+import { OtpInput } from '@efds-ui/react';
 
 export default function Erro() {
   return (

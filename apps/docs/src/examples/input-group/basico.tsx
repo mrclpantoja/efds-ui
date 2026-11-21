@@ -1,4 +1,4 @@
-import { Button, Field, Grid, Input, InputGroup } from '@eds-ui/react';
+import { Button, Field, Grid, Input, InputGroup } from '@efds-ui/react';
 
 export default function Basico() {
   return (

@@ -3,7 +3,7 @@
  * classes CSS, acessibilidade. Para uma página nova, copie este arquivo, troque o conteúdo e
  * registre-a em `src/routes.tsx`. O h1 e o título da aba vêm do registro, não daqui.
  */
-import { Stack } from '@eds-ui/react';
+import { Stack } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';

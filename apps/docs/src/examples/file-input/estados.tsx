@@ -1,4 +1,4 @@
-import { Field, FileInput, Stack } from '@eds-ui/react';
+import { Field, FileInput, Stack } from '@efds-ui/react';
 
 export default function Estados() {
   return (

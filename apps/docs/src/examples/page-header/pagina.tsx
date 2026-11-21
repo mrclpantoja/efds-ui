@@ -21,7 +21,7 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 
 const pedidos = [
   { codigo: 'PED-0001', cliente: 'Atelier Exemplo', total: 'R$ 1.280,50' },

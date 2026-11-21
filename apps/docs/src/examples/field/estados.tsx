@@ -1,4 +1,4 @@
-import { Field, Grid, Input, Select } from '@eds-ui/react';
+import { Field, Grid, Input, Select } from '@efds-ui/react';
 
 export default function Estados() {
   return (

@@ -1,4 +1,4 @@
-import { Field, PasswordInput } from '@eds-ui/react';
+import { Field, PasswordInput } from '@efds-ui/react';
 
 export default function Basico() {
   return (

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Button, Modal } from '@eds-ui/react';
+import { Button, Modal } from '@efds-ui/react';
 
 export default function Confirmacao() {
   const [open, setOpen] = useState(false);

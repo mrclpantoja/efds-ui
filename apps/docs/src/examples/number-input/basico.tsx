@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Field, NumberInput } from '@eds-ui/react';
+import { Field, NumberInput } from '@efds-ui/react';
 
 export default function Basico() {
   const [quantidade, setQuantidade] = useState<number | null>(1);

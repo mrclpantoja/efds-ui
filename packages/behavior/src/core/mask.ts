@@ -1,6 +1,6 @@
 /**
  * Núcleo da máscara de entrada: funções puras, sem DOM. Usado pelo behavior (HTML por atributos)
- * e pelo `@eds-ui/react` (subcaminho `@eds-ui/behavior/mask`), para os dois se comportarem igual.
+ * e pelo `@efds-ui/react` (subcaminho `@efds-ui/behavior/mask`), para os dois se comportarem igual.
  *
  * Modelo: do texto do campo se extraem os caracteres significativos (os que o usuário digitou de
  * fato: dígitos, letras) e o texto mascarado é sempre reescrito a partir deles. O cursor é

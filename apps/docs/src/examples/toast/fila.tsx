@@ -1,4 +1,4 @@
-import { Button, Stack, useToast } from '@eds-ui/react';
+import { Button, Stack, useToast } from '@efds-ui/react';
 
 const messages = Array.from(
   { length: 8 },

@@ -3,7 +3,7 @@ import { CodeBlock } from '../../components/CodeBlock';
 import { Section } from '../../components/Section';
 import { ColorSwatches, RadiusScale, SpaceScale } from '../../components/TokenSamples';
 
-const sobrescrita = `/* Sua folha de estilos, carregada depois do eDS.ui */
+const sobrescrita = `/* Sua folha de estilos, carregada depois do efDS.ui */
 :root {
   /* Um único valor: o resto da família deriva dele */
   --eds-color-action-primary: #0f766e;
@@ -31,9 +31,9 @@ export default function Tokens() {
   return (
     <>
       <p className="eds-text-body-lg docs-muted">
-        Todo valor visual do eDS.ui (cor, espaço, raio, altura, sombra, tipografia) vem de um token:
-        uma variável CSS com prefixo <code>--eds-</code>. Os tokens se organizam em três níveis, e
-        só um deles é a API de personalização.
+        Todo valor visual do efDS.ui (cor, espaço, raio, altura, sombra, tipografia) vem de um
+        token: uma variável CSS com prefixo <code>--eds-</code>. Os tokens se organizam em três
+        níveis, e só um deles é a API de personalização.
       </p>
 
       <Section title="Os três níveis">

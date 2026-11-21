@@ -414,7 +414,7 @@ export function toPdf(data: ExportData, options: ExportOptions = {}): Uint8Array
   const title = rawTitle
     ? ` /Title <FEFF${Array.from({ length: rawTitle.length }, (_, i) => rawTitle.charCodeAt(i).toString(16).padStart(4, '0')).join('')}>`
     : '';
-  object(5, `<<${title} /Creator (eDS.ui) /Producer (eDS.ui) /CreationDate (D:${stamp}) >>`);
+  object(5, `<<${title} /Creator (efDS.ui) /Producer (efDS.ui) /CreationDate (D:${stamp}) >>`);
   pages.forEach((_, i) => {
     const id = pageIds[i] ?? 0;
     object(

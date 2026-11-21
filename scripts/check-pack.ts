@@ -59,8 +59,8 @@ try {
     const out = join(work, 'tarballs');
     mkdirSync(out, { recursive: true });
     run('pnpm', ['pack', '--pack-destination', out], join(root, 'packages', pkg));
-    const tgz = readdirSync(out).find((f) => f === `eds-ui-${pkg}-${EXPECTED_VERSION}.tgz`);
-    if (!tgz) throw new Error(`tarball de @eds-ui/${pkg} não encontrado em ${out}`);
+    const tgz = readdirSync(out).find((f) => f === `efds-ui-${pkg}-${EXPECTED_VERSION}.tgz`);
+    if (!tgz) throw new Error(`tarball de @efds-ui/${pkg} não encontrado em ${out}`);
     tarballs[pkg] = join(out, tgz);
 
     const extracted = join(work, 'extracted', pkg);
@@ -81,12 +81,12 @@ try {
 
     const total = files.reduce((sum, f) => sum + f.size, 0);
     console.log(
-      `\n@eds-ui/${pkg}@${manifest.version}  ${files.length} arquivos, ${formatSize(total)} descompactado, ${formatSize(statSync(tarballs[pkg]).size)} tgz`,
+      `\n@efds-ui/${pkg}@${manifest.version}  ${files.length} arquivos, ${formatSize(total)} descompactado, ${formatSize(statSync(tarballs[pkg]).size)} tgz`,
     );
     for (const f of files) console.log(`  ${formatSize(f.size).padStart(9)}  ${f.path}`);
     if (problems.length > 0) {
       failed = true;
-      console.error(`\n  FALHOU @eds-ui/${pkg}:`);
+      console.error(`\n  FALHOU @efds-ui/${pkg}:`);
       for (const p of problems) console.error(`  - ${p}`);
     } else {
       console.log('  OK');

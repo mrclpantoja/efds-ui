@@ -1,7 +1,7 @@
 /**
- * Entrada `@eds-ui/behavior/fields`: regras puras dos campos da onda C (força da senha, distribuição
+ * Entrada `@efds-ui/behavior/fields`: regras puras dos campos da onda C (força da senha, distribuição
  * do OTP, aritmética do NumberInput e consulta de CEP), sem DOM e sem `init`, para o
- * `@eds-ui/react` usar exatamente a mesma lógica do HTML por atributos.
+ * `@efds-ui/react` usar exatamente a mesma lógica do HTML por atributos.
  */
 export {
   PASSWORD_RULE_IDS,

@@ -17,8 +17,8 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from '@eds-ui/react';
-import { DownloadIcon, PlusIcon, UserPlusIcon, UsersIcon } from '@eds-ui/icons';
+} from '@efds-ui/react';
+import { DownloadIcon, PlusIcon, UserPlusIcon, UsersIcon } from '@efds-ui/icons';
 import { formatarData, moeda } from './data';
 import { ReferenceShell } from './ReferenceShell';
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Tab, TabList, TabPanel, Tabs } from '@eds-ui/react';
+import { Tab, TabList, TabPanel, Tabs } from '@efds-ui/react';
 
 export default function Controlado() {
   const [value, setValue] = useState('mensal');

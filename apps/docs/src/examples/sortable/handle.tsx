@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sortable, type SortableItemData } from '@eds-ui/react';
+import { Sortable, type SortableItemData } from '@efds-ui/react';
 
 export default function Handle() {
   const [itens, setItens] = useState<SortableItemData[]>([

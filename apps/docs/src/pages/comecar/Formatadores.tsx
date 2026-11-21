@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { Section } from '../../components/Section';
@@ -13,7 +13,7 @@ export default function FormatadoresPage() {
       <p className="eds-text-body-lg docs-muted">
         Funções puras para exibir moeda, número, data, tempo relativo, CPF, CNPJ, telefone e CEP no
         padrão brasileiro. No HTML, o atributo <code>data-eds-format</code> aplica a mesma função;
-        no React, as funções são exportadas por <code>@eds-ui/react</code> (sem componente). A
+        no React, as funções são exportadas por <code>@efds-ui/react</code> (sem componente). A
         entrada de dados com máscara está em{' '}
         <a href={toHref('/comecar/mascara')}>Máscara de entrada</a>.
       </p>
@@ -29,7 +29,7 @@ export default function FormatadoresPage() {
 
       <Section title="Funções">
         <ClassTable
-          caption="@eds-ui/behavior/format (e @eds-ui/react)"
+          caption="@efds-ui/behavior/format (e @efds-ui/react)"
           headers={['Função', 'Resultado']}
           rows={[
             {
@@ -90,8 +90,8 @@ export default function FormatadoresPage() {
         />
         <p>
           Sem o behavior, use as funções direto:{' '}
-          <code>import &#123; formatCurrency &#125; from &quot;@eds-ui/behavior/format&quot;</code>.
-          Para colunas de números, a classe <code>.eds-text-tabular</code> alinha os algarismos.
+          <code>import &#123; formatCurrency &#125; from &quot;@efds-ui/behavior/format&quot;</code>
+          . Para colunas de números, a classe <code>.eds-text-tabular</code> alinha os algarismos.
         </p>
       </Section>
 

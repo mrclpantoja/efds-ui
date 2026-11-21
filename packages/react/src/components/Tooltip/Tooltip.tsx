@@ -1,5 +1,5 @@
 import { cloneElement, useEffect, useId, useRef, type ReactElement, type ReactNode } from 'react';
-import { tooltipBehavior, type Placement } from '@eds-ui/behavior/balloon';
+import { tooltipBehavior, type Placement } from '@efds-ui/behavior/balloon';
 import { cx } from '../../utils/cx';
 
 export type TooltipPlacement = Placement;
@@ -19,7 +19,7 @@ export interface TooltipProps {
 
 /**
  * Tooltip (WCAG 1.4.13): hover com atraso e foco mostram, Esc dispensa, o ponteiro pode ir ao balão.
- * Usa o mesmo código do `@eds-ui/behavior`. O nome do gatilho não vem daqui: botão só de ícone
+ * Usa o mesmo código do `@efds-ui/behavior`. O nome do gatilho não vem daqui: botão só de ícone
  * continua exigindo `aria-label`; o tooltip só repete/complementa (`aria-describedby`).
  */
 export function Tooltip({ content, placement = 'top', className, children }: TooltipProps) {

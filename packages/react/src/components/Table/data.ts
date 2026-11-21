@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type KeyboardEvent } from 'react';
-import { format, getMessages, normalizeText, sortValues } from '@eds-ui/behavior/export';
+import { format, getMessages, normalizeText, sortValues } from '@efds-ui/behavior/export';
 import { mergeTexts } from '../../utils/texts';
 import { DEFAULT_LOCALE } from '../Locale';
 import type { TableSortState } from './Table';
@@ -80,7 +80,7 @@ export interface TableFilterTexts {
 export interface UseTableFilterOptions<T> extends FilterTableDataOptions<T> {
   /** Atraso entre digitar e filtrar, em ms. Padrão: 150 (o do behavior). */
   delay?: number;
-  /** Textos do status (padrões: os do `@eds-ui/behavior`, pt-BR). */
+  /** Textos do status (padrões: os do `@efds-ui/behavior`, pt-BR). */
   texts?: Partial<TableFilterTexts>;
 }
 

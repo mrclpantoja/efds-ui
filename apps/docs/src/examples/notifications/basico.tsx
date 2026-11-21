@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NotificationBell, type NotificationItem } from '@eds-ui/react';
+import { NotificationBell, type NotificationItem } from '@efds-ui/react';
 
 const initial: NotificationItem[] = [
   {

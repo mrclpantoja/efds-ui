@@ -1,4 +1,4 @@
-import { Button, ButtonGroup } from '@eds-ui/react';
+import { Button, ButtonGroup } from '@efds-ui/react';
 
 export default function Periodo() {
   return (

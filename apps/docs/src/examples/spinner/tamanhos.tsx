@@ -1,4 +1,4 @@
-import { Spinner, Stack } from '@eds-ui/react';
+import { Spinner, Stack } from '@efds-ui/react';
 
 export default function Tamanhos() {
   return (

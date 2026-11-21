@@ -1,4 +1,4 @@
-import { Breadcrumb, BreadcrumbItem } from '@eds-ui/react';
+import { Breadcrumb, BreadcrumbItem } from '@efds-ui/react';
 
 export default function Longa() {
   return (

@@ -1,4 +1,4 @@
-import { Divider, Stack } from '@eds-ui/react';
+import { Divider, Stack } from '@efds-ui/react';
 
 export default function Basico() {
   return (

@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -52,7 +52,7 @@ export default function PasswordPage() {
           rows={[
             {
               name: 'data-eds-password',
-              effect: 'No input: liga o mostrar/ocultar (@eds-ui/behavior).',
+              effect: 'No input: liga o mostrar/ocultar (@efds-ui/behavior).',
             },
             {
               name: '[data-eds-password-toggle]',

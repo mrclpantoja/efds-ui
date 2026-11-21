@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Field, FilterBar, Input, Select } from '@eds-ui/react';
+import { Field, FilterBar, Input, Select } from '@efds-ui/react';
 
 interface Valores {
   busca: string;

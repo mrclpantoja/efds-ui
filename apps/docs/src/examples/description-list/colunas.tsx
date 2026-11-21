@@ -1,4 +1,4 @@
-import { Badge, DescriptionList } from '@eds-ui/react';
+import { Badge, DescriptionList } from '@efds-ui/react';
 
 export default function Colunas() {
   return (

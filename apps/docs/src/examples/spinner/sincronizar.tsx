@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Spinner, Stack } from '@eds-ui/react';
+import { Button, Spinner, Stack } from '@efds-ui/react';
 
 export default function Sincronizar() {
   const [syncing, setSyncing] = useState(false);

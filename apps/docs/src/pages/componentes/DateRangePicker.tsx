@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
@@ -80,10 +80,10 @@ export default function DateRangePickerPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="HTML: precisa do @eds-ui/behavior">
+        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             O calendário, a máscara, a prévia e a validação são JavaScript: no HTML vêm do{' '}
-            <a href={toHref('/comecar/comportamento')}>@eds-ui/behavior</a>, que liga o{' '}
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que liga o{' '}
             <code>.eds-datepicker</code> com <code>data-eds-daterange</code>. Os previews HTML
             abaixo estão ligados a ele; no React, o <code>DateRangePicker</code> faz tudo sozinho.
           </p>

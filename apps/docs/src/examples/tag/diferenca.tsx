@@ -1,4 +1,4 @@
-import { Badge, Stack, Tag } from '@eds-ui/react';
+import { Badge, Stack, Tag } from '@efds-ui/react';
 
 export default function Diferenca() {
   return (

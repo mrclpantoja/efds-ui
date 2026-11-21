@@ -71,7 +71,7 @@ export default function ExportacaoPage() {
             {
               name: 'exportData, toCsv, toJson, toXlsx, toPdf',
               effect:
-                'Funções puras exportadas por @eds-ui/behavior (e por @eds-ui/react), para gerar arquivos sem tabela.',
+                'Funções puras exportadas por @efds-ui/behavior (e por @efds-ui/react), para gerar arquivos sem tabela.',
             },
             {
               name: '<TableExport data|getData onBeforeExport>',

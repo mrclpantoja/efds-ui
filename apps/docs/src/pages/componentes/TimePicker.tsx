@@ -1,4 +1,4 @@
-import { Alert } from '@eds-ui/react';
+import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { Example } from '../../components/Example';
 import { PropsTable } from '../../components/PropsTable';
@@ -56,7 +56,7 @@ export default function TimePickerPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="@eds-ui/behavior">
+        <Alert variant="info" title="@efds-ui/behavior">
           <p>
             <code>data-eds-timepicker</code> na raiz, com <code>data-eds-time-step</code> (minutos,
             padrão 30), <code>data-eds-min</code> e <code>data-eds-max</code> (<code>HH:MM</code>).

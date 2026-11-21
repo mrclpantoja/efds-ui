@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Combobox, Field, type ComboboxOption } from '@eds-ui/react';
+import { Combobox, Field, type ComboboxOption } from '@efds-ui/react';
 
 /** Base fictícia. Em produção, `buscar` seria um fetch ao seu servidor. */
 const clientes: ComboboxOption[] = [

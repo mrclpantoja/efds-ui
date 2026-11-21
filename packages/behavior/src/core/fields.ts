@@ -1,7 +1,7 @@
 /**
  * Regras puras dos campos da onda C (sem DOM): força da senha, distribuição do código OTP e
- * aritmética do NumberInput. Usadas pelo behavior (HTML por atributos) e pelo `@eds-ui/react`
- * (subcaminho `@eds-ui/behavior/fields`), para os dois se comportarem igual.
+ * aritmética do NumberInput. Usadas pelo behavior (HTML por atributos) e pelo `@efds-ui/react`
+ * (subcaminho `@efds-ui/behavior/fields`), para os dois se comportarem igual.
  */
 
 // ---- Senha -----------------------------------------------------------------------------------

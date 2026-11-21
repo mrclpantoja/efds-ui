@@ -1,21 +1,21 @@
-# @eds-ui/icons
+# @efds-ui/icons
 
-Ícones do eDS.ui como componentes React (SVG inline, herdam `currentColor`).
+Ícones do efDS.ui como componentes React (SVG inline, herdam `currentColor`).
 
-> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: o escopo `@eds-ui` ainda será verificado. Licença MIT. A API pode mudar até a 1.0.
+> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: o escopo `@efds-ui` ainda será criado. Licença MIT. A API pode mudar até a 1.0.
 
 ## Instalação
 
 ```sh
-pnpm add @eds-ui/icons
+pnpm add @efds-ui/icons
 ```
 
-Peer dependency: `react` 18 ou 19. Não depende de `@eds-ui/core` nem de `@eds-ui/react`.
+Peer dependency: `react` 18 ou 19. Não depende de `@efds-ui/core` nem de `@efds-ui/react`.
 
 ## Uso mínimo
 
 ```tsx
-import { SearchIcon } from '@eds-ui/icons';
+import { SearchIcon } from '@efds-ui/icons';
 
 // Decorativo (aria-hidden) por padrão; com title vira role="img" nomeado.
 <SearchIcon title="Buscar" />;

@@ -1,5 +1,5 @@
 /**
- * Regras de dados da Table, sem DOM: o behavior (linhas do `tbody`) e o `@eds-ui/react`
+ * Regras de dados da Table, sem DOM: o behavior (linhas do `tbody`) e o `@efds-ui/react`
  * (arrays de objetos) usam as mesmas, para ordenar e filtrar do mesmo jeito.
  */
 

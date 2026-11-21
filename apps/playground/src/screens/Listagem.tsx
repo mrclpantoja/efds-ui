@@ -27,7 +27,7 @@ import {
   TableToolbar,
   ToastProvider,
   useToast,
-} from '@eds-ui/react';
+} from '@efds-ui/react';
 import {
   CopyIcon,
   DownloadIcon,
@@ -36,7 +36,7 @@ import {
   PlusIcon,
   SearchIcon,
   TrashIcon,
-} from '@eds-ui/icons';
+} from '@efds-ui/icons';
 import {
   clientes,
   formatarData,

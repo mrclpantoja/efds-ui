@@ -12,8 +12,8 @@ import {
   TableRow,
   TableToolbar,
   useTableFilter,
-} from '@eds-ui/react';
-import { SearchIcon } from '@eds-ui/icons';
+} from '@efds-ui/react';
+import { SearchIcon } from '@efds-ui/icons';
 
 interface Pedido {
   codigo: string;

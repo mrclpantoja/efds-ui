@@ -1,4 +1,4 @@
-import { Field, FileInput } from '@eds-ui/react';
+import { Field, FileInput } from '@efds-ui/react';
 
 export default function Simples() {
   return (

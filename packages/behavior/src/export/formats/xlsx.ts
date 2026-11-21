@@ -1,5 +1,5 @@
 /**
- * Entrada `@eds-ui/behavior/export/xlsx`: gera e baixa só o formato XLSX, para carregar sob
+ * Entrada `@efds-ui/behavior/export/xlsx`: gera e baixa só o formato XLSX, para carregar sob
  * demanda (`import()`) sem trazer os outros geradores.
  */
 import { MIME, downloadFile } from '../download';

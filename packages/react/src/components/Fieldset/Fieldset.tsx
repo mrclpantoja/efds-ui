@@ -37,8 +37,8 @@ export const FieldsetBase = forwardRef<HTMLFieldSetElement, FieldsetBaseProps>(
     const id = useId();
     const helperId = `${id}-helper`;
     const errorId = `${id}-error`;
-    const hasHelper = helper != null && helper !== false;
-    const hasError = error != null && error !== false;
+    const hasHelper = helper != null && helper !== false && helper !== '';
+    const hasError = error != null && error !== false && error !== '';
 
     const value = useMemo(
       () => ({ describedBy: hasError ? errorId : undefined, invalid: hasError }),

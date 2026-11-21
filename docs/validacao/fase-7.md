@@ -4,6 +4,8 @@ Objetivo: verificar em ambiente real o que só foi checado por leitura de códig
 
 Use **somente os dados fictícios** do site. Não digite dados reais em nenhum campo.
 
+Uma rodada automatizada (teclado, foco, ARIA, exportação, reflow) foi feita em 20/11/2026: veja [`fase-7-resultado-automatizado.md`](fase-7-resultado-automatizado.md). Ela não cobre leitor de tela nem toque; os itens abaixo continuam por marcar.
+
 ## Como usar
 
 - Marque `[x] ok` ou `[x] falhou` em cada item. Em falha, preencha o modelo da seção 6 (copie o bloco).

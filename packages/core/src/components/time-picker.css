@@ -260,6 +260,16 @@
       border-color: Highlight;
     }
 
+    /* Relógio por máscara: o fundo `currentColor` é trocado pelo do botão e o ícone some; uma cor
+       de sistema explícita é mantida. */
+    .eds-timepicker-toggle:not(:has(> svg))::before {
+      background-color: ButtonText;
+    }
+
+    .eds-timepicker-toggle:is(:disabled, [aria-disabled='true']):not(:has(> svg))::before {
+      background-color: GrayText;
+    }
+
     .eds-timepicker-popup {
       border-color: CanvasText;
     }

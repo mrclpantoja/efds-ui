@@ -225,6 +225,38 @@ describe('sortable: teclado', () => {
     expect(ids(c).indexOf('t1')).toBe(1);
   });
 
+  it('Tab com o item pego cancela e deixa o foco seguir', async () => {
+    const user = userEvent.setup();
+    const c = $('a');
+    const before = ids(c);
+    handle('t1').focus();
+    await user.keyboard(' {ArrowDown}');
+    expect(ids(c)).not.toEqual(before);
+    await user.tab();
+    expect(ids(c)).toEqual(before);
+    expect(handle('t1')).toHaveAttribute('aria-pressed', 'false');
+    expect(handle('t1')).not.toHaveFocus();
+  });
+
+  it('grade: o item pego, levantado pelo CSS, continua contando como da primeira linha', async () => {
+    const user = userEvent.setup();
+    const c = $('a');
+    c.setAttribute('data-eds-orientation', 'grid');
+    // 3 itens em 2 colunas: t1 t2 / t3, com o t1 deslocado 4px para cima (`translate`)
+    const els = Array.from(c.querySelectorAll<HTMLElement>('.eds-sortable-item'));
+    els.forEach((el, i) =>
+      stubRect(el, {
+        left: (i % 2) * 100,
+        top: Math.floor(i / 2) * 40 - (i === 0 ? 4 : 0),
+        width: 100,
+        height: 40,
+      }),
+    );
+    handle('t1').focus();
+    await user.keyboard(' {ArrowDown}');
+    expect(ids(c)).toEqual(['t2', 't3', 't1']);
+  });
+
   it('item sem handle recebe tabindex e funciona; foco em controle interno não pega', async () => {
     const user = userEvent.setup();
     document.body.innerHTML = `

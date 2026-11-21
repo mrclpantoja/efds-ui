@@ -98,8 +98,23 @@
   }
 
   @media (forced-colors: active) {
-    .eds-select {
-      --_select-arrow: ButtonText;
+    /* A seta é um gradiente, e o modo de cores forçadas apaga gradientes. O Select sai do ajuste
+       automático e passa a usar só cores de sistema. */
+    .eds-select,
+    .eds-select:is([readonly], [aria-readonly='true']) {
+      --_select-arrow: FieldText;
+
+      forced-color-adjust: none;
+      border-color: CanvasText;
+      background-color: Field;
+      color: FieldText;
+    }
+
+    .eds-select:disabled {
+      --_select-arrow: GrayText;
+
+      border-color: GrayText;
+      color: GrayText;
     }
 
     .eds-select:focus {

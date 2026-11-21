@@ -185,5 +185,15 @@
     .eds-tag-remove[aria-disabled='true'] {
       color: GrayText;
     }
+
+    /* "×" por máscara: o fundo `currentColor` é trocado pelo do botão e o ícone some; uma cor de
+       sistema explícita é mantida. */
+    .eds-tag-remove:empty::before {
+      background-color: ButtonText;
+    }
+
+    .eds-tag-remove:is(:disabled, [aria-disabled='true']):empty::before {
+      background-color: GrayText;
+    }
   }
 }

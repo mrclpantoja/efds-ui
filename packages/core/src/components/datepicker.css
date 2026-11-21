@@ -172,5 +172,15 @@
     .eds-datepicker-toggle[aria-expanded='true'] {
       border-color: Highlight;
     }
+
+    /* Ícone por máscara: o fundo `currentColor` é trocado pelo do botão e o ícone some; uma cor de
+       sistema explícita é mantida. */
+    .eds-datepicker-toggle:not(:has(> svg))::before {
+      background-color: ButtonText;
+    }
+
+    .eds-datepicker-toggle:is(:disabled, [aria-disabled='true']):not(:has(> svg))::before {
+      background-color: GrayText;
+    }
   }
 }

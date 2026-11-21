@@ -195,7 +195,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
     [options, filter, dirty, text],
   );
 
-  const hasError = error != null && error !== false;
+  const hasError = error != null && error !== false && error !== '';
   const showError = open && !loading && hasError;
   const showEmpty = open && !loading && !hasError && visible.length === 0;
   const showLoading = open && loading;

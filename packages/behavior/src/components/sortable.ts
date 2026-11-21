@@ -132,13 +132,20 @@ function placeAt(container: HTMLElement, item: HTMLElement, index: number): void
   else container.prepend(item);
 }
 
-/** Quantas colunas tem a grade (itens na mesma linha do primeiro). */
+/**
+ * Quantas colunas tem a grade (itens na mesma linha do primeiro). A folga é meia altura do item:
+ * o item pego fica "levantado" alguns pixels pelo CSS e não pode contar como outra linha.
+ */
 function gridColumns(container: HTMLElement): number {
   const items = itemsOf(container);
   const first = items[0];
   if (!first) return 1;
-  const top = first.getBoundingClientRect().top;
-  return Math.max(1, items.filter((i) => Math.abs(i.getBoundingClientRect().top - top) < 2).length);
+  const rect = first.getBoundingClientRect();
+  const slack = Math.max(2, rect.height / 2);
+  return Math.max(
+    1,
+    items.filter((i) => Math.abs(i.getBoundingClientRect().top - rect.top) < slack).length,
+  );
 }
 
 /** Posição de inserção do ponteiro entre os itens de `container` (sem contar `source`). */
@@ -239,11 +246,11 @@ export const sortableBehavior: Behavior = {
       return { pos: items.indexOf(item) + 1, total: items.length, list: listName(owner) };
     };
 
-    const relocate = (g: Grab, to: HTMLElement, index: number) => {
+    const relocate = (g: Grab, to: HTMLElement, index: number, refocus = true) => {
       const previous = g.item.parentElement;
       moving = true;
       placeAt(to, g.item, index);
-      g.focus.focus();
+      if (refocus) g.focus.focus();
       moving = false;
       syncInputs(to);
       if (previous && previous !== to) syncInputs(previous as HTMLElement);
@@ -265,8 +272,9 @@ export const sortableBehavior: Behavior = {
       }
     };
 
-    const cancelGrab = (g: Grab, say = true) => {
-      relocate(g, g.from, g.fromIndex);
+    /** `refocus: false` quando o usuário saiu do item (Tab): o foco fica onde ele o pôs. */
+    const cancelGrab = (g: Grab, say = true, refocus = true) => {
+      relocate(g, g.from, g.fromIndex, refocus);
       clearGrab(g);
       if (say) g.say(getMessages().sortableCancelled);
     };
@@ -403,7 +411,7 @@ export const sortableBehavior: Behavior = {
       const next = event.relatedTarget as Node | null;
       if (next && grab.item.contains(next)) return;
       if (event.target !== grab.focus) return;
-      cancelGrab(grab);
+      cancelGrab(grab, true, false);
     };
 
     container.addEventListener('keydown', onKeyDown);

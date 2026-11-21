@@ -367,6 +367,16 @@
       color: GrayText;
     }
 
+    /* Chevron por máscara: o fundo `currentColor` é trocado pelo do botão e o ícone some; uma cor
+       de sistema explícita é mantida. */
+    .eds-calendar-nav:not(:has(> svg))::before {
+      background-color: ButtonText;
+    }
+
+    .eds-calendar-nav:disabled:not(:has(> svg))::before {
+      background-color: GrayText;
+    }
+
     .eds-calendar-day {
       --_day-border: transparent;
 

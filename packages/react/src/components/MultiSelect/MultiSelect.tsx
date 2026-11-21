@@ -215,7 +215,7 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
   const atMax = maxSelected != null && values.length >= maxSelected;
   const isBlocked = (o: ComboboxOption) => o.disabled || (atMax && !values.includes(o.value));
 
-  const hasError = error != null && error !== false;
+  const hasError = error != null && error !== false && error !== '';
   const showError = open && !loading && hasError;
   const showEmpty = open && !loading && !hasError && visible.length === 0;
   const showLoading = open && loading;

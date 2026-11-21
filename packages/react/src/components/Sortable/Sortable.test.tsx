@@ -216,6 +216,35 @@ describe('Sortable: teclado', () => {
     await waitFor(() => expect(status()).toHaveTextContent('Posição 1 de 3.'));
   });
 
+  it('na grade o item pego, levantado pelo CSS, continua contando como da primeira linha', async () => {
+    const user = userEvent.setup();
+    render(<Lista orientation="grid" />);
+    const list = screen.getByRole('list', { name: 'A fazer' });
+    const [a, b, c] = Array.from(list.querySelectorAll<HTMLElement>('.eds-sortable-item'));
+    rect(a!, 0, -4, 100, 40); // `translate` do item pego
+    rect(b!, 110, 0, 100, 40);
+    rect(c!, 0, 50, 100, 40);
+    handle('Revisar contrato').focus();
+    await user.keyboard(' {ArrowDown}'); // 2 colunas: índice 0 -> 2
+    expect(ids(document.body)).toEqual(['t2', 't3', 't1']);
+  });
+
+  it('Tab com o item pego cancela e deixa o foco seguir', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Lista onChange={onChange} />);
+    const grip = handle('Revisar contrato');
+    grip.focus();
+    await user.keyboard(' {ArrowDown}');
+    expect(ids(document.body)).toEqual(['t2', 't1', 't3']);
+    await user.tab();
+    expect(ids(document.body)).toEqual(['t1', 't2', 't3']);
+    expect(status()).toHaveTextContent('Movimento cancelado.');
+    expect(onChange).not.toHaveBeenCalled();
+    expect(handle('Revisar contrato')).toHaveAttribute('aria-pressed', 'false');
+    expect(handle('Revisar contrato')).not.toHaveFocus();
+  });
+
   it('Home e End levam ao começo e ao fim', async () => {
     const user = userEvent.setup();
     render(<Lista />);

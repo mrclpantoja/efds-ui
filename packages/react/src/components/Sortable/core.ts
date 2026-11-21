@@ -149,15 +149,22 @@ export function indexAt(
   return items.length;
 }
 
-/** Colunas da grade: itens na mesma linha do primeiro. */
+/**
+ * Colunas da grade: itens na mesma linha do primeiro. A folga é meia altura do item: o item pego
+ * fica "levantado" alguns pixels pelo CSS e não pode contar como outra linha.
+ */
 function gridColumns(container: HTMLElement | null): number {
   const items = Array.from(container?.children ?? []).filter((c) =>
     c.classList.contains('eds-sortable-item'),
   );
   const first = items[0];
   if (!first) return 1;
-  const top = first.getBoundingClientRect().top;
-  return Math.max(1, items.filter((i) => Math.abs(i.getBoundingClientRect().top - top) < 2).length);
+  const rect = first.getBoundingClientRect();
+  const slack = Math.max(2, rect.height / 2);
+  return Math.max(
+    1,
+    items.filter((i) => Math.abs(i.getBoundingClientRect().top - rect.top) < slack).length,
+  );
 }
 
 export interface SortableCore {
@@ -300,10 +307,11 @@ export function useSortableCore(
     );
   };
 
-  const cancel = () => {
+  /** `refocus: false` quando o usuário saiu do item (Tab): o foco fica onde ele o pôs. */
+  const cancel = (refocus = true) => {
     const active = uiRef.current.active;
     if (!active) return;
-    clear(active.id);
+    clear(refocus ? active.id : null);
     announcer.announce(latest.current.texts.cancelled);
   };
 
@@ -416,10 +424,13 @@ export function useSortableCore(
   const onBlur: SortableCore['onBlur'] = (event, item) => {
     const active = uiRef.current.active;
     if (!active || active.mode !== 'keyboard' || active.id !== item.id) return;
+    // Sem destino, o foco caiu porque o React moveu o item no DOM: o efeito acima o devolve.
     const next = event.relatedTarget;
     if (!(next instanceof Node)) return;
-    for (const meta of metas.current.values()) if (meta.el?.contains(next)) return;
-    cancel();
+    // Sair do item pego (Tab, clique em outro controle) cancela, mesmo para outro item da lista.
+    const itemEl = event.currentTarget.closest('.eds-sortable-item');
+    if (itemEl?.contains(next)) return;
+    cancel(false);
   };
 
   const pointerMove = (point: DragPoint) => {

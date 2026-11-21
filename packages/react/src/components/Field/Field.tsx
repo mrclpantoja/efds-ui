@@ -43,9 +43,11 @@ export function Field({
   const helperId = `${id}-helper`;
   const errorId = `${id}-error`;
   const successId = `${id}-success`;
-  const hasHelper = helper != null && helper !== false;
-  const hasError = error != null && error !== false;
-  const hasSuccess = !hasError && success != null && success !== false;
+  // Texto vazio conta como ausente: `useState('')` passado em `error` não marca o campo.
+  const has = (node: ReactNode) => node != null && node !== false && node !== '';
+  const hasHelper = has(helper);
+  const hasError = has(error);
+  const hasSuccess = !hasError && has(success);
 
   const describedBy =
     [hasHelper && helperId, hasError && errorId, hasSuccess && successId]

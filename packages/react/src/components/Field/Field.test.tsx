@@ -43,6 +43,19 @@ describe('Field', () => {
     expect(screen.getByText('Informe um e-mail válido.')).toHaveClass('eds-error');
   });
 
+  it('texto vazio em error, helper ou success conta como ausente', () => {
+    const { container } = render(
+      <Field label="E-mail" error="" helper="" success="">
+        <Input type="email" />
+      </Field>,
+    );
+    const input = screen.getByLabelText('E-mail');
+    expect(input).not.toHaveAttribute('aria-invalid');
+    expect(input).not.toHaveAttribute('data-valid');
+    expect(input).not.toHaveAttribute('aria-describedby');
+    expect(container.querySelector('.eds-error, .eds-helper, .eds-success')).toBeNull();
+  });
+
   it('mescla o aria-describedby do consumidor', () => {
     render(
       <>

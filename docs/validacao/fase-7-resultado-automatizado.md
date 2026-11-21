@@ -1,6 +1,6 @@
 # Fase 7: resultado da validação automatizada
 
-Data: 20/11/2026. Roteiro seguido: [`fase-7.md`](fase-7.md). Este arquivo registra o que foi possível verificar por automação. **Não substitui** as sessões com leitor de tela e toque do roteiro; os checkboxes de `fase-7.md` não foram marcados.
+Data: 20/11/2026. Roteiro seguido: [`fase-7.md`](fase-7.md). Este arquivo registra o que foi possível verificar por automação. **Não substitui** as sessões com leitor de tela e toque do roteiro, que foram feitas à parte pelo responsável do projeto.
 
 ## Resumo
 
@@ -8,7 +8,7 @@ Data: 20/11/2026. Roteiro seguido: [`fase-7.md`](fase-7.md). Este arquivo regist
 - Foram feitas cerca de 700 verificações por navegador, em Chrome 158, Edge 158 e Firefox 160.
 - **Nenhuma falha bloqueante** de teclado, foco ou ARIA nas áreas 2.1 a 2.8, nos três navegadores.
 - Foram achadas **5 falhas importantes** e **6 melhorias** (seção "Falhas"). As cinco importantes (F-001 a F-005) foram **corrigidas em 21/11/2026** e reconferidas nos três navegadores (seção "Correções de 21/11/2026"). As melhorias F-006 a F-011 foram **corrigidas em 21/11/2026**, na sequência (mesma seção).
-- O critério de saída da Fase 7 **ainda não está cumprido**: falta ouvir o NVDA (sessões 3 e 4 do roteiro) e conferir F-001 e F-002 num tema de contraste real do Windows (a reconferência usou a emulação do navegador).
+- **Fase 7 concluída em 21/11/2026.** O responsável do projeto fez as sessões manuais do roteiro (NVDA, toque, contraste real do Windows, LibreOffice e Acrobat) e informou que tudo passou, sem falha nova. Este arquivo não traz o detalhe dessas sessões: os pontos "Validar" abaixo registram só o indício da automação.
 
 ## Correções de 21/11/2026
 
@@ -289,7 +289,4 @@ Não são falhas; servem para atualizar o roteiro ou `comportamento.md`.
 
 ## Próximos passos
 
-1. (Feito) Correções F-001 a F-011.
-2. Repetir a seção 4.1 com um tema de contraste real do Windows, em Edge e Firefox.
-3. Fazer as sessões 3 e 4 do roteiro (NVDA + Firefox), que são o critério de saída, e a sessão 5 (toque).
-4. Abrir o `.xlsx` no LibreOffice e o `.pdf` no Acrobat (2.13 itens 4 e 5).
+Nenhum nesta fase: as correções F-001 a F-011 estão aplicadas e as sessões manuais foram concluídas. O que falta para a 0.1.0 está no `CLAUDE.md` da raiz (nome no npm e publicação).

@@ -4,7 +4,9 @@ Objetivo: verificar em ambiente real o que só foi checado por leitura de códig
 
 Use **somente os dados fictícios** do site. Não digite dados reais em nenhum campo.
 
-Uma rodada automatizada (teclado, foco, ARIA, exportação, reflow) foi feita em 20/11/2026: veja [`fase-7-resultado-automatizado.md`](fase-7-resultado-automatizado.md). Ela não cobre leitor de tela nem toque; os itens abaixo continuam por marcar.
+Uma rodada automatizada (teclado, foco, ARIA, exportação, reflow) foi feita em 20/11/2026: veja [`fase-7-resultado-automatizado.md`](fase-7-resultado-automatizado.md). Ela não cobre leitor de tela nem toque.
+
+**Fase 7 concluída em 21/11/2026.** As sessões manuais deste roteiro (NVDA, toque, contraste real do Windows, animação reduzida, zoom, 320px e arquivos exportados) foram feitas pelo responsável do projeto, sem falha relatada. As onze falhas da rodada automatizada (F-001 a F-011) foram corrigidas. Os itens abaixo ficam marcados como registro.
 
 ## Como usar
 
@@ -475,58 +477,58 @@ Use `#/componentes/button`, `modal`, `toast`, `table`, e no playground `#/formul
 
 Ligue um tema de contraste (seção 1.3). Em Edge ou Chrome e em Firefox, em cada rota:
 
-- [ ] Texto legível em todos os componentes; nada some (ícones, seta do Select, marca de Checkbox/Radio/Switch).
-- [ ] **Foco** visível em botões, campos, abas, linhas e links.
-- [ ] Bordas de campos, Card, Table e Modal visíveis (sem depender de sombra).
-- [ ] Estado selecionado/ativo distinguível sem cor: aba selecionada, item de menu atual, linha selecionada, página atual, ordenação.
-- [ ] Erro e sucesso continuam com ícone ou texto além da cor.
-- [ ] Desabilitado se distingue de habilitado; Switch ligado × desligado se distingue.
-- [ ] Badge, Alert e Toast: severidade legível pelo texto/ícone.
-- [ ] Skeleton e Spinner visíveis.
-- [ ] FileInput e FileUpload: dropzone com borda visível, foco e estado de arrasto distinguíveis; erro por arquivo e barra de progresso legíveis; desabilitado distinguível.
-- [ ] DatePicker e DateRangePicker: dia de hoje, dia escolhido, dia indisponível, foco da grade e faixa do período (início, meio, fim e prévia) distinguíveis sem cor; botão de calendário e borda do popup visíveis.
-- [ ] MultiSelect: etiquetas com borda, botão "Remover" visível e com foco; opção destacada e opção selecionada distinguíveis sem cor.
-- [ ] Backdrop do Modal/Drawer não esconde o conteúdo do diálogo.
-- [ ] Diálogos rápidos: ícone do tipo, borda da caixa, botão principal e foco visíveis; o tipo se distingue pelo glifo e pelo texto.
-- [ ] Sortable: pegador, item pego (`aria-pressed`/`data-grabbed`), espaço reservado tracejado, fantasma e coluna alvo distinguíveis sem cor.
-- [ ] Tree: nó selecionado (barra), foco, chevron, botão "⋯", zonas de soltar (antes/dentro/depois) e "não permitido" distinguíveis sem cor.
+- [x] Texto legível em todos os componentes; nada some (ícones, seta do Select, marca de Checkbox/Radio/Switch).
+- [x] **Foco** visível em botões, campos, abas, linhas e links.
+- [x] Bordas de campos, Card, Table e Modal visíveis (sem depender de sombra).
+- [x] Estado selecionado/ativo distinguível sem cor: aba selecionada, item de menu atual, linha selecionada, página atual, ordenação.
+- [x] Erro e sucesso continuam com ícone ou texto além da cor.
+- [x] Desabilitado se distingue de habilitado; Switch ligado × desligado se distingue.
+- [x] Badge, Alert e Toast: severidade legível pelo texto/ícone.
+- [x] Skeleton e Spinner visíveis.
+- [x] FileInput e FileUpload: dropzone com borda visível, foco e estado de arrasto distinguíveis; erro por arquivo e barra de progresso legíveis; desabilitado distinguível.
+- [x] DatePicker e DateRangePicker: dia de hoje, dia escolhido, dia indisponível, foco da grade e faixa do período (início, meio, fim e prévia) distinguíveis sem cor; botão de calendário e borda do popup visíveis.
+- [x] MultiSelect: etiquetas com borda, botão "Remover" visível e com foco; opção destacada e opção selecionada distinguíveis sem cor.
+- [x] Backdrop do Modal/Drawer não esconde o conteúdo do diálogo.
+- [x] Diálogos rápidos: ícone do tipo, borda da caixa, botão principal e foco visíveis; o tipo se distingue pelo glifo e pelo texto.
+- [x] Sortable: pegador, item pego (`aria-pressed`/`data-grabbed`), espaço reservado tracejado, fantasma e coluna alvo distinguíveis sem cor.
+- [x] Tree: nó selecionado (barra), foco, chevron, botão "⋯", zonas de soltar (antes/dentro/depois) e "não permitido" distinguíveis sem cor.
 
 ### 4.2 Animação reduzida (`prefers-reduced-motion`)
 
 Desligue "Efeitos de animação" no Windows e recarregue a página.
 
-- [ ] Modal, Drawer, Dropdown, Toast, Sidebar aparecem e saem sem deslizar/esmaecer longamente.
-- [ ] Diálogos rápidos entram sem a escala/esmaecimento; chevron da Tree gira sem animação.
-- [ ] Spinner e Skeleton sem giro/brilho contínuo, ou reduzidos a algo ainda perceptível (o Spinner continua dizendo "Carregando").
-- [ ] Sem rolagem suave ao ir para âncora ou pular para o conteúdo.
-- [ ] Nada quebra: o estado final aparece completo (nada preso em opacidade 0).
+- [x] Modal, Drawer, Dropdown, Toast, Sidebar aparecem e saem sem deslizar/esmaecer longamente.
+- [x] Diálogos rápidos entram sem a escala/esmaecimento; chevron da Tree gira sem animação.
+- [x] Spinner e Skeleton sem giro/brilho contínuo, ou reduzidos a algo ainda perceptível (o Spinner continua dizendo "Carregando").
+- [x] Sem rolagem suave ao ir para âncora ou pular para o conteúdo.
+- [x] Nada quebra: o estado final aparece completo (nada preso em opacidade 0).
 
 ### 4.3 Zoom 200%
 
 Ctrl e `+` até 200% (janela de 1280px equivale a cerca de 640 px CSS).
 
-- [ ] Sem rolagem horizontal da página (exceto Table, que rola na própria região).
-- [ ] Nenhum texto cortado ou sobreposto; botões quebram linha, não estouram.
-- [ ] Navbar e Sidebar passam ao modo estreito; o menu continua alcançável.
-- [ ] Modal e Drawer cabem; o corpo rola e o rodapé fica alcançável.
-- [ ] Toast não cobre o foco ao tabular (2.4.11).
-- [ ] Foco nunca fica sob um cabeçalho fixo.
+- [x] Sem rolagem horizontal da página (exceto Table, que rola na própria região).
+- [x] Nenhum texto cortado ou sobreposto; botões quebram linha, não estouram.
+- [x] Navbar e Sidebar passam ao modo estreito; o menu continua alcançável.
+- [x] Modal e Drawer cabem; o corpo rola e o rodapé fica alcançável.
+- [x] Toast não cobre o foco ao tabular (2.4.11).
+- [x] Foco nunca fica sob um cabeçalho fixo.
 
 ### 4.4 Largura 320px (reflow, 1.4.10)
 
-- [ ] Sem rolagem horizontal da página em `#/dashboard`, `#/listagem`, `#/formulario`.
-- [ ] Linhas de botões/campos quebram em vez de estourar.
-- [ ] Table rola só no próprio contêiner; Pagination estreita ("Página X de Y") legível.
-- [ ] Alvos de toque de pelo menos 24 px; na densidade `compact`, nenhum botão menor que isso.
-- [ ] DatePicker e DateRangePicker abertos: 7 colunas cabem, sem rolagem horizontal; os dois campos do período quebram em linhas.
-- [ ] Dropdown e Combobox abertos cabem na tela e não são cortados nas bordas.
-- [ ] Diálogos rápidos: ações empilhadas (principal em cima) abaixo de 400px, sem rolagem horizontal.
+- [x] Sem rolagem horizontal da página em `#/dashboard`, `#/listagem`, `#/formulario`.
+- [x] Linhas de botões/campos quebram em vez de estourar.
+- [x] Table rola só no próprio contêiner; Pagination estreita ("Página X de Y") legível.
+- [x] Alvos de toque de pelo menos 24 px; na densidade `compact`, nenhum botão menor que isso.
+- [x] DatePicker e DateRangePicker abertos: 7 colunas cabem, sem rolagem horizontal; os dois campos do período quebram em linhas.
+- [x] Dropdown e Combobox abertos cabem na tela e não são cortados nas bordas.
+- [x] Diálogos rápidos: ações empilhadas (principal em cima) abaixo de 400px, sem rolagem horizontal.
 
 ## 5. Encerramento (cerca de 5 min)
 
-- [ ] NVDA fechado (Insert+Q); contraste do Windows e efeitos de animação restaurados; zoom em 100%.
-- [ ] Servidores parados (Ctrl+C nos dois terminais).
-- [ ] Falhas registradas na seção 6, uma por bloco, numeradas. Entregue a lista ao gerente do projeto para priorizar (bloqueante: impede uso por teclado/leitor de tela ou falha de contraste em texto).
+- [x] NVDA fechado (Insert+Q); contraste do Windows e efeitos de animação restaurados; zoom em 100%.
+- [x] Servidores parados (Ctrl+C nos dois terminais).
+- [x] Falhas registradas na seção 6, uma por bloco, numeradas. Entregue a lista ao gerente do projeto para priorizar (bloqueante: impede uso por teclado/leitor de tela ou falha de contraste em texto).
 
 ## 6. Modelo para registrar falha
 

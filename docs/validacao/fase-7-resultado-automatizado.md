@@ -7,7 +7,7 @@ Data: 20/11/2026. Roteiro seguido: [`fase-7.md`](fase-7.md). Este arquivo regist
 - A suíte do projeto passou: 801 testes em `behavior` e 746 em `react`.
 - Foram feitas cerca de 700 verificações por navegador, em Chrome 158, Edge 158 e Firefox 160.
 - **Nenhuma falha bloqueante** de teclado, foco ou ARIA nas áreas 2.1 a 2.8, nos três navegadores.
-- Foram achadas **5 falhas importantes** e **6 melhorias** (seção "Falhas"). As cinco importantes (F-001 a F-005) foram **corrigidas em 21/11/2026** e reconferidas nos três navegadores (seção "Correções de 21/11/2026"). As melhorias F-006 a F-011 seguem abertas.
+- Foram achadas **5 falhas importantes** e **6 melhorias** (seção "Falhas"). As cinco importantes (F-001 a F-005) foram **corrigidas em 21/11/2026** e reconferidas nos três navegadores (seção "Correções de 21/11/2026"). As melhorias F-006 a F-011 foram **corrigidas em 21/11/2026**, na sequência (mesma seção).
 - O critério de saída da Fase 7 **ainda não está cumprido**: falta ouvir o NVDA (sessões 3 e 4 do roteiro) e conferir F-001 e F-002 num tema de contraste real do Windows (a reconferência usou a emulação do navegador).
 
 ## Correções de 21/11/2026
@@ -23,6 +23,17 @@ Os números das tabelas abaixo são os da rodada de 20/11, antes das correções
 | F-005 | React: sair do item pego para outro controle cancela, mesmo dentro da lista. Nas duas camadas o foco não é mais puxado de volta ao pegador (no HTML o Tab cancelava, mas o foco voltava).                                                                                                        | Os três navegadores, HTML e React: Tab cancela, anuncia e o foco segue; Sortable 36/36                                                                                        |
 
 Cada correção ganhou teste na suíte: `behavior` passou a 803 testes e `react` a 749. Fica igual ao que era: no React, clicar numa área sem foco com o item pego não cancela (o item continua pego até Esc, Espaço ou Tab).
+
+### Melhorias F-006 a F-011
+
+| Falha | O que mudou                                                                                                                                                                                                                                                                            |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F-006 | Os exemplos React "Obrigatório e erro" (DatePicker) e "Obrigatório e validação" (DateRangePicker) levam o foco ao primeiro campo vazio depois de um envio recusado.                                                                                                                    |
+| F-007 | O exemplo HTML da tabela deixou de mostrar o contador fixo "1 selecionado"; a barra traz um título e um comentário explica que a contagem visível é do código do app (`eds:table-select-change`, `detail.count`). O anúncio da seleção já vinha da região de status.                   |
+| F-008 | O exemplo React de busca local passou a usar `useTableFilter` e `<Table status>`: mesmo atraso do HTML e "Filtro removido. N linhas." no Esc.                                                                                                                                          |
+| F-009 | O texto "Última mudança" do exemplo React da árvore editável perdeu o `aria-live`; quem anuncia é a região de status da Tree.                                                                                                                                                          |
+| F-010 | `Combobox` do React: texto sem escolha vira erro visível (`p.eds-error`, `aria-invalid`, `aria-describedby`, anúncio) ao sair do campo, no Enter ou num envio recusado, e some quando o campo volta a ser válido. Erro vindo do `Field` prevalece. Teste novo na suíte (`react`: 750). |
+| F-011 | `favicon.svg` (a marca do site) em `apps/docs/public` e `apps/playground/public`, ligado nos dois `index.html`.                                                                                                                                                                        |
 
 ## Como foi feito
 
@@ -171,6 +182,7 @@ Modelo da seção 6 do roteiro. Tema padrão (blue, claro, densidade padrão), s
 
 ### F-006
 
+- **Situação: corrigida em 21/11/2026** (ver "Melhorias F-006 a F-011"). O texto abaixo descreve o estado anterior.
 - Rota: os mesmos dois exemplos React de F-003
 - Item do roteiro: 2.1f item 8, 2.1g item 9
 - Passo a passo:
@@ -183,6 +195,7 @@ Modelo da seção 6 do roteiro. Tema padrão (blue, claro, densidade padrão), s
 
 ### F-007
 
+- **Situação: corrigida em 21/11/2026** (ver "Melhorias F-006 a F-011"). O texto abaixo descreve o estado anterior.
 - Rota: `#/componentes/table`, exemplo "Ordenação, seleção e paginação", aba HTML
 - Item do roteiro: 2.5 item 4
 - Passo a passo:
@@ -194,6 +207,7 @@ Modelo da seção 6 do roteiro. Tema padrão (blue, claro, densidade padrão), s
 
 ### F-008
 
+- **Situação: corrigida em 21/11/2026** (ver "Melhorias F-006 a F-011"). O texto abaixo descreve o estado anterior.
 - Rota: `#/componentes/table`, exemplo "Busca local (filtro de linhas)", aba React
 - Item do roteiro: 2.5 itens 9 e 11
 - Passo a passo:
@@ -207,6 +221,7 @@ Modelo da seção 6 do roteiro. Tema padrão (blue, claro, densidade padrão), s
 
 ### F-009
 
+- **Situação: corrigida em 21/11/2026** (ver "Melhorias F-006 a F-011"). O texto abaixo descreve o estado anterior.
 - Rota: `#/componentes/tree`, exemplo "Árvore editável", aba React
 - Item do roteiro: 2.12 itens 5, 7 e 8 ("anúncio único")
 - Obtido: o exemplo tem um texto visível "Última mudança: …" com `aria-live="polite"`. Cada ação muda essa região e também a região de status do componente, então o leitor tende a falar duas vezes.
@@ -214,6 +229,7 @@ Modelo da seção 6 do roteiro. Tema padrão (blue, claro, densidade padrão), s
 
 ### F-010
 
+- **Situação: corrigida em 21/11/2026** (ver "Melhorias F-006 a F-011"). O texto abaixo descreve o estado anterior.
 - Rota: `#/componentes/combobox`, exemplo "Lista local", aba React
 - Item do roteiro: 2.1 item 8
 - Passo a passo:
@@ -226,6 +242,7 @@ Modelo da seção 6 do roteiro. Tema padrão (blue, claro, densidade padrão), s
 
 ### F-011
 
+- **Situação: corrigida em 21/11/2026** (ver "Melhorias F-006 a F-011"). O texto abaixo descreve o estado anterior.
 - Rota: todas, no site de documentação e no playground
 - Obtido: `GET /favicon.ico` responde 404 e aparece como erro no console do Chrome e do Edge a cada carga.
 - Severidade sugerida: melhoria
@@ -272,7 +289,7 @@ Não são falhas; servem para atualizar o roteiro ou `comportamento.md`.
 
 ## Próximos passos
 
-1. Decidir sobre as melhorias F-006 a F-011.
+1. (Feito) Correções F-001 a F-011.
 2. Repetir a seção 4.1 com um tema de contraste real do Windows, em Edge e Firefox.
 3. Fazer as sessões 3 e 4 do roteiro (NVDA + Firefox), que são o critério de saída, e a sessão 5 (toque).
 4. Abrir o `.xlsx` no LibreOffice e o `.pdf` no Acrobat (2.13 itens 4 e 5).

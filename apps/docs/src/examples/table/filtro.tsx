@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useId } from 'react';
 import {
   Button,
   EmptyState,
@@ -11,6 +11,7 @@ import {
   TableHeaderCell,
   TableRow,
   TableToolbar,
+  useTableFilter,
 } from '@eds-ui/react';
 import { SearchIcon } from '@eds-ui/icons';
 
@@ -31,36 +32,20 @@ const pedidos: Pedido[] = [
 
 const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
-/** Minúsculas e sem acento: "CLINICA" encontra "Clínica". */
-const normalizar = (texto: string) => texto.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+/** Texto pesquisável da linha: inclui o total como aparece na tela. */
+const textoDe = (p: Pedido) => `${p.codigo} ${p.cliente} ${p.cidade} ${moeda.format(p.total)}`;
 
 export default function Filtro() {
   const id = useId();
-  const [consulta, setConsulta] = useState('');
-  const [aviso, setAviso] = useState('');
-
-  const agulha = normalizar(consulta.trim());
-  const visiveis = useMemo(
-    () =>
-      pedidos.filter(
-        (p) =>
-          agulha === '' ||
-          normalizar(`${p.codigo} ${p.cliente} ${p.cidade} ${moeda.format(p.total)}`).includes(
-            agulha,
-          ),
-      ),
-    [agulha],
-  );
-
-  // Anuncia só depois de uma pausa na digitação, nunca a cada tecla.
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (agulha === '') setAviso('');
-      else if (visiveis.length === 0) setAviso('Nenhum resultado.');
-      else setAviso(visiveis.length === 1 ? '1 resultado.' : `${visiveis.length} resultados.`);
-    }, 150);
-    return () => clearTimeout(timer);
-  }, [agulha, visiveis.length]);
+  // O hook filtra sem acento/caixa, espera 150 ms, limpa com Esc e devolve o anúncio para a Table
+  // ("2 resultados.", "Filtro removido. 5 linhas."), como o data-eds-table-filter do HTML.
+  const {
+    query: consulta,
+    setQuery: setConsulta,
+    rows: visiveis,
+    status,
+    inputProps,
+  } = useTableFilter(pedidos, { getText: textoDe });
 
   return (
     <div>
@@ -71,18 +56,11 @@ export default function Filtro() {
           placeholder="Buscar pedido"
           aria-label="Buscar pedido"
           aria-controls={id}
-          value={consulta}
-          onChange={(event) => setConsulta(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Escape' && consulta !== '') {
-              event.preventDefault();
-              setConsulta('');
-            }
-          }}
+          {...inputProps}
         />
       </TableToolbar>
 
-      <Table id={id} caption="Pedidos, com busca local">
+      <Table id={id} caption="Pedidos, com busca local" status={status}>
         <TableHead>
           <TableRow>
             <TableHeaderCell>Código</TableHeaderCell>
@@ -125,10 +103,6 @@ export default function Filtro() {
           )}
         </TableBody>
       </Table>
-
-      <div role="status" className="eds-visually-hidden">
-        {aviso}
-      </div>
     </div>
   );
 }

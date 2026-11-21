@@ -43,9 +43,8 @@ export default function Editavel() {
           setUltima(`${acoes[mudanca.action]} — ${mudanca.node.label}`)
         }
       />
-      <p className="eds-text-small" aria-live="polite">
-        Última mudança: {ultima}
-      </p>
+      {/* Só visual: quem anuncia cada mudança é a região de status da própria Tree. */}
+      <p className="eds-text-small">Última mudança: {ultima}</p>
     </>
   );
 }

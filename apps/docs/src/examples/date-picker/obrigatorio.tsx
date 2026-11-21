@@ -5,9 +5,11 @@ export default function Obrigatorio() {
   const [iso, setIso] = useState<string | null>(null);
   const [error, setError] = useState('');
 
-  const submit = (event: FormEvent) => {
+  const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(iso ? '' : 'Informe o vencimento.');
+    // Sem validação nativa (noValidate), quem leva o foco ao campo com erro é o formulário.
+    if (!iso) event.currentTarget.querySelector<HTMLInputElement>('input[type="text"]')?.focus();
   };
 
   return (

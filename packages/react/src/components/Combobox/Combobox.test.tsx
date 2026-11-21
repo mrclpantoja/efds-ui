@@ -393,6 +393,21 @@ describe('Combobox: auditoria de UX', () => {
     expect(input.checkValidity()).toBe(true);
   });
 
+  it('texto sem escolha: ao sair do campo mostra o erro em texto, ligado ao campo', async () => {
+    const { user, input, container } = setup();
+    await user.type(input, 'zz');
+    expect(input).not.toHaveAttribute('aria-invalid');
+    expect(container.querySelector('.eds-error')).toBeNull();
+    await user.tab();
+    const error = container.querySelector('.eds-error')!;
+    expect(error).toHaveTextContent('Escolha uma das opções da lista.');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input.getAttribute('aria-describedby')).toContain(error.id);
+    await user.clear(input);
+    expect(container.querySelector('.eds-error')).toBeNull();
+    expect(input).not.toHaveAttribute('aria-invalid');
+  });
+
   it('freeText: sem customValidity e o hidden recebe o texto', async () => {
     const { user, input, container } = setup({ freeText: true, name: 'cidade' });
     await user.type(input, 'Outra');

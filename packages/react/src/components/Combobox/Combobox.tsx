@@ -264,6 +264,19 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
     inputRef.current?.setCustomValidity(unresolved ? invalidChoiceMessage : '');
   }, [unresolved, invalidChoiceMessage]);
 
+  // Erro visível e associado (3.3.1), como no HTML: aparece depois de sair do campo, de Enter ou
+  // de um envio recusado, e some quando o texto volta a ter uma escolha. Erro do Field prevalece.
+  const [touched, setTouched] = useState(false);
+  useEffect(() => {
+    if (!unresolved) setTouched(false);
+  }, [unresolved]);
+  const external = attrs['aria-invalid'] === true || attrs['aria-invalid'] === 'true';
+  const ownError = !external && touched && unresolved ? invalidChoiceMessage : '';
+  const errorId = `${generated}-err`;
+  useEffect(() => {
+    if (ownError) announce(ownError);
+  }, [ownError, announce]);
+
   const openFromArrow = (highlight: 'first' | 'last' | 'none') => {
     setOpen(true);
     if (highlight === 'first') setActive(firstEnabled(0, 1));
@@ -319,8 +332,9 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
           event.preventDefault();
           const option = visible[activeIndex];
           if (option) choose(option);
-        } else if (open) {
-          closeList();
+        } else {
+          if (open) closeList();
+          setTouched(true);
         }
         break;
       }
@@ -344,91 +358,110 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
   };
 
   return (
-    <div className="eds-combobox">
-      <input
-        autoComplete="off"
-        {...rest}
-        {...attrs}
-        ref={mergeRefs(ref, inputRef)}
-        type="text"
-        role="combobox"
-        className={cx('eds-input', size !== 'md' && `eds-input-${size}`, className)}
-        aria-autocomplete="list"
-        aria-expanded={expanded}
-        aria-controls={listId}
-        aria-activedescendant={expanded && activeIndex >= 0 ? optionId(activeIndex) : undefined}
-        disabled={disabled}
-        readOnly={readOnly}
-        aria-readonly={readOnly || undefined}
-        value={text}
-        onChange={handleInput}
-        onKeyDown={handleKeyDown}
-        onClick={(event) => {
-          onClick?.(event);
-          if (!event.defaultPrevented && !disabled && !readOnly && !open) openFromArrow('none');
-        }}
-        onBlur={(event) => {
-          closeList();
-          onBlur?.(event);
-        }}
-      />
-      {name ? (
+    <>
+      <div className="eds-combobox">
         <input
-          type="hidden"
-          name={name}
-          value={value || (freeText ? text : '')}
-          disabled={disabled}
-        />
-      ) : null}
-      <div
-        ref={popupRef}
-        className="eds-combobox-popup"
-        popover="manual"
-        aria-busy={loading || undefined}
-      >
-        <ul
-          id={listId}
-          className="eds-combobox-listbox"
-          role="listbox"
-          aria-label={listLabel ?? rest['aria-label']}
-          aria-labelledby={
-            listLabel || rest['aria-label'] ? undefined : (rest['aria-labelledby'] ?? field.labelId)
+          autoComplete="off"
+          {...rest}
+          {...attrs}
+          aria-invalid={ownError ? true : attrs['aria-invalid']}
+          aria-describedby={
+            [attrs['aria-describedby'], ownError ? errorId : undefined].filter(Boolean).join(' ') ||
+            undefined
           }
-          hidden={visible.length === 0}
+          onInvalid={(event) => {
+            rest.onInvalid?.(event);
+            setTouched(true);
+          }}
+          ref={mergeRefs(ref, inputRef)}
+          type="text"
+          role="combobox"
+          className={cx('eds-input', size !== 'md' && `eds-input-${size}`, className)}
+          aria-autocomplete="list"
+          aria-expanded={expanded}
+          aria-controls={listId}
+          aria-activedescendant={expanded && activeIndex >= 0 ? optionId(activeIndex) : undefined}
+          disabled={disabled}
+          readOnly={readOnly}
+          aria-readonly={readOnly || undefined}
+          value={text}
+          onChange={handleInput}
+          onKeyDown={handleKeyDown}
+          onClick={(event) => {
+            onClick?.(event);
+            if (!event.defaultPrevented && !disabled && !readOnly && !open) openFromArrow('none');
+          }}
+          onBlur={(event) => {
+            closeList();
+            setTouched(true);
+            onBlur?.(event);
+          }}
+        />
+        {name ? (
+          <input
+            type="hidden"
+            name={name}
+            value={value || (freeText ? text : '')}
+            disabled={disabled}
+          />
+        ) : null}
+        <div
+          ref={popupRef}
+          className="eds-combobox-popup"
+          popover="manual"
+          aria-busy={loading || undefined}
         >
-          {visible.map((option, i) => (
-            // Teclado: tratado no input (aria-activedescendant); a opção só recebe o clique.
-            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-            <li
-              key={option.value}
-              id={optionId(i)}
-              className="eds-combobox-option"
-              role="option"
-              aria-selected={i === activeIndex}
-              aria-disabled={option.disabled || undefined}
-              data-value={option.value}
-              data-current={option.value === value ? '' : undefined}
-              onPointerDown={(event) => event.preventDefault()}
-              onPointerMove={() => {
-                if (!option.disabled && active !== i) setActive(i);
-              }}
-              onClick={() => choose(option)}
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
-        <p className="eds-combobox-empty" hidden={!(showEmpty || showError)}>
-          {showError ? error : emptyMessage}
-        </p>
-        <p className="eds-combobox-loading" hidden={!showLoading}>
-          <Spinner size="sm" decorative /> {loadingMessage}
-        </p>
+          <ul
+            id={listId}
+            className="eds-combobox-listbox"
+            role="listbox"
+            aria-label={listLabel ?? rest['aria-label']}
+            aria-labelledby={
+              listLabel || rest['aria-label']
+                ? undefined
+                : (rest['aria-labelledby'] ?? field.labelId)
+            }
+            hidden={visible.length === 0}
+          >
+            {visible.map((option, i) => (
+              // Teclado: tratado no input (aria-activedescendant); a opção só recebe o clique.
+              // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+              <li
+                key={option.value}
+                id={optionId(i)}
+                className="eds-combobox-option"
+                role="option"
+                aria-selected={i === activeIndex}
+                aria-disabled={option.disabled || undefined}
+                data-value={option.value}
+                data-current={option.value === value ? '' : undefined}
+                onPointerDown={(event) => event.preventDefault()}
+                onPointerMove={() => {
+                  if (!option.disabled && active !== i) setActive(i);
+                }}
+                onClick={() => choose(option)}
+              >
+                {option.label}
+              </li>
+            ))}
+          </ul>
+          <p className="eds-combobox-empty" hidden={!(showEmpty || showError)}>
+            {showError ? error : emptyMessage}
+          </p>
+          <p className="eds-combobox-loading" hidden={!showLoading}>
+            <Spinner size="sm" decorative /> {loadingMessage}
+          </p>
+        </div>
+        <span className="eds-visually-hidden" role="status">
+          {showError ? error : status}
+        </span>
       </div>
-      <span className="eds-visually-hidden" role="status">
-        {showError ? error : status}
-      </span>
-    </div>
+      {ownError ? (
+        <p className="eds-error" id={errorId}>
+          {ownError}
+        </p>
+      ) : null}
+    </>
   );
 });
 Combobox.displayName = 'Combobox';

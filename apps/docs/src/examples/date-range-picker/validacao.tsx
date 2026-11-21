@@ -5,9 +5,14 @@ export default function Validacao() {
   const [range, setRange] = useState<DateRangeValue>({ start: null, end: null });
   const [error, setError] = useState('');
 
-  const submit = (event: FormEvent) => {
+  const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(range.start && range.end ? '' : 'Informe a data inicial e a final.');
+    // Sem validação nativa (noValidate), quem leva o foco ao primeiro campo vazio é o formulário.
+    if (!range.start || !range.end) {
+      const campos = event.currentTarget.querySelectorAll<HTMLInputElement>('input[type="text"]');
+      (range.start ? campos[1] : campos[0])?.focus();
+    }
   };
 
   return (

@@ -45,6 +45,8 @@
   .eds-sidebar {
     --_sidebar-width: var(--eds-layout-sidebar-width);
     --_sidebar-text: 1;
+    /* Título de seção quebra linha na expandida; na compacta fica numa linha (está oculto). */
+    --_sidebar-title-wrap: normal;
     /* Modo tooltip do rótulo: neutro na expandida; a compacta liga (ver abaixo). */
     --_sidebar-tip-position: static;
     --_sidebar-tip-offset: 0;
@@ -128,12 +130,12 @@
     padding-inline: var(--_sidebar-item-start);
     overflow: hidden;
     color: var(--eds-color-text-muted);
-    font-size: var(--eds-font-size-small);
+    font-size: var(--eds-font-size-overline);
     font-weight: var(--eds-font-weight-semibold);
     line-height: var(--eds-line-height-small);
     letter-spacing: var(--eds-letter-spacing-caps);
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: var(--_sidebar-title-wrap);
     opacity: var(--_sidebar-text);
   }
 
@@ -227,6 +229,7 @@
   .eds-sidebar[data-collapsed] {
     --_sidebar-width: var(--eds-layout-sidebar-width-collapsed);
     --_sidebar-text: 0;
+    --_sidebar-title-wrap: nowrap;
     --_sidebar-tip-position: absolute;
     --_sidebar-tip-offset: calc(
       var(--eds-layout-sidebar-width-collapsed) - var(--_sidebar-pad) - var(--_sidebar-item-start) +
@@ -246,6 +249,7 @@
     :where(.eds-app) > .eds-sidebar:where(:not(.eds-sidebar-full)) {
       --_sidebar-width: var(--eds-layout-sidebar-width-collapsed);
       --_sidebar-text: 0;
+      --_sidebar-title-wrap: nowrap;
       --_sidebar-tip-position: absolute;
       --_sidebar-tip-offset: calc(
         var(--eds-layout-sidebar-width-collapsed) - var(--_sidebar-pad) -
@@ -273,6 +277,7 @@
     :where(.eds-app) > .eds-sidebar-full {
       --_sidebar-width: var(--eds-layout-sidebar-width-collapsed);
       --_sidebar-text: 0;
+      --_sidebar-title-wrap: nowrap;
       --_sidebar-tip-position: absolute;
       --_sidebar-tip-offset: calc(
         var(--eds-layout-sidebar-width-collapsed) - var(--_sidebar-pad) -

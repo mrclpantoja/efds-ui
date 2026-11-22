@@ -136,11 +136,11 @@ export const sections: readonly { id: SectionId; title: string }[] = [
   { id: 'formularios', title: 'Formulários' },
   { id: 'datas', title: 'Datas e horários' },
   { id: 'navegacao', title: 'Navegação e estrutura' },
-  { id: 'superficies', title: 'Superfícies e sobreposições' },
+  { id: 'superficies', title: 'Superfícies e camadas' },
   { id: 'feedback', title: 'Feedback' },
   { id: 'dados', title: 'Dados e exibição' },
   { id: 'midia', title: 'Imagem' },
-  { id: 'pagina', title: 'Comportamentos de página' },
+  { id: 'pagina', title: 'Recursos de página' },
 ];
 
 /** Categoria de cada página de componente (o caminho continua em /componentes/...). */

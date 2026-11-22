@@ -19,6 +19,7 @@
     --eds-font-size-body: var(--eds-font-size-14);
     --eds-font-size-label: var(--eds-font-size-13);
     --eds-font-size-small: var(--eds-font-size-12);
+    --eds-font-size-overline: var(--eds-font-size-11);
     --eds-line-height-display: var(--eds-line-height-48);
     --eds-line-height-h1: var(--eds-line-height-40);
     --eds-line-height-h2: var(--eds-line-height-32);

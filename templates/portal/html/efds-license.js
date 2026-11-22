@@ -1,0 +1,12 @@
+window.EFDS_LICENSE = {
+  "v": 1,
+  "id": "demo-portal",
+  "product": "portal",
+  "type": "free",
+  "issuedAt": "2026-11-22",
+  "domains": [
+    "localhost",
+    "127.0.0.1",
+    "efds-ui.com.br"
+  ]
+};

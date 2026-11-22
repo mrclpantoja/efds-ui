@@ -3,9 +3,12 @@ packages:
   - packages/*
   - scripts
   - tooling/*
+  - templates/license
+  - templates/*/react
 
 # Versões centralizadas; os pacotes referenciam com "catalog:".
 catalog:
+  '@noble/curves': ^2.4.0
   '@eslint/js': ^9.39.5
   '@testing-library/dom': ^10.4.2
   '@testing-library/jest-dom': ^7.0.1

@@ -1,0 +1,46 @@
+/*
+ * Template Cadastro — só composição de página. Todo o visual vem de @efds-ui/core;
+ * aqui ficam ajustes de espaçamento e de texto, sempre com tokens semânticos.
+ */
+
+/* Respiro vertical da página: o container só cuida do lateral. */
+.cad-main {
+  padding-block: var(--eds-space-5) var(--eds-space-8);
+  padding-inline: 0;
+}
+
+/* Texto de apoio (metadados, nome fantasia). */
+.cad-muted {
+  color: var(--eds-color-text-secondary);
+}
+
+/* Segunda linha de uma célula: nome fantasia sob a razão social. */
+.cad-sub {
+  display: block;
+  color: var(--eds-color-text-secondary);
+  font-size: var(--eds-font-size-small);
+}
+
+/* Barra de ações em massa e de exportação, na linha da busca da tabela. */
+.cad-table-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--eds-space-3);
+}
+
+/* Cartão que não estica à altura da linha da grade. */
+.cad-self-start {
+  align-self: start;
+}
+
+/* [hidden] precisa vencer o display:flex acima (esta regra não está em camada). */
+.cad-table-tools[hidden] {
+  display: none;
+}
+
+/* Busca da tabela: ocupa o que sobra, sem esticar até a borda. */
+.cad-search {
+  flex: 1 1 16rem;
+  max-inline-size: 24rem;
+}

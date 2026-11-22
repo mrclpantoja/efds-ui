@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="blue" data-mode="light" data-density="comfortable" data-shape="soft">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fornecedor · Cadastro</title>
+    <link rel="stylesheet" href="vendor/efds-ui/core/index.css" />
+    <link rel="stylesheet" href="vendor/efds-ui/themes/index.css" />
+    <link rel="stylesheet" href="assets/cadastro.css" />
+    <script src="efds-config.js"></script>
+    <script src="efds-license.js"></script>
+    <script src="vendor/efds-ui/behavior/eds-behavior.js" data-eds-manual defer></script>
+    <script src="vendor/efds-ui/license/efds-license-gate.js" defer></script>
+  </head>
+  <body data-page="detalhe">
+    <div class="eds-app">
+      <a class="eds-skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+      <nav class="eds-sidebar" id="nav" popover aria-label="Principal">
+        <div class="eds-sidebar-header">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 2 3 7v10l9 5 9-5V7z" />
+            <path d="M3 7l9 5 9-5M12 12v10" />
+          </svg>
+          <span class="eds-sidebar-label">Compras Exemplo</span>
+        </div>
+        <div class="eds-sidebar-section">
+          <p class="eds-sidebar-section-title">Cadastros</p>
+          <a class="eds-sidebar-item" href="index.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-6h6v6" />
+            </svg>
+            <span class="eds-sidebar-label">Fornecedores</span>
+          </a>
+          <a class="eds-sidebar-item" href="fornecedor-form.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span class="eds-sidebar-label">Novo fornecedor</span>
+          </a>
+        </div>
+      </nav>
+
+      <header class="eds-app-header eds-navbar">
+        <button
+          type="button"
+          class="eds-button eds-button-ghost eds-button-icon eds-app-nav-toggle"
+          popovertarget="nav"
+          aria-label="Abrir navegação"
+          aria-expanded="false"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <div class="eds-navbar-actions">
+          <span class="eds-text-small cad-muted">Ana Exemplo · Compras</span>
+          <span class="eds-avatar eds-avatar-tone-1" role="img" aria-label="Ana Exemplo">AE</span>
+        </div>
+      </header>
+
+      <main class="eds-app-main cad-main" id="conteudo" tabindex="-1">
+        <div class="eds-container eds-container-lg">
+          <div class="eds-page">
+            <header class="eds-page-header">
+              <nav class="eds-breadcrumb" aria-label="Trilha">
+                <ol class="eds-breadcrumb-list">
+                  <li class="eds-breadcrumb-item"><a href="index.html">Início</a></li>
+                  <li class="eds-breadcrumb-item"><a href="index.html">Fornecedores</a></li>
+                  <li class="eds-breadcrumb-item">
+                    <span aria-current="page" id="crumb-atual">Fornecedor</span>
+                  </li>
+                </ol>
+              </nav>
+              <div class="eds-page-heading">
+                <h1 class="eds-page-title" id="titulo" tabindex="-1">Fornecedor</h1>
+                <p class="eds-page-description" id="subtitulo"></p>
+              </div>
+              <div class="eds-page-actions" id="acoes" hidden>
+                <a class="eds-button eds-button-secondary" id="editar" href="fornecedor-form.html">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    focusable="false"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 20h4L19 9l-4-4L4 16v4zM13 7l4 4" />
+                  </svg>
+                  Editar
+                </a>
+                <button type="button" class="eds-button eds-button-danger" id="excluir">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path d="M3 6h18M8 6V4h8v2m-9 0l1 14h8l1-14" />
+                  </svg>
+                  Excluir
+                </button>
+              </div>
+            </header>
+
+            <div id="nao-encontrado" hidden>
+              <div class="eds-empty">
+                <svg
+                  class="eds-empty-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  focusable="false"
+                  aria-hidden="true"
+                >
+                  <path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" />
+                </svg>
+                <h2 class="eds-empty-title">Fornecedor não encontrado</h2>
+                <p class="eds-empty-text">
+                  O código informado não existe nesta lista. Ele pode ter sido excluído.
+                </p>
+                <div class="eds-empty-actions">
+                  <a class="eds-button eds-button-primary" href="index.html">Voltar para a lista</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="eds-tabs" id="abas" hidden>
+              <div class="eds-tablist" role="tablist" aria-label="Seções do fornecedor">
+                <button
+                  type="button"
+                  class="eds-tab"
+                  role="tab"
+                  id="aba-dados"
+                  aria-selected="true"
+                  aria-controls="painel-dados"
+                  tabindex="0"
+                >
+                  Dados
+                </button>
+                <button
+                  type="button"
+                  class="eds-tab"
+                  role="tab"
+                  id="aba-docs"
+                  aria-selected="false"
+                  aria-controls="painel-docs"
+                  tabindex="-1"
+                >
+                  Documentos
+                </button>
+                <button
+                  type="button"
+                  class="eds-tab"
+                  role="tab"
+                  id="aba-historico"
+                  aria-selected="false"
+                  aria-controls="painel-historico"
+                  tabindex="-1"
+                >
+                  Histórico
+                </button>
+              </div>
+              <div
+                class="eds-tabpanel"
+                role="tabpanel"
+                id="painel-dados"
+                aria-labelledby="aba-dados"
+                tabindex="0"
+              >
+                <dl class="eds-description-list eds-description-list-cols-2" id="lista-dados"></dl>
+              </div>
+              <div
+                class="eds-tabpanel"
+                role="tabpanel"
+                id="painel-docs"
+                aria-labelledby="aba-docs"
+                tabindex="0"
+                hidden
+              >
+                <div id="lista-docs"></div>
+              </div>
+              <div
+                class="eds-tabpanel"
+                role="tabpanel"
+                id="painel-historico"
+                aria-labelledby="aba-historico"
+                tabindex="0"
+                hidden
+              >
+                <ol class="eds-timeline" id="linha-tempo"></ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="assets/data.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>

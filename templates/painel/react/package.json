@@ -1,0 +1,32 @@
+{
+  "name": "@efds-ui/template-painel",
+  "version": "0.1.1",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "Template Painel administrativo do efDS.ui (React).",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@efds-ui/behavior": "workspace:*",
+    "@efds-ui/core": "workspace:*",
+    "@efds-ui/icons": "workspace:*",
+    "@efds-ui/react": "workspace:*",
+    "@efds-ui/template-license": "workspace:*",
+    "@efds-ui/themes": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@efds-ui/typescript-config": "workspace:*",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

@@ -1,0 +1,63 @@
+/*
+ * Painel administrativo — só composição de página. Todo o visual vem das classes .eds-* do
+ * efDS.ui; aqui ficam ajustes de layout com tokens semânticos (zero cor literal).
+ * O mesmo arquivo existe na versão React (src/painel.css).
+ */
+
+/* Respiro vertical da área de conteúdo (o container cuida do lateral). */
+.pn-main {
+  padding-block: var(--eds-space-5) var(--eds-space-8);
+}
+
+/* Texto de apoio. */
+.pn-muted {
+  color: var(--eds-color-text-secondary);
+}
+
+/* Card que não estica até a altura da linha da grade. */
+.pn-self-start {
+  align-self: start;
+}
+
+/*
+ * Cabeçalho no shell estreito: o atalho e o nome do usuário somem; o texto "Buscar" fica só para
+ * leitor de tela (o botão vira ícone, mas mantém o nome acessível).
+ */
+@container eds-app (width < 40rem) {
+  .pn-wide-only {
+    display: none;
+  }
+
+  .pn-search-label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/*
+ * Caixa de notificações: o filtro (rádios nativos do Segmented) esconde itens só com :has(),
+ * sem JS. A mensagem de filtro vazio aparece quando não sobra item visível.
+ */
+.pn-inbox-none {
+  display: none;
+  margin: 0;
+  padding: var(--eds-space-6) var(--eds-inset-md);
+  color: var(--eds-color-text-secondary);
+  text-align: center;
+}
+
+.pn-inbox:has(input[value='nao-lidas']:checked) .eds-notification:not([data-unread='true']),
+.pn-inbox:has(input[value='lidas']:checked) .eds-notification[data-unread='true'] {
+  display: none;
+}
+
+.pn-inbox:has(input[value='nao-lidas']:checked):not(:has(.eds-notification[data-unread='true']))
+  .pn-inbox-none,
+.pn-inbox:has(input[value='lidas']:checked):not(:has(.eds-notification:not([data-unread='true'])))
+  .pn-inbox-none {
+  display: block;
+}

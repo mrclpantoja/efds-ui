@@ -6,7 +6,13 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', 'documentos do projeto/**'],
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/coverage/**',
+      'documentos do projeto/**',
+      'templates/*/html/vendor/**',
+    ],
   },
   js.configs.recommended,
   tseslint.configs.recommended,
@@ -18,5 +24,10 @@ export default tseslint.config(
   {
     files: ['**/*.{js,mjs,cjs}', '**/*.config.{ts,mts}'],
     languageOptions: { globals: globals.node },
+  },
+  {
+    // Páginas HTML dos templates: scripts clássicos no navegador (sem módulos).
+    files: ['templates/*/html/**/*.js'],
+    languageOptions: { globals: globals.browser, sourceType: 'script' },
   },
 );

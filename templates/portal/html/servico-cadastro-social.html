@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="blue" data-mode="light" data-density="comfortable" data-shape="soft">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro em programas sociais | Prefeitura de Vale das Araras</title>
+    <meta
+      name="description"
+      content="Solicite a inclusão da sua família nos programas municipais."
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+    <link rel="stylesheet" href="vendor/efds-ui/core/index.css" />
+    <link rel="stylesheet" href="vendor/efds-ui/themes/index.css" />
+    <link rel="stylesheet" href="assets/portal.css" />
+    <script src="efds-config.js"></script>
+    <script src="efds-license.js"></script>
+    <script src="vendor/efds-ui/behavior/eds-behavior.js" data-eds-manual defer></script>
+    <script src="vendor/efds-ui/license/efds-license-gate.js" defer></script>
+    <script src="assets/app.js" defer></script>
+  </head>
+  <body class="portal">
+    <a class="eds-skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <div class="portal-a11y">
+      <div class="eds-container portal-a11y-inner">
+        <a href="acessibilidade.html">Acessibilidade e ajuda</a>
+        <div class="portal-a11y-tools" role="group" aria-label="Opções de leitura">
+          <div class="portal-a11y-size">
+            <span aria-hidden="true">Tamanho do texto</span>
+            <fieldset class="eds-segmented eds-segmented-sm" data-portal-text-size>
+              <legend class="eds-visually-hidden">Tamanho do texto</legend>
+              <label
+                ><input type="radio" name="tamanho-texto" value="padrao" checked />Padrão</label
+              >
+              <label><input type="radio" name="tamanho-texto" value="grande" />Grande</label>
+              <label><input type="radio" name="tamanho-texto" value="maior" />Maior</label>
+            </fieldset>
+          </div>
+          <label class="eds-check">
+            <input type="checkbox" role="switch" class="eds-switch" data-portal-dark />
+            Modo escuro
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <header class="eds-navbar portal-header">
+      <a class="eds-navbar-brand" href="index.html">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <path d="M3 19l6-9 4 6 3-4 5 7zM16 6.5a1.5 1.5 0 100 .01" />
+        </svg>
+        Prefeitura de Vale das Araras
+      </a>
+      <nav class="eds-navbar-nav portal-nav" aria-label="Principal">
+        <a class="eds-navbar-link" href="index.html">Início</a>
+        <a class="eds-navbar-link" href="carta-de-servicos.html">Carta de serviços</a>
+        <a class="eds-navbar-link" href="consultar-protocolo.html">Consultar protocolo</a>
+        <a class="eds-navbar-link" href="acessibilidade.html">Acessibilidade e ajuda</a>
+      </nav>
+      <div class="eds-navbar-actions">
+        <button
+          type="button"
+          class="eds-button eds-button-secondary portal-menu-button"
+          data-eds-open="menu-principal"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          Menu
+        </button>
+      </div>
+    </header>
+
+    <div
+      class="eds-banner eds-banner-info"
+      role="region"
+      aria-label="Aviso da prefeitura"
+      data-eds-banner="aviso-feriado-2026-11"
+    >
+      <p class="eds-banner-text">
+        <strong>Atendimento presencial.</strong> Na sexta-feira, 27/11, o atendimento no balcão não
+        funciona (feriado local). Os serviços online seguem disponíveis.
+      </p>
+      <button
+        type="button"
+        class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close"
+        aria-label="Fechar aviso"
+        data-eds-banner-close
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <dialog
+      class="eds-drawer eds-drawer-start"
+      id="menu-principal"
+      aria-labelledby="menu-principal-t"
+    >
+      <header class="eds-drawer-header">
+        <h2 class="eds-drawer-title" id="menu-principal-t">Menu</h2>
+        <form method="dialog">
+          <button class="eds-button eds-button-ghost eds-button-icon" aria-label="Fechar">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              focusable="false"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </form>
+      </header>
+      <div class="eds-drawer-body">
+        <nav class="eds-sidebar" aria-label="Menu do portal">
+          <div class="eds-sidebar-section">
+            <a class="eds-sidebar-item" href="index.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 3h5a1 1 0 011 1v7a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1zM15 3h5a1 1 0 011 1v3a1 1 0 01-1 1h-5a1 1 0 01-1-1V4a1 1 0 011-1zM15 12h5a1 1 0 011 1v7a1 1 0 01-1 1h-5a1 1 0 01-1-1v-7a1 1 0 011-1zM4 16h5a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3a1 1 0 011-1z"
+                /></svg
+              ><span class="eds-sidebar-label">Início</span></a
+            >
+            <a class="eds-sidebar-item" href="carta-de-servicos.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M4 6h16M4 12h16M4 18h16" /></svg
+              ><span class="eds-sidebar-label">Carta de serviços</span></a
+            >
+            <a class="eds-sidebar-item" href="consultar-protocolo.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" /></svg
+              ><span class="eds-sidebar-label">Consultar protocolo</span></a
+            >
+            <a class="eds-sidebar-item" href="acessibilidade.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM4 21a8 8 0 0116 0" /></svg
+              ><span class="eds-sidebar-label">Acessibilidade e ajuda</span></a
+            >
+          </div>
+        </nav>
+      </div>
+    </dialog>
+
+    <main class="portal-main" id="conteudo" tabindex="-1">
+      <div class="eds-container">
+        <div class="eds-page">
+          <header class="eds-page-header">
+            <nav class="eds-breadcrumb" aria-label="Trilha">
+              <ol class="eds-breadcrumb-list">
+                <li class="eds-breadcrumb-item"><a href="index.html">Início</a></li>
+                <li class="eds-breadcrumb-item">
+                  <a href="carta-de-servicos.html">Carta de serviços</a>
+                </li>
+                <li class="eds-breadcrumb-item">
+                  <span aria-current="page">Cadastro em programas sociais</span>
+                </li>
+              </ol>
+            </nav>
+            <div class="eds-page-heading">
+              <h1 class="eds-page-title">Cadastro em programas sociais</h1>
+              <p class="eds-page-description">
+                Solicite a inclusão da sua família nos programas municipais.
+              </p>
+              <div class="eds-page-meta">
+                <span class="eds-tag">Cidadania e saúde</span>
+                <span class="eds-badge eds-badge-info">Online ou presencial</span>
+              </div>
+            </div>
+            <div class="eds-page-actions">
+              <a
+                class="eds-button eds-button-primary eds-button-lg"
+                href="solicitar.html?servico=cadastro-social"
+                >Solicitar<span class="eds-visually-hidden"> Cadastro em programas sociais</span></a
+              >
+            </div>
+          </header>
+
+          <div class="eds-page-body">
+            <div class="eds-grid">
+              <div class="eds-col-span-12 eds-col-span-lg-8 eds-stack eds-gap-7">
+                <section class="eds-stack eds-gap-2" aria-labelledby="o-que-e">
+                  <h2 class="eds-text-h3" id="o-que-e">O que é</h2>
+                  <p>
+                    Cadastro da família para avaliação de elegibilidade em programas municipais de
+                    apoio, como cesta básica e auxílio-aluguel.
+                  </p>
+                </section>
+                <section class="eds-stack eds-gap-2" aria-labelledby="quem-pode">
+                  <h2 class="eds-text-h3" id="quem-pode">Quem pode solicitar</h2>
+                  <p>
+                    Famílias residentes no município com renda mensal de até meio salário mínimo por
+                    pessoa.
+                  </p>
+                </section>
+                <section class="eds-stack eds-gap-2" aria-labelledby="documentos">
+                  <h2 class="eds-text-h3" id="documentos">Documentos necessários</h2>
+                  <ul class="portal-list">
+                    <li>Documento de identificação de todos os moradores</li>
+                    <li>Comprovante de residência</li>
+                    <li>Comprovante de renda ou declaração de ausência de renda</li>
+                  </ul>
+                </section>
+                <section class="eds-stack eds-gap-3" aria-labelledby="etapas">
+                  <h2 class="eds-text-h3" id="etapas">Etapas</h2>
+                  <ol class="eds-stepper eds-stepper-vertical" aria-label="Etapas do serviço">
+                    <li class="eds-stepper-item" data-state="upcoming">
+                      <span class="eds-stepper-marker" aria-hidden="true"></span>
+                      <span class="eds-stepper-label">Preencha a solicitação online</span>
+                    </li>
+                    <li class="eds-stepper-item" data-state="upcoming">
+                      <span class="eds-stepper-marker" aria-hidden="true"></span>
+                      <span class="eds-stepper-label">Anexe os documentos pedidos</span>
+                    </li>
+                    <li class="eds-stepper-item" data-state="upcoming">
+                      <span class="eds-stepper-marker" aria-hidden="true"></span>
+                      <span class="eds-stepper-label">Acompanhe pelo número de protocolo</span>
+                    </li>
+                    <li class="eds-stepper-item" data-state="upcoming">
+                      <span class="eds-stepper-marker" aria-hidden="true"></span>
+                      <span class="eds-stepper-label">Receba a resposta por e-mail</span>
+                    </li>
+                  </ol>
+                </section>
+                <section class="eds-stack eds-gap-3" aria-labelledby="duvidas">
+                  <h2 class="eds-text-h3" id="duvidas">Perguntas frequentes</h2>
+                  <div class="eds-accordion">
+                    <details class="eds-accordion-item">
+                      <summary class="eds-accordion-trigger">Quem pode fazer o cadastro?</summary>
+                      <div class="eds-accordion-panel">
+                        <p>O responsável pela família, com mais de 18 anos.</p>
+                      </div>
+                    </details>
+                    <details class="eds-accordion-item">
+                      <summary class="eds-accordion-trigger">Preciso atualizar os dados?</summary>
+                      <div class="eds-accordion-panel">
+                        <p>Sim. O cadastro deve ser revisto a cada 12 meses.</p>
+                      </div>
+                    </details>
+                  </div>
+                </section>
+              </div>
+
+              <aside class="eds-col-span-12 eds-col-span-lg-4" aria-labelledby="prazos">
+                <div class="eds-card">
+                  <header class="eds-card-header">
+                    <h2 class="eds-card-title" id="prazos">Prazos e custos</h2>
+                  </header>
+                  <div class="eds-card-body">
+                    <dl class="eds-description-list">
+                      <div>
+                        <dt>Prazo</dt>
+                        <dd>Até 10 dias úteis</dd>
+                      </div>
+                      <div>
+                        <dt>Custo</dt>
+                        <dd>Gratuito</dd>
+                      </div>
+                      <div>
+                        <dt>Canal</dt>
+                        <dd>Online ou presencial</dd>
+                      </div>
+                      <div>
+                        <dt>Responsável</dt>
+                        <dd>Secretaria de Assistência Social</dd>
+                      </div>
+                      <div>
+                        <dt>Atualizado em</dt>
+                        <dd><time datetime="2026-11-20">20/11/2026</time></dd>
+                      </div>
+                    </dl>
+                  </div>
+                  <footer class="eds-card-footer">
+                    <a class="eds-button eds-button-secondary" href="consultar-protocolo.html"
+                      >Consultar um protocolo</a
+                    >
+                  </footer>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="portal-footer">
+      <div class="eds-container">
+        <div class="eds-grid">
+          <div class="eds-col-span-12 eds-col-span-md-6 eds-col-span-lg-5 eds-stack eds-gap-2">
+            <p class="eds-text-h4">Prefeitura de Vale das Araras</p>
+            <p>
+              Portal de serviços ao cidadão. Peça, acompanhe e consulte serviços municipais sem sair
+              de casa.
+            </p>
+            <p class="eds-text-small portal-muted">
+              Site fictício, criado para demonstrar o efDS.ui. Órgão, serviços, números e valores
+              não são reais.
+            </p>
+          </div>
+          <div
+            class="eds-col-span-12 eds-col-span-sm-6 eds-col-span-md-3 eds-col-span-lg-4 eds-stack eds-gap-2"
+          >
+            <h2 class="eds-text-h4">Atendimento</h2>
+            <address class="portal-address">
+              Praça da Fonte, 100, Centro, Vale das Araras<br />
+              Segunda a sexta, das 8h às 17h<br />
+              Telefone: (00) 0000-0000<br />
+              <a href="mailto:atendimento@valedasararas.example"
+                >atendimento@valedasararas.example</a
+              >
+            </address>
+          </div>
+          <nav
+            class="eds-col-span-12 eds-col-span-sm-6 eds-col-span-md-3 eds-stack eds-gap-2"
+            aria-labelledby="rodape-links"
+          >
+            <h2 class="eds-text-h4" id="rodape-links">Páginas</h2>
+            <ul class="portal-links">
+              <li><a href="index.html">Início</a></li>
+              <li><a href="carta-de-servicos.html">Carta de serviços</a></li>
+              <li><a href="consultar-protocolo.html">Consultar protocolo</a></li>
+              <li><a href="acessibilidade.html">Acessibilidade e ajuda</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

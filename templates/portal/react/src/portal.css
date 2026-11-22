@@ -1,0 +1,212 @@
+/*
+ * Portal de serviços: composição de página sobre o efDS.ui.
+ * Só tokens semânticos (--eds-*); nenhum valor literal de cor, espaço ou raio.
+ * Os componentes (.eds-*) trazem a aparência; aqui ficam apenas o esqueleto do site,
+ * a barra de acessibilidade e os blocos que o core não cobre.
+ */
+
+/* Tamanho do texto: os tokens de fonte são em rem, então escalar a raiz escala o site todo. */
+html[data-text-size='lg'] {
+  font-size: 112.5%;
+}
+
+html[data-text-size='xl'] {
+  font-size: 125%;
+}
+
+.portal {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+}
+
+.portal-main {
+  flex: 1 1 auto;
+  padding-block: var(--eds-space-6) var(--eds-space-9);
+}
+
+.portal-muted {
+  color: var(--eds-color-text-secondary);
+}
+
+/* Barra de acessibilidade */
+.portal-a11y {
+  border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+  background: var(--eds-color-bg-subtle);
+  font-size: var(--eds-font-size-label);
+}
+
+.portal-a11y-inner,
+.portal-a11y-tools,
+.portal-a11y-size {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--eds-space-2) var(--eds-space-5);
+}
+
+.portal-a11y-inner {
+  justify-content: space-between;
+  padding-block: var(--eds-space-2);
+}
+
+.portal-a11y-size {
+  gap: var(--eds-space-2) var(--eds-space-3);
+}
+
+/* Cabeçalho: abaixo de 48rem a navegação sai da barra e vira o menu em Drawer. */
+.portal-menu-button {
+  display: none;
+}
+
+@container (max-width: 47.99rem) {
+  .portal-nav {
+    display: none;
+  }
+
+  .portal-menu-button {
+    display: inline-flex;
+  }
+
+  .portal-header .eds-navbar-actions {
+    margin-inline-start: auto;
+  }
+}
+
+/* Faixa de abertura */
+.portal-hero {
+  padding-block: var(--eds-space-8);
+  border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+  background: var(--eds-color-bg-subtle);
+}
+
+.portal-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--eds-space-3);
+  max-inline-size: var(--eds-layout-container-sm);
+}
+
+.portal-search-field {
+  flex: 1 1 16rem;
+  min-inline-size: 0;
+}
+
+.portal-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--eds-space-1) var(--eds-space-4);
+  margin: 0;
+  color: var(--eds-color-text-secondary);
+}
+
+/* Seções da página inicial */
+.portal-section {
+  padding-block: var(--eds-space-7);
+}
+
+.portal-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--eds-space-2) var(--eds-space-4);
+}
+
+.portal-section-head > h2 {
+  margin: 0;
+}
+
+.portal-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--eds-space-2) var(--eds-space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portal-category {
+  border-block-start: var(--eds-border-width) solid var(--eds-color-border-strong);
+}
+
+.portal-category > a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--eds-space-1);
+  block-size: 100%;
+  padding-block: var(--eds-space-4);
+  color: var(--eds-color-text-primary);
+  text-decoration: none;
+}
+
+.portal-category-name {
+  margin: 0;
+}
+
+.portal-category-text {
+  color: var(--eds-color-text-secondary);
+}
+
+.portal-category > a:hover .portal-category-name {
+  text-decoration: underline;
+}
+
+.portal-news-card .eds-image {
+  border-radius: var(--eds-radius-md);
+}
+
+/* Listas e textos */
+.portal-list {
+  margin: 0;
+  padding-inline-start: var(--eds-space-5);
+}
+
+.portal-list > li + li {
+  margin-block-start: var(--eds-space-1);
+}
+
+.portal-protocol {
+  font-size: var(--eds-font-size-h3);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--eds-line-height-h3);
+  overflow-wrap: anywhere;
+}
+
+.portal-examples {
+  max-inline-size: var(--eds-layout-container-sm);
+}
+
+/* Rodapé */
+.portal-footer {
+  padding-block: var(--eds-space-7);
+  border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
+  background: var(--eds-color-bg-subtle);
+}
+
+.portal-footer p,
+.portal-footer h2 {
+  margin: 0;
+}
+
+.portal-address {
+  font-style: normal;
+  overflow-wrap: anywhere;
+}
+
+.portal-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--eds-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A marca pode quebrar de linha em telas estreitas (320px) em vez de alargar a página. */
+.portal-header .eds-navbar-brand {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}

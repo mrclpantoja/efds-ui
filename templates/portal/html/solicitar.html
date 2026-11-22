@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="blue" data-mode="light" data-density="comfortable" data-shape="soft">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solicitar um serviço | Prefeitura de Vale das Araras</title>
+    <meta
+      name="description"
+      content="Preencha a solicitação em quatro etapas e receba um número de protocolo."
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+    <link rel="stylesheet" href="vendor/efds-ui/core/index.css" />
+    <link rel="stylesheet" href="vendor/efds-ui/themes/index.css" />
+    <link rel="stylesheet" href="assets/portal.css" />
+    <script src="efds-config.js"></script>
+    <script src="efds-license.js"></script>
+    <script src="vendor/efds-ui/behavior/eds-behavior.js" data-eds-manual defer></script>
+    <script src="vendor/efds-ui/license/efds-license-gate.js" defer></script>
+    <script src="assets/demo-data.js" defer></script>
+    <script src="assets/app.js" defer></script>
+  </head>
+  <body class="portal">
+    <a class="eds-skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <div class="portal-a11y">
+      <div class="eds-container portal-a11y-inner">
+        <a href="acessibilidade.html">Acessibilidade e ajuda</a>
+        <div class="portal-a11y-tools" role="group" aria-label="Opções de leitura">
+          <div class="portal-a11y-size">
+            <span aria-hidden="true">Tamanho do texto</span>
+            <fieldset class="eds-segmented eds-segmented-sm" data-portal-text-size>
+              <legend class="eds-visually-hidden">Tamanho do texto</legend>
+              <label
+                ><input type="radio" name="tamanho-texto" value="padrao" checked />Padrão</label
+              >
+              <label><input type="radio" name="tamanho-texto" value="grande" />Grande</label>
+              <label><input type="radio" name="tamanho-texto" value="maior" />Maior</label>
+            </fieldset>
+          </div>
+          <label class="eds-check">
+            <input type="checkbox" role="switch" class="eds-switch" data-portal-dark />
+            Modo escuro
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <header class="eds-navbar portal-header">
+      <a class="eds-navbar-brand" href="index.html">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <path d="M3 19l6-9 4 6 3-4 5 7zM16 6.5a1.5 1.5 0 100 .01" />
+        </svg>
+        Prefeitura de Vale das Araras
+      </a>
+      <nav class="eds-navbar-nav portal-nav" aria-label="Principal">
+        <a class="eds-navbar-link" href="index.html">Início</a>
+        <a class="eds-navbar-link" href="carta-de-servicos.html">Carta de serviços</a>
+        <a class="eds-navbar-link" href="consultar-protocolo.html">Consultar protocolo</a>
+        <a class="eds-navbar-link" href="acessibilidade.html">Acessibilidade e ajuda</a>
+      </nav>
+      <div class="eds-navbar-actions">
+        <button
+          type="button"
+          class="eds-button eds-button-secondary portal-menu-button"
+          data-eds-open="menu-principal"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          Menu
+        </button>
+      </div>
+    </header>
+
+    <div
+      class="eds-banner eds-banner-info"
+      role="region"
+      aria-label="Aviso da prefeitura"
+      data-eds-banner="aviso-feriado-2026-11"
+    >
+      <p class="eds-banner-text">
+        <strong>Atendimento presencial.</strong> Na sexta-feira, 27/11, o atendimento no balcão não
+        funciona (feriado local). Os serviços online seguem disponíveis.
+      </p>
+      <button
+        type="button"
+        class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close"
+        aria-label="Fechar aviso"
+        data-eds-banner-close
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <dialog
+      class="eds-drawer eds-drawer-start"
+      id="menu-principal"
+      aria-labelledby="menu-principal-t"
+    >
+      <header class="eds-drawer-header">
+        <h2 class="eds-drawer-title" id="menu-principal-t">Menu</h2>
+        <form method="dialog">
+          <button class="eds-button eds-button-ghost eds-button-icon" aria-label="Fechar">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              focusable="false"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </form>
+      </header>
+      <div class="eds-drawer-body">
+        <nav class="eds-sidebar" aria-label="Menu do portal">
+          <div class="eds-sidebar-section">
+            <a class="eds-sidebar-item" href="index.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 3h5a1 1 0 011 1v7a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1zM15 3h5a1 1 0 011 1v3a1 1 0 01-1 1h-5a1 1 0 01-1-1V4a1 1 0 011-1zM15 12h5a1 1 0 011 1v7a1 1 0 01-1 1h-5a1 1 0 01-1-1v-7a1 1 0 011-1zM4 16h5a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3a1 1 0 011-1z"
+                /></svg
+              ><span class="eds-sidebar-label">Início</span></a
+            >
+            <a class="eds-sidebar-item" href="carta-de-servicos.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M4 6h16M4 12h16M4 18h16" /></svg
+              ><span class="eds-sidebar-label">Carta de serviços</span></a
+            >
+            <a class="eds-sidebar-item" href="consultar-protocolo.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" /></svg
+              ><span class="eds-sidebar-label">Consultar protocolo</span></a
+            >
+            <a class="eds-sidebar-item" href="acessibilidade.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM4 21a8 8 0 0116 0" /></svg
+              ><span class="eds-sidebar-label">Acessibilidade e ajuda</span></a
+            >
+          </div>
+        </nav>
+      </div>
+    </dialog>
+
+    <main class="portal-main" id="conteudo" tabindex="-1">
+      <div class="eds-container eds-container-md">
+        <div class="eds-page">
+          <header class="eds-page-header">
+            <nav class="eds-breadcrumb" aria-label="Trilha">
+              <ol class="eds-breadcrumb-list">
+                <li class="eds-breadcrumb-item"><a href="index.html">Início</a></li>
+                <li class="eds-breadcrumb-item">
+                  <a href="carta-de-servicos.html">Carta de serviços</a>
+                </li>
+                <li class="eds-breadcrumb-item">
+                  <span aria-current="page">Solicitar um serviço</span>
+                </li>
+              </ol>
+            </nav>
+            <div class="eds-page-heading">
+              <h1 class="eds-page-title">Solicitar um serviço</h1>
+              <p class="eds-page-description">
+                Preencha as quatro etapas. Ao final, você recebe um número de protocolo para
+                acompanhar o pedido.
+              </p>
+            </div>
+          </header>
+
+          <div class="eds-page-body eds-stack eds-gap-5">
+            <div class="eds-alert eds-alert-info">
+              <div class="eds-alert-content">
+                <p class="eds-alert-title">
+                  <span class="eds-visually-hidden">Informação: </span>Demonstração
+                </p>
+                <p>Este site é fictício. Nenhum dado sai do seu navegador; use dados inventados.</p>
+              </div>
+            </div>
+
+            <form class="eds-stack eds-gap-5" data-eds-wizard novalidate id="form-solicitacao">
+              <ol class="eds-stepper" aria-label="Etapas da solicitação">
+                <li class="eds-stepper-item" data-state="current" aria-current="step">
+                  <span class="eds-stepper-marker" aria-hidden="true"></span>
+                  <span class="eds-stepper-label">Identificação</span>
+                  <span class="eds-stepper-summary">Etapa 1 de 4</span>
+                </li>
+                <li class="eds-stepper-item" data-state="upcoming">
+                  <span class="eds-stepper-marker" aria-hidden="true"></span>
+                  <span class="eds-stepper-label">Contato</span>
+                </li>
+                <li class="eds-stepper-item" data-state="upcoming">
+                  <span class="eds-stepper-marker" aria-hidden="true"></span>
+                  <span class="eds-stepper-label">Anexos</span>
+                </li>
+                <li class="eds-stepper-item" data-state="upcoming">
+                  <span class="eds-stepper-marker" aria-hidden="true"></span>
+                  <span class="eds-stepper-label">Revisão</span>
+                </li>
+              </ol>
+
+              <section data-eds-wizard-step aria-labelledby="wz-t1">
+                <div class="eds-stack eds-gap-4">
+                  <h2 class="eds-text-h4" id="wz-t1" tabindex="-1">Identificação</h2>
+                  <div class="eds-field">
+                    <label class="eds-label" for="servico" data-required>Serviço</label>
+                    <select
+                      class="eds-select"
+                      id="servico"
+                      name="servico"
+                      required
+                      data-eds-error="Escolha o serviço que você quer solicitar."
+                    >
+                      <option value="">Selecione</option>
+                      <optgroup label="Tributos e taxas">
+                        <option value="iptu">2ª via do IPTU</option>
+                        <option value="certidao-negativa">Certidão negativa de débitos</option>
+                        <option value="parcelamento">Parcelamento de dívidas</option>
+                      </optgroup>
+                      <optgroup label="Obras e meio ambiente">
+                        <option value="alvara">Alvará de funcionamento</option>
+                        <option value="poda-arvore">Poda ou remoção de árvore</option>
+                        <option value="habite-se">Certidão de habite-se</option>
+                      </optgroup>
+                      <optgroup label="Cidadania e saúde">
+                        <option value="cartao-saude">Cartão municipal de saúde</option>
+                        <option value="cadastro-social">Cadastro em programas sociais</option>
+                      </optgroup>
+                      <optgroup label="Educação e cultura">
+                        <option value="matricula">Matrícula na rede municipal</option>
+                        <option value="espaco-cultural">Reserva de espaço cultural</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <div class="eds-field">
+                    <label class="eds-label" for="nome" data-required>Nome completo</label>
+                    <input
+                      class="eds-input"
+                      id="nome"
+                      name="nome"
+                      type="text"
+                      required
+                      autocomplete="name"
+                      data-eds-error="Informe o seu nome completo."
+                      placeholder="Ex.: Maria Exemplo"
+                    />
+                  </div>
+                  <div class="eds-grid">
+                    <div class="eds-field eds-col-span-12 eds-col-span-sm-6">
+                      <label class="eds-label" for="cpf" data-required>CPF</label>
+                      <input
+                        class="eds-input"
+                        id="cpf"
+                        name="cpf"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        required
+                        pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
+                        data-eds-mask="cpf"
+                        data-eds-error="Informe o CPF completo, com 11 números."
+                        aria-describedby="cpf-ajuda"
+                      />
+                      <p class="eds-helper" id="cpf-ajuda">
+                        Usado só para identificar quem pede. Ex.: 123.456.789-00
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section data-eds-wizard-step aria-labelledby="wz-t2" hidden>
+                <div class="eds-stack eds-gap-4">
+                  <h2 class="eds-text-h4" id="wz-t2" tabindex="-1">Contato</h2>
+                  <div class="eds-grid">
+                    <div class="eds-field eds-col-span-12 eds-col-span-sm-6">
+                      <label class="eds-label" for="email" data-required>E-mail</label>
+                      <input
+                        class="eds-input"
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        autocomplete="email"
+                        data-eds-error="Informe um e-mail válido."
+                      />
+                    </div>
+                    <div class="eds-field eds-col-span-12 eds-col-span-sm-6">
+                      <label class="eds-label" for="telefone">Telefone</label>
+                      <input
+                        class="eds-input"
+                        id="telefone"
+                        name="telefone"
+                        type="tel"
+                        autocomplete="tel-national"
+                        data-eds-mask="telefone"
+                        aria-describedby="telefone-ajuda"
+                      />
+                      <p class="eds-helper" id="telefone-ajuda">Opcional. Com DDD.</p>
+                    </div>
+                  </div>
+                  <fieldset class="eds-fieldset">
+                    <legend class="eds-legend">Como prefere ser avisado?</legend>
+                    <label class="eds-check"
+                      ><input
+                        type="radio"
+                        class="eds-radio"
+                        name="contato"
+                        value="E-mail"
+                        checked
+                      />E-mail</label
+                    >
+                    <label class="eds-check"
+                      ><input
+                        type="radio"
+                        class="eds-radio"
+                        name="contato"
+                        value="Telefone"
+                      />Telefone</label
+                    >
+                  </fieldset>
+                </div>
+              </section>
+
+              <section data-eds-wizard-step aria-labelledby="wz-t3" hidden>
+                <div class="eds-stack eds-gap-4">
+                  <h2 class="eds-text-h4" id="wz-t3" tabindex="-1">Anexos</h2>
+                  <div class="eds-field">
+                    <label class="eds-label" for="detalhes">Detalhes da solicitação</label>
+                    <textarea
+                      class="eds-textarea"
+                      id="detalhes"
+                      name="detalhes"
+                      maxlength="500"
+                      aria-describedby="detalhes-ajuda"
+                    ></textarea>
+                    <p class="eds-helper" id="detalhes-ajuda">Opcional. Até 500 caracteres.</p>
+                  </div>
+                  <div class="eds-field">
+                    <span class="eds-label" id="anexos-l">Documentos</span>
+                    <div
+                      class="eds-upload"
+                      data-eds-upload
+                      data-eds-max-size="5242880"
+                      data-eds-max-files="5"
+                    >
+                      <input
+                        id="anexos"
+                        class="eds-upload-input"
+                        type="file"
+                        name="anexos"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        aria-labelledby="anexos-l"
+                        aria-describedby="anexos-h"
+                      />
+                      <label class="eds-upload-dropzone" for="anexos">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          focusable="false"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.5 4 4 0 0 1 17 18M12 21v-9m0 0-3 3m3-3 3 3"
+                          />
+                        </svg>
+                        <span class="eds-upload-title"
+                          >Arraste arquivos aqui ou
+                          <span class="eds-upload-link">escolha no computador</span></span
+                        >
+                        <span class="eds-upload-hint" id="anexos-h"
+                          >PDF, JPG ou PNG, até 5 MB cada (máximo de 5)</span
+                        >
+                      </label>
+                      <ul class="eds-upload-list" aria-label="Arquivos selecionados"></ul>
+                      <span class="eds-visually-hidden" role="status"></span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section data-eds-wizard-step aria-labelledby="wz-t4" hidden>
+                <div class="eds-stack eds-gap-4">
+                  <h2 class="eds-text-h4" id="wz-t4" tabindex="-1">Revisão</h2>
+                  <p>
+                    Confira os dados antes de enviar. Para corrigir algo, volte pela etapa
+                    correspondente.
+                  </p>
+                  <dl class="eds-description-list eds-description-list-divided" id="revisao">
+                    <div>
+                      <dt>Serviço</dt>
+                      <dd data-review="servico"></dd>
+                    </div>
+                    <div>
+                      <dt>Nome</dt>
+                      <dd data-review="nome"></dd>
+                    </div>
+                    <div>
+                      <dt>CPF</dt>
+                      <dd data-review="cpf"></dd>
+                    </div>
+                    <div>
+                      <dt>E-mail</dt>
+                      <dd data-review="email"></dd>
+                    </div>
+                    <div>
+                      <dt>Telefone</dt>
+                      <dd data-review="telefone"></dd>
+                    </div>
+                    <div>
+                      <dt>Aviso por</dt>
+                      <dd data-review="contato"></dd>
+                    </div>
+                    <div>
+                      <dt>Detalhes</dt>
+                      <dd data-review="detalhes"></dd>
+                    </div>
+                    <div>
+                      <dt>Documentos</dt>
+                      <dd data-review="anexos"></dd>
+                    </div>
+                  </dl>
+                  <label class="eds-check">
+                    <input
+                      type="checkbox"
+                      class="eds-checkbox"
+                      name="declaracao"
+                      required
+                      data-eds-error="Marque a declaração para enviar."
+                    />
+                    Declaro que as informações são verdadeiras.
+                  </label>
+                </div>
+              </section>
+
+              <div
+                class="eds-stack eds-stack-row eds-stack-justify-between eds-stack-wrap eds-gap-2"
+              >
+                <button type="button" class="eds-button eds-button-secondary" data-eds-wizard-prev>
+                  Voltar
+                </button>
+                <button
+                  type="button"
+                  class="eds-button eds-button-primary eds-push-end"
+                  data-eds-wizard-next
+                >
+                  Avançar
+                </button>
+                <button
+                  type="submit"
+                  class="eds-button eds-button-primary eds-push-end"
+                  data-eds-wizard-finish
+                  hidden
+                >
+                  Enviar solicitação
+                </button>
+              </div>
+            </form>
+
+            <section
+              class="eds-stack eds-gap-4"
+              id="confirmacao"
+              aria-labelledby="confirmacao-t"
+              hidden
+            >
+              <div class="eds-alert eds-alert-success">
+                <div class="eds-alert-content">
+                  <p class="eds-alert-title">
+                    <span class="eds-visually-hidden">Sucesso: </span
+                    ><span id="confirmacao-t" tabindex="-1">Solicitação enviada</span>
+                  </p>
+                  <p>Guarde o número do protocolo para acompanhar o andamento.</p>
+                </div>
+              </div>
+              <div class="eds-card">
+                <div class="eds-card-body eds-stack eds-gap-2">
+                  <p class="eds-text-label">Número do protocolo</p>
+                  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+                    <strong class="portal-protocol" id="protocolo-numero"></strong>
+                    <button
+                      type="button"
+                      class="eds-button eds-button-secondary eds-button-sm eds-copy"
+                      data-eds-copy="#protocolo-numero"
+                    >
+                      <svg
+                        class="eds-copy-icon-idle"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        focusable="false"
+                        aria-hidden="true"
+                      >
+                        <rect x="9" y="9" width="11" height="11" rx="2" />
+                        <path d="M5 15V6a2 2 0 012-2h9" />
+                      </svg>
+                      <svg
+                        class="eds-copy-icon-done"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        focusable="false"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5 9-10" />
+                      </svg>
+                      <span class="eds-copy-label">Copiar</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                <a
+                  class="eds-button eds-button-primary"
+                  id="confirmacao-acompanhar"
+                  href="consultar-protocolo.html"
+                  >Acompanhar solicitação</a
+                >
+                <a class="eds-button eds-button-secondary" href="index.html">Voltar ao início</a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="portal-footer">
+      <div class="eds-container">
+        <div class="eds-grid">
+          <div class="eds-col-span-12 eds-col-span-md-6 eds-col-span-lg-5 eds-stack eds-gap-2">
+            <p class="eds-text-h4">Prefeitura de Vale das Araras</p>
+            <p>
+              Portal de serviços ao cidadão. Peça, acompanhe e consulte serviços municipais sem sair
+              de casa.
+            </p>
+            <p class="eds-text-small portal-muted">
+              Site fictício, criado para demonstrar o efDS.ui. Órgão, serviços, números e valores
+              não são reais.
+            </p>
+          </div>
+          <div
+            class="eds-col-span-12 eds-col-span-sm-6 eds-col-span-md-3 eds-col-span-lg-4 eds-stack eds-gap-2"
+          >
+            <h2 class="eds-text-h4">Atendimento</h2>
+            <address class="portal-address">
+              Praça da Fonte, 100, Centro, Vale das Araras<br />
+              Segunda a sexta, das 8h às 17h<br />
+              Telefone: (00) 0000-0000<br />
+              <a href="mailto:atendimento@valedasararas.example"
+                >atendimento@valedasararas.example</a
+              >
+            </address>
+          </div>
+          <nav
+            class="eds-col-span-12 eds-col-span-sm-6 eds-col-span-md-3 eds-stack eds-gap-2"
+            aria-labelledby="rodape-links"
+          >
+            <h2 class="eds-text-h4" id="rodape-links">Páginas</h2>
+            <ul class="portal-links">
+              <li><a href="index.html">Início</a></li>
+              <li><a href="carta-de-servicos.html">Carta de serviços</a></li>
+              <li><a href="consultar-protocolo.html">Consultar protocolo</a></li>
+              <li><a href="acessibilidade.html">Acessibilidade e ajuda</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="blue" data-mode="light" data-density="comfortable" data-shape="soft">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novo fornecedor · Cadastro</title>
+    <link rel="stylesheet" href="vendor/efds-ui/core/index.css" />
+    <link rel="stylesheet" href="vendor/efds-ui/themes/index.css" />
+    <link rel="stylesheet" href="assets/cadastro.css" />
+    <script src="efds-config.js"></script>
+    <script src="efds-license.js"></script>
+    <script src="vendor/efds-ui/behavior/eds-behavior.js" data-eds-manual defer></script>
+    <script src="vendor/efds-ui/license/efds-license-gate.js" defer></script>
+  </head>
+  <body data-page="form">
+    <div class="eds-app">
+      <a class="eds-skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+      <nav class="eds-sidebar" id="nav" popover aria-label="Principal">
+        <div class="eds-sidebar-header">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 2 3 7v10l9 5 9-5V7z" />
+            <path d="M3 7l9 5 9-5M12 12v10" />
+          </svg>
+          <span class="eds-sidebar-label">Compras Exemplo</span>
+        </div>
+        <div class="eds-sidebar-section">
+          <p class="eds-sidebar-section-title">Cadastros</p>
+          <a class="eds-sidebar-item" href="index.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-6h6v6" />
+            </svg>
+            <span class="eds-sidebar-label">Fornecedores</span>
+          </a>
+          <a class="eds-sidebar-item" href="fornecedor-form.html" id="nav-novo">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span class="eds-sidebar-label">Novo fornecedor</span>
+          </a>
+        </div>
+      </nav>
+
+      <header class="eds-app-header eds-navbar">
+        <button
+          type="button"
+          class="eds-button eds-button-ghost eds-button-icon eds-app-nav-toggle"
+          popovertarget="nav"
+          aria-label="Abrir navegação"
+          aria-expanded="false"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <div class="eds-navbar-actions">
+          <span class="eds-text-small cad-muted">Ana Exemplo · Compras</span>
+          <span class="eds-avatar eds-avatar-tone-1" role="img" aria-label="Ana Exemplo">AE</span>
+        </div>
+      </header>
+
+      <main class="eds-app-main cad-main" id="conteudo" tabindex="-1">
+        <div class="eds-container eds-container-lg">
+          <div class="eds-page">
+            <header class="eds-page-header">
+              <nav class="eds-breadcrumb" aria-label="Trilha">
+                <ol class="eds-breadcrumb-list">
+                  <li class="eds-breadcrumb-item"><a href="index.html">Início</a></li>
+                  <li class="eds-breadcrumb-item"><a href="index.html">Fornecedores</a></li>
+                  <li class="eds-breadcrumb-item">
+                    <span aria-current="page" id="crumb-atual">Novo fornecedor</span>
+                  </li>
+                </ol>
+              </nav>
+              <div class="eds-page-heading">
+                <h1 class="eds-page-title" id="titulo" tabindex="-1">Novo fornecedor</h1>
+                <p class="eds-page-description">
+                  Campos com * são obrigatórios. Nada é enviado a um servidor: o salvamento é
+                  simulado no navegador.
+                </p>
+              </div>
+            </header>
+
+            <div id="resumo-erros"></div>
+
+            <form
+              id="form-fornecedor"
+              class="eds-stack eds-gap-5"
+              novalidate
+              data-eds-dirty-guard
+              data-eds-dirty-message="Há alterações não salvas neste fornecedor. Sair mesmo assim?"
+            >
+              <section class="eds-card" aria-labelledby="sec-dados-t">
+                <div class="eds-card-header">
+                  <h2 class="eds-card-title" id="sec-dados-t">Dados do fornecedor</h2>
+                </div>
+                <div class="eds-card-body">
+                  <fieldset class="eds-fieldset" aria-labelledby="sec-dados-t">
+                    <div class="eds-grid">
+                      <div class="eds-field eds-col-span-sm-6">
+                        <label class="eds-label" for="f-tipo" data-required>Tipo de pessoa</label>
+                        <select class="eds-select" id="f-tipo" name="tipo">
+                          <option value="pj">Pessoa jurídica</option>
+                          <option value="pf">Pessoa física</option>
+                        </select>
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6" data-eds-show-if="tipo=pj">
+                        <label class="eds-label" for="f-cnpj" data-required>CNPJ</label>
+                        <input
+                          class="eds-input"
+                          id="f-cnpj"
+                          name="cnpj"
+                          autocomplete="off"
+                          data-eds-mask="cnpj"
+                          data-eds-require-if="tipo=pj"
+                          aria-describedby="f-cnpj-ajuda"
+                        />
+                        <p class="eds-helper" id="f-cnpj-ajuda">
+                          Fictício. Ex.: 10.000.100/0001-13
+                        </p>
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6" data-eds-show-if="tipo=pf" hidden>
+                        <label class="eds-label" for="f-cpf" data-required>CPF</label>
+                        <input
+                          class="eds-input"
+                          id="f-cpf"
+                          name="cpf"
+                          autocomplete="off"
+                          data-eds-mask="cpf"
+                          data-eds-require-if="tipo=pf"
+                          aria-describedby="f-cpf-ajuda"
+                        />
+                        <p class="eds-helper" id="f-cpf-ajuda">Fictício. Ex.: 000.000.100-13</p>
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6">
+                        <label class="eds-label" for="f-razao" data-required
+                          >Razão social ou nome</label
+                        >
+                        <input
+                          class="eds-input"
+                          id="f-razao"
+                          name="razao"
+                          autocomplete="off"
+                          placeholder="Ex.: Aurora Papelaria Exemplo Ltda."
+                        />
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6" data-eds-show-if="tipo=pj">
+                        <label class="eds-label" for="f-fantasia">Nome fantasia</label>
+                        <input
+                          class="eds-input"
+                          id="f-fantasia"
+                          name="fantasia"
+                          autocomplete="off"
+                        />
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6">
+                        <label class="eds-label" for="f-categoria" data-required>Categoria</label>
+                        <select class="eds-select" id="f-categoria" name="categoria">
+                          <option value="" disabled selected>Selecione</option>
+                        </select>
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6">
+                        <label class="eds-label" for="f-situacao" data-required>Situação</label>
+                        <select class="eds-select" id="f-situacao" name="situacao">
+                          <option value="ativo">Ativo</option>
+                          <option value="pendente">Em análise</option>
+                          <option value="inativo">Inativo</option>
+                        </select>
+                      </div>
+                      <div
+                        class="eds-field eds-col-span-12"
+                        data-eds-show-if="situacao=inativo"
+                        hidden
+                      >
+                        <label class="eds-label" for="f-motivo" data-required
+                          >Motivo da inativação</label
+                        >
+                        <input
+                          class="eds-input"
+                          id="f-motivo"
+                          name="motivo"
+                          autocomplete="off"
+                          data-eds-require-if="situacao=inativo"
+                        />
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </section>
+
+              <section class="eds-card" aria-labelledby="sec-contato-t">
+                <div class="eds-card-header">
+                  <h2 class="eds-card-title" id="sec-contato-t">Contato</h2>
+                </div>
+                <div class="eds-card-body">
+                  <fieldset class="eds-fieldset" aria-labelledby="sec-contato-t">
+                    <div class="eds-grid">
+                      <div class="eds-field eds-col-span-sm-6">
+                        <label class="eds-label" for="f-email" data-required>E-mail</label>
+                        <input
+                          class="eds-input"
+                          id="f-email"
+                          name="email"
+                          type="email"
+                          inputmode="email"
+                          autocomplete="off"
+                          placeholder="nome@example.com"
+                        />
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6">
+                        <label class="eds-label" for="f-telefone">Telefone</label>
+                        <input
+                          class="eds-input"
+                          id="f-telefone"
+                          name="telefone"
+                          type="tel"
+                          autocomplete="off"
+                          data-eds-mask="telefone"
+                          aria-describedby="f-telefone-ajuda"
+                        />
+                        <p class="eds-helper" id="f-telefone-ajuda">Opcional. Com DDD.</p>
+                      </div>
+                      <div class="eds-col-span-12">
+                        <label class="eds-check">
+                          <input type="checkbox" class="eds-checkbox" name="altContato" value="1" />
+                          <span>Informar contato alternativo</span>
+                        </label>
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6" data-eds-show-if="altContato" hidden>
+                        <label class="eds-label" for="f-email-alt">E-mail alternativo</label>
+                        <input
+                          class="eds-input"
+                          id="f-email-alt"
+                          name="emailAlt"
+                          type="email"
+                          inputmode="email"
+                          autocomplete="off"
+                        />
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </section>
+
+              <section class="eds-card" aria-labelledby="sec-end-t">
+                <div class="eds-card-header">
+                  <h2 class="eds-card-title" id="sec-end-t">Endereço</h2>
+                </div>
+                <div class="eds-card-body">
+                  <fieldset class="eds-fieldset" aria-labelledby="sec-end-t">
+                    <div class="eds-grid">
+                      <div class="eds-field eds-col-span-sm-4">
+                        <label class="eds-label" for="f-cep" data-required>CEP</label>
+                        <div class="eds-input-group">
+                          <input
+                            class="eds-input"
+                            id="f-cep"
+                            name="cep"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            placeholder="00000-000"
+                            data-eds-cep
+                            data-eds-mask="cep"
+                            data-eds-cep-url="mock/cep/{cep}"
+                            data-eds-cep-fill="logradouro:#f-logradouro,bairro:#f-bairro,uf:#f-uf"
+                            aria-describedby="f-cep-ajuda f-cep-msg"
+                          />
+                          <span class="eds-input-group-text" hidden>
+                            <span class="eds-spinner eds-spinner-sm" role="status"
+                              ><span class="eds-visually-hidden">Buscando endereço</span></span
+                            >
+                          </span>
+                        </div>
+                        <p class="eds-error" id="f-cep-msg" hidden></p>
+                        <p class="eds-helper" id="f-cep-ajuda">Teste 90010-100 ou 88010-000.</p>
+                      </div>
+                      <div class="eds-field eds-col-span-sm-8">
+                        <label class="eds-label" for="f-logradouro" data-required>Logradouro</label>
+                        <input
+                          class="eds-input"
+                          id="f-logradouro"
+                          name="logradouro"
+                          autocomplete="off"
+                        />
+                      </div>
+                      <div class="eds-field eds-col-span-sm-4">
+                        <label class="eds-label" for="f-numero" data-required>Número</label>
+                        <input class="eds-input" id="f-numero" name="numero" autocomplete="off" />
+                      </div>
+                      <div class="eds-field eds-col-span-sm-8">
+                        <label class="eds-label" for="f-bairro">Bairro</label>
+                        <input class="eds-input" id="f-bairro" name="bairro" autocomplete="off" />
+                      </div>
+                      <div class="eds-field eds-col-span-sm-8">
+                        <label class="eds-label" for="f-cidade" data-required>Cidade</label>
+                        <div class="eds-combobox">
+                          <input
+                            id="f-cidade"
+                            class="eds-input"
+                            type="text"
+                            role="combobox"
+                            aria-autocomplete="list"
+                            aria-expanded="false"
+                            aria-controls="f-cidade-lista"
+                            autocomplete="off"
+                          />
+                          <input type="hidden" name="cidade" />
+                          <div class="eds-combobox-popup" popover="manual">
+                            <ul
+                              id="f-cidade-lista"
+                              class="eds-combobox-listbox"
+                              role="listbox"
+                              aria-label="Cidade"
+                            ></ul>
+                            <p class="eds-combobox-empty" hidden>Nenhum resultado</p>
+                            <p class="eds-combobox-loading" hidden>
+                              <span class="eds-spinner eds-spinner-sm" aria-hidden="true"></span>
+                              Carregando…
+                            </p>
+                          </div>
+                          <span class="eds-visually-hidden" role="status"></span>
+                        </div>
+                      </div>
+                      <div class="eds-field eds-col-span-sm-4">
+                        <label class="eds-label" for="f-uf" data-required>UF</label>
+                        <select class="eds-select" id="f-uf" name="uf" autocomplete="off">
+                          <option value="" disabled selected>Selecione</option>
+                        </select>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </section>
+
+              <section class="eds-card" aria-labelledby="sec-contrato-t">
+                <div class="eds-card-header">
+                  <h2 class="eds-card-title" id="sec-contrato-t">Contrato e documentos</h2>
+                </div>
+                <div class="eds-card-body">
+                  <fieldset class="eds-fieldset" aria-labelledby="sec-contrato-t">
+                    <div class="eds-grid">
+                      <div class="eds-field eds-col-span-sm-6">
+                        <label class="eds-label" for="f-limite">Limite de compra</label>
+                        <input
+                          class="eds-input"
+                          id="f-limite"
+                          name="limite"
+                          inputmode="numeric"
+                          autocomplete="off"
+                          data-eds-mask="moeda"
+                        />
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6">
+                        <label class="eds-label" for="f-contrato" data-required
+                          >Início do contrato</label
+                        >
+                        <div class="eds-datepicker" data-eds-datepicker>
+                          <input
+                            id="f-contrato"
+                            class="eds-input eds-datepicker-input"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="10"
+                            placeholder="dd/mm/aaaa"
+                            autocomplete="off"
+                          />
+                          <button
+                            type="button"
+                            class="eds-datepicker-toggle"
+                            aria-label="Escolher data"
+                          ></button>
+                          <input type="hidden" name="contratoEm" />
+                          <div class="eds-calendar" popover="manual"></div>
+                          <span class="eds-visually-hidden" role="status"></span>
+                        </div>
+                      </div>
+                      <div class="eds-field eds-col-span-12">
+                        <label class="eds-label" for="f-obs">Observações</label>
+                        <textarea
+                          class="eds-textarea"
+                          id="f-obs"
+                          name="obs"
+                          rows="3"
+                          maxlength="500"
+                          aria-describedby="f-obs-ajuda"
+                        ></textarea>
+                        <p class="eds-helper" id="f-obs-ajuda">Máximo de 500 caracteres.</p>
+                      </div>
+                      <div class="eds-field eds-col-span-12">
+                        <span class="eds-label" id="docs-l">Documentos</span>
+                        <div class="eds-upload" data-eds-upload>
+                          <input
+                            id="docs"
+                            class="eds-upload-input"
+                            type="file"
+                            name="documentos[]"
+                            multiple
+                            accept=".pdf,.jpg,.png"
+                            aria-labelledby="docs-l"
+                            aria-describedby="docs-h"
+                          />
+                          <label class="eds-upload-dropzone" for="docs">
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              aria-hidden="true"
+                              focusable="false"
+                            >
+                              <path d="M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.5 4 4 0 0 1 17 18" />
+                              <path d="M12 21v-9m0 0-3 3m3-3 3 3" />
+                            </svg>
+                            <span class="eds-upload-title"
+                              >Arraste arquivos aqui ou
+                              <span class="eds-upload-link">escolha no computador</span></span
+                            >
+                            <span class="eds-upload-hint" id="docs-h"
+                              >PDF, JPG ou PNG. Os arquivos não saem do navegador neste
+                              exemplo.</span
+                            >
+                          </label>
+                          <ul class="eds-upload-list" aria-label="Arquivos selecionados"></ul>
+                          <span class="eds-visually-hidden" role="status"></span>
+                        </div>
+                        <p class="eds-helper" id="docs-existentes" hidden></p>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </section>
+
+              <div class="eds-stack eds-stack-row eds-stack-wrap eds-stack-justify-end eds-gap-3">
+                <a class="eds-button eds-button-secondary" id="cancelar" href="index.html"
+                  >Cancelar</a
+                >
+                <button type="submit" class="eds-button eds-button-primary" id="salvar">
+                  Salvar fornecedor
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="assets/data.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>

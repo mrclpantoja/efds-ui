@@ -4,3 +4,6 @@ coverage
 pnpm-lock.yaml
 documentos do projeto
 apps/docs/src/examples/**/*.html
+templates/*/html/vendor
+templates/*/html/efds-license.js
+templates/*/html/efds-config.js

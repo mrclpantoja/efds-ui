@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="blue" data-mode="light" data-density="comfortable" data-shape="soft">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu perfil · Painel administrativo</title>
+    <link rel="stylesheet" href="vendor/efds-ui/core/index.css" />
+    <link rel="stylesheet" href="vendor/efds-ui/themes/index.css" />
+    <link rel="stylesheet" href="assets/painel.css" />
+    <!-- Aparência guardada (antes do primeiro desenho) e tempo de sessão: ver assets/app.js. -->
+    <script src="assets/app.js"></script>
+    <script src="efds-config.js"></script>
+    <script src="efds-license.js"></script>
+    <script src="vendor/efds-ui/behavior/eds-behavior.js" data-eds-manual defer></script>
+    <script src="vendor/efds-ui/license/efds-license-gate.js" defer></script>
+  </head>
+  <body>
+    <div class="eds-app">
+      <a class="eds-skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+      <nav class="eds-sidebar" id="nav" popover aria-label="Principal">
+        <div class="eds-sidebar-header">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M12 2 3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10" />
+          </svg>
+          <span class="eds-sidebar-label">Painel Exemplo</span>
+        </div>
+        <div class="eds-sidebar-section">
+          <p class="eds-sidebar-section-title">Administração</p>
+          <a class="eds-sidebar-item" href="index.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M4 3h5a1 1 0 011 1v7a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1zM15 3h5a1 1 0 011 1v3a1 1 0 01-1 1h-5a1 1 0 01-1-1V4a1 1 0 011-1zM15 12h5a1 1 0 011 1v7a1 1 0 01-1 1h-5a1 1 0 01-1-1v-7a1 1 0 011-1zM4 16h5a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3a1 1 0 011-1z"
+              />
+            </svg>
+            <span class="eds-sidebar-label">Início</span>
+          </a>
+          <a class="eds-sidebar-item" href="notificacoes.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8zm4 13h4" />
+            </svg>
+            <span class="eds-sidebar-label">Notificações</span>
+          </a>
+          <a class="eds-sidebar-item" href="perfil.html" aria-current="page">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM4 21a8 8 0 0116 0" />
+            </svg>
+            <span class="eds-sidebar-label">Meu perfil</span>
+          </a>
+          <a class="eds-sidebar-item" href="configuracoes.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M12 9a3 3 0 100 6 3 3 0 000-6zM12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"
+              />
+            </svg>
+            <span class="eds-sidebar-label">Configurações</span>
+          </a>
+        </div>
+        <div class="eds-sidebar-footer">
+          <button
+            type="button"
+            class="eds-sidebar-item"
+            aria-expanded="true"
+            aria-controls="nav"
+            data-eds-sidebar-collapse
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM9 3v18M16 10l-2 2 2 2"
+              />
+            </svg>
+            <span class="eds-sidebar-label">Menu lateral</span>
+          </button>
+        </div>
+      </nav>
+
+      <header class="eds-app-header eds-navbar">
+        <button
+          type="button"
+          class="eds-button eds-button-ghost eds-button-icon eds-app-nav-toggle"
+          popovertarget="nav"
+          aria-label="Abrir navegação"
+          aria-expanded="false"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <button type="button" class="eds-button eds-button-secondary" data-eds-open="busca">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" />
+          </svg>
+          <span class="pn-search-label">Buscar</span>
+          <kbd class="eds-command-shortcut pn-wide-only">Ctrl K</kbd>
+        </button>
+        <div class="eds-navbar-actions">
+          <button
+            type="button"
+            class="eds-button eds-button-ghost eds-button-icon eds-notifications"
+            popovertarget="sino"
+            aria-expanded="false"
+            aria-label="Notificações, 3 não lidas"
+            data-eds-popover
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8zm4 13h4" />
+            </svg>
+            <span class="eds-notifications-count" aria-hidden="true">3</span>
+          </button>
+          <div
+            class="eds-popover eds-notifications-panel"
+            id="sino"
+            popover
+            role="dialog"
+            aria-labelledby="sino-t"
+            data-eds-notifications
+          >
+            <div class="eds-notifications-header">
+              <h2 class="eds-popover-title" id="sino-t">Notificações</h2>
+              <button
+                type="button"
+                class="eds-button eds-button-ghost eds-button-sm"
+                data-eds-notifications-read-all
+              >
+                Marcar todas como lidas
+              </button>
+            </div>
+            <ul class="eds-notifications-list">
+              <li class="eds-notification" data-id="n1" data-unread="true">
+                <a class="eds-notification-link" href="notificacoes.html">
+                  <span class="eds-notification-dot" aria-hidden="true"></span>
+                  <span class="eds-notification-body">
+                    <span class="eds-notification-status">Não lida</span>
+                    <span class="eds-notification-title"
+                      >Chamado CH-2026-0418 atribuído a você</span
+                    >
+                    <span class="eds-notification-text"
+                      >Acesso ao sistema de protocolo, unidade Financeiro.</span
+                    >
+                    <time class="eds-notification-time" datetime="2026-11-22T09:50"
+                      >há 10 minutos</time
+                    >
+                  </span>
+                </a>
+              </li>
+              <li class="eds-notification" data-id="n2" data-unread="true">
+                <a class="eds-notification-link" href="notificacoes.html">
+                  <span class="eds-notification-dot" aria-hidden="true"></span>
+                  <span class="eds-notification-body">
+                    <span class="eds-notification-status">Não lida</span>
+                    <span class="eds-notification-title"
+                      >Relatório mensal de acessos disponível</span
+                    >
+                    <span class="eds-notification-text">O arquivo fica disponível por 7 dias.</span>
+                    <time class="eds-notification-time" datetime="2026-11-22T09:00">há 1 hora</time>
+                  </span>
+                </a>
+              </li>
+              <li class="eds-notification" data-id="n3" data-unread="true">
+                <a class="eds-notification-link" href="notificacoes.html">
+                  <span class="eds-notification-dot" aria-hidden="true"></span>
+                  <span class="eds-notification-body">
+                    <span class="eds-notification-status">Não lida</span>
+                    <span class="eds-notification-title">Manutenção programada no sábado</span>
+                    <span class="eds-notification-text"
+                      >O sistema ficará indisponível das 22h às 23h.</span
+                    >
+                    <time class="eds-notification-time" datetime="2026-11-22T07:00"
+                      >há 3 horas</time
+                    >
+                  </span>
+                </a>
+              </li>
+              <li class="eds-notification" data-id="n4">
+                <a class="eds-notification-link" href="notificacoes.html">
+                  <span class="eds-notification-dot" aria-hidden="true"></span>
+                  <span class="eds-notification-body">
+                    <span class="eds-notification-status">Não lida</span>
+                    <span class="eds-notification-title">Senha alterada</span>
+                    <span class="eds-notification-text"
+                      >Se não foi você, avise a equipe de suporte.</span
+                    >
+                    <time class="eds-notification-time" datetime="2026-11-21T16:30">ontem</time>
+                  </span>
+                </a>
+              </li>
+              <li class="eds-notification" data-id="n5">
+                <a class="eds-notification-link" href="notificacoes.html">
+                  <span class="eds-notification-dot" aria-hidden="true"></span>
+                  <span class="eds-notification-body">
+                    <span class="eds-notification-status">Não lida</span>
+                    <span class="eds-notification-title"
+                      >Novo usuário cadastrado: Bruno Exemplo</span
+                    >
+                    <span class="eds-notification-text">Unidade Compras.</span>
+                    <time class="eds-notification-time" datetime="2026-11-20T10:05"
+                      >20/11/2026</time
+                    >
+                  </span>
+                </a>
+              </li>
+              <li class="eds-notification" data-id="n6">
+                <a class="eds-notification-link" href="notificacoes.html">
+                  <span class="eds-notification-dot" aria-hidden="true"></span>
+                  <span class="eds-notification-body">
+                    <span class="eds-notification-status">Não lida</span>
+                    <span class="eds-notification-title">Cópia de segurança semanal concluída</span>
+                    <time class="eds-notification-time" datetime="2026-11-19T03:00"
+                      >19/11/2026</time
+                    >
+                  </span>
+                </a>
+              </li>
+            </ul>
+            <p class="eds-notifications-empty" hidden>Você não tem notificações.</p>
+          </div>
+
+          <button
+            type="button"
+            class="eds-button eds-button-ghost"
+            id="conta"
+            popovertarget="conta-menu"
+            aria-label="Ana Exemplo, menu da conta"
+          >
+            <span class="eds-avatar eds-avatar-sm eds-avatar-tone-2" aria-hidden="true">AE</span>
+            <span class="pn-wide-only">Ana Exemplo</span>
+          </button>
+          <div
+            class="eds-dropdown"
+            id="conta-menu"
+            role="group"
+            aria-labelledby="conta"
+            popover="auto"
+          >
+            <a class="eds-dropdown-item" href="perfil.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM4 21a8 8 0 0116 0" />
+              </svg>
+              Meu perfil</a
+            >
+            <a class="eds-dropdown-item" href="configuracoes.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M12 9a3 3 0 100 6 3 3 0 000-6zM12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"
+                />
+              </svg>
+              Configurações</a
+            >
+            <hr class="eds-dropdown-separator" />
+            <!-- Num sistema real, o href leva à saída (ex.: /sair). -->
+            <a
+              class="eds-dropdown-item"
+              href="index.html"
+              data-eds-confirm="Deseja sair do painel?"
+              data-eds-confirm-title="Sair"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M15 4h4a1 1 0 011 1v14a1 1 0 01-1 1h-4M10 16l-4-4 4-4M6 12h10" />
+              </svg>
+              Sair</a
+            >
+          </div>
+        </div>
+      </header>
+
+      <main class="eds-app-main pn-main" id="conteudo" tabindex="-1">
+        <div class="eds-container">
+          <div class="eds-page">
+            <header class="eds-page-header">
+              <nav class="eds-breadcrumb" aria-label="Trilha">
+                <ol class="eds-breadcrumb-list">
+                  <li class="eds-breadcrumb-item"><a href="index.html">Início</a></li>
+                  <li class="eds-breadcrumb-item"><span aria-current="page">Meu perfil</span></li>
+                </ol>
+              </nav>
+              <div class="eds-page-heading">
+                <h1 class="eds-page-title">Meu perfil</h1>
+                <p class="eds-page-description">Seus dados de acesso ao painel. Dados fictícios.</p>
+              </div>
+            </header>
+            <div class="eds-grid">
+              <article
+                class="eds-card eds-col-span-lg-4 pn-self-start"
+                role="region"
+                aria-labelledby="per-foto-t"
+              >
+                <header class="eds-card-header">
+                  <h2 class="eds-card-title" id="per-foto-t">Foto</h2>
+                </header>
+                <div class="eds-card-body eds-stack eds-gap-3">
+                  <div
+                    class="eds-stack eds-stack-row eds-stack-wrap eds-stack-align-center eds-gap-3"
+                  >
+                    <span
+                      class="eds-avatar eds-avatar-lg eds-avatar-circle eds-avatar-tone-2"
+                      id="foto-previa"
+                      role="img"
+                      aria-label="Foto atual de Ana Exemplo"
+                      >AE</span
+                    >
+                    <div class="eds-field">
+                      <label class="eds-label" for="foto">Alterar foto</label>
+                      <input
+                        id="foto"
+                        class="eds-file"
+                        type="file"
+                        name="foto"
+                        form="form-dados"
+                        accept="image/*"
+                        data-eds-cropper
+                        data-eds-cropper-size="256"
+                        data-eds-cropper-aspect="1"
+                        data-eds-cropper-shape="circle"
+                        data-eds-cropper-format="image/webp"
+                        data-eds-cropper-quality="0.85"
+                        data-eds-cropper-preview="#foto-previa"
+                        aria-describedby="foto-ajuda"
+                      />
+                    </div>
+                  </div>
+                  <p class="eds-helper" id="foto-ajuda">
+                    O ajuste acontece no seu navegador: a foto só é enviada quando você salvar.
+                  </p>
+                </div>
+              </article>
+
+              <form
+                class="eds-card eds-col-span-lg-8"
+                id="form-dados"
+                aria-labelledby="per-dados-t"
+                novalidate
+                data-pn-validar
+                data-pn-sucesso="Dados pessoais salvos."
+              >
+                <header class="eds-card-header">
+                  <h2 class="eds-card-title" id="per-dados-t">Dados pessoais</h2>
+                </header>
+                <div class="eds-card-body eds-grid">
+                  <div class="eds-field eds-col-span-md-6">
+                    <label class="eds-label" for="nome" data-required>Nome completo</label>
+                    <input
+                      class="eds-input"
+                      id="nome"
+                      name="nome"
+                      autocomplete="name"
+                      value="Ana Exemplo"
+                      required
+                    />
+                    <p class="eds-error" id="nome-erro" hidden></p>
+                  </div>
+                  <div class="eds-field eds-col-span-md-6">
+                    <label class="eds-label" for="email" data-required>E-mail</label>
+                    <input
+                      class="eds-input"
+                      id="email"
+                      name="email"
+                      type="email"
+                      autocomplete="email"
+                      value="ana.exemplo@exemplo.com.br"
+                      required
+                    />
+                    <p class="eds-error" id="email-erro" hidden></p>
+                  </div>
+                  <div class="eds-field eds-col-span-md-6">
+                    <label class="eds-label" for="telefone">Telefone</label>
+                    <input
+                      class="eds-input"
+                      id="telefone"
+                      name="telefone"
+                      autocomplete="tel"
+                      value="(11) 90000-0000"
+                      data-eds-mask="telefone"
+                    />
+                    <p class="eds-error" id="telefone-erro" hidden></p>
+                  </div>
+                  <div class="eds-field eds-col-span-md-6">
+                    <label class="eds-label" for="unidade">Unidade</label>
+                    <select class="eds-select" id="unidade" name="unidade">
+                      <option value="tecnologia" selected>Departamento de Tecnologia</option>
+                      <option value="financeiro">Financeiro</option>
+                      <option value="rh">Recursos Humanos</option>
+                      <option value="compras">Compras</option>
+                      <option value="planejamento">Planejamento</option>
+                    </select>
+                    <p class="eds-error" id="unidade-erro" hidden></p>
+                  </div>
+                  <div class="eds-field eds-col-span-md-6">
+                    <label class="eds-label" for="cargo">Cargo</label>
+                    <input
+                      class="eds-input"
+                      id="cargo"
+                      name="cargo"
+                      value="Administradora do sistema"
+                      readonly
+                      aria-describedby="cargo-ajuda"
+                    />
+                    <p class="eds-helper" id="cargo-ajuda">Definido pela equipe de pessoal.</p>
+                    <p class="eds-error" id="cargo-erro" hidden></p>
+                  </div>
+                </div>
+                <footer class="eds-card-footer">
+                  <button type="submit" class="eds-button eds-button-primary">
+                    Salvar alterações
+                  </button>
+                </footer>
+              </form>
+
+              <form
+                class="eds-card eds-col-span-lg-8"
+                aria-labelledby="per-senha-t"
+                novalidate
+                data-pn-validar
+                data-pn-senha
+                data-pn-sucesso="Senha alterada."
+              >
+                <header class="eds-card-header">
+                  <h2 class="eds-card-title" id="per-senha-t">Trocar senha</h2>
+                </header>
+                <div class="eds-card-body eds-stack eds-gap-4">
+                  <div class="eds-field">
+                    <label class="eds-label" for="senha-atual" data-required>Senha atual</label>
+                    <div class="eds-input-group">
+                      <input
+                        class="eds-input"
+                        id="senha-atual"
+                        name="atual"
+                        type="password"
+                        autocomplete="current-password"
+                        required
+                        data-eds-password
+                      />
+                      <button
+                        type="button"
+                        class="eds-button eds-button-ghost eds-button-icon eds-input-group-button"
+                        aria-pressed="false"
+                        aria-label="Mostrar senha"
+                        data-eds-password-toggle
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path
+                            d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 100 6 3 3 0 000-6z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <p class="eds-error" id="senha-atual-erro" hidden></p>
+                  </div>
+                  <div class="eds-field">
+                    <label class="eds-label" for="senha-nova" data-required>Nova senha</label>
+                    <div class="eds-input-group">
+                      <input
+                        class="eds-input"
+                        id="senha-nova"
+                        name="nova"
+                        type="password"
+                        autocomplete="new-password"
+                        required
+                        data-eds-password
+                        data-eds-password-strength
+                        minlength="8"
+                        aria-describedby="senha-nova-regras senha-nova-forca"
+                      />
+                      <button
+                        type="button"
+                        class="eds-button eds-button-ghost eds-button-icon eds-input-group-button"
+                        aria-pressed="false"
+                        aria-label="Mostrar senha"
+                        data-eds-password-toggle
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path
+                            d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 100 6 3 3 0 000-6z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="eds-password-strength" id="senha-nova-forca" data-level="0">
+                      <span class="eds-password-strength-bar"></span>
+                      <span class="eds-password-strength-text">Força: não avaliada</span>
+                    </div>
+                    <ul class="eds-password-rules" id="senha-nova-regras">
+                      <li data-met="false">
+                        <span class="eds-visually-hidden">Pendente: </span>Ao menos 8 caracteres
+                      </li>
+                      <li data-met="false">
+                        <span class="eds-visually-hidden">Pendente: </span>Letras maiúsculas e
+                        minúsculas
+                      </li>
+                      <li data-met="false">
+                        <span class="eds-visually-hidden">Pendente: </span>Ao menos um número
+                      </li>
+                      <li data-met="false">
+                        <span class="eds-visually-hidden">Pendente: </span>Ao menos um símbolo
+                      </li>
+                    </ul>
+                    <p class="eds-error" id="senha-nova-erro" hidden></p>
+                  </div>
+                  <div class="eds-field">
+                    <label class="eds-label" for="senha-confirmacao" data-required
+                      >Confirme a nova senha</label
+                    >
+                    <div class="eds-input-group">
+                      <input
+                        class="eds-input"
+                        id="senha-confirmacao"
+                        name="confirmacao"
+                        type="password"
+                        autocomplete="new-password"
+                        required
+                        data-eds-password
+                      />
+                      <button
+                        type="button"
+                        class="eds-button eds-button-ghost eds-button-icon eds-input-group-button"
+                        aria-pressed="false"
+                        aria-label="Mostrar senha"
+                        data-eds-password-toggle
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path
+                            d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 100 6 3 3 0 000-6z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <p class="eds-error" id="senha-confirmacao-erro" hidden></p>
+                  </div>
+                </div>
+                <footer class="eds-card-footer">
+                  <button type="submit" class="eds-button eds-button-primary">Trocar senha</button>
+                </footer>
+              </form>
+
+              <article
+                class="eds-card eds-col-span-lg-4 pn-self-start"
+                role="region"
+                aria-labelledby="per-acesso-t"
+              >
+                <header class="eds-card-header">
+                  <h2 class="eds-card-title" id="per-acesso-t">Acesso</h2>
+                </header>
+                <div class="eds-card-body">
+                  <dl class="eds-description-list">
+                    <div>
+                      <dt>Último acesso</dt>
+                      <dd>22/11/2026 08:12</dd>
+                    </div>
+                    <div>
+                      <dt>Perfil de acesso</dt>
+                      <dd>Administrador</dd>
+                    </div>
+                    <div>
+                      <dt>Unidade</dt>
+                      <dd>Departamento de Tecnologia</dd>
+                    </div>
+                    <div>
+                      <dt>Conta criada em</dt>
+                      <dd>03/02/2025</dd>
+                    </div>
+                  </dl>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <dialog
+      class="eds-modal eds-command"
+      id="busca"
+      data-eds-command
+      data-eds-command-shortcut="mod+k"
+      aria-label="Busca no painel"
+    >
+      <div class="eds-command-search">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" />
+        </svg>
+        <input
+          class="eds-command-input"
+          type="text"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="busca-lista"
+          aria-autocomplete="list"
+          autocomplete="off"
+          aria-label="Buscar páginas e ações"
+          placeholder="Buscar páginas e ações"
+        />
+      </div>
+      <div class="eds-command-list" id="busca-lista" role="listbox" aria-label="Resultados">
+        <div class="eds-command-group" role="group" aria-labelledby="busca-g1">
+          <div class="eds-command-group-label" id="busca-g1">Páginas</div>
+          <div
+            class="eds-command-item"
+            role="option"
+            id="busca-inicio"
+            data-value="inicio"
+            data-href="index.html"
+            data-keywords="painel resumo indicadores"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="eds-command-icon"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M4 3h5a1 1 0 011 1v7a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1zM15 3h5a1 1 0 011 1v3a1 1 0 01-1 1h-5a1 1 0 01-1-1V4a1 1 0 011-1zM15 12h5a1 1 0 011 1v7a1 1 0 01-1 1h-5a1 1 0 01-1-1v-7a1 1 0 011-1zM4 16h5a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3a1 1 0 011-1z"
+              />
+            </svg>
+            <span class="eds-command-label">Início</span>
+            <span class="eds-command-description">Visão geral do painel</span>
+          </div>
+          <div
+            class="eds-command-item"
+            role="option"
+            id="busca-notificacoes"
+            data-value="notificacoes"
+            data-href="notificacoes.html"
+            data-keywords="avisos mensagens"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="eds-command-icon"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8zm4 13h4" />
+            </svg>
+            <span class="eds-command-label">Notificações</span>
+            <span class="eds-command-description">Avisos do sistema</span>
+          </div>
+          <div
+            class="eds-command-item"
+            role="option"
+            id="busca-perfil"
+            data-value="perfil"
+            data-href="perfil.html"
+            data-keywords="conta usuário"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="eds-command-icon"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM4 21a8 8 0 0116 0" />
+            </svg>
+            <span class="eds-command-label">Meu perfil</span>
+            <span class="eds-command-description">Dados pessoais e foto</span>
+          </div>
+          <div
+            class="eds-command-item"
+            role="option"
+            id="busca-configuracoes"
+            data-value="configuracoes"
+            data-href="configuracoes.html"
+            data-keywords="ajustes opções"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="eds-command-icon"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M12 9a3 3 0 100 6 3 3 0 000-6zM12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"
+              />
+            </svg>
+            <span class="eds-command-label">Configurações</span>
+            <span class="eds-command-description">Aparência, preferências e sessão</span>
+          </div>
+        </div>
+        <div class="eds-command-group" role="group" aria-labelledby="busca-g2">
+          <div class="eds-command-group-label" id="busca-g2">Ações</div>
+          <div
+            class="eds-command-item"
+            role="option"
+            id="busca-senha"
+            data-value="senha"
+            data-href="perfil.html"
+            data-keywords="segurança acesso"
+          >
+            <span class="eds-command-label">Trocar senha</span>
+          </div>
+          <div
+            class="eds-command-item"
+            role="option"
+            id="busca-aparencia"
+            data-value="aparencia"
+            data-href="configuracoes.html"
+            data-keywords="tema escuro cores densidade"
+          >
+            <span class="eds-command-label">Mudar a aparência</span>
+            <span class="eds-command-description">Tema, modo escuro, densidade e forma</span>
+          </div>
+        </div>
+      </div>
+      <p class="eds-command-empty" hidden>Nada encontrado para a busca.</p>
+      <span class="eds-visually-hidden" role="status"></span>
+      <footer class="eds-command-footer">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> navegar</span>
+        <span><kbd>Enter</kbd> abrir</span>
+        <span><kbd>Esc</kbd> fechar</span>
+      </footer>
+    </dialog>
+  </body>
+</html>

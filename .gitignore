@@ -8,3 +8,8 @@ documentos do projeto/
 # Documento interno de negócios (decisão do usuário: fora do repositório)
 docs/ParecerNegocios.md
 docs/ListaMelhorias.md
+
+# Templates: arquivos copiados de dist/ e chaves locais
+templates/*/html/vendor/
+templates/license/dist/
+.env

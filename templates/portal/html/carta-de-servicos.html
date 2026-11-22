@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="blue" data-mode="light" data-density="comfortable" data-shape="soft">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carta de serviços | Prefeitura de Vale das Araras</title>
+    <meta
+      name="description"
+      content="Todos os serviços da Prefeitura de Vale das Araras, por categoria, com prazos e custos."
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+    <link rel="stylesheet" href="vendor/efds-ui/core/index.css" />
+    <link rel="stylesheet" href="vendor/efds-ui/themes/index.css" />
+    <link rel="stylesheet" href="assets/portal.css" />
+    <script src="efds-config.js"></script>
+    <script src="efds-license.js"></script>
+    <script src="vendor/efds-ui/behavior/eds-behavior.js" data-eds-manual defer></script>
+    <script src="vendor/efds-ui/license/efds-license-gate.js" defer></script>
+    <script src="assets/app.js" defer></script>
+  </head>
+  <body class="portal">
+    <a class="eds-skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <div class="portal-a11y">
+      <div class="eds-container portal-a11y-inner">
+        <a href="acessibilidade.html">Acessibilidade e ajuda</a>
+        <div class="portal-a11y-tools" role="group" aria-label="Opções de leitura">
+          <div class="portal-a11y-size">
+            <span aria-hidden="true">Tamanho do texto</span>
+            <fieldset class="eds-segmented eds-segmented-sm" data-portal-text-size>
+              <legend class="eds-visually-hidden">Tamanho do texto</legend>
+              <label
+                ><input type="radio" name="tamanho-texto" value="padrao" checked />Padrão</label
+              >
+              <label><input type="radio" name="tamanho-texto" value="grande" />Grande</label>
+              <label><input type="radio" name="tamanho-texto" value="maior" />Maior</label>
+            </fieldset>
+          </div>
+          <label class="eds-check">
+            <input type="checkbox" role="switch" class="eds-switch" data-portal-dark />
+            Modo escuro
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <header class="eds-navbar portal-header">
+      <a class="eds-navbar-brand" href="index.html">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <path d="M3 19l6-9 4 6 3-4 5 7zM16 6.5a1.5 1.5 0 100 .01" />
+        </svg>
+        Prefeitura de Vale das Araras
+      </a>
+      <nav class="eds-navbar-nav portal-nav" aria-label="Principal">
+        <a class="eds-navbar-link" href="index.html">Início</a>
+        <a class="eds-navbar-link" href="carta-de-servicos.html" aria-current="page"
+          >Carta de serviços</a
+        >
+        <a class="eds-navbar-link" href="consultar-protocolo.html">Consultar protocolo</a>
+        <a class="eds-navbar-link" href="acessibilidade.html">Acessibilidade e ajuda</a>
+      </nav>
+      <div class="eds-navbar-actions">
+        <button
+          type="button"
+          class="eds-button eds-button-secondary portal-menu-button"
+          data-eds-open="menu-principal"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          Menu
+        </button>
+      </div>
+    </header>
+
+    <div
+      class="eds-banner eds-banner-info"
+      role="region"
+      aria-label="Aviso da prefeitura"
+      data-eds-banner="aviso-feriado-2026-11"
+    >
+      <p class="eds-banner-text">
+        <strong>Atendimento presencial.</strong> Na sexta-feira, 27/11, o atendimento no balcão não
+        funciona (feriado local). Os serviços online seguem disponíveis.
+      </p>
+      <button
+        type="button"
+        class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close"
+        aria-label="Fechar aviso"
+        data-eds-banner-close
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <dialog
+      class="eds-drawer eds-drawer-start"
+      id="menu-principal"
+      aria-labelledby="menu-principal-t"
+    >
+      <header class="eds-drawer-header">
+        <h2 class="eds-drawer-title" id="menu-principal-t">Menu</h2>
+        <form method="dialog">
+          <button class="eds-button eds-button-ghost eds-button-icon" aria-label="Fechar">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              focusable="false"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </form>
+      </header>
+      <div class="eds-drawer-body">
+        <nav class="eds-sidebar" aria-label="Menu do portal">
+          <div class="eds-sidebar-section">
+            <a class="eds-sidebar-item" href="index.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 3h5a1 1 0 011 1v7a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1zM15 3h5a1 1 0 011 1v3a1 1 0 01-1 1h-5a1 1 0 01-1-1V4a1 1 0 011-1zM15 12h5a1 1 0 011 1v7a1 1 0 01-1 1h-5a1 1 0 01-1-1v-7a1 1 0 011-1zM4 16h5a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3a1 1 0 011-1z"
+                /></svg
+              ><span class="eds-sidebar-label">Início</span></a
+            >
+            <a class="eds-sidebar-item" href="carta-de-servicos.html" aria-current="page"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M4 6h16M4 12h16M4 18h16" /></svg
+              ><span class="eds-sidebar-label">Carta de serviços</span></a
+            >
+            <a class="eds-sidebar-item" href="consultar-protocolo.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" /></svg
+              ><span class="eds-sidebar-label">Consultar protocolo</span></a
+            >
+            <a class="eds-sidebar-item" href="acessibilidade.html"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM4 21a8 8 0 0116 0" /></svg
+              ><span class="eds-sidebar-label">Acessibilidade e ajuda</span></a
+            >
+          </div>
+        </nav>
+      </div>
+    </dialog>
+
+    <main class="portal-main" id="conteudo" tabindex="-1">
+      <div class="eds-container">
+        <div class="eds-page">
+          <header class="eds-page-header">
+            <nav class="eds-breadcrumb" aria-label="Trilha">
+              <ol class="eds-breadcrumb-list">
+                <li class="eds-breadcrumb-item"><a href="index.html">Início</a></li>
+                <li class="eds-breadcrumb-item">
+                  <span aria-current="page">Carta de serviços</span>
+                </li>
+              </ol>
+            </nav>
+            <div class="eds-page-heading">
+              <h1 class="eds-page-title">Carta de serviços</h1>
+              <p class="eds-page-description">
+                Consulte o que a prefeitura oferece, quanto tempo leva e o que é preciso para pedir.
+              </p>
+            </div>
+          </header>
+
+          <div class="eds-page-toolbar eds-stack eds-gap-3">
+            <form
+              class="eds-filter-bar"
+              role="search"
+              aria-label="Filtrar a carta de serviços"
+              id="filtro-carta"
+            >
+              <div class="eds-filter-bar-fields">
+                <div class="eds-field eds-filter-bar-search">
+                  <label class="eds-label" for="filtro-busca">Buscar</label>
+                  <input
+                    class="eds-input"
+                    id="filtro-busca"
+                    name="busca"
+                    type="search"
+                    placeholder="Nome ou assunto do serviço"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="eds-field">
+                  <label class="eds-label" for="filtro-categoria">Categoria</label>
+                  <select class="eds-select" id="filtro-categoria" name="categoria">
+                    <option value="">Todas</option>
+                    <option value="tributos">Tributos e taxas</option>
+                    <option value="obras">Obras e meio ambiente</option>
+                    <option value="cidadania">Cidadania e saúde</option>
+                    <option value="educacao">Educação e cultura</option>
+                  </select>
+                </div>
+              </div>
+              <div class="eds-filter-bar-actions">
+                <button type="reset" class="eds-button eds-button-secondary">Limpar</button>
+              </div>
+            </form>
+            <p class="eds-text-small portal-muted" id="filtro-status" role="status">10 serviços</p>
+          </div>
+
+          <div class="eds-page-body eds-stack eds-gap-7">
+            <section
+              class="eds-stack eds-gap-3"
+              data-category="tributos"
+              aria-labelledby="cat-tributos"
+            >
+              <h2 class="eds-text-h3" id="cat-tributos">
+                Tributos e taxas <span class="eds-badge eds-badge-neutral" data-count>3</span>
+              </h2>
+              <div class="eds-accordion">
+                <details class="eds-accordion-item" data-service data-cat="tributos">
+                  <summary class="eds-accordion-trigger">2ª via do IPTU</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Emita a segunda via do carnê do imposto predial e territorial urbano.</p>
+                      <p class="eds-text-small portal-muted">Prazo: Imediato. Custo: Gratuito.</p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=iptu"
+                          >Solicitar<span class="eds-visually-hidden"> 2ª via do IPTU</span></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-iptu.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de 2ª via do IPTU</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details class="eds-accordion-item" data-service data-cat="tributos">
+                  <summary class="eds-accordion-trigger">Certidão negativa de débitos</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Comprove que você não tem débitos municipais em aberto.</p>
+                      <p class="eds-text-small portal-muted">
+                        Prazo: Até 2 dias úteis. Custo: Gratuito.
+                      </p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=certidao-negativa"
+                          >Solicitar<span class="eds-visually-hidden">
+                            Certidão negativa de débitos</span
+                          ></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-certidao-negativa.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de Certidão negativa de débitos</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details class="eds-accordion-item" data-service data-cat="tributos">
+                  <summary class="eds-accordion-trigger">Parcelamento de dívidas</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Negocie débitos municipais em parcelas mensais.</p>
+                      <p class="eds-text-small portal-muted">
+                        Prazo: Até 5 dias úteis. Custo: Sem taxa de adesão.
+                      </p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=parcelamento"
+                          >Solicitar<span class="eds-visually-hidden">
+                            Parcelamento de dívidas</span
+                          ></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-parcelamento.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de Parcelamento de dívidas</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </section>
+            <section class="eds-stack eds-gap-3" data-category="obras" aria-labelledby="cat-obras">
+              <h2 class="eds-text-h3" id="cat-obras">
+                Obras e meio ambiente <span class="eds-badge eds-badge-neutral" data-count>3</span>
+              </h2>
+              <div class="eds-accordion">
+                <details class="eds-accordion-item" data-service data-cat="obras">
+                  <summary class="eds-accordion-trigger">Alvará de funcionamento</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Abra ou regularize um negócio no município.</p>
+                      <p class="eds-text-small portal-muted">
+                        Prazo: Até 15 dias úteis. Custo: Taxa de R$ 180,00 (valor fictício).
+                      </p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=alvara"
+                          >Solicitar<span class="eds-visually-hidden">
+                            Alvará de funcionamento</span
+                          ></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-alvara.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de Alvará de funcionamento</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details class="eds-accordion-item" data-service data-cat="obras">
+                  <summary class="eds-accordion-trigger">Poda ou remoção de árvore</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Peça a avaliação de uma árvore em via ou área pública.</p>
+                      <p class="eds-text-small portal-muted">
+                        Prazo: Vistoria em até 10 dias úteis. Custo: Gratuito.
+                      </p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=poda-arvore"
+                          >Solicitar<span class="eds-visually-hidden">
+                            Poda ou remoção de árvore</span
+                          ></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-poda-arvore.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de Poda ou remoção de árvore</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details class="eds-accordion-item" data-service data-cat="obras">
+                  <summary class="eds-accordion-trigger">Certidão de habite-se</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Regularize a conclusão de uma obra residencial ou comercial.</p>
+                      <p class="eds-text-small portal-muted">
+                        Prazo: Até 20 dias úteis. Custo: Taxa de R$ 95,00 (valor fictício).
+                      </p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=habite-se"
+                          >Solicitar<span class="eds-visually-hidden">
+                            Certidão de habite-se</span
+                          ></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-habite-se.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de Certidão de habite-se</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </section>
+            <section
+              class="eds-stack eds-gap-3"
+              data-category="cidadania"
+              aria-labelledby="cat-cidadania"
+            >
+              <h2 class="eds-text-h3" id="cat-cidadania">
+                Cidadania e saúde <span class="eds-badge eds-badge-neutral" data-count>2</span>
+              </h2>
+              <div class="eds-accordion">
+                <details class="eds-accordion-item" data-service data-cat="cidadania">
+                  <summary class="eds-accordion-trigger">Cartão municipal de saúde</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Cadastre-se para usar os serviços da rede municipal de saúde.</p>
+                      <p class="eds-text-small portal-muted">
+                        Prazo: Até 5 dias úteis. Custo: Gratuito.
+                      </p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=cartao-saude"
+                          >Solicitar<span class="eds-visually-hidden">
+                            Cartão municipal de saúde</span
+                          ></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-cartao-saude.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de Cartão municipal de saúde</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details class="eds-accordion-item" data-service data-cat="cidadania">
+                  <summary class="eds-accordion-trigger">Cadastro em programas sociais</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Solicite a inclusão da sua família nos programas municipais.</p>
+                      <p class="eds-text-small portal-muted">
+                        Prazo: Até 10 dias úteis. Custo: Gratuito.
+                      </p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=cadastro-social"
+                          >Solicitar<span class="eds-visually-hidden">
+                            Cadastro em programas sociais</span
+                          ></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-cadastro-social.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de Cadastro em programas sociais</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </section>
+            <section
+              class="eds-stack eds-gap-3"
+              data-category="educacao"
+              aria-labelledby="cat-educacao"
+            >
+              <h2 class="eds-text-h3" id="cat-educacao">
+                Educação e cultura <span class="eds-badge eds-badge-neutral" data-count>2</span>
+              </h2>
+              <div class="eds-accordion">
+                <details class="eds-accordion-item" data-service data-cat="educacao">
+                  <summary class="eds-accordion-trigger">Matrícula na rede municipal</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Matricule crianças na educação infantil e no ensino fundamental.</p>
+                      <p class="eds-text-small portal-muted">
+                        Prazo: Resposta conforme o calendário escolar. Custo: Gratuito.
+                      </p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=matricula"
+                          >Solicitar<span class="eds-visually-hidden">
+                            Matrícula na rede municipal</span
+                          ></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-matricula.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de Matrícula na rede municipal</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details class="eds-accordion-item" data-service data-cat="educacao">
+                  <summary class="eds-accordion-trigger">Reserva de espaço cultural</summary>
+                  <div class="eds-accordion-panel">
+                    <div class="eds-stack eds-gap-3">
+                      <p>Reserve o teatro ou a casa de cultura para um evento.</p>
+                      <p class="eds-text-small portal-muted">
+                        Prazo: Resposta em até 5 dias úteis. Custo: Gratuito para entidades sem fins
+                        lucrativos; R$ 120,00 por dia nos demais casos (valores fictícios).
+                      </p>
+                      <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-2">
+                        <a
+                          class="eds-button eds-button-primary eds-button-sm"
+                          href="solicitar.html?servico=espaco-cultural"
+                          >Solicitar<span class="eds-visually-hidden">
+                            Reserva de espaço cultural</span
+                          ></a
+                        >
+                        <a
+                          class="eds-button eds-button-secondary eds-button-sm"
+                          href="servico-espaco-cultural.html"
+                          >Ver detalhes<span class="eds-visually-hidden">
+                            de Reserva de espaço cultural</span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </section>
+
+            <div class="eds-empty" id="filtro-vazio" hidden>
+              <svg
+                class="eds-empty-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" />
+              </svg>
+              <h2 class="eds-empty-title">Nenhum serviço encontrado</h2>
+              <p class="eds-empty-text">Tente outra palavra ou escolha todas as categorias.</p>
+              <div class="eds-empty-actions">
+                <button type="button" class="eds-button eds-button-primary" data-portal-clear>
+                  Limpar filtros
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="portal-footer">
+      <div class="eds-container">
+        <div class="eds-grid">
+          <div class="eds-col-span-12 eds-col-span-md-6 eds-col-span-lg-5 eds-stack eds-gap-2">
+            <p class="eds-text-h4">Prefeitura de Vale das Araras</p>
+            <p>
+              Portal de serviços ao cidadão. Peça, acompanhe e consulte serviços municipais sem sair
+              de casa.
+            </p>
+            <p class="eds-text-small portal-muted">
+              Site fictício, criado para demonstrar o efDS.ui. Órgão, serviços, números e valores
+              não são reais.
+            </p>
+          </div>
+          <div
+            class="eds-col-span-12 eds-col-span-sm-6 eds-col-span-md-3 eds-col-span-lg-4 eds-stack eds-gap-2"
+          >
+            <h2 class="eds-text-h4">Atendimento</h2>
+            <address class="portal-address">
+              Praça da Fonte, 100, Centro, Vale das Araras<br />
+              Segunda a sexta, das 8h às 17h<br />
+              Telefone: (00) 0000-0000<br />
+              <a href="mailto:atendimento@valedasararas.example"
+                >atendimento@valedasararas.example</a
+              >
+            </address>
+          </div>
+          <nav
+            class="eds-col-span-12 eds-col-span-sm-6 eds-col-span-md-3 eds-stack eds-gap-2"
+            aria-labelledby="rodape-links"
+          >
+            <h2 class="eds-text-h4" id="rodape-links">Páginas</h2>
+            <ul class="portal-links">
+              <li><a href="index.html">Início</a></li>
+              <li><a href="carta-de-servicos.html">Carta de serviços</a></li>
+              <li><a href="consultar-protocolo.html">Consultar protocolo</a></li>
+              <li><a href="acessibilidade.html">Acessibilidade e ajuda</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

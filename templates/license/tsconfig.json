@@ -1,0 +1,11 @@
+{
+  "extends": "@efds-ui/typescript-config/react.json",
+  "compilerOptions": { "allowImportingTsExtensions": true },
+  "include": [
+    "src",
+    "vite.iife.config.ts",
+    "vite.esm.config.ts",
+    "vite.dev.config.ts",
+    "vitest.config.ts"
+  ]
+}

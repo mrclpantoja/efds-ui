@@ -2,6 +2,7 @@
   "$selector": ":where(:root)",
   "$description": "Primitivos tipográficos (Inter). Tamanhos e alturas de linha em rem, base 16px.",
   "font-family-inter": "Inter, Inter Variable, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+  "font-family-source-serif": "'Source Serif 4', Georgia, Cambria, 'Times New Roman', Times, serif",
   "font-family-mono": "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace",
   "font-size-12": "0.75rem",
   "font-size-13": "0.8125rem",

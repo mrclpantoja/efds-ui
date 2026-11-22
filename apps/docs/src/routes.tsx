@@ -12,6 +12,7 @@
 import type { ComponentType } from 'react';
 import ButtonPage from './pages/componentes/Button';
 import TabsPage from './pages/componentes/Tabs';
+import EditorPage from './pages/componentes/Editor';
 import AcessibilidadePage from './pages/comecar/Acessibilidade';
 import EventosPage from './pages/comecar/Eventos';
 import ExportacaoPage from './pages/comecar/Exportacao';
@@ -412,6 +413,12 @@ export const routes: readonly DocRoute[] = [
     title: 'Corte de imagem',
     section: 'componentes',
     page: ImageCropperPage,
+  },
+  {
+    path: '/componentes/editor',
+    title: 'Editor de conteúdo',
+    section: 'componentes',
+    page: EditorPage,
   },
   { path: '/componentes/tabs', title: 'Tabs', section: 'componentes', page: TabsPage },
   { path: '/componentes/textarea', title: 'Textarea', section: 'componentes', page: TextareaPage },

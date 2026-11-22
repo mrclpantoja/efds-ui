@@ -13,6 +13,7 @@
   "dependencies": {
     "@efds-ui/behavior": "workspace:*",
     "@efds-ui/core": "workspace:*",
+    "@efds-ui/editor": "workspace:*",
     "@efds-ui/icons": "workspace:*",
     "@efds-ui/react": "workspace:*",
     "@efds-ui/themes": "workspace:*",

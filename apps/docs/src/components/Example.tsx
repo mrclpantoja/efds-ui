@@ -86,11 +86,21 @@ function HtmlPreview({ html }: { html: string }) {
     const el = ref.current;
     if (!el) return undefined;
     const stop = init(el, { loader: { mode: 'manual' } });
+    // O editor de conteúdo é outro pacote (`@efds-ui/editor`): carregado só quando o exemplo o usa.
+    let stopEditors: (() => void) | undefined;
+    let cancelled = false;
+    if (el.querySelector('[data-eds-editor]')) {
+      void import('@efds-ui/editor').then(({ initEditors }) => {
+        if (!cancelled) stopEditors = initEditors(el);
+      });
+    }
     // Os formulários dos exemplos nunca navegam (a documentação é uma SPA sem servidor).
     const block = (event: Event) => event.preventDefault();
     el.addEventListener('submit', block);
     return () => {
       el.removeEventListener('submit', block);
+      cancelled = true;
+      stopEditors?.();
       stop();
     };
   }, [scoped]);

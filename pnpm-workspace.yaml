@@ -21,6 +21,18 @@ catalog:
   globals: ^17.14.0
   jsdom: ^31.0.1
   prettier: ^3.10.1
+  prosemirror-commands: ^1.7.2
+  prosemirror-dropcursor: ^1.8.4
+  prosemirror-gapcursor: ^1.4.1
+  prosemirror-history: ^1.5.2
+  prosemirror-inputrules: ^1.7.0
+  prosemirror-keymap: ^1.2.3
+  prosemirror-model: ^1.25.13
+  prosemirror-schema-list: ^1.6.1
+  prosemirror-state: ^1.4.4
+  prosemirror-tables: ^1.8.5
+  prosemirror-transform: ^1.12.7
+  prosemirror-view: ^1.43.0
   react: ^19.3.1
   react-dom: ^19.3.1
   typescript: ~6.0.3

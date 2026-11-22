@@ -10,6 +10,7 @@ import { LayoutDemo } from './demos/LayoutDemo';
 import { DataDemo } from './demos/DataDemo';
 import { InteractionDemo } from './demos/InteractionDemo';
 import { MediaDemo } from './demos/MediaDemo';
+import { EditorDemo } from './demos/EditorDemo';
 
 const axes = [
   { attr: 'theme', label: 'Tema', options: ['blue', 'green', 'purple', 'orange', 'neutral'] },
@@ -84,6 +85,7 @@ export function App() {
       <DataDemo />
       <InteractionDemo />
       <MediaDemo />
+      <EditorDemo />
       <AppShellDemo />
     </main>
   );

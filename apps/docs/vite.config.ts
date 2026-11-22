@@ -22,6 +22,11 @@ export default defineConfig({
         replacement: fromSource('../../packages/behavior/src/export-entry.ts'),
       },
       {
+        find: '@efds-ui/editor/react',
+        replacement: fromSource('../../packages/editor/src/react/index.ts'),
+      },
+      { find: '@efds-ui/editor', replacement: fromSource('../../packages/editor/src/index.ts') },
+      {
         find: '@efds-ui/behavior/balloon',
         replacement: fromSource('../../packages/behavior/src/balloon-entry.ts'),
       },

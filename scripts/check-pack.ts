@@ -14,9 +14,12 @@ import process from 'node:process';
 import { checkIife, checkTarball, formatSize, type PackManifest } from './pack/check.ts';
 
 const root = join(import.meta.dirname, '..');
-const PACKAGES = ['core', 'themes', 'react', 'icons', 'behavior'];
+const PACKAGES = ['core', 'themes', 'react', 'icons', 'behavior', 'editor'];
 /** Arquivos que o tarball precisa ter além dos alvos do manifest. */
-const REQUIRED: Record<string, string[]> = { behavior: ['dist/eds-behavior.js'] };
+const REQUIRED: Record<string, string[]> = {
+  behavior: ['dist/eds-behavior.js'],
+  editor: ['dist/eds-editor.js'],
+};
 const EXPECTED_VERSION = '0.1.0';
 
 function run(command: string, args: string[], cwd: string): string {
@@ -77,6 +80,11 @@ try {
     );
     if (pkg === 'behavior') {
       problems.push(...checkIife(readFileSync(join(base, 'dist', 'eds-behavior.js'), 'utf8')));
+    }
+    if (pkg === 'editor') {
+      problems.push(
+        ...checkIife(readFileSync(join(base, 'dist', 'eds-editor.js'), 'utf8'), 'EDSEditor'),
+      );
     }
 
     const total = files.reduce((sum, f) => sum + f.size, 0);

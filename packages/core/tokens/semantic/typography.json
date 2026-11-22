@@ -2,6 +2,7 @@
   "$selector": ":where(:root)",
   "$description": "Tipografia semântica. Densidade não altera fonte. Estilos: display 40, h1 32, h2 24, h3 20, h4 16, body-lg 16, body 14, label 13, small 12 (Especificação Visual). O primitivo font-size-18 fica disponível para usos pontuais.",
   "font-family": "{font-family-inter}",
+  "font-family-serif": "{font-family-source-serif}",
   "font-family-code": "{font-family-mono}",
   "font-weight-regular": "{font-weight-400}",
   "font-weight-medium": "{font-weight-500}",

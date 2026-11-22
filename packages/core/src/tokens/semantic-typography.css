@@ -5,6 +5,7 @@
 @layer eds.tokens {
   :where(:root) {
     --eds-font-family: var(--eds-font-family-inter);
+    --eds-font-family-serif: var(--eds-font-family-source-serif);
     --eds-font-family-code: var(--eds-font-family-mono);
     --eds-font-weight-regular: var(--eds-font-weight-400);
     --eds-font-weight-medium: var(--eds-font-weight-500);

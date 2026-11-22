@@ -1,0 +1,5 @@
+{
+  "extends": "@efds-ui/typescript-config/react.json",
+  "compilerOptions": { "types": ["@testing-library/jest-dom/vitest"] },
+  "include": ["src", "vite.config.ts", "vite.iife.config.ts", "vitest.config.ts"]
+}

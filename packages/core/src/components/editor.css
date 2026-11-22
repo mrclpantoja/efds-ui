@@ -1,0 +1,427 @@
+/* Editor de conteúdo (edição Básica). A casca é um campo como o Textarea: mesma borda, raio,
+   hover, anel de foco e estados (data-disabled, data-readonly, data-invalid). A barra é o padrão
+   APG Toolbar; o conteúdo usa .eds-prose. O JS (ProseMirror) só liga atributos e classes. Estados
+   vêm de atributo: aria-pressed, :disabled, aria-expanded, data-*. As classes de terceiros
+   (.ProseMirror-*, .selectedCell) só existem aqui dentro de .eds-editor. */
+@layer eds.components {
+  .eds-editor {
+    --_editor-radius: var(--eds-radius-md);
+    --_editor-bg: var(--eds-color-bg-surface);
+    --_editor-fg: var(--eds-color-text-primary);
+    --_editor-border: var(--eds-color-border-strong);
+    --_editor-button-size: var(--eds-control-height-sm);
+    --_editor-line: var(--eds-line-height-body);
+    --_editor-rows: 8;
+    --_editor-max-rows: 24;
+
+    container: eds-editor / inline-size;
+    display: block;
+    inline-size: 100%;
+    border: var(--eds-border-width) solid var(--_editor-border);
+    border-radius: var(--_editor-radius);
+    background: var(--_editor-bg);
+    color: var(--_editor-fg);
+    transition: border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    /* Mesmo hover do Input: a borda escurece para text-muted. */
+    &:hover:not([data-disabled], [data-readonly], [data-invalid]) {
+      --_editor-border: var(--eds-color-text-muted);
+    }
+
+    /* O anel fica na casca, não no conteúdo (que perde o contorno). */
+    &:has(.eds-editor-content:focus) {
+      --_editor-border: var(--eds-color-action-primary);
+
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 0;
+    }
+
+    &[data-invalid] {
+      --_editor-border: var(--eds-color-status-danger);
+    }
+
+    &[data-readonly] {
+      --_editor-bg: var(--eds-color-bg-subtle);
+    }
+
+    &[data-disabled] {
+      --_editor-bg: var(--eds-color-bg-subtle);
+      --_editor-fg: var(--eds-color-text-muted);
+      --_editor-border: var(--eds-color-border-default);
+
+      cursor: not-allowed;
+    }
+
+    /* Somente leitura: sem barra (nada a acionar); o conteúdo segue selecionável e rolável. */
+    &[data-readonly] > .eds-editor-toolbar {
+      display: none;
+    }
+  }
+
+  /* ---------- Barra ---------- */
+  .eds-editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-1) var(--eds-space-2);
+    padding: var(--eds-space-1);
+    border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-start-start-radius: calc(var(--_editor-radius) - var(--eds-border-width));
+    border-start-end-radius: calc(var(--_editor-radius) - var(--eds-border-width));
+    background: var(--eds-color-bg-subtle);
+  }
+
+  .eds-editor-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-1);
+  }
+
+  .eds-editor-separator {
+    flex: none;
+    align-self: center;
+    inline-size: var(--eds-border-width);
+    block-size: var(--eds-icon-size-md);
+    background: var(--eds-color-border-strong);
+  }
+
+  /* Botão ghost compacto. aria-pressed="true" = ativo (fundo suave + barra inferior, nunca só cor). */
+  .eds-editor-button {
+    --_btn-bg: transparent;
+    --_btn-fg: var(--eds-color-text-secondary);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    min-inline-size: var(--_editor-button-size);
+    min-block-size: var(--_editor-button-size);
+    padding-inline: var(--eds-space-1);
+    border: var(--eds-border-width) solid transparent;
+    border-radius: var(--eds-radius-sm);
+    background: var(--_btn-bg);
+    color: var(--_btn-fg);
+    font-family: inherit;
+    font-size: var(--eds-font-size-label);
+    font-weight: var(--eds-font-weight-medium);
+    line-height: var(--eds-line-height-label);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+    }
+
+    /* Botões com texto (ex.: Tabela) ganham respiro lateral. */
+    &:has(> span) {
+      padding-inline: var(--eds-space-2);
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      --_btn-bg: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
+      --_btn-fg: var(--eds-color-text-primary);
+    }
+
+    &:active:not(:disabled, [aria-disabled='true']) {
+      --_btn-bg: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 14%);
+    }
+
+    &[aria-pressed='true'] {
+      --_btn-bg: var(--eds-color-action-primary-subtle);
+      --_btn-fg: var(--eds-color-action-primary);
+
+      /* Segunda pista além da cor: barra na base. */
+      box-shadow: inset 0 calc(-1 * var(--eds-border-width-strong)) 0 currentColor;
+    }
+
+    &[aria-pressed='true']:hover:not(:disabled, [aria-disabled='true']) {
+      --_btn-bg: color-mix(
+        in srgb,
+        var(--eds-color-action-primary-subtle),
+        var(--eds-color-text-primary) 8%
+      );
+      --_btn-fg: var(--eds-color-action-primary);
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      --_btn-bg: transparent;
+      --_btn-fg: var(--eds-color-text-muted);
+
+      cursor: not-allowed;
+    }
+
+    /* Menu (ex.: Tabela): seta do disclosure, gira com aria-expanded. */
+    &[aria-haspopup]::after {
+      content: '';
+      flex: none;
+      inline-size: 0.4em;
+      block-size: 0.4em;
+      margin-inline-start: var(--eds-space-1);
+      border-inline-end: 0.125em solid currentColor;
+      border-block-end: 0.125em solid currentColor;
+      rotate: 45deg;
+      translate: 0 -0.1em;
+      transition: rotate var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+
+    &[aria-haspopup][aria-expanded='true']::after {
+      rotate: 225deg;
+      translate: 0 0.1em;
+    }
+  }
+
+  /* Select compacto (estilo de bloco, fonte): mesma seta do .eds-select; borda text-muted porque
+     border-strong sobre o bg-subtle da barra fica abaixo de 3:1 (WCAG 1.4.11). */
+  .eds-editor-select {
+    --_sel-border: var(--eds-color-text-muted);
+    --_sel-arrow: var(--eds-color-text-secondary);
+    --_sel-arrow-size: 0.3125rem;
+    --_sel-pad: var(--eds-space-2);
+
+    appearance: none;
+    box-sizing: border-box;
+    inline-size: auto;
+    max-inline-size: 100%;
+    min-block-size: var(--_editor-button-size);
+    padding-block: 0;
+    padding-inline-start: var(--_sel-pad);
+    padding-inline-end: calc(var(--_sel-pad) * 2 + var(--_sel-arrow-size) * 2);
+    border: var(--eds-border-width) solid var(--_sel-border);
+    border-radius: var(--eds-radius-sm);
+    background-color: var(--eds-color-bg-surface);
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--_sel-arrow) 50%),
+      linear-gradient(135deg, var(--_sel-arrow) 50%, transparent 50%);
+    background-repeat: no-repeat;
+    background-size: var(--_sel-arrow-size) var(--_sel-arrow-size);
+    background-position:
+      calc(100% - var(--_sel-pad) - var(--_sel-arrow-size)) 50%,
+      calc(100% - var(--_sel-pad)) 50%;
+    color: var(--eds-color-text-primary);
+    font-family: inherit;
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    text-overflow: ellipsis;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      --_sel-border: var(--eds-color-text-secondary);
+    }
+
+    &:focus-visible {
+      --_sel-border: var(--eds-color-action-primary);
+    }
+
+    &:disabled {
+      --_sel-arrow: var(--eds-color-text-muted);
+
+      background-color: var(--eds-color-bg-subtle);
+      border-color: var(--eds-color-border-default);
+      color: var(--eds-color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  /* ---------- Conteúdo ---------- */
+  .eds-editor-content {
+    /* Altura mínima em linhas (o JS grava --_editor-rows a partir de rows do textarea). */
+    position: relative;
+    box-sizing: content-box;
+    min-block-size: calc(var(--_editor-rows) * var(--_editor-line));
+    max-block-size: calc(var(--_editor-max-rows) * var(--_editor-line));
+    padding-block: var(--eds-space-3);
+    padding-inline: var(--eds-space-3);
+    border-end-start-radius: calc(var(--_editor-radius) - var(--eds-border-width));
+    border-end-end-radius: calc(var(--_editor-radius) - var(--eds-border-width));
+    overflow-y: auto;
+    outline: none; /* o anel vive na casca (.eds-editor:has(:focus)) */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-variant-ligatures: none;
+    scroll-padding: var(--eds-space-3);
+
+    &[contenteditable='false'] {
+      cursor: inherit;
+    }
+
+    /* Vazio: o JS põe data-empty e data-placeholder; o texto flutua sem ocupar altura. */
+    &[data-empty]::before {
+      content: attr(data-placeholder);
+      float: inline-start;
+      block-size: 0;
+      color: var(--eds-color-text-muted);
+      pointer-events: none;
+    }
+
+    /* Seleção de células (prosemirror-tables). */
+    & :where(.selectedCell)::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--eds-color-action-primary) 18%, transparent);
+      pointer-events: none;
+    }
+
+    & :where(.selectedCell) ::selection {
+      background: transparent;
+    }
+
+    & :where(.ProseMirror-selectednode) {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+    }
+
+    & :where(.ProseMirror-hideselection)::selection,
+    & :where(.ProseMirror-hideselection *)::selection {
+      background: transparent;
+    }
+
+    /* Cursor de lacuna (antes/depois de uma tabela no começo ou no fim do documento). */
+    & :where(.ProseMirror-gapcursor) {
+      display: none;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    & :where(.ProseMirror-gapcursor)::after {
+      content: '';
+      display: block;
+      position: absolute;
+      inset-block-start: 0;
+      inline-size: var(--eds-space-5);
+      border-block-start: var(--eds-border-width) solid currentColor;
+      animation: eds-editor-blink 1.1s steps(2, start) infinite;
+    }
+  }
+
+  .eds-editor-content.ProseMirror-focused :where(.ProseMirror-gapcursor),
+  .eds-editor-content :where(.ProseMirror-focused .ProseMirror-gapcursor) {
+    display: block;
+  }
+
+  @keyframes eds-editor-blink {
+    to {
+      visibility: hidden;
+    }
+  }
+
+  .eds-editor[data-disabled] .eds-editor-content {
+    cursor: not-allowed;
+  }
+
+  /* Barra estreita: sem separadores (os grupos já quebram linha por flex-wrap). Nunca rola na horizontal. */
+  @container eds-editor (inline-size < 30rem) {
+    .eds-editor-separator {
+      display: none;
+    }
+  }
+
+  /* Toque: 16px evita o zoom do iOS ao focar o conteúdo e os selects; alvos maiores. */
+  @media (pointer: coarse) {
+    .eds-editor {
+      --_editor-line: var(--eds-line-height-body-lg);
+      --_editor-button-size: var(--eds-target-min);
+    }
+
+    .eds-editor-content {
+      --_prose-size: var(--eds-font-size-body-lg);
+      --_prose-line: var(--eds-line-height-body-lg);
+    }
+
+    .eds-editor-select {
+      font-size: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-editor,
+    .eds-editor-button,
+    .eds-editor-button::after {
+      transition: none;
+    }
+
+    .eds-editor-content :where(.ProseMirror-gapcursor)::after {
+      animation: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    .eds-editor-toolbar {
+      border-block-end-color: var(--eds-color-border-strong);
+    }
+
+    .eds-editor-button[aria-pressed='true'] {
+      border-color: currentColor;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-editor:has(.eds-editor-content:focus) {
+      outline-color: Highlight;
+    }
+
+    .eds-editor-button[aria-pressed='true'] {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    .eds-editor-button:disabled {
+      color: GrayText;
+    }
+
+    /* Como o .eds-select: a seta é gradiente e some em cores forçadas. */
+    .eds-editor-select {
+      --_sel-arrow: FieldText;
+
+      forced-color-adjust: none;
+      border-color: CanvasText;
+      background-color: Field;
+      color: FieldText;
+    }
+
+    .eds-editor-select:disabled {
+      --_sel-arrow: GrayText;
+
+      border-color: GrayText;
+      color: GrayText;
+    }
+
+    .eds-editor-separator {
+      background: CanvasText;
+    }
+
+    .eds-editor-content :where(.selectedCell)::after {
+      background: Highlight;
+      opacity: 0.4;
+    }
+
+    .eds-editor-content :where(.ProseMirror-gapcursor)::after {
+      border-color: CanvasText;
+    }
+  }
+
+  @media print {
+    .eds-editor {
+      border: 0;
+    }
+
+    .eds-editor-toolbar {
+      display: none;
+    }
+
+    .eds-editor-content {
+      max-block-size: none;
+      min-block-size: 0;
+      overflow: visible;
+    }
+  }
+}

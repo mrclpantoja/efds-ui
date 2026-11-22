@@ -1,0 +1,23 @@
+<div class="eds-stack eds-gap-6">
+  <form class="eds-stack eds-gap-3">
+    <div class="eds-field">
+      <label class="eds-label" for="editor-resumo" data-required>Resumo (obrigatório)</label>
+      <textarea class="eds-textarea" id="editor-resumo" name="resumo" rows="3" required data-eds-editor></textarea>
+    </div>
+    <div><button type="submit" class="eds-button eds-button-secondary">Enviar</button></div>
+  </form>
+  <div class="eds-field">
+    <label class="eds-label" for="editor-erro" data-required>Justificativa</label>
+    <textarea class="eds-textarea" id="editor-erro" name="justificativa" rows="4" required
+      aria-invalid="true" aria-describedby="editor-erro-msg" data-eds-editor></textarea>
+    <p class="eds-error" id="editor-erro-msg">Informe a justificativa.</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="editor-leitura">Parecer (somente leitura)</label>
+    <textarea class="eds-textarea" id="editor-leitura" rows="4" readonly data-eds-editor>&lt;p&gt;Parecer aprovado em reunião. Sem a barra, o texto segue selecionável.&lt;/p&gt;</textarea>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="editor-desabilitado">Observações (desabilitado)</label>
+    <textarea class="eds-textarea" id="editor-desabilitado" rows="3" disabled data-eds-editor>&lt;p&gt;Campo indisponível.&lt;/p&gt;</textarea>
+  </div>
+</div>

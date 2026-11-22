@@ -132,12 +132,14 @@ export function checkTarball(
  * O bundle IIFE (`<script src>`) tem de ser script clássico: sem `import`/`export` de módulo, com a
  * variável global `EDS` e o auto-init.
  */
-export function checkIife(source: string): string[] {
+export function checkIife(source: string, globalName = 'EDS'): string[] {
   const problems: string[] = [];
   if (/(^|[;}])\s*(export\s*[{*]|import\s*[{*"'])/m.test(source)) {
     problems.push('IIFE contém import/export de módulo');
   }
-  if (!/^\s*var EDS\s*=/.test(source)) problems.push('IIFE não declara a global EDS');
+  if (!new RegExp(String.raw`^\s*var ${globalName}\s*=`).test(source)) {
+    problems.push(`IIFE não declara a global ${globalName}`);
+  }
   if (!source.includes('data-eds-manual')) problems.push('IIFE sem o auto-init (data-eds-manual)');
   return problems;
 }

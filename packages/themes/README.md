@@ -2,12 +2,13 @@
 
 Temas e eixos do efDS.ui: `theme`, `mode`, `density` e `shape`. Alteram apenas tokens, nunca componentes. Depende de `@efds-ui/core`.
 
-> **Versão 0.1.0 (primeira publicação).** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
+> **Versão 0.1.1.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
 
 ## Instalação
 
 ```sh
-pnpm add @efds-ui/core @efds-ui/themes
+npm install @efds-ui/core @efds-ui/themes
+# ou: pnpm add @efds-ui/core @efds-ui/themes
 ```
 
 ## Uso mínimo
@@ -22,6 +23,13 @@ import '@efds-ui/themes/index.css'; // todos os eixos
 ```
 
 Para trocar, altere o atributo; nenhum JavaScript do pacote é necessário.
+
+## Por CDN (sem instalar)
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@efds-ui/core@0.1.1/dist/index.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@efds-ui/themes@0.1.1/dist/index.css" />
+```
 
 ## Importação seletiva
 
@@ -42,5 +50,5 @@ A fonte Inter fica por conta do consumidor.
 
 ## Documentação
 
-- [Tokens e eixos](../../docs/architecture/tokens.md)
-- [README do monorepo](../../README.md)
+- [Temas e eixos](https://efds-ui.com.br/#/fundamentos/temas-e-eixos)
+- [Site de documentação](https://efds-ui.com.br)

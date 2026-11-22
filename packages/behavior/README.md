@@ -2,14 +2,14 @@
 
 Comportamento interativo do efDS.ui em JavaScript puro (zero dependências), para quem usa só HTML: PHP, Java, .NET, Vue, Angular. O visual vem do `@efds-ui/core` (CSS); este pacote liga o que o CSS e a plataforma não entregam: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Button em carregamento (`aria-busy` não ativa por Enter/Espaço), Table (ordenação, seleção e filtro local), Sidebar, Combobox (simples e múltiplo), DatePicker e DateRangePicker (calendário próprio, máscara dd/mm/aaaa), FileUpload (arrastar e soltar, modo formulário e imediato), diálogos rápidos (`alert`, `confirm`, `prompt`) e o PageLoader automático.
 
-> **Versão 0.1.0 (primeira publicação).** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
+> **Versão 0.1.1.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
 
 ## Uso por `<script>` (CDN, PHP, Java, .NET)
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@efds-ui/core@0.1.0/dist/index.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@efds-ui/core@0.1.1/dist/index.css" />
 <script
-  src="https://cdn.jsdelivr.net/npm/@efds-ui/behavior@0.1.0/dist/eds-behavior.js"
+  src="https://cdn.jsdelivr.net/npm/@efds-ui/behavior@0.1.1/dist/eds-behavior.js"
   defer
 ></script>
 ```
@@ -187,7 +187,7 @@ const destroy = init(document.querySelector('#app')!, {
 
 `init(root, options)` liga o que existe em `root`, observa o que entra e sai depois (htmx, Turbo, Livewire, parciais do servidor) e **não toca em nada fora do `root`**. Também há `initTabs`, `initModal`, `initDropdown`, `initAlert`, `initTable`, `initTableFilter`, `initSidebar`, `initCombobox`, `initDatepicker`, `initUpload`, `initButtonBusy`, `initConfirm`, `initSortable`, `initTree`, `initNativeAlert`, `initToast` e `initLoader` para importar só o que usa (tree shaking).
 
-Referência completa (atributos, eventos, opções, configuração do loader): [`docs/architecture/behavior.md`](../../docs/architecture/behavior.md).
+Referência completa (atributos, eventos, opções, configuração do loader): [Comportamento](https://efds-ui.com.br/#/comecar/comportamento) e [Eventos](https://efds-ui.com.br/#/comecar/eventos), no site de documentação.
 
 ## O que cada componente espera
 

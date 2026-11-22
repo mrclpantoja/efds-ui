@@ -2,6 +2,12 @@
 
 Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons`, `@efds-ui/behavior` e `@efds-ui/editor`.
 
+## 0.1.1 (22/11/2026)
+
+Só documentação dos pacotes; nenhuma mudança de código, CSS ou API.
+
+- READMEs revistos para a página do npm: links para o site de documentação e para os pacotes no npm (os relativos ao repositório não funcionavam lá), instalação por `npm install` ou `pnpm add`, uso por CDN no core e no themes, endereço real do CDN no editor.
+
 ## 0.1.0 (22/11/2026)
 
 Primeira versão publicada no npm (organização `efds-ui`) e no jsDelivr/unpkg. Licença: MIT. Documentação: https://efds-ui.com.br.

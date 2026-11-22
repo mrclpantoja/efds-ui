@@ -20,7 +20,7 @@ const REQUIRED: Record<string, string[]> = {
   behavior: ['dist/eds-behavior.js'],
   editor: ['dist/eds-editor.js'],
 };
-const EXPECTED_VERSION = '0.1.0';
+const EXPECTED_VERSION = '0.1.1';
 
 function run(command: string, args: string[], cwd: string): string {
   // No Windows o pnpm é um shim (.cmd/.ps1) e exige shell; aí a linha vai inteira, com aspas,

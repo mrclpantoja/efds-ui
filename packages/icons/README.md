@@ -2,12 +2,13 @@
 
 Ícones do efDS.ui como componentes React (SVG inline, herdam `currentColor`).
 
-> **Versão 0.1.0 (primeira publicação).** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
+> **Versão 0.1.1.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
 
 ## Instalação
 
 ```sh
-pnpm add @efds-ui/icons
+npm install @efds-ui/icons
+# ou: pnpm add @efds-ui/icons
 ```
 
 Peer dependency: `react` 18 ou 19. Não depende de `@efds-ui/core` nem de `@efds-ui/react`.
@@ -25,5 +26,5 @@ Exports nomeados: só os ícones importados entram no bundle (`sideEffects: fals
 
 ## Documentação
 
-- [Convenções do pacote React](../../docs/architecture/react.md)
-- [README do monorepo](../../README.md)
+- [Uso com React](https://efds-ui.com.br/#/comecar/uso-com-react)
+- [Site de documentação](https://efds-ui.com.br)

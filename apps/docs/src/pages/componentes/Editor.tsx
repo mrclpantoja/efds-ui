@@ -61,8 +61,8 @@ export default function EditorPage() {
 
       <Alert variant="info" title="Edições">
         <p>
-          Esta é a edição <strong>Básica</strong> (0.1.0). A edição <strong>Completa</strong>{' '}
-          (gratuita) e a edição <strong>Pro</strong> virão depois da 0.1.0.
+          Esta é a edição <strong>Básica</strong>. A edição <strong>Completa</strong> (gratuita) e a
+          edição <strong>Pro</strong> virão em próximas versões.
         </p>
       </Alert>
 

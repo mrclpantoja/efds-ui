@@ -24,7 +24,7 @@ export default function StatPage() {
           'Em grade, no topo de uma listagem ou do dashboard.',
         ]}
         avoid={[
-          'Para séries e comparações ao longo do tempo: isso é um gráfico (pós-MVP).',
+          'Para séries e comparações ao longo do tempo: isso é um gráfico, fora do escopo do efDS.ui por enquanto.',
           'Para mais de uns seis indicadores lado a lado: ninguém lê tudo.',
         ]}
       />

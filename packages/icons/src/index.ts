@@ -2,7 +2,7 @@ import { createIcon } from './createIcon';
 
 export type { IconProps, IconComponent } from './createIcon';
 
-/* Conjunto mínimo do MVP (traço 2, viewBox 24). Um export nomeado por ícone: tree-shakeable. */
+/* Conjunto inicial (traço 2, viewBox 24). Um export nomeado por ícone: tree-shakeable. */
 export const SearchIcon = /*#__PURE__*/ createIcon(
   'SearchIcon',
   'M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4',

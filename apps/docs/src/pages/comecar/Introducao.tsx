@@ -108,8 +108,10 @@ export default function Introducao() {
 
       <Section title="Estado do projeto">
         <p>
-          O efDS.ui está em pré-lançamento (v0.1.0, MVP). Os pacotes ainda não foram publicados no
-          npm. Todos os dados de exemplo são fictícios.
+          Versão atual: <strong>0.1.0</strong>, publicada no npm sob o escopo{' '}
+          <a href="https://www.npmjs.com/org/efds-ui">@efds-ui</a> (veja{' '}
+          <a href={toHref('/comecar/instalacao')}>Instalação</a>). A API pode mudar até a 1.0. Todos
+          os dados de exemplo são fictícios.
         </p>
       </Section>
 

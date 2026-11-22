@@ -98,7 +98,7 @@ export default function TablePage() {
         ]}
         avoid={[
           'Para organizar o layout da página: use Grid e Stack.',
-          'Para dados que pedem edição em célula, agrupamento, virtualização ou colunas fixas: isso é DataGrid, pós-MVP.',
+          'Para dados que pedem edição em célula, agrupamento, virtualização ou colunas fixas: isso é um DataGrid, previsto para uma próxima versão.',
           'Para poucos itens com muito texto cada: um Card ou uma lista lê melhor.',
         ]}
       />
@@ -719,8 +719,9 @@ export default function TablePage() {
               ícone exige <code>aria-label</code>.
             </li>
             <li>
-              <strong>Limitação conhecida:</strong> não há coluna fixa (sticky) no MVP. Ao rolar na
-              horizontal, a coluna de identificação sai de vista. Fica para depois do MVP.
+              <strong>Limitação conhecida:</strong> não há coluna fixa (sticky) nesta versão. Ao
+              rolar na horizontal, a coluna de identificação sai de vista. Está prevista para uma
+              próxima versão.
             </li>
             <li>
               <strong>Cor nunca sozinha:</strong> a ordenação usa ícone e <code>aria-sort</code>,

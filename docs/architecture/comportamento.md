@@ -84,7 +84,7 @@ O core é CSS puro. O que o CSS e a plataforma **não** entregam fica a cargo da
 - **Toast persistente** (warning/danger): o Esc só fecha com o foco no toast, e a região é uma das últimas paradas de Tab; o `scroll-padding` evita que cubra o foco, mas três ou mais toasts empilhados podem passar da folga reservada.
 - **Tema em subárvore**: `data-theme` num elemento interno troca só os `--eds-accent-*`; os semânticos são resolvidos onde o modo é declarado. Para tematizar uma subárvore, declare `data-theme` **e** `data-mode` no mesmo elemento.
 - **Modal/Drawer mantidos abertos pelo consumidor**: após o fechamento nativo, o diálogo reabre e devolve o foco ao último elemento focado dentro dele.
-- **Table**: sem coluna fixa no MVP; ao rolar horizontalmente a coluna de identificação sai de vista (avaliar coluna sticky pós-MVP).
+- **Table**: sem coluna fixa nesta versão; ao rolar horizontalmente a coluna de identificação sai de vista (coluna sticky prevista para uma próxima versão).
 - **Popover da Sidebar**: com os irmãos em `inert`, a devolução nativa de foco falha; o JS devolve o foco ao botão de menu manualmente.
 
 ## Ainda não testado

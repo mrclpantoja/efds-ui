@@ -124,7 +124,7 @@ export default function SelectPage() {
           <ul className="docs-list">
             <li>
               <strong>Teclado e leitor de tela:</strong> nativos. Setas trocam a opção, e digitar
-              uma letra salta para ela; por isso o MVP não substitui o componente por um menu
+              uma letra salta para ela; por isso o efDS.ui não substitui o componente por um menu
               customizado.
             </li>
             <li>

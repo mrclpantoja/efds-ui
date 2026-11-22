@@ -1,17 +1,17 @@
 # Changelog
 
-Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons` e `@efds-ui/behavior`.
+Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons`, `@efds-ui/behavior` e `@efds-ui/editor`.
 
-## 0.1.0 (MVP, ainda não publicado)
+## 0.1.0 (22/11/2026)
 
-Pré-lançamento: os pacotes seguem `private` até a criação do escopo `@efds-ui` no npm. Licença: MIT.
+Primeira versão publicada no npm (organização `efds-ui`) e no jsDelivr/unpkg. Licença: MIT. Documentação: https://efds-ui.com.br.
 
 ### @efds-ui/core
 
 - Tokens em três níveis (Primitive, Semantic, Component), gerados de JSON (`pnpm tokens`).
 - Eixos do Adaptive Surface por atributo: `data-theme`, `data-mode`, `data-density`, `data-shape`.
 - Base (reset, tipografia por classes `.eds-text-*`, acessibilidade) e layout (Container, Grid por container queries, Stack, app shell).
-- 25 componentes do MVP, um CSS por componente: Foundation, Actions (Button), Forms, Surfaces (Card, Modal, Drawer), Navigation (Navbar, Sidebar, Tabs, Breadcrumb), Feedback (Alert, Toast, Badge, Spinner, Skeleton) e Data (Table com Pagination e Empty State).
+- 25 componentes base, um CSS por componente: Foundation, Actions (Button), Forms, Surfaces (Card, Modal, Drawer), Navigation (Navbar, Sidebar, Tabs, Breadcrumb), Feedback (Alert, Toast, Badge, Spinner, Skeleton) e Data (Table com Pagination e Empty State).
 - CSS completo (`index.css`) e importação seletiva por arquivo, cada um começando pela ordem de `@layer`.
 - Fase 6e: `alert-dialog.css` (diálogos rápidos sobre `.eds-modal`: ícone por tipo, ações empilhadas abaixo de 400px, sem animação de entrada ou saída), `sortable.css` (item, pegador, placeholder, fantasma, alvo de soltar, quadro) e `tree.css` (linha, guias por nível, chevron, ações "⋯", indicadores de soltar, fantasma); `.eds-toast-action` no Toast.
 - Máscara de entrada: `.eds-input[data-eds-mask='moeda'|'numero']` alinha o valor ao fim, com algarismos tabulares (seletor por atributo; só tokens semânticos).
@@ -244,3 +244,16 @@ Pré-lançamento: os pacotes seguem `private` até a criação do escopo `@efds-
 - Paleta de comandos anuncia "Carregando…" na busca remota.
 - Banner: o foco, ao fechar, pula candidatos que não aceitam foco. NotificationBell (React) só move o foco se "Marcar todas" ficou desabilitado.
 - Documentação: filtro de Idiomas anuncia a contagem e tem estado vazio; exemplo de Tag removível devolve o foco; correções de exemplos (link em `li`/`td` pintado pelo site, `name` de rádio repetido no Segmented, lembrança do Banner escondendo o exemplo, ajuda do TimePicker sem `aria-describedby`).
+
+### Imagem
+
+- `@efds-ui/core`: `image.css` (Image com proporções `-1x1 -4x3 -3x2 -16x9 -21x9 -3x4 -4x5`, `-contain`, `-circle`, estados de carregamento e erro com fallback; Figure com legenda e crédito), `gallery.css` (grade de miniaturas e Lightbox) e `cropper.css` (corte de foto).
+- `@efds-ui/behavior`: subcaminho `@efds-ui/behavior/image` (`loadImage`, `resizeImage`, `cropImage`, `buildSrcset`, `isImageFile`, `createCropperController`); estado do Image automático; galeria com Lightbox (setas, Home/End, deslizar, foco de volta à miniatura); corte de foto em `input[type=file][data-eds-cropper]` que entrega o arquivo recortado e comprimido no próprio campo (WebP, com JPEG de reserva), com botões de mover como alternativa ao arraste (WCAG 2.5.7).
+- `@efds-ui/react`: `Image`, `Figure`, `Gallery`, `ImageCropper`, `ImageCropperDialog` e `AvatarUpload`.
+
+### @efds-ui/editor (novo, edição Básica)
+
+- Editor de conteúdo sobre ProseMirror: parágrafo, títulos 2 a 4, negrito, itálico, sublinhado, tachado, listas, alinhamento, link, desfazer/refazer, limpar formatação, três fontes (sem serifa, com serifa, monoespaçada) e tabela simples; colar do Word com limpeza.
+- HTML por `textarea[data-eds-editor]` (script `eds-editor.js`, que convive com o `window.EDS` do behavior em qualquer ordem) e React em `@efds-ui/editor/react`. Saída sem `style=`; `sanitizeHtml` no navegador (o servidor deve sanitizar também).
+- `@efds-ui/core`: `editor.css`, `prose.css` (tipografia do conteúdo dentro e fora do editor) e o token `--eds-font-family-serif`.
+- Barra no padrão APG Toolbar (Alt+F10, Esc), `required` com erro visível, somente leitura focável, cabeçalho de tabela com `scope="col"`.

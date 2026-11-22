@@ -130,6 +130,11 @@ export default function Templates() {
           instruções de instalação. Sem a chave de licença o template não executa; veja{' '}
           <a href={toHref('/templates/licenca')}>Licença dos templates</a>.
         </p>
+        <p>
+          No cadastro, você pode autorizar, se quiser, nosso contato para mostrar o seu projeto em{' '}
+          <a href={toHref('/comecar/quem-usa')}>Quem usa</a>. É opcional e não interfere no
+          download.
+        </p>
       </Section>
 
       <Section title="Templates premium">

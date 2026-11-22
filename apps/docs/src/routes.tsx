@@ -14,6 +14,7 @@ import ButtonPage from './pages/componentes/Button';
 import TabsPage from './pages/componentes/Tabs';
 import EditorPage from './pages/componentes/Editor';
 import TemplatesPage from './pages/templates/Templates';
+import QuemUsaPage from './pages/comecar/QuemUsa';
 import LicencaTemplatesPage from './pages/templates/Licenca';
 import AcessibilidadePage from './pages/comecar/Acessibilidade';
 import EventosPage from './pages/comecar/Eventos';
@@ -267,6 +268,7 @@ const allRoutes: readonly DocRoute[] = [
     section: 'comecar',
     page: AcessibilidadePage,
   },
+  { path: '/comecar/quem-usa', title: 'Quem usa', section: 'comecar', page: QuemUsaPage },
 
   // Fundamentos
   { path: '/fundamentos/tokens', title: 'Tokens', section: 'fundamentos', page: Tokens },

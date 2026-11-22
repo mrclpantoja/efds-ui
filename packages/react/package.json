@@ -1,8 +1,9 @@
 {
   "name": "@efds-ui/react",
   "version": "0.1.0",
-  "private": true,
   "license": "MIT",
+  "author": "Marcelo Pantoja",
+  "homepage": "https://efds-ui.com.br",
   "type": "module",
   "description": "Componentes React do efDS.ui: wrappers sobre as classes do core.",
   "keywords": [
@@ -51,5 +52,8 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

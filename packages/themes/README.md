@@ -2,7 +2,7 @@
 
 Temas e eixos do efDS.ui: `theme`, `mode`, `density` e `shape`. Alteram apenas tokens, nunca componentes. Depende de `@efds-ui/core`.
 
-> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: o escopo `@efds-ui` ainda será criado. Licença MIT. A API pode mudar até a 1.0.
+> **Versão 0.1.0 (primeira publicação).** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
 
 ## Instalação
 

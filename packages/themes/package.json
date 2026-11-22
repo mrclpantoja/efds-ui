@@ -1,8 +1,9 @@
 {
   "name": "@efds-ui/themes",
   "version": "0.1.0",
-  "private": true,
   "license": "MIT",
+  "author": "Marcelo Pantoja",
+  "homepage": "https://efds-ui.com.br",
   "type": "module",
   "description": "Temas e eixos (theme, mode, density, shape) do efDS.ui.",
   "keywords": [
@@ -36,6 +37,7 @@
     "vite": "catalog:"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       "./index.css": "./dist/index.css",
       "./*.css": "./dist/*.css"

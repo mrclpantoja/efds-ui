@@ -2,7 +2,7 @@
 
 CSS puro do efDS.ui (Empresarial Framework Design System): tokens, base, layout e componentes. Sem JavaScript, sem dependência de runtime e sem conhecer React.
 
-> **Pré-lançamento (0.1.0).** O pacote ainda não foi publicado no npm: o escopo `@efds-ui` ainda será criado. Licença MIT. A API pode mudar até a 1.0.
+> **Versão 0.1.0 (primeira publicação).** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
 
 ## Instalação
 

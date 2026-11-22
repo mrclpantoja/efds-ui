@@ -1,8 +1,9 @@
 {
   "name": "@efds-ui/behavior",
   "version": "0.1.0",
-  "private": true,
   "license": "MIT",
+  "author": "Marcelo Pantoja",
+  "homepage": "https://efds-ui.com.br",
   "type": "module",
   "description": "Comportamento interativo do efDS.ui em JavaScript puro, para quem usa só HTML (PHP, Java, .NET, Vue, Angular).",
   "keywords": [
@@ -85,6 +86,7 @@
     "vitest": "catalog:"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",

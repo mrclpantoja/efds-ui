@@ -1,8 +1,9 @@
 {
   "name": "@efds-ui/core",
   "version": "0.1.0",
-  "private": true,
   "license": "MIT",
+  "author": "Marcelo Pantoja",
+  "homepage": "https://efds-ui.com.br",
   "type": "module",
   "description": "CSS puro do efDS.ui: tokens, base, layout e componentes.",
   "keywords": [
@@ -47,6 +48,7 @@
     "vite": "catalog:"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       "./index.css": "./dist/index.css",
       "./tokens.css": "./dist/tokens.css",

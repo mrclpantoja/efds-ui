@@ -1,8 +1,9 @@
 {
   "name": "@efds-ui/icons",
   "version": "0.1.0",
-  "private": true,
   "license": "MIT",
+  "author": "Marcelo Pantoja",
+  "homepage": "https://efds-ui.com.br",
   "type": "module",
   "description": "Ícones do efDS.ui.",
   "keywords": [
@@ -45,5 +46,8 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

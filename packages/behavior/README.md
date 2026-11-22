@@ -2,7 +2,7 @@
 
 Comportamento interativo do efDS.ui em JavaScript puro (zero dependências), para quem usa só HTML: PHP, Java, .NET, Vue, Angular. O visual vem do `@efds-ui/core` (CSS); este pacote liga o que o CSS e a plataforma não entregam: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Button em carregamento (`aria-busy` não ativa por Enter/Espaço), Table (ordenação, seleção e filtro local), Sidebar, Combobox (simples e múltiplo), DatePicker e DateRangePicker (calendário próprio, máscara dd/mm/aaaa), FileUpload (arrastar e soltar, modo formulário e imediato), diálogos rápidos (`alert`, `confirm`, `prompt`) e o PageLoader automático.
 
-> Pré-lançamento (0.1.0): ainda não publicado (`private`) até a criação do escopo `@efds-ui` no npm. Licença MIT.
+> **Versão 0.1.0 (primeira publicação).** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
 
 ## Uso por `<script>` (CDN, PHP, Java, .NET)
 

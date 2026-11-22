@@ -1,8 +1,9 @@
 {
   "name": "@efds-ui/editor",
   "version": "0.1.0",
-  "private": true,
   "license": "MIT",
+  "author": "Marcelo Pantoja",
+  "homepage": "https://efds-ui.com.br",
   "type": "module",
   "description": "Editor de conteúdo do efDS.ui (edição Básica) sobre ProseMirror: núcleo vanilla ligado por textarea[data-eds-editor], IIFE e wrapper React.",
   "keywords": [
@@ -82,6 +83,7 @@
     "vitest": "catalog:"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",

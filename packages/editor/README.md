@@ -2,7 +2,7 @@
 
 Editor de conteúdo do efDS.ui, edição **Básica**, sobre o [ProseMirror](https://prosemirror.net). Parágrafos, títulos 2 a 4, negrito, itálico, sublinhado, tachado, listas, alinhamento, três fontes, link e tabela simples. A saída é HTML limpo, sem `style=`.
 
-> Pré-lançamento (0.1.0): ainda não publicado (`private`) até a criação do escopo `@efds-ui` no npm. Licença MIT. As edições Completa (gratuita) e Pro virão depois da 0.1.0.
+> **Versão 0.1.0 (primeira publicação).** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br As edições Completa (gratuita) e Pro virão depois da 0.1.0.
 
 O visual vem do `@efds-ui/core` (`.eds-editor` e `.eds-prose`); este pacote só liga o comportamento.
 

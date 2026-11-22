@@ -1,0 +1,25 @@
+<!-- Formatos modernos primeiro, o <img> por último (fallback). `sizes` diz quanto da tela a imagem
+     ocupa para o navegador escolher a largura. As versões (480w, 960w...) são do seu servidor. -->
+<div class="eds-image eds-image-ratio-16x9">
+  <picture>
+    <source
+      type="image/avif"
+      sizes="(min-width: 768px) 50vw, 100vw"
+      srcset="/img/obra-4.svg 480w, /img/obra-4.svg 960w"
+    />
+    <source
+      type="image/webp"
+      sizes="(min-width: 768px) 50vw, 100vw"
+      srcset="/img/obra-4.svg 480w, /img/obra-4.svg 960w"
+    />
+    <img
+      src="/img/obra-4.svg"
+      sizes="(min-width: 768px) 50vw, 100vw"
+      srcset="/img/obra-4.svg 480w, /img/obra-4.svg 960w"
+      alt="Paisagem fictícia em tons de roxo"
+      loading="lazy"
+      decoding="async"
+    />
+  </picture>
+  <span class="eds-image-fallback"></span>
+</div>

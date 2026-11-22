@@ -95,6 +95,10 @@ import SegmentedPage from './pages/componentes/Segmented';
 import TagPage from './pages/componentes/Tag';
 import TimePickerPage from './pages/componentes/TimePicker';
 import IdiomasPage from './pages/comecar/Idiomas';
+// Imagem
+import GalleryPage from './pages/componentes/Gallery';
+import ImagePage from './pages/componentes/Image';
+import ImageCropperPage from './pages/componentes/ImageCropper';
 
 export type SectionId = 'comecar' | 'fundamentos' | 'componentes';
 
@@ -400,6 +404,15 @@ export const routes: readonly DocRoute[] = [
     page: DescriptionListPage,
   },
   { path: '/componentes/banner', title: 'Banner', section: 'componentes', page: BannerPage },
+  // Imagem
+  { path: '/componentes/image', title: 'Imagem', section: 'componentes', page: ImagePage },
+  { path: '/componentes/gallery', title: 'Galeria', section: 'componentes', page: GalleryPage },
+  {
+    path: '/componentes/image-cropper',
+    title: 'Corte de imagem',
+    section: 'componentes',
+    page: ImageCropperPage,
+  },
   { path: '/componentes/tabs', title: 'Tabs', section: 'componentes', page: TabsPage },
   { path: '/componentes/textarea', title: 'Textarea', section: 'componentes', page: TextareaPage },
   { path: '/componentes/tooltip', title: 'Tooltip', section: 'componentes', page: TooltipPage },

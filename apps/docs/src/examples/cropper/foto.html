@@ -1,0 +1,34 @@
+<!-- Ao escolher a imagem abre "Ajustar foto"; "Aplicar" põe no campo um arquivo já recortado,
+     redimensionado e comprimido (tudo no navegador). Sem JS o campo envia o arquivo original. -->
+<form class="eds-stack eds-gap-3">
+  <div class="eds-stack eds-stack-row eds-stack-align-center eds-gap-3">
+    <span
+      class="eds-avatar eds-avatar-lg eds-avatar-circle"
+      id="foto-previa"
+      role="img"
+      aria-label="Foto atual de Ana Exemplo"
+      >AE</span
+    >
+    <div class="eds-field">
+      <label class="eds-label" for="foto-perfil">Foto do perfil</label>
+      <input
+        id="foto-perfil"
+        class="eds-file"
+        type="file"
+        name="foto"
+        accept="image/*"
+        data-eds-cropper
+        data-eds-cropper-size="256"
+        data-eds-cropper-aspect="1"
+        data-eds-cropper-shape="circle"
+        data-eds-cropper-format="image/webp"
+        data-eds-cropper-quality="0.85"
+        data-eds-cropper-preview="#foto-previa"
+        aria-describedby="foto-perfil-h"
+      />
+      <p class="eds-helper" id="foto-perfil-h">
+        O ajuste acontece no seu navegador: a foto só é enviada quando você enviar o formulário.
+      </p>
+    </div>
+  </div>
+</form>

@@ -49,14 +49,17 @@ export function scopeIds(html: string, suffix: string): string {
           .join(' ');
         return `${attr}"${scoped}"`;
       })
-      // `data-eds-cep-fill="campo:#id,..."` e `data-eds-copy="#id"`: os seletores `#id` também
+      // `data-eds-cep-fill="campo:#id,..."`, `data-eds-copy="#id"` e `data-eds-cropper-preview="#id"`: os seletores `#id` também
       // apontam para ids do exemplo.
-      .replace(/(\sdata-eds-(?:cep-fill|copy)=)"([^"]*)"/g, (_all, attr: string, value: string) => {
-        const scoped = value.replace(/#([A-Za-z][\w-]*)/g, (m, id: string) =>
-          ids.has(id) ? `#${id}-${suffix}` : m,
-        );
-        return `${attr}"${scoped}"`;
-      })
+      .replace(
+        /(\sdata-eds-(?:cep-fill|copy|cropper-preview)=)"([^"]*)"/g,
+        (_all, attr: string, value: string) => {
+          const scoped = value.replace(/#([A-Za-z][\w-]*)/g, (m, id: string) =>
+            ids.has(id) ? `#${id}-${suffix}` : m,
+          );
+          return `${attr}"${scoped}"`;
+        },
+      )
   );
 }
 

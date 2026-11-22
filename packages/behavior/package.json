@@ -60,6 +60,11 @@
       "types": "./dist/balloon-entry.d.ts",
       "default": "./dist/balloon-entry.js"
     },
+    "./image": {
+      "development": "./src/image-entry.ts",
+      "types": "./dist/image-entry.d.ts",
+      "default": "./dist/image-entry.js"
+    },
     "./eds-behavior.js": "./dist/eds-behavior.js",
     "./eds-behavior-core.js": "./dist/eds-behavior-core.js"
   },
@@ -112,6 +117,10 @@
       "./format": {
         "types": "./dist/format-entry.d.ts",
         "default": "./dist/format-entry.js"
+      },
+      "./image": {
+        "types": "./dist/image-entry.d.ts",
+        "default": "./dist/image-entry.js"
       },
       "./eds-behavior.js": "./dist/eds-behavior.js",
       "./eds-behavior-core.js": "./dist/eds-behavior-core.js"

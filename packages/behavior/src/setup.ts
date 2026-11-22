@@ -45,6 +45,7 @@ import { initOtp } from './components/otp';
 import { initPassword } from './components/password';
 // Onda D
 import { initAvatar } from './components/avatar';
+import { initImage } from './components/image';
 import { initBanner } from './components/banner';
 import { initTimepicker } from './components/timepicker';
 
@@ -137,6 +138,7 @@ export {
   initPassword,
   // Onda D
   initAvatar,
+  initImage,
   initBanner,
   initTimepicker,
   loader,

@@ -1,0 +1,243 @@
+/* Image e Figure: imagem responsiva sem layout shift, com estados de carregamento e erro.
+   Markup:
+     <div class="eds-image eds-image-ratio-16x9" data-state="loading">   (loading | loaded | error)
+       <img src="…" alt="…" width="1280" height="720" loading="lazy" decoding="async" />
+       <span class="eds-image-fallback">
+         <svg aria-hidden="true" focusable="false">…</svg><span>Imagem indisponível</span>
+       </span>
+     </div>
+     Com formatos modernos: <picture><source type="image/avif" srcset="…" /><img … /></picture>.
+     <figure class="eds-figure">
+       <div class="eds-image …">…</div>
+       <figcaption class="eds-figure-caption">Legenda. <span class="eds-figure-credit">Foto: Fulano Fictício</span></figcaption>
+     </figure>
+   - Proporção: .eds-image-ratio-1x1 · 4x3 · 3x2 · 16x9 · 21x9 · 3x4 · 4x5. Sem classe de proporção a
+     caixa tem a altura natural da imagem (use width e height no <img>: o navegador reserva o espaço
+     antes de baixar, sem layout shift). Com proporção o espaço é reservado pela caixa.
+   - Ajuste: cover por padrão; .eds-image-contain mostra a imagem inteira sobre bg-subtle.
+     O raio segue data-shape (radius-md); .eds-image-circle força círculo (1:1).
+   - Estado por atributo: sem data-state a imagem aparece normal (sem JS). loading: fundo bg-subtle
+     com o brilho do Skeleton e <img> em opacity 0; ao virar loaded a imagem entra por fade. error:
+     o <img> some (visibility, o espaço fica) e o .eds-image-fallback (ícone + texto) aparece,
+     centralizado em text-muted. Em caixas com menos de 8rem de largura só o ícone fica visível e o
+     texto segue acessível (visually-hidden); o nome nunca some para leitor de tela.
+   - A caixa precisa de largura definida pelo pai (bloco, grid ou flex com largura): no estado de
+     erro ela vira contêiner de inline-size.
+   - Figure: a legenda usa small/text-secondary; o crédito, text-muted. */
+@layer eds.components {
+  .eds-image {
+    --_image-radius: var(--eds-radius-md);
+    --_image-bg: transparent;
+    --_image-fit: cover;
+    --_image-ratio: auto;
+    --_image-block: auto;
+    --_image-shimmer: color-mix(in srgb, var(--eds-color-text-primary) 8%, transparent);
+
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    aspect-ratio: var(--_image-ratio);
+    overflow: hidden;
+    border-radius: var(--_image-radius);
+    background: var(--_image-bg);
+
+    & picture {
+      display: contents;
+    }
+
+    & img {
+      display: block;
+      inline-size: 100%;
+      max-inline-size: 100%;
+      block-size: var(--_image-block);
+      object-fit: var(--_image-fit);
+      opacity: 1;
+      transition: opacity var(--eds-motion-duration-base) var(--eds-motion-easing-standard);
+    }
+
+    &[data-state='loading'] {
+      --_image-bg: var(--eds-color-bg-subtle);
+
+      & img {
+        opacity: 0;
+      }
+
+      /* Brilho do Skeleton: faixa clara varrendo a caixa (só translate). */
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, var(--_image-shimmer), transparent);
+        translate: -100% 0;
+        animation: eds-image-shimmer calc(var(--eds-motion-duration-slow) * 2) linear infinite;
+        pointer-events: none;
+      }
+    }
+
+    &[data-state='error'] {
+      --_image-bg: var(--eds-color-bg-subtle);
+
+      min-block-size: var(--eds-space-9);
+      container-type: inline-size;
+
+      /* visibility mantém o espaço reservado (sem layout shift) e tira a imagem quebrada da árvore
+         de acessibilidade: o nome fica no fallback visível. */
+      & img {
+        visibility: hidden;
+      }
+
+      & > .eds-image-fallback {
+        display: flex;
+      }
+    }
+  }
+
+  /* Proporções: a caixa reserva o espaço; a imagem preenche. */
+  .eds-image-ratio-1x1 {
+    --_image-ratio: 1 / 1;
+    --_image-block: 100%;
+  }
+
+  .eds-image-ratio-4x3 {
+    --_image-ratio: 4 / 3;
+    --_image-block: 100%;
+  }
+
+  .eds-image-ratio-3x2 {
+    --_image-ratio: 3 / 2;
+    --_image-block: 100%;
+  }
+
+  .eds-image-ratio-16x9 {
+    --_image-ratio: 16 / 9;
+    --_image-block: 100%;
+  }
+
+  .eds-image-ratio-21x9 {
+    --_image-ratio: 21 / 9;
+    --_image-block: 100%;
+  }
+
+  .eds-image-ratio-3x4 {
+    --_image-ratio: 3 / 4;
+    --_image-block: 100%;
+  }
+
+  .eds-image-ratio-4x5 {
+    --_image-ratio: 4 / 5;
+    --_image-block: 100%;
+  }
+
+  .eds-image-contain {
+    --_image-fit: contain;
+    --_image-bg: var(--eds-color-bg-subtle);
+  }
+
+  .eds-image-circle {
+    --_image-radius: 50%;
+    --_image-ratio: 1 / 1;
+    --_image-block: 100%;
+  }
+
+  /* Fallback: escondido em qualquer estado que não seja erro. */
+  .eds-image-fallback {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--eds-space-2);
+    padding: var(--eds-space-2);
+    color: var(--eds-color-text-muted);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    text-align: center;
+
+    & > svg,
+    & > .eds-icon {
+      flex: none;
+      inline-size: var(--eds-icon-size-lg);
+      block-size: var(--eds-icon-size-lg);
+    }
+  }
+
+  /* Caixa estreita: só o ícone; o texto vira visually-hidden e continua sendo lido. */
+  @container (inline-size < 8rem) {
+    .eds-image-fallback > span {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  @keyframes eds-image-shimmer {
+    to {
+      translate: 100% 0;
+    }
+  }
+
+  /* Figure. */
+  .eds-figure {
+    --_figure-gap: var(--eds-space-2);
+
+    display: grid;
+    gap: var(--_figure-gap);
+    margin: 0;
+    padding: 0;
+    min-inline-size: 0;
+  }
+
+  .eds-figure-caption {
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+  }
+
+  .eds-figure-credit {
+    margin-inline-start: var(--eds-space-1);
+    color: var(--eds-color-text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-image img {
+      transition: none;
+    }
+
+    .eds-image[data-state='loading']::after {
+      display: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-image[data-state='loading'],
+    .eds-image[data-state='error'] {
+      border: var(--eds-border-width) solid GrayText;
+      background: transparent;
+    }
+
+    .eds-image-fallback {
+      color: GrayText;
+    }
+  }
+
+  /* Papel: sem brilho; a imagem não é cortada entre páginas. */
+  @media print {
+    .eds-image[data-state='loading']::after {
+      display: none;
+    }
+
+    .eds-image,
+    .eds-figure {
+      break-inside: avoid;
+    }
+  }
+}

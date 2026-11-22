@@ -11,6 +11,9 @@ import { themeColorBehavior } from './components/theme-color';
 // Onda D: paleta de comandos e agenda (só na compilação completa)
 import { agendaBehavior, initAgenda } from './components/agenda';
 import { commandBehavior, initCommand } from './components/command';
+// Imagem: galeria e corte (só na compilação completa)
+import { galleryBehavior, initGallery } from './components/gallery';
+import { cropperBehavior, initCropper } from './components/cropper';
 
 export * from './setup';
 
@@ -27,6 +30,8 @@ export function init(root: ParentNode = document, options?: BehaviorOptions): ()
     themeColorBehavior,
     commandBehavior,
     agendaBehavior,
+    galleryBehavior,
+    cropperBehavior,
   ]);
 }
 
@@ -75,3 +80,5 @@ export type { ContrastCheck, ThemeOptions, ThemeResult, ThemeStep } from './them
 export { initAgenda, initCommand };
 export type { AgendaEvent, AgendaTone } from './components/agenda';
 export type { CommandItem } from './components/command';
+// Imagem: galeria (Lightbox) e corte de foto; as funções puras estão em `@efds-ui/behavior/image`
+export { initGallery, initCropper };

@@ -272,6 +272,38 @@ export interface Messages {
   timeEmpty: string;
   // Banner
   bannerClose: string;
+  // Imagem, galeria e corte de imagem: `{current}`, `{total}`, `{percent}`, `{degrees}`, `{size}`
+  imageUnavailable: string;
+  galleryTitle: string;
+  galleryClose: string;
+  galleryPrev: string;
+  galleryNext: string;
+  galleryCounter: string;
+  cropperTitle: string;
+  cropperClose: string;
+  cropperApply: string;
+  cropperCancel: string;
+  cropperArea: string;
+  cropperHint: string;
+  cropperControls: string;
+  cropperZoom: string;
+  cropperZoomIn: string;
+  cropperZoomOut: string;
+  cropperRotate: string;
+  cropperReset: string;
+  cropperPan: string;
+  cropperPanLeft: string;
+  cropperPanUp: string;
+  cropperPanDown: string;
+  cropperPanRight: string;
+  cropperRestored: string;
+  cropperZoomStatus: string;
+  cropperRotated: string;
+  cropperNotImage: string;
+  cropperLoadError: string;
+  cropperFailed: string;
+  cropperSmall: string;
+  cropperApplied: string;
 }
 
 export const defaultMessages: Messages = {
@@ -533,6 +565,39 @@ export const defaultMessages: Messages = {
   timeEmpty: 'Nenhum horário disponível.',
   // Banner
   bannerClose: 'Fechar aviso',
+  imageUnavailable: 'Imagem indisponível',
+  galleryTitle: 'Galeria de imagens',
+  galleryClose: 'Fechar',
+  galleryPrev: 'Imagem anterior',
+  galleryNext: 'Próxima imagem',
+  galleryCounter: '{current} de {total}',
+  cropperTitle: 'Ajustar foto',
+  cropperClose: 'Fechar',
+  cropperApply: 'Aplicar',
+  cropperCancel: 'Cancelar',
+  cropperArea: 'Área de corte',
+  cropperHint:
+    'Arraste a imagem para posicionar. Com o teclado: setas movem, + e - ampliam, R gira, 0 restaura.',
+  cropperControls: 'Controles da imagem',
+  cropperZoom: 'Zoom',
+  cropperZoomIn: 'Ampliar',
+  cropperZoomOut: 'Reduzir',
+  cropperRotate: 'Girar 90 graus',
+  cropperReset: 'Restaurar',
+  cropperPan: 'Mover imagem',
+  cropperPanLeft: 'Mover para a esquerda',
+  cropperPanUp: 'Mover para cima',
+  cropperPanDown: 'Mover para baixo',
+  cropperPanRight: 'Mover para a direita',
+  cropperRestored: 'Restaurado.',
+  cropperZoomStatus: 'Zoom {percent}%',
+  cropperRotated: 'Girada {degrees} graus',
+  cropperNotImage: 'Escolha um arquivo de imagem.',
+  cropperLoadError: 'Não foi possível abrir a imagem. Tente outro arquivo.',
+  cropperFailed: 'Não foi possível ajustar a imagem. Tente de novo.',
+  cropperApplied: 'Foto ajustada.',
+  cropperSmall:
+    'A imagem é menor que o tamanho final ({size} px): a foto pode ficar com pouca nitidez.',
 };
 
 export const DEFAULT_LOCALE = 'pt-BR';

@@ -188,6 +188,36 @@ const eventos: Record<string, readonly Evento[]> = {
       detail: '{ id }: o id de data-eds-banner (ou null).',
     },
   ],
+  'Imagem, galeria e corte de foto': [
+    { name: 'eds:image-load', on: '.eds-image', detail: '{ src }: a imagem carregou.' },
+    { name: 'eds:image-error', on: '.eds-image', detail: '{ src }: a imagem falhou.' },
+    {
+      name: 'eds:gallery-open',
+      on: '[data-eds-gallery]',
+      detail: '{ index, total, trigger }: o visualizador abriu.',
+    },
+    {
+      name: 'eds:gallery-change',
+      on: '[data-eds-gallery]',
+      detail: '{ index, total, src }: a imagem mostrada mudou.',
+    },
+    {
+      name: 'eds:gallery-close',
+      on: '[data-eds-gallery]',
+      detail: '{ index, total }: o visualizador fechou na última imagem vista.',
+    },
+    {
+      name: 'eds:cropper-apply',
+      on: 'input[data-eds-cropper]',
+      detail:
+        '{ file, blob, crop: { x, y, width, height, rotation }, width, height }: o arquivo já cortado, também no input.files.',
+    },
+    {
+      name: 'eds:cropper-cancel',
+      on: 'input[data-eds-cropper]',
+      detail: '{ file }: o ajuste foi cancelado; o campo volta ao arquivo aceito antes.',
+    },
+  ],
 };
 
 export default function EventosPage() {

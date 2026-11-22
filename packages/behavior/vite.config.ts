@@ -13,6 +13,7 @@ export default defineConfig({
         'theme-entry': 'src/theme-entry.ts',
         'fields-entry': 'src/fields-entry.ts',
         'format-entry': 'src/format-entry.ts',
+        'image-entry': 'src/image-entry.ts',
         // Um gerador por formato, para o @efds-ui/react carregar sob demanda.
         'export/formats/csv': 'src/export/formats/csv.ts',
         'export/formats/json': 'src/export/formats/json.ts',

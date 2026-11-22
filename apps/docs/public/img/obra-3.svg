@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Paisagem fictícia 3">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d7f0d6"/><stop offset="1" stop-color="#ffffff"/></linearGradient></defs>
+  <rect width="1600" height="900" fill="url(#g)"/>
+  <circle cx="960" cy="250" r="106" fill="#7fc17c" opacity="0.85"/>
+  <path d="M0 640 L260 380 L470 560 L700 300 L980 600 L1240 360 L1600 650 L1600 900 L0 900 Z" fill="#7fc17c"/>
+  <path d="M0 740 L300 520 L560 700 L860 480 L1180 720 L1600 560 L1600 900 L0 900 Z" fill="#2e7d32"/>
+</svg>

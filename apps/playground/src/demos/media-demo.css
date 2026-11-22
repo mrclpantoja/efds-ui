@@ -1,0 +1,68 @@
+/* Aparência só da demonstração de imagem (Image, Figure, Gallery, Lightbox, Cropper); o visual vem do core. */
+.md-section {
+  display: grid;
+  gap: var(--eds-space-4);
+  padding-block: var(--eds-space-6);
+  border-block-start: 1px solid var(--eds-color-border-default);
+}
+
+.md-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--eds-space-4);
+  align-items: start;
+}
+
+.md-frame {
+  display: grid;
+  gap: var(--eds-space-2);
+  min-inline-size: 0;
+}
+
+.md-frame-wide {
+  grid-column: 1 / -1;
+}
+
+.md-caption {
+  margin: 0;
+  color: var(--eds-color-text-secondary);
+  font-size: var(--eds-font-size-small);
+  line-height: var(--eds-line-height-small);
+}
+
+/* Contêiner estreito para mostrar o fallback só com o ícone. */
+.md-narrow {
+  inline-size: 6rem;
+}
+
+/* O <dialog open> do lightbox fora da top layer: no fluxo e com altura fixa para a demonstração. */
+.md-lightbox-frame {
+  inline-size: 100%;
+  max-inline-size: 60rem;
+}
+
+.md-lightbox-frame.md-lightbox-narrow {
+  max-inline-size: 22rem;
+}
+
+.md-lightbox-frame > .eds-lightbox {
+  position: static;
+  inset: auto;
+  inline-size: 100%;
+  block-size: 30rem;
+  margin: 0;
+  border-radius: var(--eds-radius-lg);
+}
+
+.md-modal-frame {
+  display: grid;
+  max-inline-size: 28rem;
+}
+
+.md-modal-frame > .eds-modal {
+  position: static;
+  inset: auto;
+  margin: 0;
+  inline-size: 100%;
+  border-radius: var(--eds-radius-lg);
+}

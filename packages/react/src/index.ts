@@ -386,3 +386,27 @@ export type {
 } from './components/CommandPalette';
 export { Agenda } from './components/Agenda';
 export type { AgendaEvent, AgendaProps, AgendaTexts, AgendaTone } from './components/Agenda';
+export { Image, Figure } from './components/Image';
+export type {
+  FigureProps,
+  ImageFit,
+  ImageProps,
+  ImageRatio,
+  ImageSourceProp,
+  ImageTexts,
+} from './components/Image';
+export { Gallery } from './components/Gallery';
+export type { GalleryItem, GalleryProps, GalleryTexts } from './components/Gallery';
+export { ImageCropper, ImageCropperDialog, AvatarUpload } from './components/ImageCropper';
+export type {
+  AvatarUploadProps,
+  AvatarUploadTexts,
+  ImageCropperDialogProps,
+  ImageCropperDialogTexts,
+  ImageCropperHandle,
+  ImageCropperOutput,
+  ImageCropperProps,
+  ImageCropperShape,
+  ImageCropperTexts,
+} from './components/ImageCropper';
+export type { Crop as ImageCrop, CropState as ImageCropState } from '@efds-ui/behavior/image';

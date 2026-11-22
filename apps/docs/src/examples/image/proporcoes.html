@@ -1,0 +1,50 @@
+<!-- A proporção reserva o espaço antes da imagem carregar (sem salto de layout).
+     Sem classe de proporção vale a proporção da própria imagem. -->
+<div class="eds-stack eds-stack-row eds-stack-wrap eds-stack-align-start eds-gap-3">
+  <div class="eds-image eds-image-ratio-1x1" data-state="loading">
+    <img
+      src="/img/obra-1.svg"
+      alt="Paisagem fictícia em tons de azul"
+      loading="lazy"
+      decoding="async"
+    />
+    <span class="eds-image-fallback">
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        width="1em"
+        height="1em"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM3 16l5-5 4 4 3-3 6 6M9 9h.01"
+        />
+      </svg>
+      <span>Imagem indisponível</span>
+    </span>
+  </div>
+  <div class="eds-image eds-image-ratio-16x9" data-state="loading">
+    <img
+      src="/img/obra-2.svg"
+      alt="Paisagem fictícia em tons de laranja"
+      loading="lazy"
+      decoding="async"
+    />
+    <span class="eds-image-fallback"><span>Imagem indisponível</span></span>
+  </div>
+  <div class="eds-image eds-image-ratio-4x3 eds-image-contain" data-state="loading">
+    <img
+      src="/img/retrato.svg"
+      alt="Retrato fictício mostrado inteiro"
+      loading="lazy"
+      decoding="async"
+    />
+    <span class="eds-image-fallback"><span>Imagem indisponível</span></span>
+  </div>
+  <div class="eds-image eds-image-ratio-1x1 eds-image-circle" data-state="loading">
+    <img src="/img/retrato.svg" alt="Retrato fictício em círculo" loading="lazy" decoding="async" />
+    <span class="eds-image-fallback"><span>Imagem indisponível</span></span>
+  </div>
+</div>

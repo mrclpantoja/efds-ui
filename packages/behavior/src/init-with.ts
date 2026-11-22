@@ -29,6 +29,7 @@ import { otpBehavior } from './components/otp';
 import { passwordBehavior } from './components/password';
 // Onda D
 import { avatarBehavior } from './components/avatar';
+import { imageBehavior } from './components/image';
 import { bannerBehavior } from './components/banner';
 import { timepickerBehavior } from './components/timepicker';
 import { conditionalBehavior } from './components/conditional';
@@ -84,6 +85,8 @@ export function initWith(
       conditionalBehavior,
       // Onda D
       avatarBehavior,
+      // Imagem com estado de carregamento
+      imageBehavior,
       bannerBehavior,
       timepickerBehavior,
       // Os que só entram na compilação completa (exportação, máscara, CEP e formatadores)

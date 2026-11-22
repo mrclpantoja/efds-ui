@@ -1,0 +1,303 @@
+/* ImageCropper (corte de avatar/foto): só a aparência; o JS escreve as variáveis de posição.
+   Markup:
+     <div class="eds-cropper" data-shape-crop="circle">                        (circle | rect)
+       <div class="eds-cropper-stage" tabindex="0" role="group" aria-label="Área de corte"
+            aria-describedby="dica">
+         <img class="eds-cropper-image" src="blob:…" alt="" />
+         <div class="eds-cropper-frame" aria-hidden="true"></div>
+       </div>
+       <p class="eds-cropper-hint eds-text-small" id="dica">Arraste ou use as setas…</p>
+       <div class="eds-cropper-controls">
+         botões .eds-button-ghost .eds-button-icon, <input class="eds-cropper-zoom" type="range" … />
+         <div class="eds-cropper-pan" role="group" aria-label="Mover imagem">  (WCAG 2.5.7: quatro botões
+           [data-eds-cropper-action="pan-left|pan-up|pan-down|pan-right"] .eds-button-sm, sem arrastar)
+       </div>
+     </div>
+   - Variáveis escritas pelo JS (no .eds-cropper, no stage ou na imagem; todas com valor padrão):
+       --_cropper-x, --_cropper-y   deslocamento COM unidade (ex.: 12px)
+       --_cropper-scale             número (1 = a imagem inteira dentro do stage, "contain")
+       --_cropper-rotate            ângulo COM unidade (ex.: 90deg)
+       --_cropper-aspect            largura / altura do corte, número (padrão 1; no círculo vale 1)
+     A imagem preenche o stage com object-fit: contain e recebe
+     translate(x, y) rotate(r) scale(s) a partir do centro; o JS decide o zoom mínimo para cobrir a janela.
+   - Janela (.eds-cropper-frame): 80% do menor lado do stage, centralizada, na proporção do corte.
+     Fora dela escurece (bg-overlay em box-shadow gigante); borda dupla (text-primary + bg-surface) para
+     aparecer sobre qualquer foto, nos dois modos. Círculo = raio 50%. Guias de terços só no retângulo,
+     visíveis durante o arrasto ([data-dragging] no .eds-cropper ou no stage) e com foco no stage.
+   - Stage: quadrado, touch-action: none, cursor grab/grabbing, foco visível (anel global).
+     .eds-cropper-checker no stage liga o xadrez sutil (transparência de PNG).
+   - Cabe a 320px (largura 100%; fora do diálogo limitada a 70dvh, no diálogo a altura é do modal). Não imprime. A prévia usa .eds-avatar. */
+@layer eds.components {
+  .eds-cropper {
+    --_cropper-gap: var(--eds-space-3);
+    --_cropper-frame-size: 80%;
+    --_cropper-mask: var(--eds-color-bg-overlay);
+
+    display: grid;
+    gap: var(--_cropper-gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  .eds-cropper-stage {
+    --_stage-bg: var(--eds-color-bg-subtle);
+    --_stage-check: color-mix(in srgb, var(--eds-color-text-primary) 6%, transparent);
+    --_stage-radius: var(--eds-radius-md);
+    --_cropper-guides: 0;
+
+    position: relative;
+    display: grid;
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: min(100%, 70dvh);
+    aspect-ratio: 1;
+    margin-inline: auto;
+    overflow: hidden;
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--_stage-radius);
+    background: var(--_stage-bg);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+
+    &[data-dragging],
+    :where(.eds-cropper[data-dragging]) & {
+      --_cropper-guides: 1;
+
+      cursor: grabbing;
+    }
+
+    &:focus-visible {
+      --_cropper-guides: 1;
+
+      /* Dentro de overflow:hidden o anel externo seria cortado pelo pai: vai para dentro. */
+      outline-offset: calc(-1 * var(--eds-focus-ring-width));
+    }
+  }
+
+  /* Xadrez sutil para imagens com transparência. */
+  .eds-cropper-checker {
+    --_check-size: var(--eds-space-4);
+
+    background:
+      conic-gradient(
+          var(--_stage-check) 25%,
+          transparent 0 50%,
+          var(--_stage-check) 0 75%,
+          transparent 0
+        )
+        0 0 / calc(var(--_check-size) * 2) calc(var(--_check-size) * 2),
+      var(--_stage-bg);
+  }
+
+  .eds-cropper-image {
+    grid-area: 1 / 1;
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: none;
+    object-fit: contain;
+    transform-origin: center;
+    transform: translate(var(--_cropper-x, 0), var(--_cropper-y, 0))
+      rotate(var(--_cropper-rotate, 0deg)) scale(var(--_cropper-scale, 1));
+    will-change: transform;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .eds-cropper-frame {
+    position: relative;
+    grid-area: 1 / 1;
+    box-sizing: border-box;
+    inline-size: calc(var(--_cropper-frame-size) * min(1, var(--_cropper-aspect, 1)));
+    aspect-ratio: var(--_cropper-aspect, 1);
+    border: var(--eds-border-width-strong) solid var(--eds-color-text-primary);
+    border-radius: 0;
+    /* Máscara: sombra imensa (cortada pelo stage) escurece tudo fora da janela; o anel interno claro
+       garante um segundo tom da borda. */
+    box-shadow:
+      0 0 0 100vmax var(--_cropper-mask),
+      inset 0 0 0 var(--eds-border-width) var(--eds-color-bg-surface);
+    pointer-events: none;
+
+    /* Guias de terços (regra dos terços): quatro fios finos em gradiente. */
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(
+          90deg,
+          transparent calc(100% / 3 - var(--eds-border-width) / 2),
+          var(--eds-color-bg-surface) 0 calc(100% / 3 + var(--eds-border-width) / 2),
+          transparent 0 calc(200% / 3 - var(--eds-border-width) / 2),
+          var(--eds-color-bg-surface) 0 calc(200% / 3 + var(--eds-border-width) / 2),
+          transparent 0
+        ),
+        linear-gradient(
+          180deg,
+          transparent calc(100% / 3 - var(--eds-border-width) / 2),
+          var(--eds-color-bg-surface) 0 calc(100% / 3 + var(--eds-border-width) / 2),
+          transparent 0 calc(200% / 3 - var(--eds-border-width) / 2),
+          var(--eds-color-bg-surface) 0 calc(200% / 3 + var(--eds-border-width) / 2),
+          transparent 0
+        );
+      opacity: calc(var(--_cropper-guides, 0) * 0.6);
+      transition: opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+  }
+
+  /* Círculo: janela redonda, sem guias. */
+  .eds-cropper[data-shape-crop='circle'] .eds-cropper-frame {
+    --_cropper-aspect: 1;
+
+    border-radius: 50%;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  .eds-cropper-hint {
+    margin: 0;
+    color: var(--eds-color-text-secondary);
+  }
+
+  .eds-cropper-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2);
+  }
+
+  /* Mover sem arrastar (2.5.7): quatro botões numa linha compacta que quebra com os controles. */
+  .eds-cropper-pan {
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+  }
+
+  /* Zoom: range nativo com trilho e polegar por token. */
+  .eds-cropper-zoom {
+    --_zoom-track: var(--eds-space-1);
+    --_zoom-thumb: var(--eds-icon-size-md);
+    --_zoom-track-bg: var(--eds-color-border-strong);
+    --_zoom-thumb-bg: var(--eds-color-action-primary);
+    --_zoom-thumb-ring: var(--eds-color-bg-surface);
+
+    flex: 1 1 8rem;
+    inline-size: 100%;
+    min-inline-size: 6rem;
+    block-size: var(--eds-control-height-md);
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    accent-color: var(--eds-color-action-primary);
+
+    &::-webkit-slider-runnable-track {
+      block-size: var(--_zoom-track);
+      border-radius: var(--eds-radius-full);
+      background: var(--_zoom-track-bg);
+    }
+
+    &::-moz-range-track {
+      block-size: var(--_zoom-track);
+      border-radius: var(--eds-radius-full);
+      background: var(--_zoom-track-bg);
+    }
+
+    &::-webkit-slider-thumb {
+      box-sizing: border-box;
+      inline-size: var(--_zoom-thumb);
+      block-size: var(--_zoom-thumb);
+      margin-block-start: calc((var(--_zoom-track) - var(--_zoom-thumb)) / 2);
+      border: var(--eds-border-width-strong) solid var(--_zoom-thumb-ring);
+      border-radius: var(--eds-radius-full);
+      background: var(--_zoom-thumb-bg);
+      box-shadow: var(--eds-shadow-xs);
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    &::-moz-range-thumb {
+      box-sizing: border-box;
+      inline-size: var(--_zoom-thumb);
+      block-size: var(--_zoom-thumb);
+      border: var(--eds-border-width-strong) solid var(--_zoom-thumb-ring);
+      border-radius: var(--eds-radius-full);
+      background: var(--_zoom-thumb-bg);
+      box-shadow: var(--eds-shadow-xs);
+    }
+
+    &:hover:not(:disabled) {
+      --_zoom-thumb-bg: var(--eds-color-action-primary-hover);
+    }
+
+    &:active:not(:disabled) {
+      --_zoom-thumb-bg: var(--eds-color-action-primary-active);
+    }
+
+    &:disabled {
+      --_zoom-thumb-bg: var(--eds-color-text-muted);
+      --_zoom-track-bg: var(--eds-color-border-default);
+
+      cursor: not-allowed;
+    }
+
+    /* Toque: a faixa inteira vira alvo de ao menos --eds-target-min de altura. */
+    @media (pointer: coarse) {
+      block-size: var(--eds-target-min);
+    }
+  }
+
+  /* Dentro de um diálogo o palco divide a altura com título, dica, controles e rodapé: com 70dvh
+     o zoom e o girar ficavam abaixo da dobra (a 1024x768, cortados). 50dvh deixa tudo à vista. */
+  .eds-modal .eds-cropper-stage {
+    inline-size: min(100%, 50dvh);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-cropper-frame::after {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-cropper-stage {
+      border-color: CanvasText;
+    }
+
+    /* A sombra de máscara some em cores forçadas: a janela fica só com a borda. */
+    .eds-cropper-frame {
+      border-color: Highlight;
+      box-shadow: none;
+      outline: var(--eds-border-width) solid CanvasText;
+    }
+
+    .eds-cropper-frame::after {
+      background-image: none;
+    }
+
+    .eds-cropper-zoom {
+      --_zoom-track-bg: ButtonText;
+      --_zoom-thumb-bg: ButtonText;
+      --_zoom-thumb-ring: ButtonFace;
+
+      &:disabled {
+        --_zoom-track-bg: GrayText;
+        --_zoom-thumb-bg: GrayText;
+      }
+    }
+  }
+
+  @media print {
+    .eds-cropper {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="Retrato fictício">
+  <rect width="1200" height="900" fill="#dfe9f5"/>
+  <circle cx="600" cy="360" r="170" fill="#8aa6c8"/>
+  <path d="M220 900 C220 640 400 560 600 560 C800 560 980 640 980 900 Z" fill="#5f7fa8"/>
+</svg>

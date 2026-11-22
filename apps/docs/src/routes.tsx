@@ -13,6 +13,8 @@ import type { ComponentType } from 'react';
 import ButtonPage from './pages/componentes/Button';
 import TabsPage from './pages/componentes/Tabs';
 import EditorPage from './pages/componentes/Editor';
+import TemplatesPage from './pages/templates/Templates';
+import LicencaTemplatesPage from './pages/templates/Licenca';
 import AcessibilidadePage from './pages/comecar/Acessibilidade';
 import EventosPage from './pages/comecar/Eventos';
 import ExportacaoPage from './pages/comecar/Exportacao';
@@ -101,7 +103,7 @@ import GalleryPage from './pages/componentes/Gallery';
 import ImagePage from './pages/componentes/Image';
 import ImageCropperPage from './pages/componentes/ImageCropper';
 
-export type SectionId = 'comecar' | 'fundamentos' | 'componentes';
+export type SectionId = 'comecar' | 'fundamentos' | 'componentes' | 'templates';
 
 export interface DocRoute {
   /** Caminho do hash, com barra inicial (`/componentes/button`). */
@@ -117,6 +119,7 @@ export const sections: readonly { id: SectionId; title: string }[] = [
   { id: 'comecar', title: 'Começar' },
   { id: 'fundamentos', title: 'Fundamentos' },
   { id: 'componentes', title: 'Componentes' },
+  { id: 'templates', title: 'Templates' },
 ];
 
 export const routes: readonly DocRoute[] = [
@@ -424,6 +427,14 @@ export const routes: readonly DocRoute[] = [
   { path: '/componentes/textarea', title: 'Textarea', section: 'componentes', page: TextareaPage },
   { path: '/componentes/tooltip', title: 'Tooltip', section: 'componentes', page: TooltipPage },
   { path: '/componentes/toast', title: 'Toast', section: 'componentes', page: ToastPage },
+  // Templates
+  { path: '/templates', title: 'Templates', section: 'templates', page: TemplatesPage },
+  {
+    path: '/templates/licenca',
+    title: 'Licença dos templates',
+    section: 'templates',
+    page: LicencaTemplatesPage,
+  },
 ];
 
 export function findRoute(path: string): DocRoute | undefined {

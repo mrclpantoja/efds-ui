@@ -8,6 +8,8 @@ const fromSource = (path: string) => fileURLToPath(new URL(path, import.meta.url
 export default defineConfig({
   plugins: [react()],
   // IPv4 explícito: o Firefox resolve localhost para 127.0.0.1 e o padrão do Vite escuta só em ::1.
+  // Caminhos relativos: a demonstração é publicada em subpasta do site.
+  base: './',
   server: { host: '127.0.0.1', port: 5303 },
   resolve: {
     alias: [

@@ -3,6 +3,4 @@ dist
 coverage
 pnpm-lock.yaml
 documentos do projeto
-.claude
-CLAUDE.md
 apps/docs/src/examples/**/*.html

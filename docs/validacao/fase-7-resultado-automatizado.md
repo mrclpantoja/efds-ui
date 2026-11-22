@@ -289,4 +289,4 @@ Não são falhas; servem para atualizar o roteiro ou `comportamento.md`.
 
 ## Próximos passos
 
-Nenhum nesta fase: as correções F-001 a F-011 estão aplicadas e as sessões manuais foram concluídas. O que falta para a 0.1.0 está no `CLAUDE.md` da raiz (nome no npm e publicação).
+Nenhum nesta fase: as correções F-001 a F-011 estão aplicadas e as sessões manuais foram concluídas. O que falta para a 0.1.0 está nas notas do projeto (nome no npm e publicação).

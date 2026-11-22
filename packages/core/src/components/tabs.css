@@ -5,7 +5,7 @@
  * Sem JS (HTML puro) NÃO prometa o padrão tablist: o contrato exige o comportamento de roving tabindex/setas
  * fornecido por JavaScript; sem ele, use links/âncoras ou seções comuns em vez de role=tablist.
  * O CSS só estiliza. Roving tabindex (tabindex=0 na ativa, -1 nas demais), setas e Home/End são
- * JavaScript: em HTML puro dependem da decisão em aberto sobre JS para quem usa só HTML (CLAUDE.md);
+ * JavaScript: em HTML puro dependem da decisão em aberto sobre JS para quem usa só HTML (notas do projeto);
  * a referência do contrato está em apps/playground/src/demos/NavigationDemo.tsx.
  * Variante: .eds-tabs-fill (abas dividem a largura). Sem barra de rolagem pesada: a tablist rola na horizontal.
  */

@@ -21,8 +21,8 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
     "test": "pnpm -r test",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore --ignore-path .git/info/exclude",
+    "format:check": "prettier --check . --ignore-path .gitignore --ignore-path .prettierignore --ignore-path .git/info/exclude"
   },
   "devDependencies": {
     "@efds-ui/eslint-config": "workspace:*",

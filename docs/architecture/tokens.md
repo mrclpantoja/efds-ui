@@ -1,6 +1,6 @@
 # Arquitetura de tokens — formato e pipeline
 
-Regras de conteúdo (níveis, nomenclatura, valores): skill `.claude/skills/eds-tokens/SKILL.md`. Este documento define **onde** os tokens vivem e **como** viram CSS.
+Regras de conteúdo (níveis, nomenclatura, valores): guia interno de tokens. Este documento define **onde** os tokens vivem e **como** viram CSS.
 
 ## Fonte: JSON
 

@@ -196,3 +196,7 @@ O markup é o contrato do core (`.eds-*`); o pacote detecta por classes e ARIA. 
 ## Scripts
 
 `pnpm build` (ESM + `.d.ts` + IIFE) · `pnpm typecheck` · `pnpm test`.
+
+## Quem mantém
+
+Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).

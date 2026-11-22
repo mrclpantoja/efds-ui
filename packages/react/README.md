@@ -32,6 +32,10 @@ O pacote **não importa CSS**. Assim você escolhe o `index.css` completo ou a i
 
 O efDS.ui usa Inter; carregue-a no seu app.
 
+## Quem mantém
+
+Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).
+
 ## Documentação
 
 - [Uso com React](https://efds-ui.com.br/#/comecar/uso-com-react)

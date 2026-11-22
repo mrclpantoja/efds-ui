@@ -48,6 +48,10 @@ Valores disponíveis: `theme-{blue,green,purple,orange,neutral}`, `mode-{light,d
 
 A fonte Inter fica por conta do consumidor.
 
+## Quem mantém
+
+Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).
+
 ## Documentação
 
 - [Temas e eixos](https://efds-ui.com.br/#/fundamentos/temas-e-eixos)

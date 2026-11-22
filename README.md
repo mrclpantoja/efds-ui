@@ -56,3 +56,7 @@ Os pacotes `@efds-ui/core`, `themes`, `react`, `icons`, `behavior` e `editor` es
 Nos pacotes de CSS (`core`, `themes`), o `package.json` do repositório mantém a condição `development` (aponta para `src`, útil no monorepo); o tarball a remove via `publishConfig.exports` e leva só `dist/`. O `@efds-ui/react` não importa CSS: o consumidor importa o do core.
 
 Dependências: `core` <- `themes`, `core` <- `react` <- `icons`, `behavior` (só `@efds-ui/behavior/export`) <- `react`; `behavior` não depende de nenhum pacote.
+
+## Quem mantém
+
+Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/), consultoria em tecnologia da informação e transformação digital de Macapá (AP), que atua com órgãos públicos e empresas privadas.

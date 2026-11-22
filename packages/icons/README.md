@@ -24,6 +24,10 @@ import { SearchIcon } from '@efds-ui/icons';
 
 Exports nomeados: só os ícones importados entram no bundle (`sideEffects: false`).
 
+## Quem mantém
+
+Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).
+
 ## Documentação
 
 - [Uso com React](https://efds-ui.com.br/#/comecar/uso-com-react)

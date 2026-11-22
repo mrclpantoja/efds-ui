@@ -40,3 +40,7 @@ import { Editor } from '@efds-ui/editor/react';
 ## Segurança
 
 **Sanitize o HTML no servidor antes de gravar e de exibir.** A limpeza do navegador (`sanitizeHtml`) não é fronteira de confiança.
+
+## Quem mantém
+
+Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).

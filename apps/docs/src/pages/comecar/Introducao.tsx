@@ -1,6 +1,7 @@
 import { Card, CardBody, CardHeader, CardTitle, Grid, GridItem } from '@efds-ui/react';
 import { Section } from '../../components/Section';
 import { toHref } from '../../router';
+import { VERSION } from '../../cdn';
 
 const packages = [
   {
@@ -108,10 +109,25 @@ export default function Introducao() {
 
       <Section title="Estado do projeto">
         <p>
-          Versão atual: <strong>0.1.0</strong>, publicada no npm sob o escopo{' '}
+          Versão atual: <strong>{VERSION}</strong>, publicada no npm sob o escopo{' '}
           <a href="https://www.npmjs.com/org/efds-ui">@efds-ui</a> (veja{' '}
           <a href={toHref('/comecar/instalacao')}>Instalação</a>). A API pode mudar até a 1.0. Todos
           os dados de exemplo são fictícios.
+        </p>
+      </Section>
+
+      <Section title="Quem mantém">
+        <p>
+          O efDS.ui é desenvolvido e mantido pela{' '}
+          <a href="https://innovationtech.com.br/">Innovation Tech</a>, empresa de consultoria em
+          tecnologia da informação e transformação digital sediada em Macapá (AP). A Innovation Tech
+          atua com órgãos públicos e empresas privadas em gestão pública digital, inovação de
+          processos, inteligência artificial e automação, com foco em governança, qualidade e
+          transparência.
+        </p>
+        <p>
+          O design system nasceu dessa experiência com sistemas administrativos: telas densas,
+          formulários longos, tabelas e exigências de acessibilidade e de proteção de dados (LGPD).
         </p>
       </Section>
 

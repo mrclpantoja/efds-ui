@@ -46,6 +46,10 @@ import '@efds-ui/core/components/button.css'; // um componente
 
 O core não carrega fonte. A tipografia usa Inter: carregue-a no seu app (por exemplo `@fontsource-variable/inter`).
 
+## Quem mantém
+
+Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).
+
 ## Documentação
 
 - [Tokens](https://efds-ui.com.br/#/fundamentos/tokens)

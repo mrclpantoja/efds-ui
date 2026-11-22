@@ -7,6 +7,7 @@ import {
   CardTitle,
   Grid,
   GridItem,
+  Image,
 } from '@efds-ui/react';
 import { Section } from '../../components/Section';
 import { toHref } from '../../router';
@@ -74,6 +75,13 @@ export default function Templates() {
           {templates.map((t) => (
             <GridItem key={t.id} span={12} spanMd={6} spanLg={4}>
               <Card>
+                <Image
+                  src={`img/templates/${t.id}.png`}
+                  alt={`Tela inicial do template ${t.name}`}
+                  width={1280}
+                  height={800}
+                  loading="lazy"
+                />
                 <CardHeader>
                   <CardTitle level={3}>{t.name}</CardTitle>
                 </CardHeader>

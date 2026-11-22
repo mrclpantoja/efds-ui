@@ -116,6 +116,12 @@
     border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
   }
 
+  /* Seções seguintes separadas por filete: o título não se confunde com um item. */
+  .eds-sidebar-section + .eds-sidebar-section {
+    border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
+  }
+
+  /* Rótulo de grupo, não link: caixa alta pequena, espaçada e esmaecida. */
   .eds-sidebar-section-title {
     margin: 0;
     padding-block: var(--eds-space-1);
@@ -125,6 +131,8 @@
     font-size: var(--eds-font-size-small);
     font-weight: var(--eds-font-weight-semibold);
     line-height: var(--eds-line-height-small);
+    letter-spacing: var(--eds-letter-spacing-caps);
+    text-transform: uppercase;
     white-space: nowrap;
     opacity: var(--_sidebar-text);
   }

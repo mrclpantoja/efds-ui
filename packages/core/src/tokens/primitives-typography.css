@@ -27,5 +27,6 @@
     --eds-font-weight-400: 400;
     --eds-font-weight-500: 500;
     --eds-font-weight-600: 600;
+    --eds-letter-spacing-wide: 0.06em;
   }
 }

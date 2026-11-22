@@ -23,5 +23,6 @@
   "line-height-48": "3rem",
   "font-weight-400": "400",
   "font-weight-500": "500",
-  "font-weight-600": "600"
+  "font-weight-600": "600",
+  "letter-spacing-wide": "0.06em"
 }

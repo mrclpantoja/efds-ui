@@ -28,5 +28,6 @@
     --eds-line-height-body: var(--eds-line-height-20);
     --eds-line-height-label: var(--eds-line-height-18);
     --eds-line-height-small: var(--eds-line-height-16);
+    --eds-letter-spacing-caps: var(--eds-letter-spacing-wide);
   }
 }

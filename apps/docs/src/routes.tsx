@@ -103,7 +103,20 @@ import GalleryPage from './pages/componentes/Gallery';
 import ImagePage from './pages/componentes/Image';
 import ImageCropperPage from './pages/componentes/ImageCropper';
 
-export type SectionId = 'comecar' | 'fundamentos' | 'componentes' | 'templates';
+export type SectionId =
+  | 'comecar'
+  | 'fundamentos'
+  | 'templates'
+  | 'acoes'
+  | 'formularios'
+  | 'datas'
+  | 'navegacao'
+  | 'superficies'
+  | 'feedback'
+  | 'dados'
+  | 'midia'
+  | 'pagina'
+  | 'componentes';
 
 export interface DocRoute {
   /** Caminho do hash, com barra inicial (`/componentes/button`). */
@@ -118,11 +131,105 @@ export interface DocRoute {
 export const sections: readonly { id: SectionId; title: string }[] = [
   { id: 'comecar', title: 'Começar' },
   { id: 'fundamentos', title: 'Fundamentos' },
-  { id: 'componentes', title: 'Componentes' },
   { id: 'templates', title: 'Templates' },
+  { id: 'acoes', title: 'Ações' },
+  { id: 'formularios', title: 'Formulários' },
+  { id: 'datas', title: 'Datas e horários' },
+  { id: 'navegacao', title: 'Navegação e estrutura' },
+  { id: 'superficies', title: 'Superfícies e sobreposições' },
+  { id: 'feedback', title: 'Feedback' },
+  { id: 'dados', title: 'Dados e exibição' },
+  { id: 'midia', title: 'Imagem' },
+  { id: 'pagina', title: 'Comportamentos de página' },
 ];
 
-export const routes: readonly DocRoute[] = [
+/** Categoria de cada página de componente (o caminho continua em /componentes/...). */
+const componentCategory: Record<string, SectionId> = {
+  ...Object.fromEntries(['button', 'button-group', 'dropdown', 'copy'].map((s) => [s, 'acoes'])),
+  ...Object.fromEntries(
+    [
+      'field',
+      'fieldset',
+      'input',
+      'textarea',
+      'select',
+      'checkbox',
+      'radio',
+      'switch',
+      'segmented',
+      'input-group',
+      'password',
+      'otp',
+      'combobox',
+      'multi-select',
+      'lookup',
+      'cep',
+      'file-input',
+      'file-upload',
+      'editor',
+    ].map((s) => [s, 'formularios']),
+  ),
+  ...Object.fromEntries(
+    ['date-input', 'date-picker', 'date-range-picker', 'time-picker', 'agenda'].map((s) => [
+      s,
+      'datas',
+    ]),
+  ),
+  ...Object.fromEntries(
+    [
+      'app-shell',
+      'sidebar',
+      'navbar',
+      'page-header',
+      'breadcrumb',
+      'tabs',
+      'pagination',
+      'stepper',
+      'command',
+    ].map((s) => [s, 'navegacao']),
+  ),
+  ...Object.fromEntries(
+    ['card', 'accordion', 'divider', 'modal', 'drawer', 'popover', 'tooltip'].map((s) => [
+      s,
+      'superficies',
+    ]),
+  ),
+  ...Object.fromEntries(
+    [
+      'alert',
+      'banner',
+      'toast',
+      'dialogos',
+      'page-loader',
+      'spinner',
+      'skeleton',
+      'progress',
+      'empty-state',
+      'error-state',
+      'notifications',
+    ].map((s) => [s, 'feedback']),
+  ),
+  ...Object.fromEntries(
+    [
+      'table',
+      'filter-bar',
+      'stat',
+      'description-list',
+      'timeline',
+      'badge',
+      'tag',
+      'avatar',
+      'tree',
+      'sortable',
+    ].map((s) => [s, 'dados']),
+  ),
+  ...Object.fromEntries(['image', 'gallery', 'image-cropper'].map((s) => [s, 'midia'])),
+  ...Object.fromEntries(
+    ['dirty-guard', 'session-timeout', 'conditional'].map((s) => [s, 'pagina']),
+  ),
+};
+
+const allRoutes: readonly DocRoute[] = [
   // Começar
   { path: '/', title: 'Introdução', section: 'comecar', page: Introducao },
   { path: '/comecar/instalacao', title: 'Instalação', section: 'comecar', page: Instalacao },
@@ -436,6 +543,24 @@ export const routes: readonly DocRoute[] = [
     page: LicencaTemplatesPage,
   },
 ];
+
+const collator = new Intl.Collator('pt-BR');
+
+/** Componentes vão para a sua categoria, em ordem alfabética dentro dela. */
+export const routes: readonly DocRoute[] = allRoutes
+  .map((r) =>
+    r.section === 'componentes'
+      ? { ...r, section: componentCategory[r.path.slice('/componentes/'.length)] ?? r.section }
+      : r,
+  )
+  .sort((a, b) => {
+    const sa = sections.findIndex((s) => s.id === a.section);
+    const sb = sections.findIndex((s) => s.id === b.section);
+    if (sa !== sb) return sa - sb;
+    return a.section === 'comecar' || a.section === 'fundamentos' || a.section === 'templates'
+      ? 0
+      : collator.compare(a.title, b.title);
+  });
 
 export function findRoute(path: string): DocRoute | undefined {
   return routes.find((route) => route.path === path);

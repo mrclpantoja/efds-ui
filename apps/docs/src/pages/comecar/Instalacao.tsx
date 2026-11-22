@@ -1,11 +1,17 @@
 import { Alert } from '@efds-ui/react';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Section } from '../../components/Section';
+import { cdn, cssTag, scriptTag, VERSION } from '../../cdn';
 import { toHref } from '../../router';
 
 const addPnpm = 'pnpm add @efds-ui/core @efds-ui/themes @efds-ui/react @efds-ui/icons';
 const addNpm = 'npm install @efds-ui/core @efds-ui/themes @efds-ui/react @efds-ui/icons';
 const addHtml = 'pnpm add @efds-ui/core @efds-ui/themes @efds-ui/behavior';
+const addEditor = 'pnpm add @efds-ui/editor';
+
+const cdnSnippet = `${cssTag(cdn.coreCss)}
+${cssTag(cdn.themesCss)}
+${scriptTag(cdn.behavior)}`;
 
 const importAll = `import '@efds-ui/core/index.css';    // tokens, base, layout e todos os componentes
 import '@efds-ui/themes/index.css';  // os eixos: tema, modo, densidade e forma`;
@@ -23,20 +29,18 @@ const htmlSnippet = `<html lang="pt-BR" data-theme="blue" data-mode="light" data
 export default function Instalacao() {
   return (
     <>
-      <Alert variant="warning" title="Pré-lançamento">
-        <p>
-          Os pacotes <code>@efds-ui/*</code> ainda não estão publicados no npm: os comandos abaixo
-          valem a partir da primeira publicação. Até lá, o uso é dentro do monorepo, com{' '}
-          <code>workspace:*</code>.
-        </p>
-      </Alert>
+      <p className="eds-text-body-lg">
+        Versão atual: <strong>{VERSION}</strong>, publicada no npm sob o escopo{' '}
+        <a href="https://www.npmjs.com/org/efds-ui">@efds-ui</a>, licença MIT. A API pode mudar até
+        a 1.0.
+      </p>
 
       <Section title="Instalar os pacotes">
         <p>
-          Cinco pacotes. <code>react</code> e <code>react-dom</code> (18 ou 19) são peer
-          dependencies de <code>@efds-ui/react</code> e <code>@efds-ui/icons</code>. Quem usa só
-          HTML instala <code>@efds-ui/core</code> e <code>@efds-ui/themes</code> (CSS) e, para o
-          comportamento de Tabs, Modal, Toast, Table, Combobox, DatePicker, FileUpload e PageLoader,{' '}
+          Seis pacotes. <code>react</code> e <code>react-dom</code> (18 ou 19) são peer dependencies
+          de <code>@efds-ui/react</code> e <code>@efds-ui/icons</code>. Quem usa só HTML instala{' '}
+          <code>@efds-ui/core</code> e <code>@efds-ui/themes</code> (CSS) e, para o comportamento de
+          Tabs, Modal, Toast, Table, Combobox, DatePicker, FileUpload e PageLoader,{' '}
           <code>@efds-ui/behavior</code> (JavaScript puro, sem dependências).
         </p>
         <CodeBlock code={addPnpm} label="Instalação com pnpm" />
@@ -47,6 +51,28 @@ export default function Instalacao() {
           por <code>&lt;script&gt;</code> ou por módulo.
         </p>
         <CodeBlock code={addHtml} label="Instalação para HTML puro" />
+        <p>
+          O editor de conteúdo é um pacote à parte (traz o ProseMirror); instale só se for usar.
+          Veja <a href={toHref('/componentes/editor')}>Editor de conteúdo</a>.
+        </p>
+        <CodeBlock code={addEditor} label="Instalação do editor" />
+      </Section>
+
+      <Section title="Usar por CDN (sem instalar)">
+        <p>
+          Os mesmos arquivos estão no jsDelivr (e no unpkg), com a versão fixada no endereço. O
+          atributo <code>integrity</code> faz o navegador recusar o arquivo se ele for alterado no
+          caminho.
+        </p>
+        <CodeBlock code={cdnSnippet} label="Código HTML: CSS e comportamento pelo CDN" />
+        <Alert variant="warning" title="CDN externo e LGPD">
+          <p>
+            Carregar do CDN envia o IP de quem acessa ao provedor do CDN. Em sistemas de órgão
+            público ou com dados pessoais, prefira servir os arquivos do seu próprio servidor:
+            instale pelo npm e copie o conteúdo de <code>dist/</code> de cada pacote para a sua
+            pasta de arquivos estáticos. O CDN é ótimo para protótipos e testes.
+          </p>
+        </Alert>
       </Section>
 
       <Section title="Importar o CSS">

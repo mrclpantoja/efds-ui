@@ -2,6 +2,7 @@ import { Alert } from '@efds-ui/react';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Example } from '../../components/Example';
 import { Section } from '../../components/Section';
+import { cdn, cssTag, scriptTag } from '../../cdn';
 import { toHref } from '../../router';
 import primeiroHtml from '../../examples/comecar/primeiro-componente.html?raw';
 
@@ -11,10 +12,10 @@ const pagina = `<!doctype html>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minha página</title>
-    <link rel="stylesheet" href="/caminho/para/@efds-ui/core/index.css" />
-    <link rel="stylesheet" href="/caminho/para/@efds-ui/themes/index.css" />
+${cssTag(cdn.coreCss, '    ')}
+${cssTag(cdn.themesCss, '    ')}
     <!-- Opcional: comportamento de Tabs, Modal, Toast, Table, Combobox, DatePicker, FileUpload... -->
-    <script src="/caminho/para/@efds-ui/behavior/dist/eds-behavior.js" defer></script>
+${scriptTag(cdn.behavior, '    ')}
   </head>
   <body>
     <main>
@@ -34,9 +35,9 @@ export default function UsoComHtml() {
 
       <Section title="Página mínima">
         <p>
-          Carregue o CSS do core e dos temas e declare os eixos no <code>html</code>. Em um projeto
-          com bundler, importe os mesmos arquivos (veja{' '}
-          <a href={toHref('/comecar/instalacao')}>Instalação</a>).
+          Carregue o CSS do core e dos temas e declare os eixos no <code>html</code>. O exemplo usa
+          o CDN; em produção, sirva os mesmos arquivos do seu servidor, ou importe-os num projeto
+          com bundler (veja <a href={toHref('/comecar/instalacao')}>Instalação</a>).
         </p>
         <CodeBlock code={pagina} label="Página HTML mínima" />
       </Section>

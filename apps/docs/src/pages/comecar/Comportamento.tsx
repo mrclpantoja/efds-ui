@@ -1,8 +1,14 @@
-import { Alert } from '@efds-ui/react';
 import { ClassTable } from '../../components/ClassTable';
 import { CodeBlock } from '../../components/CodeBlock';
 import { Section } from '../../components/Section';
+import { cdn, cssTag, scriptTag as tag } from '../../cdn';
 import { toHref } from '../../router';
+
+const scriptCdn = `${cssTag(cdn.coreCss)}
+${cssTag(cdn.themesCss)}
+
+<!-- No fim do <head>, com defer: liga tudo quando o DOM estiver pronto. -->
+${tag(cdn.behavior)}`;
 
 const scriptTag = `<link rel="stylesheet" href="/assets/eds/core/index.css" />
 <link rel="stylesheet" href="/assets/eds/themes/index.css" />
@@ -137,18 +143,10 @@ export default function Comportamento() {
         <a href={toHref('/comecar/uso-com-react')}>@efds-ui/react</a> já traz o mesmo comportamento.
       </p>
 
-      <Alert variant="warning" title="Pré-lançamento">
-        <p>
-          O pacote ainda não está publicado no npm (0.1.0, <code>private</code>). Os caminhos abaixo
-          (<code>/assets/eds/...</code>) são do seu projeto: copie o conteúdo de <code>dist/</code>{' '}
-          do pacote para lá, ou, depois da publicação, use o CDN ou o npm.
-        </p>
-      </Alert>
-
       <Section title="Instalar">
         <p>
           O pacote tem duas saídas: um <strong>script clássico</strong> (
-          <code>eds-behavior.js</code>, para <code>&lt;script src&gt;</code>, cerca de 72 kB com
+          <code>eds-behavior.js</code>, para <code>&lt;script src&gt;</code>, cerca de 88 kB com
           gzip, no pacote completo) e um <strong>módulo ESM</strong> tree-shakeable. O visual
           continua vindo do <code>@efds-ui/core</code>: o pacote não carrega CSS.
         </p>
@@ -160,7 +158,15 @@ export default function Comportamento() {
           Uma linha. Com <code>defer</code>, o pacote liga todos os componentes do documento quando
           o DOM está pronto e expõe <code>window.EDS</code>.
         </p>
-        <CodeBlock code={scriptTag} label="Código HTML: carregar o eds-behavior.js" />
+        <p>Pelo CDN, com a versão fixada e verificação de integridade:</p>
+        <CodeBlock code={scriptCdn} label="Código HTML: eds-behavior.js pelo CDN" />
+        <p>
+          Servindo do seu próprio servidor (recomendado em produção e em sistemas com dados
+          pessoais, para não enviar o IP de quem acessa a terceiros): instale com{' '}
+          <code>pnpm add @efds-ui/behavior</code> e copie o conteúdo de <code>dist/</code> para a
+          pasta de arquivos estáticos, por exemplo <code>/assets/eds/</code>.
+        </p>
+        <CodeBlock code={scriptTag} label="Código HTML: eds-behavior.js do seu servidor" />
         <CodeBlock code={scriptApi} label="Código JavaScript: window.EDS" />
         <p>
           Para ligar quando você quiser, marque a tag com <code>data-eds-manual</code>:
@@ -170,7 +176,7 @@ export default function Comportamento() {
           Quem não usa a exportação de tabelas, a máscara de entrada, o CEP, os formatadores nem o
           tema por cor pode carregar <code>eds-behavior-core.js</code>: é o mesmo script (mesmo{' '}
           <code>window.EDS</code>, mesmos atributos e a mesma configuração pela tag) sem esses cinco
-          recursos: cerca de 56 kB com gzip, contra 72 kB do completo. Nele,{' '}
+          recursos: cerca de 60 kB com gzip, contra 88 kB do completo. Nele,{' '}
           <code>data-eds-export</code>, <code>data-eds-mask</code>, <code>data-eds-cep</code>,{' '}
           <code>data-eds-format</code> e <code>data-eds-theme-color</code> não fazem nada, e{' '}
           <code>EDS.exportData</code> e <code>EDS.createMask</code> não existem. O NumberInput

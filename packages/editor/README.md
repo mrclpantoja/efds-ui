@@ -18,7 +18,7 @@ O visual vem do `@efds-ui/core` (`.eds-editor` e `.eds-prose`); este pacote só 
   rows="8"
   data-eds-editor="basic"
 ></textarea>
-<script src=".../@efds-ui/editor/dist/eds-editor.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@efds-ui/editor@0.1.0/dist/eds-editor.js" defer></script>
 ```
 
 O script liga os `textarea[data-eds-editor]` (e os que entrarem depois) e mescla a API em `window.EDS.editor`, sem apagar o `window.EDS` do `@efds-ui/behavior`, em qualquer ordem. `data-eds-manual` na tag desliga a ligação automática.

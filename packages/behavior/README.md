@@ -7,9 +7,14 @@ Comportamento interativo do efDS.ui em JavaScript puro (zero dependências), par
 ## Uso por `<script>` (CDN, PHP, Java, .NET)
 
 ```html
-<link rel="stylesheet" href=".../@efds-ui/core/dist/index.css" />
-<script src=".../@efds-ui/behavior/dist/eds-behavior.js" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@efds-ui/core@0.1.0/dist/index.css" />
+<script
+  src="https://cdn.jsdelivr.net/npm/@efds-ui/behavior@0.1.0/dist/eds-behavior.js"
+  defer
+></script>
 ```
+
+Em produção, prefira servir os mesmos arquivos do seu servidor (`pnpm add @efds-ui/behavior` e copie `dist/`): o CDN recebe o IP de quem acessa. Hashes de integridade (SRI) em https://efds-ui.com.br/#/comecar/instalacao.
 
 Liga tudo sozinho quando o DOM está pronto e expõe `window.EDS`. Opções na própria tag:
 

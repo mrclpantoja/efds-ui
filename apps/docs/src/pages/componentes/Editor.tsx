@@ -12,9 +12,10 @@ import Estados from '../../examples/editor/estados';
 import estadosHtml from '../../examples/editor/estados.html?raw';
 import estadosSource from '../../examples/editor/estados.tsx?raw';
 import exibirHtml from '../../examples/editor/exibir.html?raw';
+import { cdn, cssTag, scriptTag as scriptTag_ } from '../../cdn';
 
-const scriptTag = `<link rel="stylesheet" href=".../@efds-ui/core/dist/index.css" />
-<script src=".../@efds-ui/editor/dist/eds-editor.js" defer></script>`;
+const scriptTag = `${cssTag(cdn.coreCss)}
+${scriptTag_(cdn.editor)}`;
 
 const scriptApi = `EDS.editor.initEditors(document);              // liga os textarea[data-eds-editor]
 const ed = EDS.editor.createEditor(textarea);  // um só; devolve a instância

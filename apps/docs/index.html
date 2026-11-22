@@ -6,16 +6,13 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script>
       // Aparência salva (tema, modo, densidade, forma), aplicada antes da primeira pintura.
-      // Sem preferência salva, o modo vem de prefers-color-scheme.
+      // Sem preferência salva, o modo é claro (data-mode="light" acima).
       (function () {
         var root = document.documentElement;
         var saved = {};
         try {
           saved = JSON.parse(localStorage.getItem('eds-docs-appearance') || '{}') || {};
         } catch (e) {}
-        if (!saved.mode && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          saved.mode = 'dark';
-        }
         ['theme', 'mode', 'density', 'shape'].forEach(function (axis) {
           if (typeof saved[axis] === 'string') root.setAttribute('data-' + axis, saved[axis]);
         });

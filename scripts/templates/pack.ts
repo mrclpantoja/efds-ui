@@ -17,7 +17,7 @@ import {
   statSync,
   writeFileSync,
 } from 'node:fs';
-import { basename, join, relative, resolve } from 'node:path';
+import { basename, dirname, join, relative, resolve } from 'node:path';
 import process from 'node:process';
 import { parseArgs } from 'node:util';
 import { createZip, type ZipEntry } from '../../packages/behavior/src/export/zip.ts';
@@ -80,7 +80,18 @@ const version = (
     version: string;
   }
 ).version;
-const catalog = parseCatalog(readFileSync(join(root, 'pnpm-workspace.yaml'), 'utf8'));
+// Template externo: o catálogo do workspace dele (o pnpm-workspace.yaml mais próximo) vale sobre o daqui.
+function externalCatalog(from: string): Record<string, string> {
+  for (let dir = from; ; dir = dirname(dir)) {
+    const file = join(dir, 'pnpm-workspace.yaml');
+    if (existsSync(file)) return parseCatalog(readFileSync(file, 'utf8'));
+    if (dirname(dir) === dir) return {};
+  }
+}
+const catalog = {
+  ...parseCatalog(readFileSync(join(root, 'pnpm-workspace.yaml'), 'utf8')),
+  ...(externalSource ? externalCatalog(externalSource) : {}),
+};
 
 const outRoot = resolve(values.out);
 const folderName = `efds-${template}`;

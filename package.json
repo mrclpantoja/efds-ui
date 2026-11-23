@@ -28,7 +28,8 @@
     "test": "pnpm -r test",
     "format": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore --ignore-path .git/info/exclude",
     "format:check": "prettier --check . --ignore-path .gitignore --ignore-path .prettierignore --ignore-path .git/info/exclude",
-    "templates:site": "node scripts/templates/site.ts"
+    "templates:site": "node scripts/templates/site.ts",
+    "site:build": "pnpm build && pnpm templates:vendor && pnpm templates:site"
   },
   "devDependencies": {
     "@efds-ui/eslint-config": "workspace:*",

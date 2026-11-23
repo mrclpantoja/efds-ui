@@ -97,12 +97,15 @@ export function vendorDir(template: string): string {
 }
 
 /** Copia os arquivos de `dist/` para o template. Devolve os caminhos copiados. */
-export function vendorTemplate(template: string, base = root): string[] {
+/** `htmlDir`: pasta html/ de um template fora deste repositório (opção `--source`). */
+export function vendorTemplate(template: string, base = root, htmlDir?: string): string[] {
   const missing = VENDOR_FILES.map((f) => join(base, ...f.from)).filter((p) => !existsSync(p));
   if (missing.length > 0) {
     throw new Error(`Faltam arquivos de build (rode "pnpm build"):\n  ${missing.join('\n  ')}`);
   }
-  const target = join(base, 'templates', template, 'html', 'vendor', 'efds-ui');
+  const target = htmlDir
+    ? join(htmlDir, 'vendor', 'efds-ui')
+    : join(base, 'templates', template, 'html', 'vendor', 'efds-ui');
   rmSync(target, { recursive: true, force: true });
   const copied: string[] = [];
   for (const file of VENDOR_FILES) {

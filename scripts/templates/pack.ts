@@ -17,7 +17,7 @@ import {
   statSync,
   writeFileSync,
 } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { basename, join, relative, resolve } from 'node:path';
 import process from 'node:process';
 import { parseArgs } from 'node:util';
 import { createZip, type ZipEntry } from '../../packages/behavior/src/export/zip.ts';
@@ -33,6 +33,7 @@ import {
 const { values } = parseArgs({
   options: {
     template: { type: 'string' },
+    source: { type: 'string' },
     license: { type: 'string' },
     out: { type: 'string' },
   },
@@ -43,9 +44,11 @@ function fail(message: string): never {
   process.exit(1);
 }
 
-const template = values.template;
-if (!template || !(TEMPLATES as readonly string[]).includes(template)) {
-  fail(`--template deve ser um de: ${TEMPLATES.join(', ')}.`);
+// --source <pasta>: template fora deste repositório (o nome do produto é o nome da pasta).
+const externalSource = values.source ? resolve(values.source) : undefined;
+const template = values.template ?? (externalSource ? basename(externalSource) : undefined);
+if (!template || (!externalSource && !(TEMPLATES as readonly string[]).includes(template))) {
+  fail(`--template deve ser um de: ${TEMPLATES.join(', ')} (ou use --source <pasta>).`);
 }
 if (!values.license) fail('Falta --license <pasta com efds-license.json e efds-license.js>.');
 if (!values.out) fail('Falta --out <pasta>.');
@@ -61,7 +64,7 @@ if (licenseJson.product !== undefined && licenseJson.product !== template) {
   fail(`A licença é do produto "${licenseJson.product}", não de "${template}".`);
 }
 
-const source = join(templatesDir, template);
+const source = externalSource ?? join(templatesDir, template);
 const htmlSource = join(source, 'html');
 const reactSource = join(source, 'react');
 const vendorSource = join(htmlSource, 'vendor', 'efds-ui');
@@ -206,7 +209,9 @@ Se a licença for de um site (ou de vários), o template só roda nos domínios 
 Documentação: https://efds-ui.com.br/#/templates/licenca
 `,
 );
-cpSync(join(root, 'LICENSE'), join(target, 'LICENSE'));
+// Template com licença própria (premium): LICENSE na pasta do template; senão, a MIT do repositório.
+const ownLicense = join(source, 'LICENSE');
+cpSync(existsSync(ownLicense) ? ownLicense : join(root, 'LICENSE'), join(target, 'LICENSE'));
 
 // .zip
 const entries: ZipEntry[] = [];

@@ -18,7 +18,19 @@
    .eds-table-sort-up / -down; aria-sort esconde o oposto; "none" mostra ambos em text-muted.
    Linha selecionada: tbody tr:has(.eds-table-check input:checked), sem classe.
    Sticky: o wrap precisa de altura limitada (ex.: max-block-size) para o thead fixar.
-   Altura da linha: --eds-table-row-height (densidade). */
+   Altura da linha: --eds-table-row-height (densidade).
+   Variações:
+   - .eds-table-fit (na table): sem largura mínima; para 2–3 colunas dentro de um card (a tabela
+     preenche o contêiner em vez de rolar).
+   - .eds-table-sticky-col (na table): a primeira coluna fica fixa ao rolar na horizontal, com o
+     fundo da linha (hover e selecionada incluídos) e uma borda de separação.
+   - .eds-table-stack (no .eds-table-wrap): em contêiner abaixo de 40rem cada linha vira um bloco
+     (cartão leve) e cada <td data-label="Rótulo"> mostra o rótulo antes do valor; o <thead> fica só
+     para leitor de tela. Ver a nota de acessibilidade junto da regra.
+   - .eds-table-hide-narrow (em th e td): a coluna some quando o .eds-table-wrap tem menos de 40rem
+     de largura (mede o contêiner, não a viewport). Use em colunas secundárias para a tabela caber
+     sem rolar; a informação que só existe nessas colunas precisa estar disponível por outro caminho
+     (display:none tira a coluna também do leitor de tela). Não combine com .eds-table-stack. */
 @layer eds.components {
   .eds-table-wrap {
     /* Bloco de contenção: filhos absolutos (ex.: .eds-visually-hidden em th) ficam presos à
@@ -277,6 +289,170 @@
     position: sticky;
     inset-block-start: 0;
     z-index: var(--eds-z-sticky);
+  }
+
+  /* Sem largura mínima: a tabela acompanha o contêiner (poucas colunas, dentro de um card). */
+  .eds-table.eds-table-fit {
+    --_table-min-inline-size: 0;
+  }
+
+  /* Primeira coluna fixa na rolagem horizontal. O fundo da célula é opaco (senão o conteúdo que rola
+     aparece por baixo) e acompanha o estado da linha pela variável --_sticky-bg; a borda à direita
+     separa a coluna fixa do que passa por baixo. */
+  .eds-table-sticky-col {
+    & :is(th, td):first-child:not(.eds-table-empty) {
+      position: sticky;
+      inset-inline-start: 0;
+      z-index: 1;
+      border-inline-end: var(--eds-border-width) solid var(--eds-color-border-default);
+      background: var(--_sticky-bg, var(--eds-color-bg-surface));
+    }
+
+    /* Canto superior: acima das células fixas e do cabeçalho fixo. */
+    & thead th:first-child {
+      --_sticky-bg: var(--eds-color-bg-subtle);
+
+      z-index: calc(var(--eds-z-sticky) + 1);
+    }
+
+    @media (hover: hover) {
+      & tbody tr:hover:not(:has(.eds-table-empty), .eds-table-loading) {
+        --_sticky-bg: color-mix(
+          in srgb,
+          var(--eds-color-bg-subtle) 60%,
+          var(--eds-color-bg-surface)
+        );
+      }
+    }
+
+    & tbody tr:has(.eds-table-check input:checked) {
+      --_sticky-bg: var(--eds-color-action-primary-subtle);
+    }
+  }
+
+  /* Coluna secundária que some em tela estreita. O wrap vira contêiner só quando há uma coluna
+     assim; o nome da lista mantém o da tabela empilhada, que pode coexistir. */
+  .eds-table-wrap:has(.eds-table-hide-narrow) {
+    container-type: inline-size;
+    container-name: eds-table-narrow eds-table-stack;
+  }
+
+  @container eds-table-narrow (inline-size < 40rem) {
+    .eds-table :is(th, td).eds-table-hide-narrow {
+      display: none;
+    }
+  }
+
+  /* Empilhada: o contêiner (.eds-table-wrap) decide, pela própria largura, quando as linhas viram
+     blocos. Cada <td> traz o rótulo em data-label; a célula de ações ocupa a linha toda no fim.
+     Acessibilidade: trocar o display de table/tr/td faz alguns leitores de tela perderem a
+     semântica de tabela (Safari/VoiceOver historicamente; Chrome e Firefox a mantêm nas versões
+     atuais). Para garantir, acrescente os papéis no HTML (role="table" na table, "rowgroup" em
+     thead/tbody, "row" em tr, "columnheader" em th, "cell" em td). O <thead> continua no DOM,
+     escondido só visualmente, e o rótulo vem de ::before (lido pelos leitores). */
+  .eds-table-stack {
+    container: eds-table-stack / inline-size;
+  }
+
+  @container eds-table-stack (inline-size < 40rem) {
+    .eds-table-stack > .eds-table {
+      --_table-min-inline-size: 0;
+
+      display: block;
+
+      & :is(tbody, tr, td, th) {
+        display: block;
+      }
+
+      & thead {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      & tbody tr {
+        padding-block: var(--eds-space-2);
+        border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+      }
+
+      & tbody tr:last-child {
+        border-block-end: 0;
+      }
+
+      & tbody :is(td, th) {
+        block-size: auto;
+        min-block-size: 0;
+        padding-block: var(--eds-space-1);
+        border-block-end: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        position: static;
+        box-shadow: none;
+      }
+
+      & tbody td[data-label] {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+        align-items: baseline;
+        justify-items: start;
+        column-gap: var(--eds-space-3);
+
+        &::before {
+          content: attr(data-label);
+          justify-self: start;
+          text-align: start;
+          color: var(--eds-color-text-secondary);
+          font-size: var(--eds-font-size-small);
+          line-height: var(--eds-line-height-small);
+          font-weight: var(--eds-font-weight-medium);
+          white-space: normal;
+        }
+      }
+
+      /* Número continua à direita do valor. */
+      & tbody td.eds-table-num {
+        justify-items: end;
+        text-align: end;
+      }
+
+      & .eds-table-check,
+      & .eds-table-actions {
+        inline-size: auto;
+      }
+
+      & tbody .eds-table-actions {
+        padding-block: var(--eds-space-1);
+        text-align: end;
+      }
+
+      /* Seleção no início do bloco, alinhada ao texto (não centrada numa linha própria). */
+      & tbody .eds-table-check {
+        text-align: start;
+      }
+
+      & tbody .eds-table-check > .eds-check {
+        justify-content: flex-start;
+        min-block-size: var(--eds-target-min);
+        padding-inline: var(--eds-inset-md) 0;
+      }
+
+      /* Selecionada: a barra passa da primeira célula para a linha. */
+      & tbody tr:has(.eds-table-check input:checked) {
+        box-shadow: inset var(--eds-focus-ring-width) 0 0 var(--eds-color-action-primary);
+
+        & > :first-child {
+          box-shadow: none;
+        }
+      }
+
+      & tbody tr:has(.eds-table-empty) {
+        padding-block: 0;
+      }
+    }
   }
 
   /* Estado vazio dentro da tabela. */

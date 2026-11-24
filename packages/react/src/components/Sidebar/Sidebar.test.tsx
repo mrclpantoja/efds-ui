@@ -190,6 +190,21 @@ describe('AppShell + Sidebar (off-canvas)', () => {
     expect(toggle).toHaveFocus();
   });
 
+  it('botão Fechar menu: no cabeçalho, fecha o popover sem JS e não é tratado como gatilho', () => {
+    render(<Layout />);
+    const nav = screen.getByTestId('nav');
+    const close = screen.getByRole('button', { name: 'Fechar menu', hidden: true });
+    expect(close).toHaveClass('eds-sidebar-close');
+    expect(close.closest('.eds-sidebar-header')).not.toBeNull();
+    expect(close).toHaveAttribute('popovertarget', nav.id);
+    expect(close).toHaveAttribute('popovertargetaction', 'hide');
+    expect(close).not.toHaveAttribute('aria-expanded');
+    fireToggle(nav, 'open');
+    close.focus();
+    fireToggle(nav, 'closed');
+    expect(screen.getByRole('button', { name: 'Abrir navegação' })).toHaveFocus();
+  });
+
   it('navegar por um item fecha o off-canvas e leva o foco ao conteúdo', async () => {
     const user = userEvent.setup();
     const onNavigate = vi.fn();
@@ -237,5 +252,48 @@ describe('Sidebar id dentro do AppShell', () => {
       'popovertarget',
       'minha-nav',
     );
+  });
+});
+
+describe('SidebarItem com contador', () => {
+  it('mostra o contador e o inclui no nome acessível junto do complemento', () => {
+    render(
+      <Sidebar>
+        <SidebarItem href="#contas" badge={3} badgeLabel="vencidas">
+          Contas
+        </SidebarItem>
+      </Sidebar>,
+    );
+    const link = screen.getByRole('link', { name: 'Contas 3 vencidas', hidden: true });
+    const badge = link.querySelector('.eds-sidebar-badge');
+    expect(badge).not.toBeNull();
+    expect(badge?.firstChild?.textContent).toBe('3');
+    expect(badge?.querySelector('.eds-visually-hidden')).toHaveTextContent('vencidas');
+  });
+
+  it('sem badgeLabel o número sozinho entra no nome; sem badge não há contador', () => {
+    render(
+      <Sidebar>
+        <SidebarItem href="#a" badge="12">
+          Alertas
+        </SidebarItem>
+        <SidebarItem href="#b">Outros</SidebarItem>
+      </Sidebar>,
+    );
+    expect(screen.getByRole('link', { name: 'Alertas 12', hidden: true })).toBeInTheDocument();
+    expect(
+      screen
+        .getByRole('link', { name: 'Outros', hidden: true })
+        .querySelector('.eds-sidebar-badge'),
+    ).toBeNull();
+  });
+
+  it('um botão (sem href) também aceita o contador', () => {
+    render(
+      <Sidebar>
+        <SidebarItem badge={0}>Fila</SidebarItem>
+      </Sidebar>,
+    );
+    expect(screen.getByRole('button', { name: 'Fila 0', hidden: true })).toBeInTheDocument();
   });
 });

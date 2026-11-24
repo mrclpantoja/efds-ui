@@ -83,6 +83,11 @@ const icons = {
 
 type Page = 'dashboard' | 'projetos' | 'usuarios' | 'financeiro' | 'relatorios' | 'configuracoes';
 
+/** Contador de itens (markup `.eds-sidebar-badge`): o número entra no nome acessível do link. */
+const counters: Partial<Record<Page, { count: number; label: string }>> = {
+  financeiro: { count: 3, label: 'vencidas' },
+};
+
 const sections: { title: string; items: { id: Page; label: string }[] }[] = [
   {
     title: 'Geral',
@@ -178,7 +183,9 @@ export function AppShellDemo() {
         navigated.current = false;
         document.getElementById('asd-conteudo')?.focus();
       } else if (document.activeElement === document.body || nav.contains(document.activeElement)) {
-        document.querySelector<HTMLElement>(`[popovertarget="${NAV_ID}"]`)?.focus();
+        document
+          .querySelector<HTMLElement>(`[popovertarget="${NAV_ID}"]:not(.eds-sidebar-close)`)
+          ?.focus();
       }
     };
     nav.addEventListener('toggle', onToggle);
@@ -213,6 +220,12 @@ export function AppShellDemo() {
     >
       {icons[id]}
       <span className="eds-sidebar-label">{text}</span>
+      {counters[id] ? (
+        <span className="eds-sidebar-badge">
+          {counters[id].count}
+          <span className="eds-visually-hidden"> {counters[id].label}</span>
+        </span>
+      ) : null}
     </a>
   );
 
@@ -260,6 +273,24 @@ export function AppShellDemo() {
               <div className="eds-sidebar-header">
                 {icons.marca}
                 <span className="eds-sidebar-label">Gestão Exemplo</span>
+                <button
+                  type="button"
+                  className="eds-sidebar-close eds-button eds-button-ghost eds-button-icon"
+                  popoverTarget={NAV_ID}
+                  popoverTargetAction="hide"
+                  aria-label="Fechar menu"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.75}
+                    strokeLinecap="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
               {sections.map((section) => (
                 <div key={section.title} className="eds-sidebar-section">

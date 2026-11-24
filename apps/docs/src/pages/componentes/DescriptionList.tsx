@@ -104,7 +104,11 @@ export default function DescriptionListPage() {
               name: 'dl.eds-description-list',
               effect: 'A lista (div > dt + dd). Uma coluna por padrão.',
             },
-            { name: '.eds-description-list-cols-2 / -cols-3', effect: 'Máximo de colunas.' },
+            {
+              name: '.eds-description-list-cols-2 / -cols-3',
+              effect:
+                'Máximo de colunas; a lista usa menos quando o contêiner é estreito (coluna mínima de 14rem, contando o espaço entre colunas).',
+            },
             {
               name: '.eds-description-list-horizontal',
               effect: 'Rótulo à esquerda, valor à direita.',

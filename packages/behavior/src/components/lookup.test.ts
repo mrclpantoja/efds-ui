@@ -100,6 +100,7 @@ describe('Lookup (lista local)', () => {
     const user = userEvent.setup();
     await user.click(document.querySelector('button[aria-label="Buscar cliente"]')!);
     expect(dialog().open).toBe(true);
+    expect(dialog().classList.contains('eds-modal-lg')).toBe(true);
     await vi.waitFor(() => expect(rows()).toHaveLength(3));
     expect(dialog().querySelector('[role="status"]')).toHaveTextContent(
       '3 resultados disponíveis.',

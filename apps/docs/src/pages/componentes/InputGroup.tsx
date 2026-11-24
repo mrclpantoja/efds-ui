@@ -6,6 +6,9 @@ import { UseCases } from '../../components/UseCases';
 import Basico from '../../examples/input-group/basico';
 import basicoHtml from '../../examples/input-group/basico.html?raw';
 import basicoSource from '../../examples/input-group/basico.tsx?raw';
+import Icone from '../../examples/input-group/icone';
+import iconeHtml from '../../examples/input-group/icone.html?raw';
+import iconeSource from '../../examples/input-group/icone.tsx?raw';
 import Carregando from '../../examples/input-group/carregando';
 import carregandoHtml from '../../examples/input-group/carregando.html?raw';
 import carregandoSource from '../../examples/input-group/carregando.tsx?raw';
@@ -41,6 +44,12 @@ export default function InputGroupPage() {
           description="Só CSS. O foco e o erro pintam o grupo inteiro; os estados são lidos do campo filho direto (aria-invalid, data-valid, readonly, disabled). Tamanhos: .eds-input-group-sm e -lg."
           html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
+        />
+        <Example
+          title="Ícone no prefixo ou sufixo"
+          description="Um svg dentro de .eds-input-group-text recebe o tamanho --eds-icon-size-md e não encolhe. Decorativo (aria-hidden): o rótulo continua no label. No React, o nó entra como veio, então leve o próprio .eds-input-group-text."
+          html={iconeHtml}
+          react={{ Component: Icone, source: iconeSource }}
         />
         <Example
           title="Carregando"
@@ -126,7 +135,7 @@ export default function InputGroupPage() {
               name: 'prefix / suffix',
               type: 'ReactNode',
               description:
-                'Texto vira .eds-input-group-text; um nó (ex.: Button com .eds-input-group-button) entra como veio.',
+                'Texto vira .eds-input-group-text; um nó (ex.: Button com .eds-input-group-button, ou um span .eds-input-group-text com um ícone) entra como veio.',
             },
             {
               name: 'size',

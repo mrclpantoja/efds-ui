@@ -129,7 +129,8 @@ export function placeBalloon(
     gap,
     align,
     rtl: isRtl(anchor),
-    margin: 4,
+    // 8 px da borda da janela (painel do sino, Popover): 4 px parecia colado.
+    margin: 8,
   });
   popup.style.setProperty(`--_${prefix}-x`, `${result.x}px`);
   popup.style.setProperty(`--_${prefix}-y`, `${result.y}px`);

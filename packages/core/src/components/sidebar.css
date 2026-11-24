@@ -9,6 +9,8 @@
  *       <a class="eds-sidebar-item" href="…" aria-current="page">
  *         <svg aria-hidden="true" …/><span class="eds-sidebar-label">Dashboard</span>
  *       </a>
+ *       <a class="eds-sidebar-item" href="…"><svg …/><span class="eds-sidebar-label">Contas</span>
+ *         <span class="eds-sidebar-badge">3<span class="eds-visually-hidden"> vencidas</span></span></a>
  *     </div>
  *     <div class="eds-sidebar-footer">…itens (<a> ou <button class="eds-sidebar-item">)…</div>
  *   </nav>
@@ -103,6 +105,14 @@
       inline-size: var(--_sidebar-icon);
       block-size: var(--_sidebar-icon);
     }
+  }
+
+  /* Fechar do off-canvas (WCAG 2.4.3 e 2.5.8: saída visível, além de Esc e toque fora). Botão
+     .eds-button-ghost.eds-button-icon com popovertarget="<id da sidebar>" e
+     popovertargetaction="hide" (funciona sem JS). Oculto fora do off-canvas aberto; no fim do
+     cabeçalho, ou no topo da sidebar sem cabeçalho. */
+  .eds-sidebar-close {
+    display: none;
   }
 
   .eds-sidebar-section,
@@ -225,6 +235,60 @@
     }
   }
 
+  /* Contador do item (ex.: "3 vencidas"): <span class="eds-sidebar-badge">3<span
+     class="eds-visually-hidden"> vencidas</span></span> dentro do .eds-sidebar-item, depois do
+     rótulo. Expandida: pílula discreta no fim do item. Compacta (trilho): vira um ponto sobre o canto
+     do ícone; o número fica só no nome acessível do link (fonte zerada, não display:none).
+     --_sidebar-text (1 expandida, 0 compacta) interpola tamanho, fonte, preenchimento e cores, sem
+     precisar repetir regras nos três pontos em que a sidebar compacta. O ponto precisa de margem
+     negativa porque o item é overflow:hidden e não posicionado (o tooltip do rótulo depende disso):
+     ele é puxado de volta por 2 gaps (rótulo com largura 0) mais metade do ponto. */
+  .eds-sidebar-badge {
+    --_badge-t: var(--_sidebar-text);
+    --_badge-dot: var(--eds-space-2);
+    --_badge-size: calc(
+      var(--_badge-dot) + var(--_badge-t) * (var(--eds-icon-size-md) - var(--_badge-dot))
+    );
+
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--_badge-size);
+    min-block-size: var(--_badge-size);
+    margin-inline-start: calc(
+      (1 - var(--_badge-t)) * (-2 * var(--eds-space-3) - var(--_badge-dot) / 2)
+    );
+    margin-block-end: calc((1 - var(--_badge-t)) * var(--eds-space-4));
+    padding-inline: calc(var(--_badge-t) * var(--eds-space-2));
+    border: var(--eds-border-width) solid
+      color-mix(
+        in srgb,
+        var(--eds-color-border-default) calc(var(--_badge-t) * 100%),
+        var(--eds-color-action-primary)
+      );
+    border-radius: var(--eds-radius-sm);
+    background: color-mix(
+      in srgb,
+      var(--eds-color-bg-surface) calc(var(--_badge-t) * 100%),
+      var(--eds-color-action-primary)
+    );
+    color: var(--eds-color-text-secondary);
+    font-size: calc(var(--_badge-t) * var(--eds-font-size-small));
+    font-weight: var(--eds-font-weight-medium);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* Com o tooltip aberto o rótulo sai do fluxo (absolute): há um gap a menos até o ponto. */
+  .eds-sidebar-item:is(:hover, :focus-visible) > .eds-sidebar-badge {
+    margin-inline-start: calc(
+      (1 - var(--_badge-t)) * (-1 * var(--eds-space-3) - var(--_badge-dot) / 2)
+    );
+  }
+
   /* Compacta à mão. */
   .eds-sidebar[data-collapsed] {
     --_sidebar-width: var(--eds-layout-sidebar-width-collapsed);
@@ -318,6 +382,17 @@
           box-shadow: var(--eds-shadow-lg);
         }
 
+        &:popover-open .eds-sidebar-close {
+          display: inline-flex;
+          margin-inline-start: auto;
+        }
+
+        &:popover-open > .eds-sidebar-close {
+          flex: none;
+          align-self: flex-end;
+          margin: var(--eds-space-2);
+        }
+
         &::backdrop {
           background: var(--eds-color-bg-overlay);
         }
@@ -326,6 +401,10 @@
   }
 
   @media (forced-colors: active) {
+    .eds-sidebar-badge {
+      border-color: CanvasText;
+    }
+
     .eds-sidebar-item[aria-current='page'] {
       outline: var(--eds-border-width) solid CanvasText;
     }

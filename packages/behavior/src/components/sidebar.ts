@@ -14,7 +14,11 @@ export const sidebarBehavior: Behavior = {
     if (!app) return;
     const id = ensureId(nav, 'sidebar');
     const doc = nav.ownerDocument;
-    const triggers = () => Array.from(doc.querySelectorAll<HTMLElement>(`[popovertarget="${id}"]`));
+    // Gatilhos de fora: o botão de fechar (.eds-sidebar-close) fica dentro da própria sidebar.
+    const triggers = () =>
+      Array.from(doc.querySelectorAll<HTMLElement>(`[popovertarget="${id}"]`)).filter(
+        (el) => !nav.contains(el),
+      );
     const siblings = () =>
       Array.from(
         app.querySelectorAll<HTMLElement>(

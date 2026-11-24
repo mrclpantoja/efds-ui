@@ -9,6 +9,9 @@
      deixa "—" e [data-empty="true"] (cor atenuada). Código inexistente: aria-invalid no input e
      p.eds-error fora do .eds-lookup, ligada por aria-describedby.
    - Em largura estreita, a descrição desce para a linha de baixo (quebra o flex).
+   - Diálogo de busca: abaixo de 768px de viewport ocupa a tela inteira (qualquer .eds-modal que
+     contenha .eds-lookup-results). A tabela não rola na horizontal: marque as colunas secundárias com
+     .eds-table-hide-narrow (th e td) para escondê-las quando a tabela estiver estreita.
    - Tamanhos: .eds-lookup-sm / -lg (alturas dos controles via tokens, logo da densidade). */
 @layer eds.components {
   .eds-lookup {
@@ -80,11 +83,27 @@
   /* Tabela de resultados do diálogo: a descrição quebra linha e o botão "Selecionar" fica à vista
      a 320 px (sem a largura mínima de uma tabela de dados, que o faria rolar; sobra só uma folga de
      ~30 px, que rola dentro do wrap). */
+  /* Colunas secundárias podem sair em tela estreita com .eds-table-hide-narrow (ver table.css). */
   .eds-lookup-results .eds-table {
     --_table-min-inline-size: 0;
 
     & :is(th, td) {
       padding-inline: var(--eds-space-2);
+    }
+  }
+
+  /* Celular: o diálogo de busca ocupa a tela inteira (mesma aparência de .eds-modal-full abaixo de
+     768px: sem margem, raio nem borda; cabeçalho e rodapé fixos, só o corpo rola). Vale para o
+     diálogo montado pelo JS, para o do React e para um diálogo seu: basta ter .eds-lookup-results. */
+  @media (width < 768px) {
+    .eds-modal:has(.eds-lookup-results) {
+      --_modal-radius: 0;
+      --_modal-gutter: 0rem;
+
+      inline-size: 100%;
+      block-size: 100dvh;
+      max-block-size: none;
+      border-width: 0;
     }
   }
 

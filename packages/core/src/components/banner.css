@@ -75,6 +75,44 @@
     gap: var(--eds-space-2);
   }
 
+  /* Botões nas ações herdam o tom da superfície (o secondary padrão é branco sobre o fundo de
+     status). Dois seletores de classe vencem as variantes do Button sem depender da ordem. O hover
+     e o active CLAREIAM o fundo (mistura com bg-surface): escurecer reprova 4.5:1 do texto em
+     success/warning no claro (medido). */
+  .eds-banner-actions {
+    & .eds-button-secondary {
+      --_button-bg: transparent;
+      --_button-fg: var(--_banner-fg);
+      --_button-border: color-mix(in srgb, var(--_banner-fg) 80%, transparent);
+      --_button-border-hover: color-mix(in srgb, var(--_banner-fg) 80%, transparent);
+      --_button-bg-hover: color-mix(in srgb, var(--eds-color-bg-surface) 50%, var(--_banner-bg));
+      --_button-bg-active: color-mix(in srgb, var(--eds-color-bg-surface) 75%, var(--_banner-bg));
+    }
+
+    & .eds-button-ghost {
+      --_button-fg: var(--_banner-fg);
+      --_button-bg-hover: color-mix(in srgb, var(--eds-color-bg-surface) 50%, var(--_banner-bg));
+      --_button-bg-active: color-mix(in srgb, var(--eds-color-bg-surface) 75%, var(--_banner-bg));
+    }
+
+    & .eds-button-primary {
+      --_button-bg: var(--_banner-fg);
+      --_button-fg: var(--_banner-bg);
+      --_button-bg-hover: color-mix(in srgb, var(--_banner-fg), var(--eds-color-text-primary) 15%);
+      --_button-bg-active: color-mix(in srgb, var(--_banner-fg), var(--eds-color-text-primary) 25%);
+    }
+
+    &
+      :is(.eds-button-secondary, .eds-button-ghost, .eds-button-primary):is(
+        :disabled,
+        [aria-disabled='true']
+      ) {
+      --_button-bg: transparent;
+      --_button-fg: color-mix(in srgb, var(--_banner-fg) 60%, transparent);
+      --_button-border: color-mix(in srgb, var(--_banner-fg) 30%, transparent);
+    }
+  }
+
   /* Botão fechar: ghost sm na cor do aviso (a cor de ação não foi medida sobre estes fundos). */
   .eds-banner .eds-banner-close {
     --_button-fg: var(--_banner-fg);

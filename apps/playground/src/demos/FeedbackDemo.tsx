@@ -638,6 +638,56 @@ function SkeletonCard() {
   );
 }
 
+function ToneActions() {
+  const tones: { key: Status; title: string }[] = [
+    { key: 'danger', title: 'Erro: falha na conciliação' },
+    { key: 'warning', title: 'Atenção: fechamento próximo' },
+    { key: 'success', title: 'Sucesso: importação concluída' },
+    { key: 'info', title: 'Informação: nova versão disponível' },
+  ];
+  const buttons = (
+    <>
+      <button type="button" className="eds-button eds-button-primary eds-button-sm">
+        Primário
+      </button>
+      <button type="button" className="eds-button eds-button-secondary eds-button-sm">
+        Secundário
+      </button>
+      <button type="button" className="eds-button eds-button-ghost eds-button-sm">
+        Ghost
+      </button>
+    </>
+  );
+  return (
+    <Section title="Alert e Banner: botões herdam o tom">
+      <div style={{ display: 'grid', gap: 'var(--eds-space-3)' }}>
+        {tones.map((t) => (
+          <div key={t.key} className={`eds-alert eds-alert-${t.key}`}>
+            <div className="eds-alert-content">
+              <p className="eds-alert-title">{t.title}</p>
+              <p>Texto de apoio do aviso, com as ações logo abaixo.</p>
+            </div>
+            <div className="eds-alert-actions">{buttons}</div>
+          </div>
+        ))}
+        {[...tones, { key: 'neutral' as const, title: 'Aviso legal' }].map((t) => (
+          <div
+            key={t.key}
+            className={`eds-banner eds-banner-${t.key}`}
+            role="region"
+            aria-label={t.title}
+          >
+            <p className="eds-banner-text">
+              <strong>{t.title}.</strong> Texto curto do aviso do sistema.
+            </p>
+            <div className="eds-banner-actions">{buttons}</div>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
 export function FeedbackDemo() {
   return (
     <div
@@ -645,6 +695,7 @@ export function FeedbackDemo() {
     >
       <h2 className="eds-text-h2">Feedback</h2>
       <Alerts />
+      <ToneActions />
       <Toasts />
       <Badges />
       <Spinners />

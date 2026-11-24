@@ -21,7 +21,7 @@ export default function Grade() {
         texts={{ down: 'Queda de' }}
       />
       <Stat
-        label="Inadimplência"
+        label="Inadimplência acumulada nos últimos 12 meses"
         value="4,8%"
         delta="0,6 ponto"
         trend="up"

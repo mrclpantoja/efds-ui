@@ -101,7 +101,11 @@ export default function StatPage() {
               effect: 'Conteúdo do indicador; sem fundo nem borda: use junto de .eds-card.',
             },
             { name: '.eds-stat-label', effect: 'Nome do indicador.' },
-            { name: '.eds-stat-value', effect: 'O número, grande e tabular.' },
+            {
+              name: '.eds-stat-value',
+              effect:
+                'O número, grande e tabular. Em .eds-stat-grid, rótulo, valor e variação alinham por subgrade entre os cards da mesma fileira (rótulo de duas linhas não desalinha os números); fora dela, o valor fica ancorado na base do card.',
+            },
             { name: '.eds-stat-delta', effect: 'Variação, com seta (svg) e texto.' },
             {
               name: '[data-trend="up|down|flat"]',

@@ -20,6 +20,7 @@
   .eds-description-list {
     --_dl-cols: 1;
     --_dl-gap: var(--eds-space-4);
+    --_dl-col-gap: var(--eds-space-5);
     --_dl-col-min: 14rem;
     --_dl-term-width: 10rem;
 
@@ -31,13 +32,13 @@
           100%,
           max(
             var(--_dl-col-min),
-            calc((100% - (var(--_dl-cols) - 1) * var(--_dl-gap)) / var(--_dl-cols))
+            calc((100% - (var(--_dl-cols) - 1) * var(--_dl-col-gap)) / var(--_dl-cols))
           )
         ),
         1fr
       )
     );
-    gap: var(--_dl-gap) var(--eds-space-5);
+    gap: var(--_dl-gap) var(--_dl-col-gap);
     box-sizing: border-box;
     min-inline-size: 0;
     margin: 0;

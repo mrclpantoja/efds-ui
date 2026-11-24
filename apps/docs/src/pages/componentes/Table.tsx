@@ -8,6 +8,18 @@ import { UseCases } from '../../components/UseCases';
 import Basica from '../../examples/table/basica';
 import basicaHtml from '../../examples/table/basica.html?raw';
 import basicaSource from '../../examples/table/basica.tsx?raw';
+import Ajustada from '../../examples/table/ajustada';
+import ajustadaHtml from '../../examples/table/ajustada.html?raw';
+import ajustadaSource from '../../examples/table/ajustada.tsx?raw';
+import ColunaFixa from '../../examples/table/coluna-fixa';
+import colunaFixaHtml from '../../examples/table/coluna-fixa.html?raw';
+import colunaFixaSource from '../../examples/table/coluna-fixa.tsx?raw';
+import EsconderEstreita from '../../examples/table/esconder-estreita';
+import esconderEstreitaHtml from '../../examples/table/esconder-estreita.html?raw';
+import esconderEstreitaSource from '../../examples/table/esconder-estreita.tsx?raw';
+import Empilhada from '../../examples/table/empilhada';
+import empilhadaHtml from '../../examples/table/empilhada.html?raw';
+import empilhadaSource from '../../examples/table/empilhada.tsx?raw';
 import Carregando from '../../examples/table/carregando';
 import carregandoHtml from '../../examples/table/carregando.html?raw';
 import carregandoSource from '../../examples/table/carregando.tsx?raw';
@@ -109,6 +121,60 @@ export default function TablePage() {
           description="Coluna numérica alinhada à direita e coluna de ações com botão só de ícone."
           html={basicaHtml}
           react={{ Component: Basica, source: basicaSource }}
+        />
+        <Example
+          title="Poucas colunas dentro de um card (eds-table-fit)"
+          description={
+            <>
+              <code>.eds-table-fit</code> na tabela tira a largura mínima de uma listagem: com 2 ou
+              3 colunas, a tabela preenche o card em vez de rolar. No React, passe-a em{' '}
+              <code>className</code>.
+            </>
+          }
+          html={ajustadaHtml}
+          react={{ Component: Ajustada, source: ajustadaSource }}
+        />
+        <Example
+          title="Primeira coluna fixa (eds-table-sticky-col)"
+          description={
+            <>
+              Role a tabela na horizontal: a primeira coluna fica fixa, com o fundo da linha (também
+              no hover e na linha selecionada) e uma borda de separação. Combina com{' '}
+              <code>.eds-table-sticky</code>. No React, passe a classe em <code>className</code>.
+            </>
+          }
+          html={colunaFixaHtml}
+          react={{ Component: ColunaFixa, source: colunaFixaSource }}
+        />
+        <Example
+          title="Empilhada no celular (eds-table-stack)"
+          description={
+            <>
+              Quando o contêiner fica abaixo de 40rem, cada linha vira um bloco e cada célula mostra
+              o rótulo de <code>data-label</code> antes do valor; o cabeçalho continua para leitor
+              de tela, números seguem à direita e as ações ocupam a linha toda. O modificador vai no{' '}
+              <code>.eds-table-wrap</code> (no React, <code>wrapClassName</code>). Estreite a janela
+              para ver.
+            </>
+          }
+          html={empilhadaHtml}
+          react={{ Component: Empilhada, source: empilhadaSource }}
+        />
+        <Example
+          title="Colunas que somem em tela estreita (eds-table-hide-narrow)"
+          description={
+            <>
+              Marque as colunas secundárias (no <code>th</code> e em cada <code>td</code>) com{' '}
+              <code>.eds-table-hide-narrow</code>: abaixo de 40rem de largura do próprio{' '}
+              <code>.eds-table-wrap</code> elas somem e a tabela cabe sem rolar na horizontal (o
+              wrap vira contêiner sozinho). Serve em diálogos e no celular; o que só existe nessas
+              colunas precisa estar disponível por outro caminho, porque a coluna some também para o
+              leitor de tela. Não combine com <code>.eds-table-stack</code>. Estreite a janela para
+              ver.
+            </>
+          }
+          html={esconderEstreitaHtml}
+          react={{ Component: EsconderEstreita, source: esconderEstreitaSource }}
         />
         <Example
           title="Ordenação, seleção e paginação"
@@ -605,6 +671,26 @@ export default function TablePage() {
               effect: 'Cabeçalho fixo; o wrap precisa de altura limitada.',
             },
             {
+              name: '.eds-table-fit',
+              effect:
+                'Na table: sem largura mínima. Para 2 ou 3 colunas dentro de um card (a tabela preenche em vez de rolar).',
+            },
+            {
+              name: '.eds-table-sticky-col',
+              effect:
+                'Na table: a primeira coluna fica fixa na rolagem horizontal, com o fundo da linha (hover e selecionada) e borda de separação.',
+            },
+            {
+              name: '.eds-table-stack',
+              effect:
+                'No .eds-table-wrap: abaixo de 40rem de contêiner, cada linha vira um bloco e cada td[data-label] mostra o rótulo antes do valor. O thead fica só para leitor de tela; .eds-table-num segue à direita e .eds-table-actions ocupa a linha toda no fim.',
+            },
+            {
+              name: '.eds-table-hide-narrow',
+              effect:
+                'Em th e td de uma coluna secundária: some (display: none) quando o .eds-table-wrap tem menos de 40rem de largura. Mede o contêiner, não a viewport; use no Lookup para a tabela do diálogo não rolar no celular.',
+            },
+            {
               name: '.eds-table-caption',
               effect: 'A legenda. Junto de .eds-visually-hidden, só para leitores de tela.',
             },
@@ -678,6 +764,20 @@ export default function TablePage() {
               <strong>Estrutura:</strong> <code>&lt;table&gt;</code> com{' '}
               <code>&lt;caption&gt;</code>, <code>scope</code> nos cabeçalhos e uma coluna de ações
               com o cabeçalho &quot;Ações&quot; oculto.
+            </li>
+            <li>
+              <strong>
+                Empilhada (<code>.eds-table-stack</code>):
+              </strong>{' '}
+              abaixo de 40rem o CSS troca o <code>display</code> de table, tr e td por bloco/grade,
+              e alguns leitores de tela (VoiceOver no Safari, historicamente) perdem a semântica de
+              tabela quando isso acontece; Chrome e Firefox a mantêm nas versões atuais. Para não
+              depender disso, acrescente os papéis no HTML (<code>role=&quot;table&quot;</code>,{' '}
+              <code>rowgroup</code>, <code>row</code>, <code>columnheader</code>, <code>cell</code>
+              ), como no exemplo. O rótulo vem do <code>::before</code> com{' '}
+              <code>attr(data-label)</code>, que os leitores leem como parte da célula; o{' '}
+              <code>thead</code> fica só escondido visualmente. Se a leitura por célula for
+              essencial, valide com o seu leitor de tela.
             </li>
             <li>
               <strong>Rolagem:</strong> o wrap recebe <code>tabindex=&quot;0&quot;</code>,{' '}

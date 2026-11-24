@@ -1,0 +1,31 @@
+<!-- .eds-table-hide-narrow em th e td: a coluna some quando o .eds-table-wrap tem menos de 40rem de largura
+     (mede o contêiner, não a viewport). Serve para a tabela caber sem rolar na horizontal em diálogo
+     pequeno ou celular. display:none também tira a coluna do leitor de tela: o que só existe nela
+     precisa estar disponível por outro caminho. Estreite a janela para ver "Cidade" e "Situação" sumirem. -->
+<div class="eds-table-wrap">
+  <table class="eds-table eds-table-fit">
+    <caption class="eds-table-caption eds-visually-hidden">Clientes</caption>
+    <thead>
+      <tr>
+        <th scope="col">Código</th>
+        <th scope="col">Nome</th>
+        <th scope="col" class="eds-table-hide-narrow">Cidade</th>
+        <th scope="col" class="eds-table-hide-narrow">Situação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>10</td>
+        <td>Atelier Exemplo</td>
+        <td class="eds-table-hide-narrow">Pelotas</td>
+        <td class="eds-table-hide-narrow"><span class="eds-badge eds-badge-success">Ativo</span></td>
+      </tr>
+      <tr>
+        <td>11</td>
+        <td>Comércio Modelo</td>
+        <td class="eds-table-hide-narrow">Rio Grande</td>
+        <td class="eds-table-hide-narrow"><span class="eds-badge eds-badge-warning">Pendente</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

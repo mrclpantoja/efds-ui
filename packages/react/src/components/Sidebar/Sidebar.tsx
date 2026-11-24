@@ -20,6 +20,7 @@ import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { SidebarCollapseGlyph } from '../../internal/glyphs-d';
 import { mergeRefs } from '../../internal/refs-d';
+import { CloseGlyph } from '../../internal/glyphs';
 import { AppShellContext, SidebarSlotContext, useShellState } from '../AppShell/context';
 
 const SidebarContext = createContext<{ onNavigate: () => void } | null>(null);
@@ -27,6 +28,8 @@ const SidebarContext = createContext<{ onNavigate: () => void } | null>(null);
 export interface SidebarTexts {
   /** Rótulo fixo do botão de colapsar (não muda com o estado). */
   collapse: string;
+  /** Nome do botão de fechar do off-canvas (mobile). */
+  close: string;
 }
 
 export interface SidebarProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
@@ -44,7 +47,7 @@ export interface SidebarProps extends Omit<HTMLAttributes<HTMLElement>, 'childre
   collapsed?: boolean;
   defaultCollapsed?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
-  /** Textos internos (padrões em pt-BR): `collapse` ("Menu lateral"). */
+  /** Textos internos (padrões em pt-BR): `collapse` ("Menu lateral") e `close` ("Fechar menu"). */
   texts?: Partial<SidebarTexts>;
   /** Ícone do botão de colapsar. */
   collapseIcon?: ReactNode;
@@ -115,7 +118,9 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
         document.getElementById(current.mainId)?.focus();
       } else if (document.activeElement === document.body || nav.contains(document.activeElement)) {
         // O gatilho estava inerte: o retorno de foco nativo do popover falha.
-        document.querySelector<HTMLElement>(`[popovertarget="${current.navId}"]`)?.focus();
+        document
+          .querySelector<HTMLElement>(`[popovertarget="${current.navId}"]:not(.eds-sidebar-close)`)
+          ?.focus();
       }
     };
     nav.addEventListener('toggle', onToggle);
@@ -133,6 +138,19 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
   const navId = ownId ?? shell.navId;
   const hasHeader = brandIcon !== undefined || brandLabel !== undefined;
   const hasFooter = footer !== undefined || collapsible;
+  const t = mergeTexts({ collapse: 'Menu lateral', close: 'Fechar menu' }, texts);
+  // Só aparece no off-canvas aberto (CSS); o navegador fecha o popover sem JS.
+  const closeButton = (
+    <button
+      type="button"
+      className="eds-sidebar-close eds-button eds-button-ghost eds-button-icon"
+      aria-label={t.close}
+      popoverTarget={navId}
+      popoverTargetAction="hide"
+    >
+      <CloseGlyph />
+    </button>
+  );
 
   return (
     <SidebarContext.Provider value={{ onNavigate }}>
@@ -149,8 +167,11 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
           <div className="eds-sidebar-header">
             {brandIcon}
             <span className="eds-sidebar-label">{brandLabel}</span>
+            {closeButton}
           </div>
-        ) : null}
+        ) : (
+          closeButton
+        )}
         {children}
         {hasFooter ? (
           <div className="eds-sidebar-footer">
@@ -164,9 +185,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
                 onClick={toggleCollapsed}
               >
                 {collapseIcon ?? <SidebarCollapseGlyph />}
-                <span className="eds-sidebar-label">
-                  {mergeTexts({ collapse: 'Menu lateral' }, texts).collapse}
-                </span>
+                <span className="eds-sidebar-label">{t.collapse}</span>
               </button>
             ) : null}
           </div>
@@ -200,6 +219,10 @@ interface SidebarItemOwnProps {
   icon?: ReactNode;
   /** Página atual: `aria-current="page"`. */
   current?: boolean;
+  /** Contador ao fim do item (ex.: `3`). Na sidebar compacta vira um ponto sobre o ícone. */
+  badge?: ReactNode;
+  /** Complemento do contador no nome acessível, oculto na tela (ex.: `vencidas`). */
+  badgeLabel?: ReactNode;
 }
 
 export type SidebarItemAsLinkProps = SidebarItemOwnProps &
@@ -213,7 +236,7 @@ type SidebarItemImplProps = SidebarItemOwnProps &
 
 /** Item de navegação: `<a>` com `href`; sem `href`, `<button>`. Links fecham o off-canvas. */
 export const SidebarItem = forwardRef<HTMLElement, SidebarItemImplProps>(function SidebarItem(
-  { icon, current = false, href, type, className, onClick, children, ...rest },
+  { icon, current = false, badge, badgeLabel, href, type, className, onClick, children, ...rest },
   ref,
 ) {
   const sidebar = useContext(SidebarContext);
@@ -234,6 +257,19 @@ export const SidebarItem = forwardRef<HTMLElement, SidebarItemImplProps>(functio
     },
     icon,
     <span className="eds-sidebar-label">{children}</span>,
+    // Espaço entre o rótulo e o contador: em flex não é desenhado, mas separa as palavras do nome acessível.
+    badge !== undefined && badge !== null && badge !== false ? ' ' : null,
+    badge !== undefined && badge !== null && badge !== false ? (
+      <span className="eds-sidebar-badge">
+        {badge}
+        {badgeLabel ? (
+          <>
+            {' '}
+            <span className="eds-visually-hidden">{badgeLabel}</span>
+          </>
+        ) : null}
+      </span>
+    ) : null,
   );
 }) as unknown as {
   (props: SidebarItemAsLinkProps & { ref?: Ref<HTMLAnchorElement> }): ReactNode;

@@ -31,6 +31,13 @@ export default function LookupPage() {
         ]}
       />
 
+      <p className="docs-muted">
+        O diálogo de busca usa o tamanho grande do Modal (<code>.eds-modal-lg</code>) e, abaixo de
+        768px de viewport, ocupa a tela inteira (<code>.eds-modal:has(.eds-lookup-results)</code>,
+        com a aparência de <code>.eds-modal-full</code>); a tabela de resultados não rola na
+        horizontal, e as colunas secundárias saem com <code>.eds-table-hide-narrow</code>.
+      </p>
+
       <Section title="Exemplos">
         <Example
           title="Cliente, com busca em modal"
@@ -81,7 +88,8 @@ export default function LookupPage() {
             },
             {
               name: 'data-eds-lookup-columns=\'[{"key":"cidade","label":"Cidade"}]\'',
-              effect: 'Colunas da tabela (padrão: código e descrição).',
+              effect:
+                'Colunas da tabela (padrão: código e descrição). "hideNarrow": true esconde a coluna quando a tabela do diálogo fica estreita (ver .eds-table-hide-narrow).',
             },
             {
               name: 'eds:lookup-change',
@@ -119,8 +127,9 @@ export default function LookupPage() {
             },
             {
               name: 'columns',
-              type: '{ key, label }[]',
-              description: 'Colunas do diálogo (padrão: código e descrição).',
+              type: '{ key, label, hideNarrow? }[]',
+              description:
+                'Colunas do diálogo (padrão: código e descrição). hideNarrow esconde a coluna quando a tabela fica estreita (.eds-table-hide-narrow).',
             },
             {
               name: 'buttonLabel / dialogTitle',

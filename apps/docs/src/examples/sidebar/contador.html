@@ -1,0 +1,41 @@
+<!-- Só CSS. .eds-sidebar-badge dentro do .eds-sidebar-item, depois do rótulo. Expandida: contador discreto
+     no fim do item. Compacta ([data-collapsed] ou o trilho do app shell): vira um ponto sobre o ícone, e o
+     número continua no nome acessível do link pelo texto oculto ("Contas a pagar 3 vencidas"). -->
+<div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-5">
+  <nav class="eds-sidebar" popover aria-label="Menu com contador (expandido)">
+    <div class="eds-sidebar-section">
+      <a class="eds-sidebar-item" href="#/componentes/sidebar" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
+        <span class="eds-sidebar-label">Dashboard</span>
+      </a>
+      <a class="eds-sidebar-item" href="#/componentes/sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5" /></svg>
+        <span class="eds-sidebar-label">Contas a pagar</span>
+        <span class="eds-sidebar-badge">3<span class="eds-visually-hidden"> vencidas</span></span>
+      </a>
+      <a class="eds-sidebar-item" href="#/componentes/sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0" /></svg>
+        <span class="eds-sidebar-label">Avisos</span>
+        <span class="eds-sidebar-badge">12<span class="eds-visually-hidden"> não lidos</span></span>
+      </a>
+    </div>
+  </nav>
+  <nav class="eds-sidebar" data-collapsed popover aria-label="Menu com contador (compacto)">
+    <div class="eds-sidebar-section">
+      <a class="eds-sidebar-item" href="#/componentes/sidebar" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
+        <span class="eds-sidebar-label">Dashboard</span>
+      </a>
+      <a class="eds-sidebar-item" href="#/componentes/sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5" /></svg>
+        <span class="eds-sidebar-label">Contas a pagar</span>
+        <span class="eds-sidebar-badge">3<span class="eds-visually-hidden"> vencidas</span></span>
+      </a>
+      <a class="eds-sidebar-item" href="#/componentes/sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0" /></svg>
+        <span class="eds-sidebar-label">Avisos</span>
+        <span class="eds-sidebar-badge">12<span class="eds-visually-hidden"> não lidos</span></span>
+      </a>
+    </div>
+  </nav>
+</div>

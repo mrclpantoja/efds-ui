@@ -5,7 +5,8 @@
  *     <header class="eds-page-header [eds-page-header-sticky]">
  *       <nav class="eds-breadcrumb">…</nav>
  *       <div class="eds-page-heading">
- *         <h1 class="eds-page-title">Pedidos</h1>
+ *         <h1 class="eds-page-title">Pedidos</h1>   (ícone opcional antes do texto: <svg aria-hidden="true"> ou
+ *                                                    <span class="eds-page-title-icon" aria-hidden="true">)
  *         <p class="eds-page-description">…</p>
  *         <div class="eds-page-meta">…badges…</div>        (opcional)
  *       </div>
@@ -18,7 +19,8 @@
  *
  * - A página é um container de largura (eds-page): título e ações ficam na mesma linha quando cabem;
  *   abaixo de 40rem as ações descem para a linha seguinte.
- * - O espaçamento entre as partes é --eds-inset-lg (acompanha a densidade).
+ * - O espaçamento entre as partes é --eds-inset-lg (acompanha a densidade); do cabeçalho ao bloco
+ *   seguinte são 32px (space-6), da trilha ao título 16px (só com trilha) e do título à descrição 8px.
  * - .eds-page-header-sticky fixa o cabeçalho no topo da área de rolagem. Cuidado com WCAG 2.4.11: o
  *   cabeçalho pode cobrir o foco; se ele for alto, prefira não fixar em telas baixas.
  */
@@ -42,9 +44,17 @@
     gap: var(--eds-space-3) var(--eds-inset-md);
     min-inline-size: 0;
 
+    /* Cabeçalho → primeiro bloco: space-6 (a página já separa os blocos por --_page-gap). */
+    margin-block-end: max(0px, calc(var(--eds-space-6) - var(--_page-gap)));
+
     /* A trilha ocupa a primeira linha sozinha. */
     & > .eds-breadcrumb {
       flex: 1 1 100%;
+    }
+
+    /* Trilha → título: space-4 (só quando há trilha). */
+    &:has(> .eds-breadcrumb) {
+      row-gap: var(--eds-space-4);
     }
   }
 
@@ -52,7 +62,7 @@
     display: flex;
     flex: 1 1 20rem;
     flex-direction: column;
-    gap: var(--eds-space-1);
+    gap: var(--eds-space-2);
     min-inline-size: 0;
   }
 
@@ -63,6 +73,31 @@
     font-weight: var(--eds-font-weight-semibold);
     line-height: var(--eds-line-height-h1);
     overflow-wrap: anywhere;
+  }
+
+  /* Flex só quando há ícone: sem ele o título continua um bloco comum (<em>, <span> e links no
+     texto seguem em linha). Com ícone, o texto com marcação interna deve vir num único <span>. */
+  .eds-page-title:has(> .eds-page-title-icon, > svg) {
+    display: flex;
+    gap: var(--eds-space-3);
+    align-items: flex-start;
+  }
+
+  /* Ícone antes do título: centrado na primeira linha (1lh = altura da linha do título), do
+     tamanho --eds-icon-size-lg, e não encolhe nem quebra o título longo. Decorativo: aria-hidden. */
+  .eds-page-title-icon,
+  .eds-page-title > svg {
+    flex: none;
+    inline-size: var(--eds-icon-size-lg);
+    block-size: var(--eds-icon-size-lg);
+    margin-block: calc((1lh - var(--eds-icon-size-lg)) / 2);
+    color: var(--eds-color-text-secondary);
+
+    & > svg {
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
+    }
   }
 
   .eds-page-description {

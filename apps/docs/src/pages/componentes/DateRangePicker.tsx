@@ -294,7 +294,8 @@ export default function DateRangePickerPage() {
           rows={[
             {
               name: '.eds-daterange',
-              effect: 'No .eds-datepicker: dois campos lado a lado com o separador e um só botão.',
+              effect:
+                'No .eds-datepicker: grade de início, separador, fim e botão, sempre na mesma linha (nunca quebra; os campos encolhem).',
             },
             { name: '.eds-daterange-sep', effect: 'O separador ("até"), decorativo.' },
             {

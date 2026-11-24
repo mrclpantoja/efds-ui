@@ -115,24 +115,25 @@
 
   /* ---- Período ---- */
 
-  /* Dois campos + botão na mesma linha; em contêiner estreito quebra em "início até / fim [botão]".
-     O botão fica ao lado do segundo campo (não por cima), com a borda dos campos. */
+  /* Início, separador, fim e botão sempre na mesma linha (nunca quebra): a grade deixa os campos
+     encolherem (minmax(0, 1fr)) e o separador e o botão ficam com a largura do conteúdo. O botão
+     fica ao lado do segundo campo, com a borda dos campos. O calendário (popover) e o status
+     oculto saem do fluxo e não ocupam coluna. */
   .eds-daterange {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--eds-space-2);
 
     & > .eds-datepicker-input {
-      flex: 1 1 9rem;
       inline-size: auto;
-      padding-inline: var(--eds-space-3);
+      min-inline-size: 0;
+      padding-inline: var(--eds-space-2);
     }
 
     & > .eds-datepicker-toggle {
       position: static;
       align-self: stretch;
-      flex: none;
       inline-size: var(--_dp-height);
       block-size: auto;
       min-block-size: var(--_dp-height);
@@ -148,7 +149,6 @@
   }
 
   .eds-daterange-sep {
-    flex: none;
     color: var(--eds-color-text-secondary);
     font-size: var(--eds-font-size-small);
     line-height: var(--eds-line-height-small);

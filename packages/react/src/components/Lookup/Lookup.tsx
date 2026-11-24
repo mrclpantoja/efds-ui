@@ -29,6 +29,8 @@ export interface LookupColumn {
   /** Propriedade do item (`code` e `description` já existem). */
   key: string;
   label: string;
+  /** Coluna secundária: some (`.eds-table-hide-narrow`) quando a tabela do diálogo fica estreita. */
+  hideNarrow?: boolean;
 }
 
 /** Textos internos do Lookup (padrões em pt-BR). */
@@ -390,7 +392,11 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
               <thead>
                 <tr>
                   {columns.map((c) => (
-                    <th key={c.key} scope="col">
+                    <th
+                      key={c.key}
+                      scope="col"
+                      className={c.hideNarrow ? 'eds-table-hide-narrow' : undefined}
+                    >
                       {c.label}
                     </th>
                   ))}
@@ -405,7 +411,12 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
                     {columns.map((c) => (
                       <td
                         key={c.key}
-                        className={c.key === 'code' ? undefined : 'eds-table-wrap-text'}
+                        className={
+                          cx(
+                            c.key !== 'code' && 'eds-table-wrap-text',
+                            c.hideNarrow && 'eds-table-hide-narrow',
+                          ) || undefined
+                        }
                       >
                         {item[c.key] == null ? '' : String(item[c.key])}
                       </td>

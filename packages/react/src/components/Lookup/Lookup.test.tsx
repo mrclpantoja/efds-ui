@@ -95,12 +95,18 @@ describe('Lookup', () => {
         columns={[
           { key: 'code', label: 'Código' },
           { key: 'description', label: 'Descrição' },
-          { key: 'cidade', label: 'Cidade' },
+          { key: 'cidade', label: 'Cidade', hideNarrow: true },
         ]}
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Buscar cliente' }));
     const dialog = await screen.findByRole('dialog', { name: 'Buscar cliente' });
+    expect(within(dialog).getByRole('columnheader', { name: 'Cidade' })).toHaveClass(
+      'eds-table-hide-narrow',
+    );
+    expect(within(dialog).getByRole('columnheader', { name: 'Código' })).not.toHaveClass(
+      'eds-table-hide-narrow',
+    );
     await waitFor(() => expect(within(dialog).getAllByRole('row')).toHaveLength(4));
     expect(within(dialog).getByRole('columnheader', { name: 'Cidade' })).toBeInTheDocument();
     expect(within(dialog).getByRole('status')).toHaveTextContent('3 resultados disponíveis.');

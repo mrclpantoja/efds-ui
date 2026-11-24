@@ -1,0 +1,38 @@
+<!-- O campo com .eds-daterange recebe mais largura (flex 2 1 22rem) e o período nunca quebra linha:
+     início, "até", fim e o botão do calendário ficam juntos. As ações vão ao fim da linha. Os rótulos
+     (<label> e <span>) têm a mesma altura, então os controles ficam alinhados pela base. -->
+<form class="eds-filter-bar" role="search" aria-label="Filtrar lançamentos" method="get" action="#/componentes/filter-bar">
+  <div class="eds-filter-bar-fields">
+    <div class="eds-field eds-filter-bar-search">
+      <label class="eds-label" for="fbp-busca">Buscar</label>
+      <input class="eds-input" id="fbp-busca" name="busca" type="search" placeholder="Descrição ou fornecedor" autocomplete="off" />
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="fbp-situacao">Situação</label>
+      <select class="eds-select" id="fbp-situacao" name="situacao">
+        <option value="">Todas</option>
+        <option value="aberto">Em aberto</option>
+        <option value="pago">Pago</option>
+      </select>
+    </div>
+    <div class="eds-field">
+      <span class="eds-label" id="fbp-periodo-l">Período</span>
+      <div class="eds-datepicker eds-daterange" data-eds-daterange role="group" aria-labelledby="fbp-periodo-l">
+        <input class="eds-input eds-datepicker-input" type="text" inputmode="numeric" maxlength="10" aria-label="Data inicial"
+          placeholder="dd/mm/aaaa" autocomplete="off" />
+        <span class="eds-daterange-sep" aria-hidden="true">até</span>
+        <input class="eds-input eds-datepicker-input" type="text" inputmode="numeric" maxlength="10" aria-label="Data final"
+          placeholder="dd/mm/aaaa" autocomplete="off" />
+        <button type="button" class="eds-datepicker-toggle" aria-label="Escolher período"></button>
+        <input type="hidden" name="inicio" />
+        <input type="hidden" name="fim" />
+        <div class="eds-calendar" popover="manual"></div>
+        <span class="eds-visually-hidden" role="status"></span>
+      </div>
+    </div>
+  </div>
+  <div class="eds-filter-bar-actions">
+    <button type="submit" class="eds-button eds-button-primary">Filtrar</button>
+    <button type="reset" class="eds-button eds-button-secondary">Limpar</button>
+  </div>
+</form>

@@ -7,6 +7,9 @@ import { UseCases } from '../../components/UseCases';
 import Basico from '../../examples/banner/basico';
 import basicoHtml from '../../examples/banner/basico.html?raw';
 import basicoSource from '../../examples/banner/basico.tsx?raw';
+import AcoesTons from '../../examples/banner/acoes-tons';
+import acoesTonsHtml from '../../examples/banner/acoes-tons.html?raw';
+import acoesTonsSource from '../../examples/banner/acoes-tons.tsx?raw';
 import Dinamico from '../../examples/banner/dinamico';
 import dinamicoHtml from '../../examples/banner/dinamico.html?raw';
 import dinamicoSource from '../../examples/banner/dinamico.tsx?raw';
@@ -41,6 +44,12 @@ export default function BannerPage() {
           description="info (padrão), success, warning, danger e neutral. O ícone é decorativo; o texto diz a natureza do aviso."
           html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
+        />
+        <Example
+          title="Ações nos tons"
+          description="Os botões dentro das ações herdam o tom do aviso (info, success, warning, danger e neutral): secondary em contorno, ghost sem borda e primary com a cor do tom como fundo."
+          html={acoesTonsHtml}
+          react={{ Component: AcoesTons, source: acoesTonsSource }}
         />
         <Example
           title="Dispensável"
@@ -133,7 +142,11 @@ export default function BannerPage() {
               effect: 'A faixa. Tons: -info (padrão), -success, -warning, -danger, -neutral.',
             },
             { name: '.eds-banner-text', effect: 'O texto (um <p>).' },
-            { name: '.eds-banner-actions', effect: 'Botões ou links à direita.' },
+            {
+              name: '.eds-banner-actions',
+              effect:
+                'Botões ou links à direita. Primary, secondary e ghost herdam o tom do aviso.',
+            },
             { name: '.eds-banner-close', effect: 'Botão ghost de ícone para fechar.' },
           ]}
         />

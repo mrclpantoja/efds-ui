@@ -8,6 +8,9 @@ import { toHref } from '../../router';
 import Basico from '../../examples/filter-bar/basico';
 import basicoHtml from '../../examples/filter-bar/basico.html?raw';
 import basicoSource from '../../examples/filter-bar/basico.tsx?raw';
+import Periodo from '../../examples/filter-bar/periodo';
+import periodoHtml from '../../examples/filter-bar/periodo.html?raw';
+import periodoSource from '../../examples/filter-bar/periodo.tsx?raw';
 import Completa from '../../examples/filter-bar/completa';
 import completaHtml from '../../examples/filter-bar/completa.html?raw';
 import completaSource from '../../examples/filter-bar/completa.tsx?raw';
@@ -38,6 +41,12 @@ export default function FilterBarPage() {
           description="Busca e situação. Os chips mostram o que foi aplicado (rótulo do campo + texto da opção): remover um chip limpa o campo e refaz a busca, e o foco vai ao próximo chip ou, se não sobrou nenhum, ao primeiro campo. Nestes exemplos o envio não navega."
           html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
+        />
+        <Example
+          title="Com período"
+          description="O campo com DateRangePicker recebe mais largura e o período nunca quebra linha (início, “até”, fim e botão do calendário). As ações ficam no fim da linha, alinhadas à base dos campos. Reduza a largura do navegador para ver."
+          html={periodoHtml}
+          react={{ Component: Periodo, source: periodoSource }}
         />
         <Example
           title="Com “Mais filtros”"
@@ -132,7 +141,11 @@ export default function FilterBarPage() {
               name: '.eds-filter-bar-search',
               effect: 'A busca principal: ocupa o espaço que sobra.',
             },
-            { name: '.eds-filter-bar-actions', effect: 'Filtrar e Limpar.' },
+            {
+              name: '.eds-filter-bar-actions',
+              effect:
+                'Filtrar e Limpar: no fim da linha dos campos, alinhadas à base; em contêiner estreito ocupam a linha toda.',
+            },
             {
               name: '.eds-filter-bar-more',
               effect:

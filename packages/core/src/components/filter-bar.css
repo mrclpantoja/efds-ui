@@ -32,30 +32,46 @@
     margin: 0;
   }
 
+  /* Base 0: os campos dividem a linha com as ações, que ficam no fim da última linha de campos
+     em vez de caírem sozinhas para a linha de baixo. */
   .eds-filter-bar-fields {
     display: flex;
-    flex: 1 1 auto;
+    flex: 1 1 0;
     flex-wrap: wrap;
     align-items: flex-end;
     gap: var(--eds-space-3);
     min-inline-size: 0;
 
     & > * {
-      flex: 1 1 12rem;
+      flex: 1 1 10rem;
       min-inline-size: 0;
     }
 
     & > .eds-filter-bar-search {
       flex: 2 1 16rem;
     }
+
+    /* Período (dois campos + botão) precisa de mais largura que um filtro comum. */
+    & > :has(.eds-daterange) {
+      flex: 2 1 22rem;
+    }
+
+    /* Rótulos de <label> e de <span> (grupos) com a mesma altura: os controles ficam alinhados. */
+    & > .eds-field > .eds-label {
+      display: block;
+      min-block-size: var(--eds-line-height-label);
+    }
   }
 
+  /* Ações no fim da mesma linha dos campos, alinhadas à base deles quando cabem; sem espaço, descem
+     e continuam no fim. */
   .eds-filter-bar-actions {
     display: flex;
     flex: none;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--eds-space-2);
+    margin-inline-start: auto;
   }
 
   /* ---- Mais filtros ---- */
@@ -152,6 +168,15 @@
         & > :not(summary) {
           flex: 1 1 12rem;
           margin-block-start: 0;
+        }
+
+        & > :has(.eds-daterange) {
+          flex: 2 1 22rem;
+        }
+
+        & > .eds-field > .eds-label {
+          display: block;
+          min-block-size: var(--eds-line-height-label);
         }
       }
     }

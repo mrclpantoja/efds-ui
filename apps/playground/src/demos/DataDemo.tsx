@@ -420,6 +420,219 @@ function Paginations() {
   );
 }
 
+function TableVariants() {
+  const id = useId();
+  return (
+    <Section title="Table: fit, coluna fixa e empilhada">
+      <article className="eds-card">
+        <header className="eds-card-header">
+          <h3 className="eds-card-title">eds-table-fit (2 colunas em card)</h3>
+        </header>
+        <div className="eds-table-wrap">
+          <table className="eds-table eds-table-fit">
+            <caption className="eds-table-caption eds-visually-hidden">Vencimentos</caption>
+            <thead>
+              <tr>
+                <th scope="col">Cliente</th>
+                <th scope="col" className="eds-table-num">
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.slice(0, 3).map((row) => (
+                <tr key={row.code}>
+                  <td>{row.client}</td>
+                  <td className="eds-table-num">{money.format(row.total)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <h3 className="eds-text-h4" id={`${id}-fix`}>
+        eds-table-sticky-col
+      </h3>
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- região rolável precisa de foco (WCAG 2.1.1) */}
+      <div className="eds-table-wrap" role="region" aria-labelledby={`${id}-fix`} tabIndex={0}>
+        <table className="eds-table eds-table-sticky-col">
+          <thead>
+            <tr>
+              <th scope="col">Código</th>
+              {['Cliente', 'Categoria', 'Início', 'Término', 'Responsável', 'Situação'].map((h) => (
+                <th key={h} scope="col">
+                  {h}
+                </th>
+              ))}
+              <th scope="col" className="eds-table-num">
+                Total
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.slice(0, 4).map((row) => (
+              <tr key={row.code}>
+                <th scope="row">{row.code}</th>
+                <td>{row.client}</td>
+                <td>Materiais</td>
+                <td>01/03/2026</td>
+                <td>28/02/2027</td>
+                <td>Equipe Modelo</td>
+                <td>
+                  <span className={`eds-badge eds-badge-${row.status}`}>{row.label}</span>
+                </td>
+                <td className="eds-table-num">{money.format(row.total)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h3 className="eds-text-h4">eds-table-stack (contêiner de 22rem, abaixo de 40rem)</h3>
+      <div style={{ inlineSize: '22rem', maxInlineSize: '100%' }}>
+        <div className="eds-table-wrap eds-table-stack">
+          <table className="eds-table">
+            <caption className="eds-table-caption eds-visually-hidden">Pedidos empilhados</caption>
+            <thead>
+              <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Cliente</th>
+                <th scope="col" className="eds-table-num">
+                  Total
+                </th>
+                <th scope="col" className="eds-table-actions">
+                  <span className="eds-visually-hidden">Ações</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.slice(0, 3).map((row) => (
+                <tr key={row.code}>
+                  <td data-label="Código">{row.code}</td>
+                  <td data-label="Cliente">{row.client}</td>
+                  <td data-label="Total" className="eds-table-num">
+                    {money.format(row.total)}
+                  </td>
+                  <td className="eds-table-actions">
+                    <button type="button" className="eds-button eds-button-secondary eds-button-sm">
+                      Ver {row.code}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function StatAndDescription() {
+  return (
+    <Section title="Stat com rótulo longo e DescriptionList em card estreito">
+      <div className="eds-stat-grid">
+        {[
+          ['Pedidos no mês', '1.284'],
+          ['Inadimplência acumulada nos últimos 12 meses', '4,8%'],
+          ['Faturamento', 'R$ 86.410,00'],
+          ['Ticket médio', 'R$ 67,30'],
+        ].map(([label, value]) => (
+          <div key={label} className="eds-card eds-stat">
+            <p className="eds-stat-label">{label}</p>
+            <p className="eds-stat-value">{value}</p>
+            <p className="eds-stat-delta" data-tone="neutral">
+              <span className="eds-stat-meta">vs. mês anterior</span>
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className="eds-card" style={{ inlineSize: '32.5rem', maxInlineSize: '100%' }}>
+        <div className="eds-card-body">
+          <dl className="eds-description-list eds-description-list-cols-2">
+            <div>
+              <dt>Número</dt>
+              <dd>PED-0001</dd>
+            </div>
+            <div>
+              <dt>Cliente</dt>
+              <dd>Atelier Exemplo</dd>
+            </div>
+            <div>
+              <dt>Emissão</dt>
+              <dd>15/03/2026</dd>
+            </div>
+            <div>
+              <dt>Total</dt>
+              <dd>R$ 1.280,50</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function FilterWithPeriod() {
+  const id = useId();
+  return (
+    <Section title="FilterBar com período (eds-daterange não quebra linha)">
+      <form className="eds-filter-bar" role="search" aria-label="Filtrar lançamentos">
+        <div className="eds-filter-bar-fields">
+          <div className="eds-field eds-filter-bar-search">
+            <label className="eds-label" htmlFor={`${id}-b`}>
+              Buscar
+            </label>
+            <input className="eds-input" id={`${id}-b`} type="search" autoComplete="off" />
+          </div>
+          <div className="eds-field">
+            <span className="eds-label" id={`${id}-l`}>
+              Período
+            </span>
+            <div className="eds-datepicker eds-daterange" role="group" aria-labelledby={`${id}-l`}>
+              <input
+                className="eds-input eds-datepicker-input"
+                type="text"
+                inputMode="numeric"
+                maxLength={10}
+                aria-label="Data inicial"
+                placeholder="dd/mm/aaaa"
+                autoComplete="off"
+              />
+              <span className="eds-daterange-sep" aria-hidden="true">
+                até
+              </span>
+              <input
+                className="eds-input eds-datepicker-input"
+                type="text"
+                inputMode="numeric"
+                maxLength={10}
+                aria-label="Data final"
+                placeholder="dd/mm/aaaa"
+                autoComplete="off"
+              />
+              <button
+                type="button"
+                className="eds-datepicker-toggle"
+                aria-label="Escolher período"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="eds-filter-bar-actions">
+          <button type="submit" className="eds-button eds-button-primary">
+            Filtrar
+          </button>
+          <button type="reset" className="eds-button eds-button-secondary">
+            Limpar
+          </button>
+        </div>
+      </form>
+    </Section>
+  );
+}
+
 export function DataDemo() {
   return (
     <div
@@ -436,6 +649,9 @@ export function DataDemo() {
       <CardTable />
       <EmptyTable />
       <Paginations />
+      <TableVariants />
+      <StatAndDescription />
+      <FilterWithPeriod />
     </div>
   );
 }

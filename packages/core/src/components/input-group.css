@@ -11,6 +11,8 @@
    - Erro herdado: [aria-invalid="true"] no input marca o grupo (a mensagem fica em p.eds-error
      fora do grupo, ligada por aria-describedby). Também reage a [data-valid="true"], :disabled
      e [readonly] do input.
+   - Prefixo/sufixo também aceita um ícone: <span class="eds-input-group-text"><svg aria-hidden="true">…</svg></span>
+     (o svg ganha o tamanho --eds-icon-size-md; ícone decorativo, o rótulo segue no label).
    - Texto de apoio (prefixo/sufixo) NÃO é o rótulo: o campo continua precisando de label/aria-label.
    - Carregando (ex.: busca de CEP): um .eds-input-group-text com .eds-spinner, alternado por [hidden],
      e [aria-busy="true"] no grupo.
@@ -120,6 +122,13 @@
     font-size: var(--eds-font-size-body);
     line-height: var(--eds-line-height-body);
     white-space: nowrap;
+
+    /* Ícone como prefixo/sufixo: sem largura/altura próprias o svg colapsa a 0 dentro do flex. */
+    & > svg {
+      flex: none;
+      inline-size: var(--eds-icon-size-md);
+      block-size: var(--eds-icon-size-md);
+    }
 
     &:first-child {
       border-start-start-radius: calc(var(--_group-radius) - var(--eds-border-width));

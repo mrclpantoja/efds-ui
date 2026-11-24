@@ -7,6 +7,9 @@ import { UseCases } from '../../components/UseCases';
 import Acoes from '../../examples/alert/acoes';
 import acoesHtml from '../../examples/alert/acoes.html?raw';
 import acoesSource from '../../examples/alert/acoes.tsx?raw';
+import AcoesTons from '../../examples/alert/acoes-tons';
+import acoesTonsHtml from '../../examples/alert/acoes-tons.html?raw';
+import acoesTonsSource from '../../examples/alert/acoes-tons.tsx?raw';
 import Dinamico from '../../examples/alert/dinamico';
 import dinamicoHtml from '../../examples/alert/dinamico.html?raw';
 import dinamicoSource from '../../examples/alert/dinamico.tsx?raw';
@@ -53,6 +56,12 @@ export default function AlertPage() {
           description="O título fica em linha própria; as ações ficam abaixo do conteúdo."
           html={acoesHtml}
           react={{ Component: Acoes, source: acoesSource }}
+        />
+        <Example
+          title="Ações nos quatro tons"
+          description="Os botões dentro das ações herdam o tom do alerta: o secondary vira contorno na cor do status (sem o fundo branco), o ghost fica sem borda e o primary usa a cor do status como fundo. Texto e contorno passam AA nos dois modos."
+          html={acoesTonsHtml}
+          react={{ Component: AcoesTons, source: acoesTonsSource }}
         />
         <Example
           title="Com botão de fechar"
@@ -170,7 +179,8 @@ export default function AlertPage() {
             },
             {
               name: '.eds-alert-actions',
-              effect: 'Linha de botões abaixo do conteúdo, com quebra.',
+              effect:
+                'Linha de botões abaixo do conteúdo, com quebra. Os botões primary, secondary e ghost herdam o tom do alerta.',
             },
             {
               name: '.eds-alert-close',

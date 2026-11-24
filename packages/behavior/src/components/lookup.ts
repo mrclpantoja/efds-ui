@@ -10,6 +10,8 @@ const SEARCH_DEBOUNCE_MS = 250;
 interface LookupColumn {
   key: string;
   label: string;
+  /** Coluna secundária: some (`.eds-table-hide-narrow`) quando a tabela do diálogo fica estreita. */
+  hideNarrow?: boolean;
 }
 
 /** `fetch` aceita só o que a especificação define; `edsLoader` é lido pelo PageLoader. */
@@ -56,7 +58,7 @@ async function getJson(
  *   é usada e vale o código exato.
  * Outros atributos: `data-eds-lookup-dialog` (id de um diálogo seu, com `[data-eds-lookup-search]` e
  * `tbody[data-eds-lookup-results]`), `data-eds-lookup-title`, `data-eds-lookup-columns` (JSON
- * `[{ "key", "label" }]`). Evento `eds:lookup-change` (`{ code, description, item }`).
+ * `[{ "key", "label", "hideNarrow"? }]`). Evento `eds:lookup-change` (`{ code, description, item }`).
  */
 export const lookupBehavior: Behavior = {
   name: 'lookup',
@@ -98,7 +100,11 @@ export const lookupBehavior: Behavior = {
         if (Array.isArray(parsed) && parsed.length > 0) {
           columns = parsed
             .filter((c): c is LookupColumn => !!c && typeof (c as LookupColumn).key === 'string')
-            .map((c) => ({ key: c.key, label: String(c.label ?? c.key) }));
+            .map((c) => ({
+              key: c.key,
+              label: String(c.label ?? c.key),
+              hideNarrow: c.hideNarrow === true,
+            }));
         }
       } catch {
         /* mantém as colunas padrão */
@@ -288,7 +294,10 @@ export const lookupBehavior: Behavior = {
         for (const column of columns) {
           const cell = document.createElement('td');
           // Descrições longas quebram linha (a tabela do diálogo não rola a 320 px até o botão).
-          if (column.key !== 'code') cell.className = 'eds-table-wrap-text';
+          const cellClasses = [];
+          if (column.key !== 'code') cellClasses.push('eds-table-wrap-text');
+          if (column.hideNarrow) cellClasses.push('eds-table-hide-narrow');
+          if (cellClasses.length) cell.className = cellClasses.join(' ');
           const v =
             column.key === 'code'
               ? item.code
@@ -417,7 +426,7 @@ function buildDialog(
   const m = getMessages();
   const id = uid('lookup');
   const dialog = document.createElement('dialog');
-  dialog.className = 'eds-modal eds-lookup-dialog';
+  dialog.className = 'eds-modal eds-modal-lg eds-lookup-dialog';
   dialog.setAttribute('aria-labelledby', `${id}-title`);
 
   const header = document.createElement('header');
@@ -480,6 +489,7 @@ function buildDialog(
     const th = document.createElement('th');
     th.scope = 'col';
     th.textContent = column.label;
+    if (column.hideNarrow) th.className = 'eds-table-hide-narrow';
     headRow.append(th);
   }
   const actionsHead = document.createElement('th');

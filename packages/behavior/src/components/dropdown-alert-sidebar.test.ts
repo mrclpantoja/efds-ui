@@ -129,6 +129,7 @@ describe('sidebar', () => {
       <div class="eds-app">
         <a class="eds-skip-link" href="#conteudo">Pular</a>
         <nav class="eds-sidebar" id="nav" popover aria-label="Principal">
+          <div class="eds-sidebar-header">Marca<button type="button" id="fechar" class="eds-sidebar-close" popovertarget="nav" popovertargetaction="hide" aria-label="Fechar menu">x</button></div>
           <a class="eds-sidebar-item" id="home" href="/dashboard" aria-current="page">Dashboard</a>
           <a class="eds-sidebar-item" id="users" href="/usuarios">Usuários</a>
           <div class="eds-sidebar-footer">
@@ -166,6 +167,18 @@ describe('sidebar', () => {
     await flush();
     expect(byId('menu')).toHaveAttribute('aria-expanded', 'false');
     expect(byId('conteudo')).not.toHaveAttribute('inert');
+    expect(document.activeElement).toBe(byId('menu'));
+  });
+
+  it('Fechar menu fecha, devolve o foco ao gatilho de fora e não ganha aria-expanded', async () => {
+    const user = userEvent.setup();
+    await user.click(byId('menu'));
+    await flush();
+    expect(byId('fechar')).not.toHaveAttribute('aria-expanded');
+    await user.click(byId('fechar'));
+    await flush();
+    expect(byId('nav').matches(':popover-open')).toBe(false);
+    expect(byId('menu')).toHaveAttribute('aria-expanded', 'false');
     expect(document.activeElement).toBe(byId('menu'));
   });
 

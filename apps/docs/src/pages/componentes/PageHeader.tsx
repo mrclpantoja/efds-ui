@@ -6,6 +6,9 @@ import { UseCases } from '../../components/UseCases';
 import Basico from '../../examples/page-header/basico';
 import basicoHtml from '../../examples/page-header/basico.html?raw';
 import basicoSource from '../../examples/page-header/basico.tsx?raw';
+import Icone from '../../examples/page-header/icone';
+import iconeHtml from '../../examples/page-header/icone.html?raw';
+import iconeSource from '../../examples/page-header/icone.tsx?raw';
 import Pagina from '../../examples/page-header/pagina';
 import paginaHtml from '../../examples/page-header/pagina.html?raw';
 import paginaSource from '../../examples/page-header/pagina.tsx?raw';
@@ -36,6 +39,12 @@ export default function PageHeaderPage() {
           description="Título e ações na mesma linha quando cabem; em contêiner estreito (< 40rem) as ações descem. A meta (selos e informações curtas) fica abaixo da descrição."
           html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
+        />
+        <Example
+          title="Título com ícone"
+          description="Um svg (ou .eds-page-title-icon envolvendo o svg) antes do texto: fica centrado na primeira linha, do tamanho de --eds-icon-size-lg, e um título longo quebra sem empurrar o ícone. No React, ponha o ícone dentro de title. Decorativo (aria-hidden)."
+          html={iconeHtml}
+          react={{ Component: Icone, source: iconeSource }}
         />
         <Example
           title="Página completa"
@@ -100,13 +109,26 @@ export default function PageHeaderPage() {
               name: '.eds-page',
               effect: 'Contêiner da página: empilha os blocos com o espaçamento do tema.',
             },
-            { name: '.eds-page-header', effect: 'Cabeçalho (<header>): trilha, título e ações.' },
+            {
+              name: '.eds-page-header',
+              effect:
+                'Cabeçalho (<header>): trilha, título e ações. Com trilha, 16 px entre ela e o título; 32 px até o primeiro bloco da página.',
+            },
             {
               name: '.eds-page-header-sticky',
               effect: 'Cabeçalho fixo no topo da área de rolagem.',
             },
-            { name: '.eds-page-heading', effect: 'Grupo do título, da descrição e da meta.' },
-            { name: '.eds-page-title', effect: 'O <h1>.' },
+            {
+              name: '.eds-page-heading',
+              effect:
+                'Grupo do título, da descrição e da meta (8 px entre o título e a descrição).',
+            },
+            { name: '.eds-page-title', effect: 'O <h1>. Aceita um ícone antes do texto.' },
+            {
+              name: '.eds-page-title-icon',
+              effect:
+                'Opcional: envolve o svg do ícone do título (um svg direto no .eds-page-title também vale). Centrado na primeira linha, 12 px de distância do texto, não encolhe. Com ícone, o título vira flex: texto com marcação interna (<em>, link) vai num único <span>.',
+            },
             { name: '.eds-page-description', effect: 'Descrição, em tom secundário.' },
             { name: '.eds-page-meta', effect: 'Selos e informações curtas.' },
             { name: '.eds-page-actions', effect: 'Botões; descem em contêiner estreito.' },

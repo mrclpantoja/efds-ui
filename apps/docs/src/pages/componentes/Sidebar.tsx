@@ -9,6 +9,9 @@ import { toHref } from '../../router';
 import Estatica from '../../examples/sidebar/estatica';
 import estaticaHtml from '../../examples/sidebar/estatica.html?raw';
 import estaticaSource from '../../examples/sidebar/estatica.tsx?raw';
+import Contador from '../../examples/sidebar/contador';
+import contadorHtml from '../../examples/sidebar/contador.html?raw';
+import contadorSource from '../../examples/sidebar/contador.tsx?raw';
 import colapsavelSource from '../../examples/sidebar/colapsavel.tsx?raw';
 
 export default function SidebarPage() {
@@ -47,6 +50,19 @@ export default function SidebarPage() {
           description="Marca, seções, item atual e rodapé. Fora de .eds-app não há faixas responsivas nem off-canvas."
           html={estaticaHtml}
           react={{ Component: Estatica, source: estaticaSource }}
+        />
+        <Example
+          title="Item com contador"
+          description={
+            <>
+              Contador ao fim do item (&quot;3 vencidas&quot;), com aparência de Badge discreto. Na
+              sidebar compacta vira um ponto sobre o ícone; o número continua no nome acessível do
+              link (&quot;Contas a pagar 3 vencidas&quot;), pelo texto oculto. No React, use{' '}
+              <code>badge</code> e <code>badgeLabel</code>.
+            </>
+          }
+          html={contadorHtml}
+          react={{ Component: Contador, source: contadorSource }}
         />
         <h3 className="eds-text-h4">Colapso controlado, dentro do app shell</h3>
         <p className="docs-muted">
@@ -171,6 +187,18 @@ export default function SidebarPage() {
               default: 'false',
               description: 'Página atual: aria-current="page".',
             },
+            {
+              name: 'badge',
+              type: 'ReactNode',
+              description:
+                'Contador ao fim do item (ex.: 3). Na sidebar compacta vira um ponto sobre o ícone. Ausente (ou false/null), não renderiza; 0 aparece.',
+            },
+            {
+              name: 'badgeLabel',
+              type: 'ReactNode',
+              description:
+                'Complemento do contador no nome acessível, oculto na tela (ex.: "vencidas"), para o link ler "Contas a pagar 3 vencidas".',
+            },
           ]}
         />
       </Section>
@@ -195,6 +223,11 @@ export default function SidebarPage() {
                 'Só na sidebar do shell: mantém-na expandida entre 768 e 1023px, em vez de compacta. Abaixo de 768px continua off-canvas. Use quando os itens são só texto.',
             },
             { name: '.eds-sidebar-header', effect: 'Marca: ícone e nome.' },
+            {
+              name: '.eds-sidebar-close',
+              effect:
+                'Botão de fechar do off-canvas (com .eds-button-ghost.eds-button-icon, popovertarget e popovertargetaction="hide", aria-label "Fechar menu"): no fim do cabeçalho, só aparece com o menu aberto no mobile. Funciona sem JS. O React o põe sozinho (texts.close).',
+            },
             { name: '.eds-sidebar-section', effect: 'Grupo de itens.' },
             { name: '.eds-sidebar-section-title', effect: 'Título do grupo; some na compacta.' },
             {
@@ -205,6 +238,11 @@ export default function SidebarPage() {
               name: '.eds-sidebar-label',
               effect:
                 'Rótulo. Na compacta fica transparente e recortado, mas continua sendo o nome acessível; no hover e no foco vira um tooltip em CSS.',
+            },
+            {
+              name: '.eds-sidebar-badge',
+              effect:
+                'Contador dentro do .eds-sidebar-item, depois do .eds-sidebar-label. Expandida: pílula discreta no fim do item. Compacta: ponto sobre o ícone. Ponha o complemento do nome em <span class="eds-visually-hidden"> dentro dele.',
             },
             { name: '.eds-sidebar-footer', effect: 'Itens do rodapé e botão de colapsar.' },
             {
@@ -247,6 +285,11 @@ export default function SidebarPage() {
             <li>
               <strong>Compacta:</strong> o rótulo continua o nome acessível do link; o tooltip é CSS
               puro e aparece também no foco por teclado.
+            </li>
+            <li>
+              <strong>Contador:</strong> o número entra no nome acessível do link (texto visível ou{' '}
+              <code>.eds-visually-hidden</code>); na compacta o ponto é só pista visual, com a fonte
+              zerada, e o valor continua sendo lido. Não use <code>display: none</code> nele.
             </li>
             <li>
               <strong>Limitação conhecida:</strong> se o trilho compacto rolar (telas curtas, 768 a

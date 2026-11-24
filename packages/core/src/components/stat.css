@@ -31,6 +31,12 @@
     & > :where(p, h2, h3, h4) {
       margin: 0;
     }
+
+    /* Valor ancorado na base: em uma grade (cards de mesma altura) os números ficam na mesma linha
+       mesmo quando um rótulo quebra em duas linhas. */
+    & > .eds-stat-value {
+      margin-block-start: auto;
+    }
   }
 
   .eds-stat-label {
@@ -129,5 +135,21 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
     gap: var(--eds-inset-md);
     min-inline-size: 0;
+  }
+
+  /* Cada indicador ocupa 3 linhas da grade (rótulo, valor, variação) por subgrade: rótulos que
+     quebram em duas linhas e variações de alturas diferentes não desalinham os números da mesma
+     fileira. Sem subgrade, vale a âncora do valor na base do card (margin-block-start: auto). */
+  @supports (grid-template-rows: subgrid) {
+    .eds-stat-grid > .eds-stat {
+      display: grid;
+      grid-row: span 3;
+      grid-template-rows: subgrid;
+      row-gap: var(--_stat-gap);
+
+      & > .eds-stat-value {
+        margin-block-start: 0;
+      }
+    }
   }
 }

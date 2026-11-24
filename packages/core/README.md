@@ -2,7 +2,7 @@
 
 CSS puro do efDS.ui (Empresarial Framework Design System): tokens, base, layout e componentes. Sem JavaScript, sem dependência de runtime e sem conhecer React.
 
-> **Versão 0.1.1.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
+> **Versão 0.1.2.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
 
 ## Instalação
 

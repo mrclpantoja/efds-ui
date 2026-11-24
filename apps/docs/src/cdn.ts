@@ -2,14 +2,14 @@
  * Endereços públicos da versão publicada (npm + jsDelivr), fonte única das páginas de instalação.
  * Ao publicar uma versão nova: trocar VERSION e recalcular os hashes SRI (sha384 do arquivo do CDN).
  */
-export const VERSION = '0.1.1';
+export const VERSION = '0.1.2';
 
 const base = (pkg: string) => `https://cdn.jsdelivr.net/npm/@efds-ui/${pkg}@${VERSION}/dist`;
 
 export const cdn = {
   coreCss: {
     url: `${base('core')}/index.css`,
-    sri: 'sha384-86azce/Jbn1TjQ3pZXURLf012TGEU87eALT5TMhof2xKBF3e+k09npoAcKADH3GS',
+    sri: 'sha384-1LqbLmBRakINJukdWT29rt+Dy73RAWvv+a/TYQJyFIkyBBfpJ2kwrwKftdJsj3/z',
   },
   themesCss: {
     url: `${base('themes')}/index.css`,

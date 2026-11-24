@@ -51,7 +51,7 @@ CHANGELOG.md    histórico de versões
 
 ## Publicação
 
-Os pacotes `@efds-ui/core`, `themes`, `react`, `icons`, `behavior` e `editor` estão **publicados no npm (versão atual 0.1.1)** (organização [`efds-ui`](https://www.npmjs.com/org/efds-ui)) e disponíveis no jsDelivr/unpkg. Documentação: https://efds-ui.com.br. Para publicar uma versão nova: subir o número em todos os pacotes, diretório limpo, `pnpm -r --filter "./packages/*" publish --access public` e atualizar `apps/docs/src/cdn.ts` (versão e hashes SRI). Licença: [MIT](LICENSE); o texto da documentação está sob CC BY 4.0 ([`apps/docs/LICENSE.md`](apps/docs/LICENSE.md)). `pnpm pack:check` garante que cada tarball é consumível (alvos de `exports` existem, sem testes, `src` ou `workspace:` dentro).
+Os pacotes `@efds-ui/core`, `themes`, `react`, `icons`, `behavior` e `editor` estão **publicados no npm (versão atual 0.1.2)** (organização [`efds-ui`](https://www.npmjs.com/org/efds-ui)) e disponíveis no jsDelivr/unpkg. Documentação: https://efds-ui.com.br. Para publicar uma versão nova, ver [`docs/publicacao.md`](docs/publicacao.md) (GitHub Actions com proveniência e aprovação em etapas no npm). Licença: [MIT](LICENSE); o texto da documentação está sob CC BY 4.0 ([`apps/docs/LICENSE.md`](apps/docs/LICENSE.md)). `pnpm pack:check` garante que cada tarball é consumível (alvos de `exports` existem, sem testes, `src` ou `workspace:` dentro).
 
 Nos pacotes de CSS (`core`, `themes`), o `package.json` do repositório mantém a condição `development` (aponta para `src`, útil no monorepo); o tarball a remove via `publishConfig.exports` e leva só `dist/`. O `@efds-ui/react` não importa CSS: o consumidor importa o do core.
 

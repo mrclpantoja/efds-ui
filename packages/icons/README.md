@@ -2,7 +2,7 @@
 
 Ícones do efDS.ui como componentes React (SVG inline, herdam `currentColor`).
 
-> **Versão 0.1.1.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
+> **Versão 0.1.2.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
 
 ## Instalação
 

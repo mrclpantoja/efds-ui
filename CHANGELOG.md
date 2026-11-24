@@ -2,6 +2,19 @@
 
 Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons`, `@efds-ui/behavior` e `@efds-ui/editor`.
 
+## 0.1.2 (24/11/2026)
+
+Primeira versão publicada pelo GitHub Actions, com proveniência (selo que liga cada pacote ao commit e ao build que o geraram). Sem mudança de API.
+
+### @efds-ui/core
+
+- Sidebar: título de seção em caixa alta pequena e espaçada (`--eds-font-size-overline`, `--eds-letter-spacing-caps`), com filete entre seções; na Sidebar expandida o título quebra linha em vez de ser cortado.
+- Tokens novos: primitivos `--eds-font-size-11` e `--eds-letter-spacing-wide`; semânticos `--eds-font-size-overline` e `--eds-letter-spacing-caps`.
+
+### Todos os pacotes
+
+- Código-fonte público: campos `repository` e `bugs` no `package.json` e seção "Código-fonte" no README, com link para https://github.com/mrclpantoja/efds-ui.
+
 ## 0.1.1 (22/11/2026)
 
 Só documentação dos pacotes; nenhuma mudança de código, CSS ou API.

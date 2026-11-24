@@ -2,7 +2,7 @@
 
 Componentes React do efDS.ui. São wrappers finos: montam as classes `.eds-*` do `@efds-ui/core` e os atributos HTML/ARIA. Não têm identidade visual própria nem CSS.
 
-> **Versão 0.1.1.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
+> **Versão 0.1.2.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
 
 ## Instalação
 

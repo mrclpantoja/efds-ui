@@ -106,6 +106,8 @@ describe('TableExport', () => {
     const user = userEvent.setup();
     render(<TableExport data={data} filename="pedidos.xlsx" title="Pedidos" subtitle="Novembro" />);
     for (const name of ['CSV', 'Excel (.xlsx)', 'JSON', 'PDF']) await user.click(item(name));
+    // O PDF é gerado de forma assíncrona: esperar evita que o download vaze para o próximo teste.
+    await vi.waitFor(() => expect(downloads).toHaveLength(4));
     expect(downloads.map((d) => d.name)).toEqual([
       'pedidos.csv',
       'pedidos.xlsx',
@@ -125,6 +127,7 @@ describe('TableExport', () => {
     render(<TableExport getData={getData} />);
     await user.click(item('JSON'));
     await user.click(item('JSON'));
+    await vi.waitFor(() => expect(downloads).toHaveLength(2));
     expect(getData).toHaveBeenCalledTimes(2);
     expect(JSON.parse(await text(downloads[0]!.blob))).toHaveLength(1);
   });

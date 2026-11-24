@@ -1,0 +1,52 @@
+name: Publicar no npm
+
+# Publica os pacotes @efds-ui/* com proveniência, pela publicação confiável do npm (OIDC):
+# nenhum token do npm fica guardado no GitHub.
+#
+# - Tag `v<versão>` (ex.: v0.1.2): roda todas as verificações e publica.
+# - Execução manual (Actions > Publicar no npm > Run workflow): só simula (--dry-run).
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Ambiente com o mesmo nome configurado no npm (Trusted Publisher). No GitHub, pode exigir
+    # aprovação manual antes de publicar (Settings > Environments > npm > Required reviewers).
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      # A publicação confiável exige npm 11.5.1 ou mais novo.
+      - run: npm install -g npm@^11.5.1
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm tokens:check
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm pack:check
+      - name: Publicar
+        if: github.event_name == 'push'
+        run: node scripts/publish.ts
+      - name: Simular publicação
+        if: github.event_name == 'workflow_dispatch'
+        run: node scripts/publish.ts --dry-run

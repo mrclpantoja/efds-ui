@@ -50,6 +50,12 @@ beforeEach(() => {
   });
 });
 
+/**
+ * Os geradores são carregados sob demanda (`import()`): o download chega depois do clique, em tempo
+ * variável. Esperar em cada teste evita assert antes da hora e download vazando para o seguinte.
+ */
+const waitDownloads = (n: number) => vi.waitFor(() => expect(downloads).toHaveLength(n));
+
 const item = (name: string) => screen.getByRole('button', { name, hidden: true });
 const labelsOf = (root: HTMLElement) =>
   Array.from(root.querySelectorAll('.eds-dropdown-item'), (el) => el.textContent);
@@ -94,7 +100,7 @@ describe('TableExport', () => {
     const user = userEvent.setup();
     render(<TableExport data={data} filename="pedidos" />);
     await user.click(item('CSV'));
-    expect(downloads).toHaveLength(1);
+    await waitDownloads(1);
     expect(downloads[0]?.name).toBe('pedidos.csv');
     expect(downloads[0]?.type).toBe('text/csv;charset=utf-8');
     const csv = await text(downloads[0]!.blob);
@@ -105,9 +111,12 @@ describe('TableExport', () => {
   it('gera os quatro formatos com o tipo MIME certo', async () => {
     const user = userEvent.setup();
     render(<TableExport data={data} filename="pedidos.xlsx" title="Pedidos" subtitle="Novembro" />);
-    for (const name of ['CSV', 'Excel (.xlsx)', 'JSON', 'PDF']) await user.click(item(name));
-    // O PDF é gerado de forma assíncrona: esperar evita que o download vaze para o próximo teste.
-    await vi.waitFor(() => expect(downloads).toHaveLength(4));
+    // Um formato por vez: os geradores carregam em tempos diferentes e a ordem importa aqui.
+    const names = ['CSV', 'Excel (.xlsx)', 'JSON', 'PDF'];
+    for (const [i, name] of names.entries()) {
+      await user.click(item(name));
+      await waitDownloads(i + 1);
+    }
     expect(downloads.map((d) => d.name)).toEqual([
       'pedidos.csv',
       'pedidos.xlsx',
@@ -126,8 +135,9 @@ describe('TableExport', () => {
     const getData = vi.fn(() => ({ ...data, rows: data.rows.slice(0, 1) }));
     render(<TableExport getData={getData} />);
     await user.click(item('JSON'));
+    await waitDownloads(1);
     await user.click(item('JSON'));
-    await vi.waitFor(() => expect(downloads).toHaveLength(2));
+    await waitDownloads(2);
     expect(getData).toHaveBeenCalledTimes(2);
     expect(JSON.parse(await text(downloads[0]!.blob))).toHaveLength(1);
   });
@@ -140,6 +150,7 @@ describe('TableExport', () => {
     }));
     render(<TableExport data={data} onBeforeExport={before} filename="p" />);
     await user.click(item('JSON'));
+    await waitDownloads(1);
     expect(before).toHaveBeenCalledWith(data, { format: 'json', filename: 'p.json' });
     const out = await text(downloads[0]!.blob);
     expect(out).toContain('***.***.***-**');
@@ -157,6 +168,7 @@ describe('TableExport', () => {
       />,
     );
     await user.click(item('CSV'));
+    await waitDownloads(1);
     const csv = await text(downloads[0]!.blob);
     expect(csv).not.toContain('CPF');
     expect(csv).toContain('Cliente;Total');
@@ -179,6 +191,7 @@ describe('TableExport', () => {
     const onExport = vi.fn();
     const { container } = render(<TableExport data={data} filename="p" onExport={onExport} />);
     await user.click(item('CSV'));
+    await waitDownloads(1);
     expect(onExport).toHaveBeenCalledWith({ format: 'csv', filename: 'p.csv', count: 2 });
     const status = container.querySelector('[role="status"]')!;
     await vi.waitFor(() => expect(status).toHaveTextContent('Arquivo p.csv gerado (2 linhas).'));

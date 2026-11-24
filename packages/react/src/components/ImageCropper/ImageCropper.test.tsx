@@ -146,9 +146,10 @@ describe('ImageCropperDialog', () => {
     const { baseElement } = render(
       <ImageCropperDialog open file={photo} onApply={onApply} onClose={() => undefined} />,
     );
-    expect(screen.getByRole('dialog', { name: 'Ajustar foto' })).toBeInTheDocument();
+    // showModal() e o foco inicial vêm de efeitos: com a máquina carregada, chegam depois.
+    expect(await screen.findByRole('dialog', { name: 'Ajustar foto' })).toBeInTheDocument();
     await waitFor(() => expect(baseElement.querySelector('img.eds-cropper-image')).not.toBeNull());
-    expect(baseElement.querySelector('.eds-cropper-stage')).toHaveFocus();
+    await waitFor(() => expect(baseElement.querySelector('.eds-cropper-stage')).toHaveFocus());
     loadImg(baseElement);
     await userEvent.setup().click(screen.getByRole('button', { name: 'Aplicar' }));
     await waitFor(() => expect(onApply).toHaveBeenCalledTimes(1));
@@ -161,7 +162,7 @@ describe('ImageCropperDialog', () => {
   it('Cancelar pede o fechamento', async () => {
     const onClose = vi.fn();
     render(<ImageCropperDialog open file={photo} onApply={vi.fn()} onClose={onClose} />);
-    await userEvent.setup().click(screen.getByRole('button', { name: 'Cancelar' }));
+    await userEvent.setup().click(await screen.findByRole('button', { name: 'Cancelar' }));
     expect(onClose).toHaveBeenCalled();
   });
 });

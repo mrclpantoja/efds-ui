@@ -93,6 +93,8 @@ describe('TableExport e locale', () => {
     const user = userEvent.setup();
     const { unmount } = render(<TableExport data={data} />);
     await user.click(screen.getByRole('button', { name: 'CSV', hidden: true }));
+    // O gerador é carregado sob demanda (`import()`): o download chega depois do clique.
+    await waitFor(() => expect(blobs).toHaveLength(1));
     expect(await read(blobs[0]!)).toContain('1280,5;15/03/2026');
     unmount();
 
@@ -102,6 +104,7 @@ describe('TableExport e locale', () => {
       </LocaleProvider>,
     );
     await user.click(screen.getByRole('button', { name: 'CSV', hidden: true }));
+    await waitFor(() => expect(blobs).toHaveLength(2));
     expect(await read(blobs[1]!)).toContain('1280.5;03/15/2026');
   });
 });

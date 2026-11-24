@@ -25,7 +25,7 @@ export default function SwitchPage() {
         avoid={[
           <>
             Para uma escolha que só vale ao enviar o formulário: use{' '}
-            <a href="#/componentes/checkbox">Checkbox</a>.
+            <a href="/componentes/checkbox">Checkbox</a>.
           </>,
           'Para escolher entre duas opções com nomes próprios (Mensal ou Anual): use Radio.',
           'Para disparar uma ação: use Button.',

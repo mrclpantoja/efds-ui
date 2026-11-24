@@ -72,9 +72,9 @@ export default function BannerPage() {
           <p>
             O aviso fixo não precisa de JS. Com <code>data-eds-banner=&quot;id&quot;</code> e um
             botão <code>[data-eds-banner-close]</code> (ou <code>data-eds-dismissible</code>, que o
-            cria), o <a href="#/comecar/comportamento">@efds-ui/behavior</a> esconde o banner, move
-            o foco ao próximo elemento focável e lembra o id em <code>localStorage</code> (só o
-            valor <code>1</code>, na chave <code>eds:banner:id</code>). Evento:{' '}
+            cria), o <a href="/comecar/comportamento">@efds-ui/behavior</a> esconde o banner, move o
+            foco ao próximo elemento focável e lembra o id em <code>localStorage</code> (só o valor{' '}
+            <code>1</code>, na chave <code>eds:banner:id</code>). Evento:{' '}
             <code>eds:banner-close</code>.
           </p>
         </Alert>

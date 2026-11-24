@@ -23,7 +23,7 @@ export default function TextareaPage() {
         ]}
         avoid={[
           <>
-            Para entradas curtas (nome, código): use <a href="#/componentes/input">Input</a>.
+            Para entradas curtas (nome, código): use <a href="/componentes/input">Input</a>.
           </>,
           'Para formatação rica (negrito, listas): o componente é só texto simples.',
         ]}

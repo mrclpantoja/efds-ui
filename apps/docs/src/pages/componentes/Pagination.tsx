@@ -23,7 +23,7 @@ export default function PaginationPage() {
       <UseCases
         use={[
           <>
-            No rodapé de um <a href="#/componentes/table">Table</a> com mais registros do que cabem
+            No rodapé de um <a href="/componentes/table">Table</a> com mais registros do que cabem
             em uma tela.
           </>,
           <>
@@ -65,7 +65,7 @@ export default function PaginationPage() {
         />
         <p>
           A tabela completa, com resumo no rodapé, ordenação e seleção, está em{' '}
-          <a href="#/componentes/table">Table</a>.
+          <a href="/componentes/table">Table</a>.
         </p>
       </Section>
 

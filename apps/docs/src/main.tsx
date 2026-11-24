@@ -7,6 +7,7 @@ import './site.css';
 import { alert, configure, confirm, loader, prompt, toast } from '@efds-ui/behavior';
 import { Layout } from './Layout';
 import { installDocsMocks } from './mock-api';
+import { installRouter } from './router';
 
 // O site é React: o loader automático ficaria bloqueando a navegação da documentação. Fica em
 // modo manual, e `window.EDS` expõe só o que os exemplos HTML chamam (o mesmo nome que o
@@ -23,6 +24,8 @@ configure({ loader: { mode: 'manual' }, cepUrl: '/mock/cep/{cep}' });
   confirm,
   prompt,
 };
+
+installRouter();
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Elemento #root não encontrado.');

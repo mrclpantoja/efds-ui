@@ -26,13 +26,13 @@ export default function RadioPage() {
         ]}
         avoid={[
           <>
-            Para mais de cinco opções: use <a href="#/componentes/select">Select</a>.
+            Para mais de cinco opções: use <a href="/componentes/select">Select</a>.
           </>,
           <>
-            Para escolher várias: use <a href="#/componentes/checkbox">Checkbox</a>.
+            Para escolher várias: use <a href="/componentes/checkbox">Checkbox</a>.
           </>,
           <>
-            Para ligar ou desligar uma opção: use <a href="#/componentes/switch">Switch</a>.
+            Para ligar ou desligar uma opção: use <a href="/componentes/switch">Switch</a>.
           </>,
         ]}
       />

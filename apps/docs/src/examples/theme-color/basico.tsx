@@ -11,8 +11,11 @@ export default function Basico() {
   const result = useMemo(() => createTheme(cor), [cor]);
   const box = useRef<HTMLDivElement>(null);
   // O contêiner segue o modo (claro/escuro) do documento: `data-theme` e `data-mode` andam juntos.
-  const [mode, setMode] = useState(
-    () => document.documentElement.getAttribute('data-mode') ?? 'light',
+  // `typeof document`: o mesmo código roda em renderização no servidor (Next.js, pré-render).
+  const [mode, setMode] = useState(() =>
+    typeof document === 'undefined'
+      ? 'light'
+      : (document.documentElement.getAttribute('data-mode') ?? 'light'),
   );
   useEffect(() => {
     const html = document.documentElement;

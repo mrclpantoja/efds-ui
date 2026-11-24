@@ -53,7 +53,7 @@ export default function EditorPage() {
         ]}
         avoid={[
           <>
-            Para texto sem formatação: use <a href="#/componentes/textarea">Textarea</a>.
+            Para texto sem formatação: use <a href="/componentes/textarea">Textarea</a>.
           </>,
           'Para imagens, vídeos, código-fonte, modelos, colunas ou mesclagem de células: ficam para as edições Completa e Pro.',
         ]}

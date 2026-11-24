@@ -56,7 +56,7 @@ export default function ImageCropperPage() {
       <Section title="HTML puro">
         <p>
           Marque o <code>input type=&quot;file&quot;</code> com <code>data-eds-cropper</code>
-          (compilação completa do <a href="#/comecar/comportamento">@efds-ui/behavior</a>). Sem
+          (compilação completa do <a href="/comecar/comportamento">@efds-ui/behavior</a>). Sem
           JavaScript o campo envia o arquivo original, sem corte.
         </p>
         <ClassTable

@@ -87,7 +87,7 @@ export default function ImagePage() {
         <Alert variant="info" title="O estado de carregamento vem do JS (opcional)">
           <p>
             Sem JavaScript a imagem aparece normalmente e o texto de reserva fica oculto. Com o{' '}
-            <a href="#/comecar/comportamento">@efds-ui/behavior</a> (inclusive a compilação core),
+            <a href="/comecar/comportamento">@efds-ui/behavior</a> (inclusive a compilação core),
             todo <code>.eds-image</code> ganha <code>data-state</code> sozinho, sem atributo extra:
             ele trata a imagem que já carregou ou falhou antes do script, a troca de{' '}
             <code>src</code>/<code>srcset</code> e escreve “Imagem indisponível” no{' '}

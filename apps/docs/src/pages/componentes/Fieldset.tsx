@@ -27,7 +27,7 @@ export default function FieldsetPage() {
         ]}
         avoid={[
           <>
-            Para um único campo de texto ou Select: use <a href="#/componentes/field">Field</a>.
+            Para um único campo de texto ou Select: use <a href="/componentes/field">Field</a>.
           </>,
           'Para dividir um formulário longo em seções visuais: use títulos e Cards.',
           'Para um Checkbox isolado (um aceite): o próprio rótulo basta.',
@@ -54,7 +54,7 @@ export default function FieldsetPage() {
           <code>Fieldset</code> aceita os atributos nativos de <code>fieldset</code> (como{' '}
           <code>disabled</code>), repassa <code>ref</code> e mescla <code>className</code>. Os
           controles filhos recebem <code>aria-invalid</code> e a descrição do erro. Para rádios, use{' '}
-          <a href="#/componentes/radio">RadioGroup</a>.
+          <a href="/componentes/radio">RadioGroup</a>.
         </p>
         <PropsTable
           caption="Props de Fieldset"

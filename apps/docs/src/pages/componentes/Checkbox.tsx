@@ -42,10 +42,10 @@ export default function CheckboxPage() {
         avoid={[
           <>
             Para uma opção que vale na hora, como ligar um recurso: use{' '}
-            <a href="#/componentes/switch">Switch</a>.
+            <a href="/componentes/switch">Switch</a>.
           </>,
           <>
-            Para escolher exatamente uma opção: use <a href="#/componentes/radio">Radio</a>.
+            Para escolher exatamente uma opção: use <a href="/componentes/radio">Radio</a>.
           </>,
           'Para disparar uma ação: use Button.',
         ]}

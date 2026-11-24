@@ -27,7 +27,7 @@ export default function FieldPage() {
         avoid={[
           <>
             Para grupos de Checkbox, Radio ou Switch: use{' '}
-            <a href="#/componentes/fieldset">Fieldset</a> (ou RadioGroup), cuja legenda nomeia o
+            <a href="/componentes/fieldset">Fieldset</a> (ou RadioGroup), cuja legenda nomeia o
             grupo.
           </>,
           'Para vários controles no mesmo Field: ele envolve exatamente um controle.',

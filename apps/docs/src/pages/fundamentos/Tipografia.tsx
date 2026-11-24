@@ -87,7 +87,7 @@ export default function Tipografia() {
         </p>
         <CodeBlock code={fonteOutra} label="Trocando a família tipográfica" />
         <p>
-          Veja também <a href="#/comecar/instalacao">Instalação</a>.
+          Veja também <a href="/comecar/instalacao">Instalação</a>.
         </p>
       </Section>
 

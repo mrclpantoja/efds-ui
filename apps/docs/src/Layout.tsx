@@ -22,8 +22,17 @@ import { NotFound } from './pages/NotFound';
 import { ComingSoon } from './pages/ComingSoon';
 import { findRoute, routes, sections, type DocRoute } from './routes';
 import { navigation, toHref, useRoutePath } from './router';
+import { canonicalUrl, pageDescription, pageTitle, SITE_NAME } from './seo';
 
-const SITE_NAME = 'efDS.ui';
+/** Atualiza (ou cria) uma <meta>/<link> do head; a pré-renderização já grava os valores. */
+function setHead(selector: string, create: () => HTMLElement, attr: string, value: string) {
+  let el = document.head.querySelector<HTMLElement>(selector);
+  if (!el) {
+    el = create();
+    document.head.append(el);
+  }
+  el.setAttribute(attr, value);
+}
 
 /** Marca do site (não é ícone do framework). */
 function BrandMark() {
@@ -64,13 +73,20 @@ function PageFrame({ path, title, route, children }: PageFrameProps) {
   const section = sections.find((s) => s.id === route?.section);
 
   useEffect(() => {
-    document.title = `${title} · ${SITE_NAME}`;
+    document.title = pageTitle(route);
+    const description = pageDescription(route);
+    const meta = (name: string) => () => Object.assign(document.createElement('meta'), { name });
+    setHead('meta[name="description"]', meta('description'), 'content', description);
+    if (route) {
+      const link = () => Object.assign(document.createElement('link'), { rel: 'canonical' });
+      setHead('link[rel="canonical"]', link, 'href', canonicalUrl(route.path));
+    }
     closeNav();
     if (!navigation.navigated) return; // carga inicial: o foco fica onde o navegador o põe
     navigation.navigated = false;
     document.getElementById(mainId)?.scrollTo(0, 0);
     h1Ref.current?.focus();
-  }, [path, title, closeNav, mainId]);
+  }, [path, title, route, closeNav, mainId]);
 
   return (
     <Container size="lg">

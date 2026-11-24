@@ -77,7 +77,7 @@ export default function AvatarPage() {
         <Alert variant="info" title="Tom pelo nome, sem escrever a classe">
           <p>
             No HTML você pode escrever <code>eds-avatar-tone-1</code> a <code>6</code> à mão. Com o{' '}
-            <a href="#/comecar/comportamento">@efds-ui/behavior</a>, um <code>.eds-avatar</code> sem
+            <a href="/comecar/comportamento">@efds-ui/behavior</a>, um <code>.eds-avatar</code> sem
             classe de tom recebe a certa pelo nome (<code>data-name</code>, <code>aria-label</code>{' '}
             ou o texto): hash do nome sem acento nem caixa, módulo 6, mais 1. Com{' '}
             <code>data-name</code> e o avatar vazio, o JS escreve as iniciais e dá{' '}

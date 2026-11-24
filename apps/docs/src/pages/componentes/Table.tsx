@@ -91,8 +91,8 @@ export default function TablePage() {
           'Para listas de registros comparáveis por colunas: pedidos, clientes, faturas.',
           <>
             Com ordenação, seleção e paginação quando a lista é longa; veja{' '}
-            <a href="#/componentes/pagination">Pagination</a> e{' '}
-            <a href="#/componentes/empty-state">Empty State</a>, que são partes do Table.
+            <a href="/componentes/pagination">Pagination</a> e{' '}
+            <a href="/componentes/empty-state">Empty State</a>, que são partes do Table.
           </>,
           'Com um nome claro na legenda (caption): ele rotula a tabela e a região rolável.',
         ]}

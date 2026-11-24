@@ -27,7 +27,7 @@ export default function SelectPage() {
         avoid={[
           <>
             Para duas a quatro opções visíveis de uma vez: use{' '}
-            <a href="#/componentes/radio">Radio</a>.
+            <a href="/componentes/radio">Radio</a>.
           </>,
           'Para listas muito longas que pedem busca ou seleção múltipla: o select nativo não filtra.',
           'Para ações: use Dropdown.',

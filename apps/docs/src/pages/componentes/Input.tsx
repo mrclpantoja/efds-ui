@@ -42,10 +42,10 @@ export default function InputPage() {
         ]}
         avoid={[
           <>
-            Para texto longo ou de várias linhas: use <a href="#/componentes/textarea">Textarea</a>.
+            Para texto longo ou de várias linhas: use <a href="/componentes/textarea">Textarea</a>.
           </>,
           <>
-            Para escolher entre opções conhecidas: use <a href="#/componentes/select">Select</a>,
+            Para escolher entre opções conhecidas: use <a href="/componentes/select">Select</a>,
             Radio ou Checkbox.
           </>,
           'Sem rótulo: o placeholder não substitui o label.',

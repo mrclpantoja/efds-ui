@@ -210,7 +210,7 @@ export default function Tokens() {
         <p>
           A sobrescrita também funciona em qualquer subárvore, porque as variáveis herdam. Para
           trocar tema, modo, densidade ou forma, prefira os eixos (veja{' '}
-          <a href="#/fundamentos/temas-e-eixos">Temas e eixos</a>), que já vêm calculados e testados
+          <a href="/fundamentos/temas-e-eixos">Temas e eixos</a>), que já vêm calculados e testados
           para contraste.
         </p>
         <CodeBlock code={subarvore} label="Sobrescrita em uma subárvore" />

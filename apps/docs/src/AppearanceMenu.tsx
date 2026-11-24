@@ -45,6 +45,10 @@ type Axis = (typeof axes)[number]['attr'];
 
 /** Lê os padrões do `<html>` (declarados em index.html) para a UI começar coerente. */
 function initialValues(): Record<Axis, string> {
+  // Pré-renderização (sem DOM): os mesmos padrões do <html> em index.html.
+  if (typeof document === 'undefined') {
+    return { theme: 'blue', mode: 'light', density: 'comfortable', shape: 'soft' };
+  }
   const root = document.documentElement;
   return Object.fromEntries(
     axes.map(({ attr }) => [attr, root.getAttribute(`data-${attr}`) ?? '']),

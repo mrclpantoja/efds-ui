@@ -24,7 +24,7 @@ export default function EmptyStatePage() {
           'Quando uma lista ou região não tem nada para mostrar e o usuário pode fazer algo a respeito.',
           <>
             Dentro de uma tabela, na linha de <code>TableEmpty</code>; veja{' '}
-            <a href="#/componentes/table">Table</a>.
+            <a href="/componentes/table">Table</a>.
           </>,
           'Com uma ação que diz tudo o que faz: "Limpar busca e filtros", "Novo cliente".',
         ]}
@@ -49,7 +49,7 @@ export default function EmptyStatePage() {
           react={{ Component: SemAcao, source: semAcaoSource }}
         />
         <p>
-          O estado vazio dentro de uma tabela está em <a href="#/componentes/table">Table</a>{' '}
+          O estado vazio dentro de uma tabela está em <a href="/componentes/table">Table</a>{' '}
           (exemplo &quot;Tabela vazia&quot;).
         </p>
       </Section>

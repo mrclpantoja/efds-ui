@@ -49,8 +49,8 @@ export default function GalleryPage() {
       <Section title="HTML puro">
         <Alert variant="info" title="Funciona sem JavaScript">
           <p>
-            Sem o <a href="#/comecar/comportamento">@efds-ui/behavior</a> o link abre a imagem
-            grande numa página própria, o que já é uma boa experiência. Com a compilação completa (
+            Sem o <a href="/comecar/comportamento">@efds-ui/behavior</a> o link abre a imagem grande
+            numa página própria, o que já é uma boa experiência. Com a compilação completa (
             <code>eds-behavior.js</code>; a compilação core não inclui o visualizador), o clique
             abre o diálogo <code>eds-lightbox</code>, escuro no tema vigente. O <code>alt</code> da
             imagem grande é o da miniatura; <code>data-eds-caption</code> é a legenda. Clique com

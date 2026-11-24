@@ -123,10 +123,9 @@ export default function Introducao() {
         <p>
           O efDS.ui é desenvolvido e mantido pela{' '}
           <a href="https://innovationtech.com.br/">Innovation Tech</a>, empresa de consultoria em
-          tecnologia da informação e transformação digital sediada em Macapá (AP). A Innovation Tech
-          atua com órgãos públicos e empresas privadas em gestão pública digital, inovação de
-          processos, inteligência artificial e automação, com foco em governança, qualidade e
-          transparência.
+          tecnologia da informação e transformação digital. A Innovation Tech atua com órgãos
+          públicos e empresas privadas em gestão pública digital, inovação de processos,
+          inteligência artificial e automação, com foco em governança, qualidade e transparência.
         </p>
         <p>
           O design system nasceu dessa experiência com sistemas administrativos: telas densas,

@@ -63,4 +63,4 @@ Código aberto sob a licença MIT em [github.com/mrclpantoja/efds-ui](https://gi
 
 ## Quem mantém
 
-Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/), consultoria em tecnologia da informação e transformação digital de Macapá (AP), que atua com órgãos públicos e empresas privadas.
+Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/), consultoria em tecnologia da informação e transformação digital que atua com órgãos públicos e empresas privadas.

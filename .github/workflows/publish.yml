@@ -3,7 +3,8 @@ name: Publicar no npm
 # Publica os pacotes @efds-ui/* com proveniência, pela publicação confiável do npm (OIDC):
 # nenhum token do npm fica guardado no GitHub.
 #
-# - Tag `v<versão>` (ex.: v0.1.2): roda todas as verificações e publica.
+# - Tag `v<versão>` (ex.: v0.1.2): roda todas as verificações e envia em etapas (npm stage
+#   publish); cada versão só fica pública depois de aprovada com 2FA em npmjs.com.
 # - Execução manual (Actions > Publicar no npm > Run workflow): só simula (--dry-run).
 on:
   push:
@@ -34,8 +35,8 @@ jobs:
           node-version: 24
           cache: pnpm
           registry-url: https://registry.npmjs.org
-      # A publicação confiável exige npm 11.5.1 ou mais novo.
-      - run: npm install -g npm@^11.5.1
+      # A publicação em etapas exige npm 11.15.0 ou mais novo.
+      - run: npm install -g npm@^11.15.0
       - run: pnpm install --frozen-lockfile
       - run: pnpm tokens:check
       - run: pnpm format:check
@@ -45,7 +46,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm pack:check
-      - name: Publicar
+      - name: Enviar para aprovação
         if: github.event_name == 'push'
         run: node scripts/publish.ts
       - name: Simular publicação

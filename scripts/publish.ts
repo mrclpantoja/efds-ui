@@ -1,14 +1,19 @@
 /**
- * Publica os pacotes @efds-ui/* no npm. Feito para rodar no GitHub Actions (fluxo
- * `.github/workflows/publish.yml`), que entrega a proveniência pela publicação confiável (OIDC).
+ * Publica os pacotes @efds-ui/* no npm **em etapas** (`npm stage publish`). Feito para rodar no
+ * GitHub Actions (fluxo `.github/workflows/publish.yml`), que entrega a proveniência pela
+ * publicação confiável (OIDC). A versão enviada fica retida no npm até alguém aprovar com 2FA em
+ * npmjs.com > Staged Packages (ou `npm stage approve <id>`); só então fica pública.
  *
- *   node scripts/publish.ts --dry-run    empacota e simula a publicação (não envia nada)
- *   node scripts/publish.ts              publica (só no CI; fora dele, recusa)
+ *   node scripts/publish.ts --dry-run    empacota e simula o envio (não envia nada)
+ *   node scripts/publish.ts              envia para aprovação (só no CI; fora dele, recusa)
  *
  * Regras:
  * - todos os pacotes precisam estar na mesma versão; no CI, a tag precisa ser `v<versão>`;
- * - `pnpm pack` resolve `workspace:` e `catalog:`; quem envia é o `npm publish` do tarball;
- * - versão já publicada é pulada (rodar de novo depois de uma falha no meio é seguro).
+ * - `pnpm pack` resolve `workspace:` e `catalog:`; o tarball é extraído e o `npm stage publish`
+ *   roda na pasta extraída (o comando empacota a pasta atual e não aceita tarball);
+ * - exige npm 11.15.0 ou mais novo;
+ * - versão já publicada é pulada (rodar de novo depois de uma falha no meio é seguro). Versão
+ *   enviada e ainda não aprovada não é vista pelo `npm view`: para reenviar, rejeite a anterior.
  */
 
 import { spawnSync } from 'node:child_process';
@@ -86,11 +91,13 @@ try {
       console.log(`${spec}: já existe no npm; empacotado, envio não simulado.`);
       continue;
     }
-    const args = ['publish', join(out, tgz), '--access', 'public'];
+    // O tarball do pnpm guarda tudo em `package/`.
+    run('tar', ['-xzf', tgz], out);
+    const args = ['stage', 'publish', '--access', 'public'];
     if (inCi) args.push('--provenance');
     if (dryRun) args.push('--dry-run');
-    run('npm', args, root);
-    console.log(`${spec}: ${dryRun ? 'simulado' : 'publicado'}.`);
+    run('npm', args, join(out, 'package'));
+    console.log(`${spec}: ${dryRun ? 'simulado' : 'enviado; aguardando aprovação no npmjs.com'}.`);
   }
 } catch (error) {
   console.error(error instanceof Error ? error.message : error);

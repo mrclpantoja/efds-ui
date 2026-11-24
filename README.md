@@ -57,6 +57,10 @@ Nos pacotes de CSS (`core`, `themes`), o `package.json` do repositório mantém 
 
 Dependências: `core` <- `themes`, `core` <- `react` <- `icons`, `behavior` (só `@efds-ui/behavior/export`) <- `react`; `behavior` não depende de nenhum pacote.
 
+## Código-fonte
+
+Código aberto sob a licença MIT em [github.com/mrclpantoja/efds-ui](https://github.com/mrclpantoja/efds-ui). Problemas e sugestões: [issues](https://github.com/mrclpantoja/efds-ui/issues).
+
 ## Quem mantém
 
 Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/), consultoria em tecnologia da informação e transformação digital de Macapá (AP), que atua com órgãos públicos e empresas privadas.

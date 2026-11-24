@@ -4,6 +4,14 @@
   "license": "MIT",
   "author": "Marcelo Pantoja",
   "homepage": "https://efds-ui.com.br",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrclpantoja/efds-ui.git",
+    "directory": "packages/icons"
+  },
+  "bugs": {
+    "url": "https://github.com/mrclpantoja/efds-ui/issues"
+  },
   "type": "module",
   "description": "Ícones do efDS.ui.",
   "keywords": [

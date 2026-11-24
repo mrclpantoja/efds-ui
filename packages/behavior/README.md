@@ -197,6 +197,10 @@ O markup é o contrato do core (`.eds-*`); o pacote detecta por classes e ARIA. 
 
 `pnpm build` (ESM + `.d.ts` + IIFE) · `pnpm typecheck` · `pnpm test`.
 
+## Código-fonte
+
+[github.com/mrclpantoja/efds-ui](https://github.com/mrclpantoja/efds-ui) (MIT). Problemas e sugestões: [issues](https://github.com/mrclpantoja/efds-ui/issues).
+
 ## Quem mantém
 
 Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).

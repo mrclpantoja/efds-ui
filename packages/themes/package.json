@@ -4,6 +4,14 @@
   "license": "MIT",
   "author": "Marcelo Pantoja",
   "homepage": "https://efds-ui.com.br",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrclpantoja/efds-ui.git",
+    "directory": "packages/themes"
+  },
+  "bugs": {
+    "url": "https://github.com/mrclpantoja/efds-ui/issues"
+  },
   "type": "module",
   "description": "Temas e eixos (theme, mode, density, shape) do efDS.ui.",
   "keywords": [

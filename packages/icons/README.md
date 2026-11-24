@@ -24,6 +24,10 @@ import { SearchIcon } from '@efds-ui/icons';
 
 Exports nomeados: só os ícones importados entram no bundle (`sideEffects: false`).
 
+## Código-fonte
+
+[github.com/mrclpantoja/efds-ui](https://github.com/mrclpantoja/efds-ui) (MIT). Problemas e sugestões: [issues](https://github.com/mrclpantoja/efds-ui/issues).
+
 ## Quem mantém
 
 Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).

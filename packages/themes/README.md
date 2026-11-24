@@ -48,6 +48,10 @@ Valores disponíveis: `theme-{blue,green,purple,orange,neutral}`, `mode-{light,d
 
 A fonte Inter fica por conta do consumidor.
 
+## Código-fonte
+
+[github.com/mrclpantoja/efds-ui](https://github.com/mrclpantoja/efds-ui) (MIT). Problemas e sugestões: [issues](https://github.com/mrclpantoja/efds-ui/issues).
+
 ## Quem mantém
 
 Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).

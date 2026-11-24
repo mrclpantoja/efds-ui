@@ -4,6 +4,14 @@
   "license": "MIT",
   "author": "Marcelo Pantoja",
   "homepage": "https://efds-ui.com.br",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrclpantoja/efds-ui.git",
+    "directory": "packages/behavior"
+  },
+  "bugs": {
+    "url": "https://github.com/mrclpantoja/efds-ui/issues"
+  },
   "type": "module",
   "description": "Comportamento interativo do efDS.ui em JavaScript puro, para quem usa só HTML (PHP, Java, .NET, Vue, Angular).",
   "keywords": [

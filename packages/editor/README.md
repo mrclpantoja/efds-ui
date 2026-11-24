@@ -41,6 +41,10 @@ import { Editor } from '@efds-ui/editor/react';
 
 **Sanitize o HTML no servidor antes de gravar e de exibir.** A limpeza do navegador (`sanitizeHtml`) não é fronteira de confiança.
 
+## Código-fonte
+
+[github.com/mrclpantoja/efds-ui](https://github.com/mrclpantoja/efds-ui) (MIT). Problemas e sugestões: [issues](https://github.com/mrclpantoja/efds-ui/issues).
+
 ## Quem mantém
 
 Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).

@@ -4,6 +4,14 @@
   "license": "MIT",
   "author": "Marcelo Pantoja",
   "homepage": "https://efds-ui.com.br",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrclpantoja/efds-ui.git",
+    "directory": "packages/editor"
+  },
+  "bugs": {
+    "url": "https://github.com/mrclpantoja/efds-ui/issues"
+  },
   "type": "module",
   "description": "Editor de conteúdo do efDS.ui (edição Básica) sobre ProseMirror: núcleo vanilla ligado por textarea[data-eds-editor], IIFE e wrapper React.",
   "keywords": [

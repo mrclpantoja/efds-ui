@@ -1,6 +1,7 @@
 import { Card, CardBody, CardHeader, CardTitle, Grid, GridItem } from '@efds-ui/react';
 import { Section } from '../../components/Section';
 import { toHref } from '../../router';
+import { REPOSITORY_URL } from '../../site';
 import { VERSION } from '../../cdn';
 
 const packages = [
@@ -111,8 +112,10 @@ export default function Introducao() {
         <p>
           Versão atual: <strong>{VERSION}</strong>, publicada no npm sob o escopo{' '}
           <a href="https://www.npmjs.com/org/efds-ui">@efds-ui</a> (veja{' '}
-          <a href={toHref('/comecar/instalacao')}>Instalação</a>). A API pode mudar até a 1.0. Todos
-          os dados de exemplo são fictícios.
+          <a href={toHref('/comecar/instalacao')}>Instalação</a>). O código é aberto, sob a licença
+          MIT, no repositório <a href={REPOSITORY_URL}>mrclpantoja/efds-ui</a> do GitHub, onde
+          também ficam as issues para relatar problemas. A API pode mudar até a 1.0. Todos os dados
+          de exemplo são fictícios.
         </p>
       </Section>
 

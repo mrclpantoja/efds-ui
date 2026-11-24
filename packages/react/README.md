@@ -32,6 +32,10 @@ O pacote **não importa CSS**. Assim você escolhe o `index.css` completo ou a i
 
 O efDS.ui usa Inter; carregue-a no seu app.
 
+## Código-fonte
+
+[github.com/mrclpantoja/efds-ui](https://github.com/mrclpantoja/efds-ui) (MIT). Problemas e sugestões: [issues](https://github.com/mrclpantoja/efds-ui/issues).
+
 ## Quem mantém
 
 Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).

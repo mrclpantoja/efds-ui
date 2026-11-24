@@ -5,6 +5,7 @@ import {
   AppShellNavToggle,
   Breadcrumb,
   BreadcrumbItem,
+  Button,
   Container,
   NavbarActions,
   Sidebar,
@@ -16,6 +17,7 @@ import {
   useAppShell,
 } from '@efds-ui/react';
 import { AppearanceMenu } from './AppearanceMenu';
+import { REPOSITORY_URL } from './site';
 import { NotFound } from './pages/NotFound';
 import { ComingSoon } from './pages/ComingSoon';
 import { findRoute, routes, sections, type DocRoute } from './routes';
@@ -136,6 +138,10 @@ export function Layout() {
                 {SITE_NAME}
               </span>
               <NavbarActions>
+                <Button href={REPOSITORY_URL} variant="ghost" rel="noopener">
+                  GitHub
+                  <span className="eds-visually-hidden"> (repositório do código)</span>
+                </Button>
                 <AppearanceMenu />
               </NavbarActions>
             </AppShellHeader>

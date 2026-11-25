@@ -20,7 +20,7 @@ const ssrDir = join(docs, 'dist-ssr');
 // React de produção na renderização (sem os avisos e a lentidão do modo de desenvolvimento).
 process.env.NODE_ENV ??= 'production';
 const ssr = await import(pathToFileURL(join(ssrDir, 'entry-server.js')).href);
-const { routes, sections, render, pageTitle, pageDescription, canonicalUrl } = ssr;
+const { routes, render, pageTitle, pageDescription, canonicalUrl } = ssr;
 const { SITE_NAME, SITE_URL, SITE_DESCRIPTION, OG_IMAGE } = ssr;
 
 const template = readFileSync(join(dist, 'index.html'), 'utf8');
@@ -65,10 +65,12 @@ function structuredData(route) {
       },
     ];
   }
-  const section = sections.find((s) => s.id === route.section);
-  const items = [{ name: SITE_NAME, item: `${SITE_URL}/` }];
-  if (section) items.push({ name: section.title });
-  items.push({ name: route.title, item: url });
+  // A seção (Ações, Formulários...) não tem página própria: fora da trilha, porque o Google exige
+  // `item` (URL) em todo elemento da BreadcrumbList.
+  const items = [
+    { name: SITE_NAME, item: `${SITE_URL}/` },
+    { name: route.title, item: url },
+  ];
   return [
     {
       '@context': 'https://schema.org',

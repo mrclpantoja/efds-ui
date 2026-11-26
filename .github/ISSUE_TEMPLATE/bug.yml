@@ -1,0 +1,70 @@
+name: Defeito
+description: Algo não funciona como a documentação descreve.
+title: '[Defeito] '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use só dados fictícios. Falha de segurança não vai aqui: veja o SECURITY.md.
+  - type: dropdown
+    id: package
+    attributes:
+      label: Pacote
+      options:
+        - '@efds-ui/core (CSS)'
+        - '@efds-ui/themes'
+        - '@efds-ui/behavior (JavaScript para HTML)'
+        - '@efds-ui/react'
+        - '@efds-ui/icons'
+        - '@efds-ui/editor'
+        - Documentação
+        - Não sei
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versão
+      placeholder: '1.0.0'
+    validations:
+      required: true
+  - type: input
+    id: component
+    attributes:
+      label: Componente
+      placeholder: Table, Modal, DatePicker...
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Se puder, um trecho de HTML (ou um link do StackBlitz ou CodePen) com o mínimo para ver o problema.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: O que você esperava
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: O que aconteceu
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Navegador e sistema
+      description: Por exemplo, Firefox 140 no Windows 11. Se usa leitor de tela, diga qual.
+    validations:
+      required: true
+  - type: dropdown
+    id: usage
+    attributes:
+      label: Como você usa
+      options:
+        - HTML com CSS e JavaScript (CDN ou servidor)
+        - React
+        - Não sei

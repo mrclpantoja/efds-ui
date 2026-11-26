@@ -15,6 +15,7 @@ import TabsPage from './pages/componentes/Tabs';
 import EditorPage from './pages/componentes/Editor';
 import TemplatesPage from './pages/templates/Templates';
 import QuemUsaPage from './pages/comecar/QuemUsa';
+import PoliticasPage from './pages/comecar/Politicas';
 import LicencaTemplatesPage from './pages/templates/Licenca';
 import AcessibilidadePage from './pages/comecar/Acessibilidade';
 import EventosPage from './pages/comecar/Eventos';
@@ -127,6 +128,11 @@ export interface DocRoute {
   section: SectionId;
   /** Corpo da página. Ausente: a rota mostra a página "Em breve". */
   page?: ComponentType;
+  /**
+   * Só nas páginas de componente: `stable` segue o SemVer; `experimental` pode mudar a API numa
+   * versão menor (ver a página Políticas). Preenchido por `experimentalComponents` abaixo.
+   */
+  stability?: 'stable' | 'experimental';
 }
 
 export const sections: readonly { id: SectionId; title: string }[] = [
@@ -230,6 +236,18 @@ const componentCategory: Record<string, SectionId> = {
   ),
 };
 
+/** Componentes (pelo fim do caminho) cuja API ainda pode mudar numa versão menor. */
+const experimentalComponents: ReadonlySet<string> = new Set([
+  'editor',
+  'agenda',
+  'command',
+  'gallery',
+  'image-cropper',
+  'tree',
+  'sortable',
+  'lookup',
+]);
+
 const allRoutes: readonly DocRoute[] = [
   // Começar
   { path: '/', title: 'Introdução', section: 'comecar', page: Introducao },
@@ -268,6 +286,7 @@ const allRoutes: readonly DocRoute[] = [
     section: 'comecar',
     page: AcessibilidadePage,
   },
+  { path: '/comecar/politicas', title: 'Políticas', section: 'comecar', page: PoliticasPage },
   { path: '/comecar/quem-usa', title: 'Quem usa', section: 'comecar', page: QuemUsaPage },
 
   // Fundamentos
@@ -550,11 +569,15 @@ const collator = new Intl.Collator('pt-BR');
 
 /** Componentes vão para a sua categoria, em ordem alfabética dentro dela. */
 export const routes: readonly DocRoute[] = allRoutes
-  .map((r) =>
-    r.section === 'componentes'
-      ? { ...r, section: componentCategory[r.path.slice('/componentes/'.length)] ?? r.section }
-      : r,
-  )
+  .map((r): DocRoute => {
+    if (!r.path.startsWith('/componentes/')) return r;
+    const slug = r.path.slice('/componentes/'.length);
+    return {
+      ...r,
+      section: componentCategory[slug] ?? r.section,
+      stability: experimentalComponents.has(slug) ? 'experimental' : 'stable',
+    };
+  })
   .sort((a, b) => {
     const sa = sections.findIndex((s) => s.id === a.section);
     const sb = sections.findIndex((s) => s.id === b.section);

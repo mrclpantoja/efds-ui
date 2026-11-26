@@ -1,0 +1,41 @@
+name: Proposta de componente ou melhoria
+description: Sugira um componente novo ou uma melhoria num existente.
+title: '[Proposta] '
+labels: ['proposta']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes de propor, veja se a necessidade já está coberta na documentação (https://efds-ui.com.br). O projeto mantém a API pequena: propostas que resolvem um problema real e recorrente têm mais chance.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema
+      description: O que você não consegue fazer hoje, e em que tipo de tela (ERP, painel, formulário...).
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta
+      description: Como o componente se comportaria. Um rascunho do HTML e das props ajuda.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas que você tentou
+      description: Componentes existentes combinados, HTML nativo, bibliotecas externas.
+  - type: textarea
+    id: a11y
+    attributes:
+      label: Teclado e acessibilidade
+      description: Há um padrão conhecido (por exemplo, da WAI-ARIA Authoring Practices) para este componente?
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Regras do projeto
+      options:
+        - label: Entendo que o core é CSS puro e que o React não tem aparência própria.
+          required: true
+        - label: Posso ajudar a implementar ou a testar.

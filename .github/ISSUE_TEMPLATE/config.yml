@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Vulnerabilidade de segurança
+    url: https://github.com/mrclpantoja/efds-ui/security/advisories/new
+    about: Relate em particular, nunca numa issue pública.
+  - name: Documentação
+    url: https://efds-ui.com.br
+    about: Veja a documentação e as políticas do projeto antes de abrir uma issue.

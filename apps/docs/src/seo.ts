@@ -36,6 +36,8 @@ const descriptions: Record<string, string> = {
     'Textos e idioma dos componentes do efDS.ui: mensagens pt-BR configuráveis, locale de datas e números e como traduzir.',
   '/comecar/acessibilidade':
     'Acessibilidade no efDS.ui: WCAG 2.2 AA, teclado, foco visível, leitores de tela, contraste e o que cabe a quem usa os componentes.',
+  '/comecar/politicas':
+    'Políticas do efDS.ui: versionamento semântico, depreciação, navegadores e versões de React suportados, suporte, segurança e selo de estabilidade dos componentes.',
   '/comecar/quem-usa': 'Sistemas e organizações que usam o efDS.ui em produção.',
   '/fundamentos/tokens':
     'Design tokens do efDS.ui em CSS custom properties: cores, espaçamento, raio, tipografia e sombras em três níveis.',

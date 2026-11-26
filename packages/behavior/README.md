@@ -1,20 +1,50 @@
 # @efds-ui/behavior
 
-Comportamento interativo do efDS.ui em JavaScript puro (zero dependências), para quem usa só HTML: PHP, Java, .NET, Vue, Angular. O visual vem do `@efds-ui/core` (CSS); este pacote liga o que o CSS e a plataforma não entregam: Tabs, Modal/Drawer, Dropdown, Toast, Alert fechável, Button em carregamento (`aria-busy` não ativa por Enter/Espaço), Table (ordenação, seleção e filtro local), Sidebar, Combobox (simples e múltiplo), DatePicker e DateRangePicker (calendário próprio, máscara dd/mm/aaaa), FileUpload (arrastar e soltar, modo formulário e imediato), diálogos rápidos (`alert`, `confirm`, `prompt`) e o PageLoader automático.
+Comportamento interativo do efDS.ui em JavaScript puro, **sem nenhuma dependência**, para quem usa só HTML: PHP, Java, .NET, Vue, Angular, htmx. O visual vem do `@efds-ui/core` (CSS); este pacote liga o que o CSS e a plataforma não entregam, por atributos `data-*` e sem escrever JavaScript.
 
-> **Versão 0.1.2.** Licença MIT. A API pode mudar até a 1.0. Documentação: https://efds-ui.com.br
+> **Versão 0.1.2.** Licença MIT. Documentação: https://efds-ui.com.br
+
+## Como se encaixa no conjunto
+
+| Pacote                                                             | O que traz                                                           |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| [`@efds-ui/core`](https://www.npmjs.com/package/@efds-ui/core)     | CSS: tokens, base, layout e componentes                              |
+| [`@efds-ui/themes`](https://www.npmjs.com/package/@efds-ui/themes) | Temas, modo, densidade e forma por atributos `data-*`                |
+| **`@efds-ui/behavior`** (este)                                     | JavaScript puro para HTML: modal, abas, toast, tabela, datas, upload |
+| [`@efds-ui/react`](https://www.npmjs.com/package/@efds-ui/react)   | Componentes React sobre as classes do core                           |
+| [`@efds-ui/icons`](https://www.npmjs.com/package/@efds-ui/icons)   | Ícones SVG para React                                                |
+| [`@efds-ui/editor`](https://www.npmjs.com/package/@efds-ui/editor) | Editor de conteúdo (HTML e React)                                    |
+
+O `behavior` não depende de nenhum pacote. O `@efds-ui/react` usa só o subcaminho `@efds-ui/behavior/export` (exportação de tabelas) e a máscara; os demais comportamentos o React já traz por conta própria.
+
+## O que liga
+
+Tabs, Modal e Drawer (sobre `<dialog>`), Dropdown, Toast, Alert fechável, Button em carregamento (`aria-busy` não ativa por Enter/Espaço), Table (ordenação, seleção, filtro local e exportação para CSV, Excel, JSON e PDF), Sidebar, Combobox (simples e múltiplo), DatePicker e DateRangePicker (calendário próprio, máscara dd/mm/aaaa), FileUpload (arrastar e soltar), máscara de entrada (CPF, CNPJ, telefone, moeda), diálogos rápidos (`alert`, `confirm`, `prompt`), Sortable, Tree, PageLoader automático, alterações não salvas, sessão por inatividade, campos condicionais, paleta de comandos e agenda.
+
+Tamanhos: `eds-behavior.js` completo (cerca de 88 kB comprimido com gzip) e `eds-behavior-core.js` (cerca de 60 kB com gzip), sem exportador, CEP, formatadores, tema, paleta, agenda, galeria e cortador de imagem.
+
+## Acessibilidade e testes
+
+Os componentes seguem os padrões de teclado e ARIA da WAI-ARIA Authoring Practices (por exemplo Tabs com setas, Combobox no padrão list autocomplete, Date Picker Dialog) e a WCAG 2.2 AA. O pacote tem uma suíte de testes automatizados (Vitest e jsdom) por módulo, e a rodada de validação em Chrome, Edge e Firefox reais está registrada na documentação. Veja [Acessibilidade](https://efds-ui.com.br/comecar/acessibilidade).
+
+## Instalação
+
+```sh
+npm install @efds-ui/behavior
+# ou: pnpm add @efds-ui/behavior
+```
 
 ## Uso por `<script>` (CDN, PHP, Java, .NET)
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@efds-ui/core@0.1.1/dist/index.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@efds-ui/core@0.1.2/dist/index.css" />
 <script
-  src="https://cdn.jsdelivr.net/npm/@efds-ui/behavior@0.1.1/dist/eds-behavior.js"
+  src="https://cdn.jsdelivr.net/npm/@efds-ui/behavior@0.1.2/dist/eds-behavior.js"
   defer
 ></script>
 ```
 
-Em produção, prefira servir os mesmos arquivos do seu servidor (`pnpm add @efds-ui/behavior` e copie `dist/`): o CDN recebe o IP de quem acessa. Hashes de integridade (SRI) em https://efds-ui.com.br/#/comecar/instalacao.
+Em produção, prefira servir os mesmos arquivos do seu servidor (`pnpm add @efds-ui/behavior` e copie `dist/`): o CDN recebe o IP de quem acessa. Hashes de integridade (SRI) em https://efds-ui.com.br/comecar/instalacao.
 
 Liga tudo sozinho quando o DOM está pronto e expõe `window.EDS`. Opções na própria tag:
 
@@ -187,7 +217,7 @@ const destroy = init(document.querySelector('#app')!, {
 
 `init(root, options)` liga o que existe em `root`, observa o que entra e sai depois (htmx, Turbo, Livewire, parciais do servidor) e **não toca em nada fora do `root`**. Também há `initTabs`, `initModal`, `initDropdown`, `initAlert`, `initTable`, `initTableFilter`, `initSidebar`, `initCombobox`, `initDatepicker`, `initUpload`, `initButtonBusy`, `initConfirm`, `initSortable`, `initTree`, `initNativeAlert`, `initToast` e `initLoader` para importar só o que usa (tree shaking).
 
-Referência completa (atributos, eventos, opções, configuração do loader): [Comportamento](https://efds-ui.com.br/#/comecar/comportamento) e [Eventos](https://efds-ui.com.br/#/comecar/eventos), no site de documentação.
+Referência completa (atributos, eventos, opções, configuração do loader): [Comportamento](https://efds-ui.com.br/comecar/comportamento) e [Eventos](https://efds-ui.com.br/comecar/eventos), no site de documentação.
 
 ## O que cada componente espera
 
@@ -197,10 +227,16 @@ O markup é o contrato do core (`.eds-*`); o pacote detecta por classes e ARIA. 
 
 `pnpm build` (ESM + `.d.ts` + IIFE) · `pnpm typecheck` · `pnpm test`.
 
-## Código-fonte
+## Documentação
 
-[github.com/mrclpantoja/efds-ui](https://github.com/mrclpantoja/efds-ui) (MIT). Problemas e sugestões: [issues](https://github.com/mrclpantoja/efds-ui/issues).
+- [Comportamento (JS)](https://efds-ui.com.br/comecar/comportamento) e [Referência de eventos](https://efds-ui.com.br/comecar/eventos)
+- [Máscara de entrada](https://efds-ui.com.br/comecar/mascara), [Formatadores](https://efds-ui.com.br/comecar/formatadores) e [Exportação de tabelas](https://efds-ui.com.br/comecar/exportacao)
+- [Políticas](https://efds-ui.com.br/comecar/politicas): versionamento, depreciação e estabilidade de cada componente (Árvore, Sortable, Lookup, Agenda e Paleta de comandos são experimentais)
 
-## Quem mantém
+## Código-fonte e contribuição
 
-Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).
+[github.com/mrclpantoja/efds-ui](https://github.com/mrclpantoja/efds-ui). Problemas e sugestões: [issues](https://github.com/mrclpantoja/efds-ui/issues). Guia: [CONTRIBUTING.md](https://github.com/mrclpantoja/efds-ui/blob/main/CONTRIBUTING.md). Falhas de segurança: [SECURITY.md](https://github.com/mrclpantoja/efds-ui/blob/main/SECURITY.md).
+
+## Licença
+
+MIT. Desenvolvido e mantido pela [Innovation Tech](https://innovationtech.com.br/).

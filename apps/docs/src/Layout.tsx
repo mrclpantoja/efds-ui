@@ -3,6 +3,7 @@ import {
   AppShell,
   AppShellHeader,
   AppShellNavToggle,
+  Badge,
   Breadcrumb,
   BreadcrumbItem,
   Button,
@@ -55,6 +56,22 @@ function BrandMark() {
   );
 }
 
+/** Selo de estabilidade do componente: o texto diz a situação, a cor só reforça. */
+function StabilityBadge({ stability }: { stability: NonNullable<DocRoute['stability']> }) {
+  const stable = stability === 'stable';
+  return (
+    <Stack direction="row" gap={2} wrap>
+      <Badge variant={stable ? 'success' : 'warning'}>{stable ? 'Estável' : 'Experimental'}</Badge>
+      <span className="eds-text-small docs-muted">
+        {stable
+          ? 'A API segue o versionamento semântico. '
+          : 'A API ainda pode mudar numa versão menor. '}
+        <a href={toHref('/comecar/politicas')}>Veja as políticas</a>
+      </span>
+    </Stack>
+  );
+}
+
 interface PageFrameProps {
   path: string;
   title: string;
@@ -101,6 +118,7 @@ function PageFrame({ path, title, route, children }: PageFrameProps) {
           <h1 className="eds-text-h1" ref={h1Ref} tabIndex={-1}>
             {title}
           </h1>
+          {route?.stability ? <StabilityBadge stability={route.stability} /> : null}
         </Stack>
         {children}
       </Stack>

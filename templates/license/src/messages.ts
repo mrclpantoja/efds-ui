@@ -1,6 +1,6 @@
 import type { LicenseFailure } from './core';
 
-export const LICENSE_DOCS_URL = 'https://efds-ui.com.br/#/templates/licenca';
+export const LICENSE_DOCS_URL = 'https://efds-ui.com.br/templates/licenca';
 
 export type LicenseBlockReason = LicenseFailure | 'no-behavior';
 

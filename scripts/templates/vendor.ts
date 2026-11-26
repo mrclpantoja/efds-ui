@@ -2,6 +2,7 @@
  * Copia os arquivos de `dist/` para `templates/<t>/html/vendor/efds-ui/` (fora do Git).
  *
  *   node scripts/templates/vendor.ts [--template painel|cadastro|portal]
+ *   node scripts/templates/vendor.ts --source <pasta do template premium>   (inclui a verificação de licença)
  *
  * Rode depois de `pnpm build`.
  */
@@ -16,7 +17,7 @@ const { values } = parseArgs({
   options: { template: { type: 'string' }, source: { type: 'string' } },
 });
 
-// Template fora deste repositório: --source <pasta com html/>.
+// Template fora deste repositório (premium, com trava): --source <pasta com html/>.
 if (values.source) {
   const source = resolve(values.source);
   const html = join(source, 'html');

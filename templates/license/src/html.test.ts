@@ -61,7 +61,7 @@ describe('trava de licença (HTML)', () => {
     const title = alert.querySelector('h1')!;
     expect(document.activeElement).toBe(title);
     expect(alert.querySelector('a')?.getAttribute('href')).toBe(
-      'https://efds-ui.com.br/#/templates/licenca',
+      'https://efds-ui.com.br/templates/licenca',
     );
     expect(errors[0]?.detail).toEqual({ reason: 'missing-key' });
     expect(document.querySelector('[style]')).toBeNull();

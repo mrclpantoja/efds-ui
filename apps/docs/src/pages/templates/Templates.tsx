@@ -121,19 +121,20 @@ export default function Templates() {
 
       <Section title="Download">
         <Alert variant="info" title="Em breve">
-          O download dos templates gratuitos será liberado depois de um cadastro rápido, que gera a
-          sua chave de licença gratuita. Enquanto isso, as demonstrações acima funcionam
-          normalmente.
+          O download dos templates gratuitos estará disponível aqui. Eles são livres, sob licença
+          MIT, e <strong>não precisam de chave de licença</strong> para funcionar: baixe, abra e
+          use. Enquanto isso, as demonstrações acima funcionam normalmente, e o código está no
+          repositório do efDS.ui, na pasta <code>templates/</code>.
         </Alert>
         <p>
-          O pacote baixado traz as duas versões, o arquivo de licença emitido para você e as
-          instruções de instalação. Sem a chave de licença o template não executa; veja{' '}
-          <a href={toHref('/templates/licenca')}>Licença dos templates</a>.
+          O pacote traz as duas versões (HTML e React) e as instruções de instalação. Os arquivos do
+          efDS.ui já vão dentro da versão HTML; nada é carregado de CDN.
         </p>
         <p>
-          No cadastro, você pode autorizar, se quiser, nosso contato para mostrar o seu projeto em{' '}
-          <a href={toHref('/comecar/quem-usa')}>Quem usa</a>. É opcional e não interfere no
-          download.
+          Um cadastro rápido poderá existir no futuro, só para você receber novidades. Ele nunca
+          será exigido para o template funcionar. Se quiser, você também poderá autorizar nosso
+          contato para mostrar o seu projeto em <a href={toHref('/comecar/quem-usa')}>Quem usa</a>.
+          É opcional e não interfere no download.
         </p>
       </Section>
 
@@ -142,7 +143,8 @@ export default function Templates() {
           Dez templates para áreas específicas estão em preparação: ERP financeiro, CRM de vendas,
           Helpdesk, RH, Protocolo e processo administrativo, Ouvidoria e e-SIC, Contratos e
           licitações, Estoque e patrimônio, Agenda e atendimento, e Gestão escolar. Terão licença
-          para um site ou para vários sites.
+          para um site ou para vários sites, com uma chave de licença; veja{' '}
+          <a href={toHref('/templates/licenca')}>Licença dos templates</a>.
         </p>
       </Section>
 

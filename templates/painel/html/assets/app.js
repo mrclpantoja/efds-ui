@@ -41,7 +41,7 @@
     gravar(CHAVE_APARENCIA, a);
   }
 
-  /** O behavior lê data-eds-session-timeout ao iniciar (EDS.init, chamado pelo gate). */
+  /** O behavior lê data-eds-session-timeout ao iniciar (auto-init do behavior). */
   function marcarSessao(minutos) {
     if (minutos > 0) {
       html.setAttribute('data-eds-session-timeout', String(minutos * 60));

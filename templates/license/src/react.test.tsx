@@ -31,7 +31,7 @@ describe('LicenseGate', () => {
     const heading = screen.getByRole('heading', { name: 'Chave de licença ausente' });
     expect(document.activeElement).toBe(heading);
     expect(screen.getByRole('link').getAttribute('href')).toBe(
-      'https://efds-ui.com.br/#/templates/licenca',
+      'https://efds-ui.com.br/templates/licenca',
     );
   });
 

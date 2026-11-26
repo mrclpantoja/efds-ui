@@ -1,6 +1,6 @@
 import { ed25519 } from '@noble/curves/ed25519.js';
 
-export type LicenseType = 'free' | 'single' | 'multi';
+export type LicenseType = 'single' | 'multi';
 
 export interface License {
   v: 1;
@@ -61,7 +61,7 @@ export function base64urlDecode(text: string): Uint8Array | null {
   }
 }
 
-const TYPES: readonly string[] = ['free', 'single', 'multi'];
+const TYPES: readonly string[] = ['single', 'multi'];
 
 function normalizeHost(host: string): string {
   return host.trim().toLowerCase().replace(/\.+$/, '');

@@ -10,8 +10,11 @@ documentos do projeto/
 docs/ParecerNegocios.md
 docs/ListaMelhorias.md
 docs/melhorias.md
+docs/ConsolidadoRumo-1.0.md
+docs/melhorias.md
 
 # Templates: arquivos copiados de dist/ e chaves locais
 templates/*/html/vendor/
 templates/license/dist/
 .env
+docs/Plano-1.0.md

@@ -22,10 +22,16 @@ export default function Licenca() {
   return (
     <>
       <p className="eds-text-body-lg">
-        Cada template baixado traz um <strong>arquivo de licença</strong> com um identificador único
-        e é acompanhado de uma <strong>chave</strong>. A chave é a assinatura digital desse arquivo:
-        só funciona com ele. Sem a chave, ou com uma chave que não corresponde ao arquivo, o
-        template não executa e mostra uma tela explicando o motivo.
+        Os <strong>templates gratuitos</strong> (Painel administrativo, Cadastro e Portal de
+        serviços) são livres, sob a licença MIT: o download é aberto e eles funcionam{' '}
+        <strong>sem chave de licença</strong>. Esta página trata dos{' '}
+        <strong>templates premium</strong>, que ainda não foram publicados.
+      </p>
+      <p>
+        Cada template premium baixado traz um <strong>arquivo de licença</strong> com um
+        identificador único e é acompanhado de uma <strong>chave</strong>. A chave é a assinatura
+        digital desse arquivo: só funciona com ele. Sem a chave, ou com uma chave que não
+        corresponde ao arquivo, o template não executa e mostra uma tela explicando o motivo.
       </p>
 
       <Section title="O arquivo de licença">
@@ -45,8 +51,7 @@ export default function Licenca() {
               name: 'type',
               effect: (
                 <>
-                  <code>free</code> (gratuita), <code>single</code> (um site) ou <code>multi</code>{' '}
-                  (vários sites).
+                  <code>single</code> (um site) ou <code>multi</code> (vários sites).
                 </>
               ),
             },
@@ -125,18 +130,19 @@ export default function Licenca() {
       <Section title="Tipos de licença">
         <ul className="docs-list">
           <li>
-            <strong>Gratuita:</strong> templates gratuitos, liberada após cadastro.
+            <strong>Gratuitos:</strong> sem chave; MIT, download livre.
           </li>
           <li>
-            <strong>Um site:</strong> templates premium, um domínio ou sistema em produção.
+            <strong>Um site</strong> (premium): um domínio ou sistema em produção.
           </li>
           <li>
-            <strong>Vários sites:</strong> templates premium, sem limite de domínios.
+            <strong>Vários sites</strong> (premium): sem limite de domínios.
           </li>
         </ul>
         <p>
-          Os componentes do efDS.ui continuam livres sob a licença MIT; a licença acima vale para os
-          templates. Veja os <a href={toHref('/templates')}>templates disponíveis</a>.
+          Os componentes do efDS.ui continuam livres sob a licença MIT; a chave descrita acima vale
+          só para os templates premium. Veja os{' '}
+          <a href={toHref('/templates')}>templates disponíveis</a>.
         </p>
       </Section>
     </>

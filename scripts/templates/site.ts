@@ -1,13 +1,13 @@
 /**
  * Copia as demonstrações dos templates gratuitos para o build do site de documentação:
- *   apps/docs/dist/demos/<template>/html   (páginas + vendor + licença de demonstração)
+ *   apps/docs/dist/demos/<template>/html   (páginas + vendor)
  *   apps/docs/dist/demos/<template>/react  (build do app React)
  *
  * Toda página de demonstração recebe `<meta name="robots" content="noindex">`: são telas de
  * exemplo com dados fictícios, conteúdo raso para a busca (a página Templates é que se indexa).
  * Não bloquear `/demos/` no robots.txt: o buscador precisa ler a página para ver o noindex.
  *
- * Antes: `pnpm build` (gera os apps React e o gate) e `pnpm templates:vendor`.
+ * Antes: `pnpm build` (gera os apps React) e `pnpm templates:vendor`.
  * Uso: node scripts/templates/site.ts
  */
 import { cpSync, existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';

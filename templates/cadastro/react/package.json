@@ -15,7 +15,6 @@
     "@efds-ui/core": "workspace:*",
     "@efds-ui/icons": "workspace:*",
     "@efds-ui/react": "workspace:*",
-    "@efds-ui/template-license": "workspace:*",
     "@efds-ui/themes": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"

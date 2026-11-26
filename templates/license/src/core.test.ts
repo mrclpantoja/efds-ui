@@ -55,7 +55,7 @@ describe('verifyLicense', () => {
   it('recusa campo adulterado', () => {
     const license = baseLicense();
     const key = sign(license, secretKey);
-    expect(verifyLicense({ ...license, type: 'multi' }, key, opts)).toEqual({
+    expect(verifyLicense({ ...license, product: 'cadastro' }, key, opts)).toEqual({
       ok: false,
       reason: 'bad-signature',
     });
@@ -132,7 +132,7 @@ describe('verifyLicense', () => {
   });
 
   it('sem domains, qualquer host serve, inclusive localhost', () => {
-    const license = baseLicense({ type: 'free' });
+    const license = baseLicense({ type: 'multi' });
     expect(
       verifyLicense(license, sign(license, secretKey), { publicKey, hostname: 'qualquer.com' }).ok,
     ).toBe(true);

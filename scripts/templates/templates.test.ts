@@ -1,10 +1,16 @@
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { verifyLicense } from '../../templates/license/src/core.ts';
 import { generateKeyPair, publicKeyOf } from '../../templates/license/src/sign.ts';
-import { issueLicense, licenseJsFile, vendorTemplate, VENDOR_FILES } from './lib.ts';
+import {
+  issueLicense,
+  LICENSE_VENDOR_FILE,
+  licenseJsFile,
+  vendorTemplate,
+  VENDOR_FILES,
+} from './lib.ts';
 import { inlineTsconfig, parseCatalog, transformPackageJson } from './pack-lib.ts';
 
 describe('emissão', () => {
@@ -36,22 +42,55 @@ describe('emissão', () => {
 });
 
 describe('vendor', () => {
-  it('copia os quatro arquivos e avisa quando falta build', () => {
+  const seed = (base: string, files: { from: string[] }[]) => {
+    for (const file of files) {
+      const path = join(base, ...file.from);
+      mkdirSync(join(path, '..'), { recursive: true });
+      writeFileSync(path, 'x');
+    }
+  };
+
+  it('gratuito: copia só core, themes e behavior, sem a verificação de licença', () => {
     const base = mkdtempSync(join(tmpdir(), 'efds-vendor-'));
     try {
       expect(() => vendorTemplate('painel', base)).toThrow(/pnpm build/);
-      for (const file of VENDOR_FILES) {
-        const path = join(base, ...file.from);
-        mkdirSync(join(path, '..'), { recursive: true });
-        writeFileSync(path, 'x');
-      }
-      expect(vendorTemplate('painel', base)).toHaveLength(4);
+      seed(base, VENDOR_FILES);
+      const copied = vendorTemplate('painel', base);
+      expect(copied).toHaveLength(3);
       expect(
-        readFileSync(
-          join(base, 'templates/painel/html/vendor/efds-ui/license/efds-license-gate.js'),
-          'utf8',
-        ),
-      ).toBe('x');
+        existsSync(join(base, 'templates/painel/html/vendor/efds-ui/license/efds-license-gate.js')),
+      ).toBe(false);
+    } finally {
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
+  it('premium (--source): inclui a verificação de licença e exige o build dela', () => {
+    const base = mkdtempSync(join(tmpdir(), 'efds-vendor-'));
+    try {
+      seed(base, VENDOR_FILES);
+      const html = join(base, 'externo', 'html');
+      mkdirSync(html, { recursive: true });
+      expect(() => vendorTemplate('erp', base, html)).toThrow(/efds-license-gate/);
+      seed(base, [LICENSE_VENDOR_FILE]);
+      expect(vendorTemplate('erp', base, html)).toHaveLength(4);
+      expect(readFileSync(join(html, 'vendor/efds-ui/license/efds-license-gate.js'), 'utf8')).toBe(
+        'x',
+      );
+    } finally {
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
+  it('gratuito reexecutado remove a licença que sobrou de um vendor antigo', () => {
+    const base = mkdtempSync(join(tmpdir(), 'efds-vendor-'));
+    try {
+      seed(base, VENDOR_FILES);
+      const old = join(base, 'templates/painel/html/vendor/efds-ui/license/efds-license-gate.js');
+      mkdirSync(join(old, '..'), { recursive: true });
+      writeFileSync(old, 'antigo');
+      vendorTemplate('painel', base);
+      expect(existsSync(old)).toBe(false);
     } finally {
       rmSync(base, { recursive: true, force: true });
     }

@@ -16,7 +16,7 @@ export function baseLicense(overrides: Partial<License> = {}): License {
     v: 1,
     id: 'teste-0001',
     product: 'painel',
-    type: 'free',
+    type: 'multi',
     issuedAt: '2026-11-22',
     ...overrides,
   };

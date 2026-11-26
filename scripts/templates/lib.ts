@@ -1,4 +1,7 @@
-/** Núcleo dos scripts de templates (chaves, emissão, vendor), separado para ser testável. */
+/**
+ * Núcleo dos scripts de templates (chaves, emissão, vendor), separado para ser testável.
+ * Os templates gratuitos (`TEMPLATES`) não têm licença; chaves e emissão valem só para os premium.
+ */
 
 import { randomUUID } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -78,7 +81,7 @@ export function writeText(path: string, content: string): void {
   writeFileSync(path, content);
 }
 
-/** Arquivos de `dist/` que cada template HTML recebe em `vendor/efds-ui/`. */
+/** Arquivos de `dist/` que todo template HTML recebe em `vendor/efds-ui/`. */
 export const VENDOR_FILES: { from: string[]; to: string[] }[] = [
   { from: ['packages', 'core', 'dist', 'index.css'], to: ['core', 'index.css'] },
   { from: ['packages', 'themes', 'dist', 'index.css'], to: ['themes', 'index.css'] },
@@ -86,20 +89,32 @@ export const VENDOR_FILES: { from: string[]; to: string[] }[] = [
     from: ['packages', 'behavior', 'dist', 'eds-behavior.js'],
     to: ['behavior', 'eds-behavior.js'],
   },
-  {
-    from: ['templates', 'license', 'dist', 'efds-license-gate.js'],
-    to: ['license', 'efds-license-gate.js'],
-  },
 ];
+
+/** Só os templates premium (com trava de licença) recebem a verificação de licença. */
+export const LICENSE_VENDOR_FILE = {
+  from: ['templates', 'license', 'dist', 'efds-license-gate.js'],
+  to: ['license', 'efds-license-gate.js'],
+};
 
 export function vendorDir(template: string): string {
   return join(templatesDir, template, 'html', 'vendor', 'efds-ui');
 }
 
-/** Copia os arquivos de `dist/` para o template. Devolve os caminhos copiados. */
-/** `htmlDir`: pasta html/ de um template fora deste repositório (opção `--source`). */
-export function vendorTemplate(template: string, base = root, htmlDir?: string): string[] {
-  const missing = VENDOR_FILES.map((f) => join(base, ...f.from)).filter((p) => !existsSync(p));
+/**
+ * Copia os arquivos de `dist/` para o template. Devolve os caminhos copiados.
+ * `htmlDir`: pasta html/ de um template fora deste repositório (opção `--source`, os premium).
+ * `withLicense`: inclui a verificação de licença; padrão: só nos templates externos (premium).
+ * Os gratuitos (`templates/`) não têm trava.
+ */
+export function vendorTemplate(
+  template: string,
+  base = root,
+  htmlDir?: string,
+  withLicense = htmlDir !== undefined,
+): string[] {
+  const files = withLicense ? [...VENDOR_FILES, LICENSE_VENDOR_FILE] : VENDOR_FILES;
+  const missing = files.map((f) => join(base, ...f.from)).filter((p) => !existsSync(p));
   if (missing.length > 0) {
     throw new Error(`Faltam arquivos de build (rode "pnpm build"):\n  ${missing.join('\n  ')}`);
   }
@@ -108,7 +123,7 @@ export function vendorTemplate(template: string, base = root, htmlDir?: string):
     : join(base, 'templates', template, 'html', 'vendor', 'efds-ui');
   rmSync(target, { recursive: true, force: true });
   const copied: string[] = [];
-  for (const file of VENDOR_FILES) {
+  for (const file of files) {
     const dest = join(target, ...file.to);
     ensureDir(dirname(dest));
     copyFileSync(join(base, ...file.from), dest);

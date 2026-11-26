@@ -1,7 +1,11 @@
 /**
  * Monta a pasta de download de um template (html/ + react/), com README e LICENSE, e o .zip.
  *
- *   node scripts/templates/pack.ts --template painel --license <pasta com efds-license.json/js> --out <pasta>
+ * Gratuitos (painel, cadastro, portal): MIT, sem licença nem chave.
+ *   node scripts/templates/pack.ts --template painel --out <pasta>
+ *
+ * Premium (repositório à parte, `--source`): exige a licença emitida (`issue.ts`).
+ *   node scripts/templates/pack.ts --source <pasta> --license <pasta com efds-license.json/js> --out <pasta>
  *
  * Pré-requisitos: `pnpm build` e `pnpm templates:vendor`. Nunca inclui chave privada nem a chave
  * de licença (o cliente cola a que recebeu).
@@ -50,18 +54,24 @@ const template = values.template ?? (externalSource ? basename(externalSource) :
 if (!template || (!externalSource && !(TEMPLATES as readonly string[]).includes(template))) {
   fail(`--template deve ser um de: ${TEMPLATES.join(', ')} (ou use --source <pasta>).`);
 }
-if (!values.license) fail('Falta --license <pasta com efds-license.json e efds-license.js>.');
 if (!values.out) fail('Falta --out <pasta>.');
 
-const licenseDir = resolve(values.license);
-for (const file of ['efds-license.json', 'efds-license.js']) {
-  if (!existsSync(join(licenseDir, file))) fail(`Não achei ${file} em ${licenseDir}.`);
+// Só os templates externos (premium) têm trava de licença; os gratuitos deste repositório não.
+const licensed = externalSource !== undefined;
+if (licensed && !values.license) {
+  fail('Falta --license <pasta com efds-license.json e efds-license.js>.');
 }
-const licenseJson = JSON.parse(readFileSync(join(licenseDir, 'efds-license.json'), 'utf8')) as {
-  product?: string;
-};
-if (licenseJson.product !== undefined && licenseJson.product !== template) {
-  fail(`A licença é do produto "${licenseJson.product}", não de "${template}".`);
+const licenseDir = values.license ? resolve(values.license) : undefined;
+if (licensed && licenseDir) {
+  for (const file of ['efds-license.json', 'efds-license.js']) {
+    if (!existsSync(join(licenseDir, file))) fail(`Não achei ${file} em ${licenseDir}.`);
+  }
+  const licenseJson = JSON.parse(readFileSync(join(licenseDir, 'efds-license.json'), 'utf8')) as {
+    product?: string;
+  };
+  if (licenseJson.product !== undefined && licenseJson.product !== template) {
+    fail(`A licença é do produto "${licenseJson.product}", não de "${template}".`);
+  }
 }
 
 const source = externalSource ?? join(templatesDir, template);
@@ -72,7 +82,7 @@ const licensePkg = join(templatesDir, 'license', 'dist', 'pkg');
 if (!existsSync(htmlSource) || !existsSync(reactSource)) fail(`Template incompleto: ${source}.`);
 if (!existsSync(vendorSource))
   fail('Faltam os arquivos de vendor. Rode "pnpm build" e "pnpm templates:vendor".');
-if (!existsSync(join(licensePkg, 'index.js')))
+if (licensed && !existsSync(join(licensePkg, 'index.js')))
   fail('Falta o build ESM da licença. Rode "pnpm build".');
 
 const version = (
@@ -115,18 +125,22 @@ const skipSource = (path: string): boolean => {
 // html/
 const htmlTarget = join(target, 'html');
 cpSync(htmlSource, htmlTarget, { recursive: true, filter: (p) => !skipSource(p) });
-cpSync(join(licenseDir, 'efds-license.json'), join(htmlTarget, 'efds-license.json'));
-cpSync(join(licenseDir, 'efds-license.js'), join(htmlTarget, 'efds-license.js'));
-writeText(join(htmlTarget, 'efds-config.js'), configJsFile(''));
+if (licensed && licenseDir) {
+  cpSync(join(licenseDir, 'efds-license.json'), join(htmlTarget, 'efds-license.json'));
+  cpSync(join(licenseDir, 'efds-license.js'), join(htmlTarget, 'efds-license.js'));
+  writeText(join(htmlTarget, 'efds-config.js'), configJsFile(''));
+}
 
 // react/
 const reactTarget = join(target, 'react');
 cpSync(reactSource, reactTarget, { recursive: true, filter: (p) => !skipSource(p) });
-cpSync(join(licenseDir, 'efds-license.json'), join(reactTarget, 'src', 'efds-license.json'));
-writeText(
-  join(reactTarget, '.env.example'),
-  '# Cole a chave de licença que acompanha o seu arquivo de licença.\nVITE_EFDS_LICENSE_KEY=\n',
-);
+if (licensed && licenseDir) {
+  cpSync(join(licenseDir, 'efds-license.json'), join(reactTarget, 'src', 'efds-license.json'));
+  writeText(
+    join(reactTarget, '.env.example'),
+    '# Cole a chave de licença que acompanha o seu arquivo de licença.\nVITE_EFDS_LICENSE_KEY=\n',
+  );
+}
 
 // O vite.config.ts do repositório aponta para o código-fonte dos pacotes; o download usa os do npm.
 writeText(
@@ -163,40 +177,51 @@ if (existsSync(tsconfigPath)) {
   writeFileSync(tsconfigPath, `${JSON.stringify(resolved, null, 2)}\n`);
 }
 
-// vendor/template-license (build ESM)
-const vendorLicense = join(reactTarget, 'vendor', 'template-license');
-cpSync(licensePkg, vendorLicense, { recursive: true });
-writeFileSync(
-  join(vendorLicense, 'package.json'),
-  `${JSON.stringify(
-    {
-      name: '@efds-ui/template-license',
-      version,
-      license: 'MIT',
-      type: 'module',
-      main: './index.js',
-      types: './index.d.ts',
-      exports: {
-        '.': { types: './index.d.ts', default: './index.js' },
-        './react': { types: './react.d.ts', default: './react.js' },
+// vendor/template-license (build ESM): só nos premium
+if (licensed) {
+  const vendorLicense = join(reactTarget, 'vendor', 'template-license');
+  cpSync(licensePkg, vendorLicense, { recursive: true });
+  writeFileSync(
+    join(vendorLicense, 'package.json'),
+    `${JSON.stringify(
+      {
+        name: '@efds-ui/template-license',
+        version,
+        license: 'MIT',
+        type: 'module',
+        main: './index.js',
+        types: './index.d.ts',
+        exports: {
+          '.': { types: './index.d.ts', default: './index.js' },
+          './react': { types: './react.d.ts', default: './react.js' },
+        },
+        dependencies: { '@noble/curves': catalog['@noble/curves'] ?? '^2.4.0' },
+        peerDependencies: { '@efds-ui/react': `^${version}`, react: '^18.0.0 || ^19.0.0' },
       },
-      dependencies: { '@noble/curves': catalog['@noble/curves'] ?? '^2.4.0' },
-      peerDependencies: { '@efds-ui/react': `^${version}`, react: '^18.0.0 || ^19.0.0' },
-    },
-    null,
-    2,
-  )}\n`,
-);
+      null,
+      2,
+    )}\n`,
+  );
+}
 
 // README e LICENSE
-writeText(
-  join(target, 'README.md'),
-  `# efDS.ui - template ${template}
+const freeReadme = `## Uso
 
-Este download traz o mesmo template em duas versões: \`html/\` (HTML puro, para PHP, Java, .NET) e
-\`react/\` (Vite + React). Os dados são fictícios.
+Licença MIT: o template funciona sem chave de licença e sem cadastro.
 
-## Chave de licença
+## HTML
+
+1. Sirva a pasta \`html/\` em um servidor (qualquer um; para testar: \`npx serve html\`).
+2. Abra \`index.html\`. Os arquivos do efDS.ui já estão em \`vendor/\`; nada é carregado de CDN.
+
+## React
+
+1. Rode \`npm install\` e depois \`npm run dev\`.
+2. \`npm run build\` gera a pasta \`dist/\` para publicar.
+
+Documentação: https://efds-ui.com.br/templates
+`;
+const licensedReadme = `## Chave de licença
 
 Junto com o arquivo de licença (\`efds-license.json\`) você recebeu uma **chave**. Sem ela o template
 não executa e mostra uma tela de bloqueio explicando o motivo. A verificação é local: não chama
@@ -217,8 +242,16 @@ nenhum servidor.
 Se a licença for de um site (ou de vários), o template só roda nos domínios listados em
 \`efds-license.json\` e nos seus subdomínios.
 
-Documentação: https://efds-ui.com.br/#/templates/licenca
-`,
+Documentação: https://efds-ui.com.br/templates/licenca
+`;
+writeText(
+  join(target, 'README.md'),
+  `# efDS.ui - template ${template}
+
+Este download traz o mesmo template em duas versões: \`html/\` (HTML puro, para PHP, Java, .NET) e
+\`react/\` (Vite + React). Os dados são fictícios.
+
+${licensed ? licensedReadme : freeReadme}`,
 );
 // Template com licença própria (premium): LICENSE na pasta do template; senão, a MIT do repositório.
 const ownLicense = join(source, 'LICENSE');

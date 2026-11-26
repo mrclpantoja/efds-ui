@@ -1,7 +1,7 @@
 /**
  * Emite uma licença de template e imprime a chave.
  *
- *   node scripts/templates/issue.ts --product painel --type free --out <pasta>
+ *   node scripts/templates/issue.ts --product painel --type multi --out <pasta>
  *   node scripts/templates/issue.ts --product erp --type single --domain exemplo.gov.br --out <pasta> --write-key both
  *
  * Grava `efds-license.json` e `efds-license.js` em <pasta>. Com `--write-key`, grava também
@@ -32,8 +32,8 @@ function fail(message: string): never {
 
 const type = values.type;
 if (!values.product) fail('Falta --product.');
-if (type !== 'free' && type !== 'single' && type !== 'multi') {
-  fail('--type deve ser free, single ou multi.');
+if (type !== 'single' && type !== 'multi') {
+  fail('--type deve ser single ou multi.');
 }
 if (!values.out) fail('Falta --out <pasta>.');
 const writeKey = values['write-key'];

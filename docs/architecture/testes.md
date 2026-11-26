@@ -126,3 +126,10 @@ Localmente, `VISUAL_UPDATE=1 pnpm e2e --project=visual --update-snapshots=all` g
 - Job `e2e` (matriz chromium/firefox/webkit): `pnpm site:build`, instala o navegador com
   dependências do sistema, roda `pnpm e2e --project=<navegador>`; no chromium roda também
   `--project=visual`. `fail-fast` desligado, uma tentativa extra (`retries: 1`) só no CI.
+
+## Limitação conhecida: Firefox do Playwright
+
+Nos exemplos de ordenação da Table e no Sortable, o Firefox do Playwright derruba a aba ("Page
+crashed") ao ler o texto dos itens, inclusive antes de qualquer interação. Os 6 cenários ficam como
+`test.fixme` só no Firefox; Chromium e WebKit os cobrem, e os fluxos foram validados no Firefox real
+na Fase 7. Retirar o `fixme` quando uma versão nova do Playwright deixar de travar.

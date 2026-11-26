@@ -1,6 +1,13 @@
 import { expect, test, type Page } from '@playwright/test';
 import { abrirExemplo, camadas, textos } from '../support/docs.ts';
 
+/**
+ * O Firefox do Playwright derruba a aba ("Page crashed") ao ler o texto destes exemplos depois de
+ * carregados (CI, Linux). Ordenação e arrastar foram validados no Firefox real na Fase 7; Chromium e
+ * WebKit cobrem estes cenários. Retirar o fixme quando o Playwright corrigir.
+ */
+const FIREFOX_CRASH = 'Firefox do Playwright: Page crashed ao ler o texto do exemplo';
+
 /** Rótulo do nó com foco (o `.eds-tree-label` é o contrato de markup da árvore). */
 async function rotuloFocado(page: Page): Promise<string> {
   return page.evaluate(
@@ -73,7 +80,11 @@ for (const camada of camadas) {
   test.describe(`Sortable (${camada})`, () => {
     const ordem = (bloco: ReturnType<Page['locator']>) => textos(bloco.getByRole('listitem'));
 
-    test('Espaço pega, setas movem, Espaço solta e o resultado é anunciado', async ({ page }) => {
+    test('Espaço pega, setas movem, Espaço solta e o resultado é anunciado', async ({
+      page,
+      browserName,
+    }) => {
+      test.fixme(browserName === 'firefox', FIREFOX_CRASH);
       const bloco = await abrirExemplo(
         page,
         '/componentes/sortable',
@@ -109,7 +120,8 @@ for (const camada of camadas) {
       await expect(itens.filter({ hasText: 'Revisar contrato' })).toBeFocused();
     });
 
-    test('Esc cancela o movimento e restaura a ordem original', async ({ page }) => {
+    test('Esc cancela o movimento e restaura a ordem original', async ({ page, browserName }) => {
+      test.fixme(browserName === 'firefox', FIREFOX_CRASH);
       const bloco = await abrirExemplo(
         page,
         '/componentes/sortable',

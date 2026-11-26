@@ -3,10 +3,14 @@
  *   apps/docs/dist/demos/<template>/html   (páginas + vendor + licença de demonstração)
  *   apps/docs/dist/demos/<template>/react  (build do app React)
  *
+ * Toda página de demonstração recebe `<meta name="robots" content="noindex">`: são telas de
+ * exemplo com dados fictícios, conteúdo raso para a busca (a página Templates é que se indexa).
+ * Não bloquear `/demos/` no robots.txt: o buscador precisa ler a página para ver o noindex.
+ *
  * Antes: `pnpm build` (gera os apps React e o gate) e `pnpm templates:vendor`.
  * Uso: node scripts/templates/site.ts
  */
-import { cpSync, existsSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { root, templatesDir, TEMPLATES } from './lib.ts';
 
@@ -37,3 +41,24 @@ for (const template of TEMPLATES) {
   cpSync(reactDist, join(out, template, 'react'), { recursive: true });
   console.log(`${template}: demos/${template}/html e demos/${template}/react`);
 }
+
+const NOINDEX = '<meta name="robots" content="noindex" />';
+let pages = 0;
+for (const entry of readdirSync(out, { recursive: true, withFileTypes: true })) {
+  if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
+  const file = join(entry.parentPath, entry.name);
+  const html = readFileSync(file, 'utf8');
+  if (html.includes('name="robots"')) continue;
+  const head = html.match(/<head[^>]*>/i);
+  if (!head) throw new Error(`Página de demonstração sem <head>: ${file}`);
+  writeFileSync(
+    file,
+    html.replace(
+      head[0],
+      `${head[0]}
+    ${NOINDEX}`,
+    ),
+  );
+  pages += 1;
+}
+console.log(`noindex em ${pages} páginas de demonstração.`);

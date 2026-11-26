@@ -95,7 +95,14 @@ function HtmlPreview({ html }: { html: string }) {
       });
     }
     // Os formulários dos exemplos nunca navegam (a documentação é uma SPA sem servidor).
-    const block = (event: Event) => event.preventDefault();
+    // `method="dialog"` (ou `formmethod`) fecha o <dialog> sem navegar: esse envio passa.
+    const block = (event: Event) => {
+      const form = event.target as HTMLFormElement;
+      const submitter = (event as SubmitEvent).submitter;
+      const method = submitter?.getAttribute('formmethod') ?? form.getAttribute('method');
+      if (method?.toLowerCase() === 'dialog') return;
+      event.preventDefault();
+    };
     el.addEventListener('submit', block);
     return () => {
       el.removeEventListener('submit', block);

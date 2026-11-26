@@ -1,0 +1,302 @@
+<!doctype html>
+<!--
+  Página da regressão visual (tests/e2e/specs/visual.spec.ts). Markup estático copiado dos contratos
+  de apps/docs/src/examples, sem JavaScript de componente: o que se compara é o CSS do core e os
+  tokens dos temas. Eixos pela query: ?theme=blue&mode=light&density=comfortable&shape=soft.
+  Dados fictícios. Fonte do sistema (o core não carrega fonte), animações desligadas.
+-->
+<html lang="pt-BR" data-theme="blue" data-mode="light" data-density="comfortable" data-shape="soft">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regressão visual</title>
+    <link rel="stylesheet" href="/__core/index.css" />
+    <link rel="stylesheet" href="/__themes/index.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        caret-color: transparent !important;
+        scroll-behavior: auto !important;
+      }
+      body {
+        margin: 0;
+        padding: 1rem;
+        background: var(--eds-color-bg-canvas, Canvas);
+        color: var(--eds-color-text-primary, CanvasText);
+      }
+      /* Moldura de cada grupo: largura fixa para o quadro ser estável entre execuções. */
+      [data-visual] {
+        inline-size: 920px;
+        padding: 1rem;
+        box-sizing: border-box;
+        background: var(--eds-color-bg-canvas, Canvas);
+      }
+    </style>
+    <script>
+      // Aplica os eixos da query nos atributos do <html> antes do primeiro desenho.
+      var q = new URLSearchParams(location.search);
+      ['theme', 'mode', 'density', 'shape'].forEach(function (eixo) {
+        if (q.get(eixo)) document.documentElement.setAttribute('data-' + eixo, q.get(eixo));
+      });
+    </script>
+  </head>
+  <body>
+    <section data-visual="acoes" aria-label="Ações">
+      <div class="eds-stack eds-gap-4">
+        <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+          <button type="button" class="eds-button eds-button-primary">Salvar</button>
+          <button type="button" class="eds-button eds-button-secondary">Cancelar</button>
+          <button type="button" class="eds-button eds-button-tertiary">Mais opções</button>
+          <button type="button" class="eds-button eds-button-ghost">Ver detalhes</button>
+          <button type="button" class="eds-button eds-button-danger">Excluir</button>
+        </div>
+        <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+          <button type="button" class="eds-button eds-button-primary eds-button-sm">Pequeno</button>
+          <button type="button" class="eds-button eds-button-primary">Médio</button>
+          <button type="button" class="eds-button eds-button-primary eds-button-lg">Grande</button>
+          <button type="button" class="eds-button eds-button-secondary" disabled>
+            Desabilitado
+          </button>
+        </div>
+        <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+          <span class="eds-badge eds-badge-neutral">Rascunho</span>
+          <span class="eds-badge eds-badge-info">Em análise</span>
+          <span class="eds-badge eds-badge-success">Pago</span>
+          <span class="eds-badge eds-badge-warning">Pendente</span>
+          <span class="eds-badge eds-badge-danger">Atrasado</span>
+        </div>
+      </div>
+    </section>
+
+    <section data-visual="formularios" aria-label="Formulários">
+      <div class="eds-grid eds-grid-auto">
+        <div class="eds-field">
+          <label class="eds-label" for="v-nome" data-required>Nome do projeto</label>
+          <input id="v-nome" class="eds-input" value="Projeto Horizonte" />
+          <p class="eds-helper">Aparece nas listagens.</p>
+        </div>
+        <div class="eds-field">
+          <label class="eds-label" for="v-erro">Telefone</label>
+          <input
+            id="v-erro"
+            class="eds-input"
+            value="(11) 9876"
+            aria-invalid="true"
+            aria-describedby="v-erro-m"
+          />
+          <p class="eds-error" id="v-erro-m">Informe o telefone com DDD.</p>
+        </div>
+        <div class="eds-field">
+          <label class="eds-label" for="v-ok">Código</label>
+          <input
+            id="v-ok"
+            class="eds-input"
+            value="PRJ-0042"
+            data-valid="true"
+            aria-describedby="v-ok-m"
+          />
+          <p class="eds-success" id="v-ok-m">Código disponível.</p>
+        </div>
+        <div class="eds-field">
+          <label class="eds-label" for="v-dis">Setor</label>
+          <input id="v-dis" class="eds-input" value="Financeiro" disabled />
+        </div>
+        <div class="eds-field">
+          <label class="eds-label" for="v-sel">Departamento</label>
+          <select id="v-sel" class="eds-select">
+            <option>Compras</option>
+            <option selected>Financeiro</option>
+            <option>Tecnologia</option>
+          </select>
+        </div>
+        <div class="eds-field">
+          <label class="eds-label" for="v-txt">Descrição</label>
+          <textarea id="v-txt" class="eds-textarea" rows="3">
+Objetivo e escopo do projeto fictício.</textarea>
+        </div>
+        <div class="eds-stack eds-gap-1">
+          <label class="eds-check"
+            ><input type="checkbox" class="eds-checkbox" checked /> Marcado</label
+          >
+          <label class="eds-check"><input type="checkbox" class="eds-checkbox" /> Desmarcado</label>
+          <label class="eds-check"
+            ><input type="checkbox" class="eds-checkbox" disabled checked /> Desabilitado</label
+          >
+        </div>
+        <div class="eds-stack eds-gap-1" role="radiogroup" aria-label="Prazo">
+          <label class="eds-check"
+            ><input type="radio" name="v-prazo" class="eds-radio" checked /> 30 dias</label
+          >
+          <label class="eds-check"
+            ><input type="radio" name="v-prazo" class="eds-radio" /> 60 dias</label
+          >
+          <label class="eds-check"
+            ><input type="checkbox" role="switch" class="eds-switch" checked /> Notificar a
+            equipe</label
+          >
+        </div>
+      </div>
+    </section>
+
+    <section data-visual="feedback" aria-label="Feedback">
+      <div class="eds-stack eds-gap-3">
+        <div class="eds-alert eds-alert-info">
+          <div class="eds-alert-content">
+            <p class="eds-alert-title">
+              <span class="eds-visually-hidden">Informação: </span>Conciliação agendada
+            </p>
+            <p>Roda todos os dias às 02h.</p>
+          </div>
+        </div>
+        <div class="eds-alert eds-alert-success">
+          <div class="eds-alert-content">
+            <p class="eds-alert-title">
+              <span class="eds-visually-hidden">Sucesso: </span>Importação concluída
+            </p>
+            <p>248 registros foram importados.</p>
+          </div>
+        </div>
+        <div class="eds-alert eds-alert-warning">
+          <div class="eds-alert-content">
+            <p class="eds-alert-title">
+              <span class="eds-visually-hidden">Atenção: </span>Fechamento próximo
+            </p>
+            <p>O período fecha em 2 dias.</p>
+          </div>
+          <div class="eds-alert-actions">
+            <button type="button" class="eds-button eds-button-primary eds-button-sm">
+              Revisar
+            </button>
+            <button type="button" class="eds-button eds-button-secondary eds-button-sm">
+              Ver pendências
+            </button>
+          </div>
+        </div>
+        <div class="eds-alert eds-alert-danger">
+          <div class="eds-alert-content">
+            <p class="eds-alert-title">
+              <span class="eds-visually-hidden">Erro: </span>Falha na conciliação
+            </p>
+            <p>12 lançamentos não puderam ser conciliados.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section data-visual="dados" aria-label="Dados">
+      <div class="eds-stack eds-gap-4">
+        <div class="eds-table-wrap">
+          <table class="eds-table">
+            <caption class="eds-table-caption eds-visually-hidden">
+              Pedidos recentes (dados fictícios)
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Situação</th>
+                <th scope="col" class="eds-table-num">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PED-0001</td>
+                <td>Atelier Exemplo</td>
+                <td><span class="eds-badge eds-badge-success">Pago</span></td>
+                <td class="eds-table-num">R$ 1.280,50</td>
+              </tr>
+              <tr>
+                <td>PED-0002</td>
+                <td>Comércio Modelo</td>
+                <td><span class="eds-badge eds-badge-warning">Pendente</span></td>
+                <td class="eds-table-num">R$ 459,00</td>
+              </tr>
+              <tr>
+                <td>PED-0003</td>
+                <td>Oficina Fictícia</td>
+                <td><span class="eds-badge eds-badge-danger">Atrasado</span></td>
+                <td class="eds-table-num">R$ 8.920,90</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="eds-grid eds-grid-auto">
+          <article class="eds-card">
+            <header class="eds-card-header"><h4 class="eds-card-title">Padrão</h4></header>
+            <div class="eds-card-body">Fundo de superfície, borda de 1px e raio médio.</div>
+          </article>
+          <article class="eds-card eds-card-elevated">
+            <header class="eds-card-header"><h4 class="eds-card-title">Elevado</h4></header>
+            <div class="eds-card-body">Com sombra, para destacar.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section data-visual="navegacao" aria-label="Navegação">
+      <div class="eds-stack eds-gap-4">
+        <nav class="eds-breadcrumb" aria-label="Trilha">
+          <ol class="eds-breadcrumb-list">
+            <li class="eds-breadcrumb-item"><a href="#a">Dashboard</a></li>
+            <li class="eds-breadcrumb-item"><a href="#b">Usuários</a></li>
+            <li class="eds-breadcrumb-item"><span aria-current="page">Ana Souza</span></li>
+          </ol>
+        </nav>
+        <div class="eds-tabs">
+          <div class="eds-tablist" role="tablist" aria-label="Seções do pedido">
+            <button
+              type="button"
+              class="eds-tab"
+              role="tab"
+              id="v-aba-1"
+              aria-selected="true"
+              aria-controls="v-p-1"
+              tabindex="0"
+            >
+              Resumo
+            </button>
+            <button
+              type="button"
+              class="eds-tab"
+              role="tab"
+              id="v-aba-2"
+              aria-selected="false"
+              aria-controls="v-p-2"
+              tabindex="-1"
+            >
+              Itens
+            </button>
+            <button
+              type="button"
+              class="eds-tab"
+              role="tab"
+              id="v-aba-3"
+              aria-selected="false"
+              aria-controls="v-p-3"
+              aria-disabled="true"
+              tabindex="-1"
+            >
+              Anexos
+            </button>
+          </div>
+          <div
+            class="eds-tabpanel"
+            role="tabpanel"
+            id="v-p-1"
+            aria-labelledby="v-aba-1"
+            tabindex="0"
+          >
+            <p>Pedido 1042 · Cliente Exemplo Ltda · 3 itens.</p>
+          </div>
+        </div>
+        <div class="eds-stack eds-stack-row eds-gap-3">
+          <a href="#c" class="eds-button eds-button-primary">Link como botão</a>
+          <a href="#d">Link comum</a>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

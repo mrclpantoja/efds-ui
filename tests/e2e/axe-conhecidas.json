@@ -1,0 +1,4 @@
+{
+  "_comentario": "Violações do axe-core encontradas e ainda não corrigidas (o autor do teste não corrige componentes: o dono do projeto decide). Vazia é o estado desejado. O teste falha se uma entrada deixar de ocorrer.",
+  "conhecidas": []
+}

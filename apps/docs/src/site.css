@@ -45,6 +45,11 @@
   white-space: nowrap;
 }
 
+/* Código dentro de link: sem o fundo (no modo escuro a cor do link sobre bg-subtle dava 4,37:1). */
+:where(.eds-app-main) a > code {
+  background: none;
+}
+
 /* Reflow a 320 px (WCAG 1.4.10): código longo em linha (URLs, chamadas) quebra em vez de rolar a página. */
 @media (max-width: 40em) {
   :where(.eds-app-main) code {

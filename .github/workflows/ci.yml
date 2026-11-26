@@ -7,7 +7,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -23,5 +23,41 @@ jobs:
       - run: pnpm build
       - run: pnpm typecheck
       - run: pnpm test
+      - run: pnpm size:check
       - run: pnpm pack:check
       - run: pnpm docs:check
+
+  # Testes de ponta a ponta (Playwright) contra o site de documentação construído, com axe-core em
+  # todas as rotas. A regressão visual roda só no chromium e só quando há capturas versionadas.
+  e2e:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Site completo: build dos pacotes e do site, mais as demonstrações dos templates (/demos).
+      - run: pnpm site:build
+      - name: Instalar o navegador (${{ matrix.browser }})
+        run: pnpm --filter @efds-ui/e2e exec playwright install --with-deps ${{ matrix.browser }}
+      - name: E2E e axe-core (${{ matrix.browser }})
+        run: pnpm e2e --project=${{ matrix.browser }}
+      - name: Regressão visual
+        if: matrix.browser == 'chromium'
+        run: pnpm e2e --project=visual
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-${{ matrix.browser }}
+          path: |
+            tests/e2e/node_modules/.e2e/report
+            tests/e2e/node_modules/.e2e/test-results
+          if-no-files-found: ignore
+          retention-days: 7

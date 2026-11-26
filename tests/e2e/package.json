@@ -1,0 +1,19 @@
+{
+  "name": "@efds-ui/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "Testes de ponta a ponta (Playwright), axe-core e regressão visual do efDS.ui.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "catalog:",
+    "@efds-ui/typescript-config": "workspace:*",
+    "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

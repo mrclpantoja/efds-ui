@@ -1,0 +1,31 @@
+name: Atualizar capturas da regressão visual
+
+# Gera (ou regrava) as capturas de referência no mesmo ambiente do CI (Linux, chromium do
+# Playwright) e as publica como artefato. Nada é commitado aqui: baixe o artefato, extraia em
+# tests/e2e/__screenshots__/ e faça o commit. Passo a passo em docs/architecture/testes.md.
+on:
+  workflow_dispatch:
+
+jobs:
+  capturas:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm --filter @efds-ui/e2e exec playwright install --with-deps chromium
+      - name: Gerar as capturas
+        env:
+          VISUAL_UPDATE: '1'
+        run: pnpm e2e --project=visual --update-snapshots=all
+      - uses: actions/upload-artifact@v4
+        with:
+          name: capturas-visuais
+          path: tests/e2e/__screenshots__/linux
+          if-no-files-found: error
+          retention-days: 14

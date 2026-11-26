@@ -1,0 +1,10 @@
+{
+  "extends": "@efds-ui/typescript-config/base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM"],
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true
+  },
+  "include": ["**/*.ts"]
+}

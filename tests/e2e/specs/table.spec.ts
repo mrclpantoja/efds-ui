@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirExemplo, camadas } from '../support/docs.ts';
+import { abrirExemplo, camadas, textos } from '../support/docs.ts';
 
 for (const camada of camadas) {
   test.describe(`Table (${camada})`, () => {
@@ -17,7 +17,7 @@ for (const camada of camadas) {
       const codigo = bloco.getByRole('columnheader', { name: 'Código' });
 
       const totais = async () =>
-        (await bloco.locator('tbody tr td.eds-table-num').allTextContents()).map((texto) =>
+        (await textos(bloco.locator('tbody tr td.eds-table-num'))).map((texto) =>
           Number(texto.replace(/[^\d,]/g, '').replace(',', '.')),
         );
       const ordenado = (valores: number[], sentido: 1 | -1) =>

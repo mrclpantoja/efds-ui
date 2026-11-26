@@ -62,3 +62,11 @@ export async function focoPresoEm(page: Page, seletor: string): Promise<boolean>
     return !el || el === document.body || !!el.closest(sel);
   }, seletor);
 }
+
+/**
+ * Textos dos elementos lidos dentro da página. Substitui `locator.allTextContents()`, que derrubava
+ * a aba do Firefox do Playwright no CI ("Page crashed") nas páginas de Table e Sortable.
+ */
+export function textos(locator: Locator): Promise<string[]> {
+  return locator.evaluateAll((els) => els.map((el) => el.textContent ?? ''));
+}

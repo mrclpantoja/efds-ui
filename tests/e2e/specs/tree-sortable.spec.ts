@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { abrirExemplo, camadas } from '../support/docs.ts';
+import { abrirExemplo, camadas, textos } from '../support/docs.ts';
 
 /** Rótulo do nó com foco (o `.eds-tree-label` é o contrato de markup da árvore). */
 async function rotuloFocado(page: Page): Promise<string> {
@@ -71,8 +71,7 @@ for (const camada of camadas) {
   });
 
   test.describe(`Sortable (${camada})`, () => {
-    const ordem = (bloco: ReturnType<Page['locator']>) =>
-      bloco.getByRole('listitem').allTextContents();
+    const ordem = (bloco: ReturnType<Page['locator']>) => textos(bloco.getByRole('listitem'));
 
     test('Espaço pega, setas movem, Espaço solta e o resultado é anunciado', async ({ page }) => {
       const bloco = await abrirExemplo(

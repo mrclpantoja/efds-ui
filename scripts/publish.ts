@@ -6,6 +6,9 @@
  *
  *   node scripts/publish.ts --dry-run    empacota e simula o envio (não envia nada)
  *   node scripts/publish.ts              envia para aprovação (só no CI; fora dele, recusa)
+ *   node scripts/publish.ts --pack <dir> só empacota (job de build do CI, sem credencial)
+ *   node scripts/publish.ts --from <dir> envia os tarballs já gerados (job de publicação do CI,
+ *                                        o único com OIDC; não roda install nem build)
  *
  * Regras:
  * - todos os pacotes precisam estar na mesma versão; no CI, a tag precisa ser `v<versão>`;
@@ -17,7 +20,7 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import process from 'node:process';
@@ -27,6 +30,12 @@ const root = join(import.meta.dirname, '..');
 const PACKAGES = ['core', 'behavior', 'icons', 'themes', 'react', 'editor'];
 
 const dryRun = process.argv.includes('--dry-run');
+const argValue = (flag: string) => {
+  const i = process.argv.indexOf(flag);
+  return i === -1 ? undefined : process.argv[i + 1];
+};
+const packDir = argValue('--pack');
+const fromDir = argValue('--from');
 const inCi = process.env.GITHUB_ACTIONS === 'true';
 
 function run(command: string, args: string[], cwd: string, allowFail = false) {
@@ -50,7 +59,7 @@ function fail(message: string): never {
   process.exit(1);
 }
 
-if (!dryRun && !inCi) {
+if (!dryRun && !inCi && !packDir) {
   fail('Publicação real só pelo GitHub Actions (proveniência). Localmente, use --dry-run.');
 }
 
@@ -67,8 +76,16 @@ if (mismatch.length > 0) {
   fail(`Versões diferentes: ${versions.map((v) => `${v.name}@${v.version}`).join(', ')}.`);
 }
 const tag = process.env.GITHUB_REF_TYPE === 'tag' ? process.env.GITHUB_REF_NAME : undefined;
-if (inCi && !dryRun && tag !== `v${version}`) {
+if (inCi && !dryRun && !packDir && tag !== `v${version}`) {
   fail(`A tag (${tag ?? 'nenhuma'}) precisa ser v${version}.`);
+}
+
+if (packDir) {
+  for (const { pkg } of versions) {
+    run('pnpm', ['pack', '--pack-destination', join(packDir, pkg)], join(root, 'packages', pkg));
+  }
+  console.log(`Tarballs de ${version} em ${packDir}.`);
+  process.exit(0);
 }
 
 const work = mkdtempSync(join(tmpdir(), 'efds-publish-'));
@@ -82,7 +99,11 @@ try {
     }
 
     const out = join(work, pkg);
-    run('pnpm', ['pack', '--pack-destination', out], join(root, 'packages', pkg));
+    if (fromDir) {
+      cpSync(join(fromDir, pkg), out, { recursive: true });
+    } else {
+      run('pnpm', ['pack', '--pack-destination', out], join(root, 'packages', pkg));
+    }
     const tgz = readdirSync(out).find((f) => f.endsWith('.tgz'));
     if (!tgz) throw new Error(`tarball de ${name} não encontrado.`);
 

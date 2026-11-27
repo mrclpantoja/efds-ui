@@ -72,6 +72,77 @@ export function sortText(value: unknown): string {
   return String(value).trim();
 }
 
+interface ColumnKeys {
+  kind: 'number' | 'date' | 'text';
+  keys: (number | string | null)[];
+  empty: boolean[];
+}
+
+/** Tipo da coluna (número, data ou texto) e a chave comparável de cada valor; detectado uma vez. */
+function columnKeys(values: string[]): ColumnKeys {
+  // Cada valor é interpretado uma única vez (número e, só se preciso, data).
+  const numbers = values.map((v) => (v === '' ? null : parseNumber(v)));
+  const allNumbers = values.every((v, i) => v === '' || numbers[i] !== null);
+  const hasFilled = values.some((v) => v !== '');
+  let dates: (number | null)[] = [];
+  let allDates = false;
+  if (hasFilled && !allNumbers) {
+    dates = values.map((v) => (v === '' ? null : parseDate(v)));
+    allDates = values.every((v, i) => v === '' || dates[i] !== null);
+  }
+  const kind = hasFilled && allNumbers ? 'number' : allDates ? 'date' : 'text';
+  return {
+    kind,
+    keys: values.map((v, i) =>
+      kind === 'number' ? numbers[i] : kind === 'date' ? (dates[i] ?? null) : v,
+    ) as ColumnKeys['keys'],
+    empty: values.map((v) => v === ''),
+  };
+}
+
+/** Critério de ordenação: `key` é o `data-eds-col` (ou a chave da coluna nos dados). */
+export interface SortCriterion {
+  key: string;
+  direction: SortDirection;
+}
+
+/**
+ * Ordena `items` (sem alterar o original) por uma lista de critérios, em ordem de prioridade.
+ * O tipo de cada coluna (número, data ou texto) é detectado uma vez; empate no critério 1
+ * desempata no 2; vazios ficam por último em cada critério; estável.
+ */
+export function sortByCriteria<T>(
+  items: readonly T[],
+  criteria: readonly SortCriterion[],
+  getValue: (item: T, key: string) => unknown,
+  locale: string = DEFAULT_LOCALE,
+): T[] {
+  if (criteria.length === 0 || items.length < 2) return [...items];
+  const compare = textCompare(locale);
+  const columns = criteria.map((criterion) => ({
+    ...columnKeys(items.map((item) => sortText(getValue(item, criterion.key)))),
+    sign: criterion.direction === 'ascending' ? 1 : -1,
+  }));
+  const order = items.map((_, i) => i);
+  order.sort((a, b) => {
+    for (const col of columns) {
+      const ea = col.empty[a] ?? true;
+      const eb = col.empty[b] ?? true;
+      if (ea || eb) {
+        if (ea === eb) continue;
+        return ea ? 1 : -1;
+      }
+      const ka = col.keys[a];
+      const kb = col.keys[b];
+      const diff =
+        col.kind === 'text' ? compare(String(ka), String(kb)) : (ka as number) - (kb as number);
+      if (diff !== 0) return col.sign * diff;
+    }
+    return a - b;
+  });
+  return order.map((i) => items[i] as T);
+}
+
 /**
  * Ordena `items` (sem alterar o original) pelo valor devolvido por `getValue`. O tipo da coluna
  * vem dos valores preenchidos: todos números (pt-BR ou ponto decimal) = número; todos datas
@@ -84,29 +155,50 @@ export function sortValues<T>(
   direction: SortDirection,
   locale: string = DEFAULT_LOCALE,
 ): T[] {
-  const values = items.map((item) => sortText(getValue(item)));
-  // Cada valor é interpretado uma única vez (número e, só se preciso, data).
-  const numbers = values.map((v) => (v === '' ? null : parseNumber(v)));
-  const allNumbers = values.every((v, i) => v === '' || numbers[i] !== null);
-  const hasFilled = values.some((v) => v !== '');
-  let dates: (number | null)[] = [];
-  let allDates = false;
-  if (hasFilled && !allNumbers) {
-    dates = values.map((v) => (v === '' ? null : parseDate(v)));
-    allDates = values.every((v, i) => v === '' || dates[i] !== null);
+  return sortByCriteria(items, [{ key: '', direction }], (item) => getValue(item), locale);
+}
+
+/**
+ * Filtro de uma coluna: texto (contém, sem acento e caixa), seleção (igual a algum item, sem
+ * acento e caixa) ou faixa `{ gte, lte }` (número pt-BR/ponto ou data ISO/`dd/mm/aaaa`).
+ * Valor vazio nunca passa por uma faixa; faixa sem limites passa tudo.
+ */
+export type FilterValue = string | string[] | { gte?: string; lte?: string };
+
+/** O filtro está vazio (nada a aplicar)? */
+export function isEmptyFilter(filter: FilterValue | null | undefined): boolean {
+  if (filter === null || filter === undefined) return true;
+  if (typeof filter === 'string') return filter.trim() === '';
+  if (Array.isArray(filter)) return filter.length === 0;
+  return (filter.gte ?? '') === '' && (filter.lte ?? '') === '';
+}
+
+/** Número ou data (timestamp) de um texto; `null` se nenhum dos dois. */
+function comparable(text: string): number | null {
+  const t = text.trim();
+  if (t === '') return null;
+  return parseNumber(t) ?? parseDate(t);
+}
+
+export function matchColumnFilter(value: unknown, filter: FilterValue): boolean {
+  if (isEmptyFilter(filter)) return true;
+  const text = sortText(value);
+  if (typeof filter === 'string') return normalizeText(text).includes(normalizeText(filter.trim()));
+  if (Array.isArray(filter)) {
+    const needle = normalizeText(text);
+    return filter.some((item) => normalizeText(item.trim()) === needle);
   }
-  const kind = hasFilled && allNumbers ? 'number' : allDates ? 'date' : 'text';
-  const sign = direction === 'ascending' ? 1 : -1;
-  const compare = textCompare(locale);
-  const keyed = items.map((item, i) => {
-    const raw = values[i] ?? '';
-    const key = kind === 'number' ? numbers[i] : kind === 'date' ? (dates[i] ?? null) : raw;
-    return { item, key, empty: raw === '' };
-  });
-  keyed.sort((a, b) => {
-    if (a.empty || b.empty) return a.empty === b.empty ? 0 : a.empty ? 1 : -1;
-    if (kind === 'text') return sign * compare(String(a.key), String(b.key));
-    return sign * ((a.key as number) - (b.key as number));
-  });
-  return keyed.map((k) => k.item);
+  const current = comparable(text);
+  if (current === null) return false;
+  const min = filter.gte ? comparable(filter.gte) : null;
+  const max = filter.lte ? comparable(filter.lte) : null;
+  // Data com a hora do mesmo dia: o limite superior inclui o dia inteiro (aaaa-mm-dd).
+  const maxEnd =
+    max !== null &&
+    filter.lte &&
+    /^\d{4}-\d{2}-\d{2}$|^\d{1,2}\/\d{1,2}\/\d{4}$/.test(filter.lte.trim())
+      ? max + 86_400_000 - 1
+      : max;
+  if (min !== null && current < min) return false;
+  return !(maxEnd !== null && current > maxEnd);
 }

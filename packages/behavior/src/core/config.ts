@@ -309,6 +309,68 @@ export interface Messages extends ValidationMessages {
   submitBusy: string;
   submitSuccess: string;
   submitError: string;
+  // Table avançada: ordenação múltipla
+  sortedByMany: string;
+  sortThen: string;
+  sortRemoved: string;
+  sortCleared: string;
+  sortHint: string;
+  sortMaxReached: string;
+  sortOrderLabel: string;
+  // Filtro por coluna
+  columnFilterLabel: string;
+  columnFilterActive: string;
+  columnFilterApply: string;
+  columnFilterClear: string;
+  columnFilterApplied: string;
+  columnFilterCleared: string;
+  columnFilterRangeInvalid: string;
+  columnFilterMin: string;
+  columnFilterMax: string;
+  columnFilterFrom: string;
+  columnFilterTo: string;
+  filterChipRange: string;
+  filterChipGte: string;
+  filterChipLte: string;
+  filterChipsLabel: string;
+  filterChipRemove: string;
+  // Colunas
+  columnsButton: string;
+  columnsTitle: string;
+  columnsRestore: string;
+  columnsRestored: string;
+  columnHidden: string;
+  columnShown: string;
+  columnLastVisible: string;
+  columnHandleLabel: string;
+  columnHandleHelp: string;
+  columnGrab: string;
+  columnMoved: string;
+  columnResized: string;
+  columnDrop: string;
+  columnCancel: string;
+  columnMoveBefore: string;
+  columnMoveAfter: string;
+  columnNarrow: string;
+  columnWiden: string;
+  // Lote
+  bulkCount: string;
+  bulkCountOne: string;
+  bulkAllResults: string;
+  bulkAllSelected: string;
+  bulkClear: string;
+  bulkLabel: string;
+  // Tabela remota
+  tableLoading: string;
+  tableResults: string;
+  tableLoadError: string;
+  // Edição na célula
+  editLabel: string;
+  editFieldLabel: string;
+  editHint: string;
+  editSaved: string;
+  editSaving: string;
+  editError: string;
 }
 
 export const defaultMessages: Messages = {
@@ -608,6 +670,69 @@ export const defaultMessages: Messages = {
   submitBusy: 'Enviando…',
   submitSuccess: 'Salvo',
   submitError: 'Não foi possível salvar',
+  // Table avançada: ordenação múltipla
+  sortedByMany: 'Ordenado por {criteria}.',
+  sortThen: 'depois',
+  sortRemoved: 'Ordenação por {column} removida.',
+  sortCleared: 'Ordenação removida.',
+  sortHint: 'Shift mais Enter acrescenta a coluna à ordenação.',
+  sortMaxReached: 'Máximo de {max} colunas na ordenação.',
+  sortOrderLabel: ', critério {order}, {direction}',
+  // Filtro por coluna
+  columnFilterLabel: 'Filtrar {column}',
+  columnFilterActive: ', filtro ativo',
+  columnFilterApply: 'Aplicar',
+  columnFilterClear: 'Limpar',
+  columnFilterApplied: '{column} filtrada. {count} resultados.',
+  columnFilterCleared: 'Filtro de {column} removido. {count} resultados.',
+  columnFilterRangeInvalid: 'O valor inicial não pode ser maior que o final.',
+  columnFilterMin: 'Mínimo',
+  columnFilterMax: 'Máximo',
+  columnFilterFrom: 'De',
+  columnFilterTo: 'Até',
+  filterChipRange: 'de {min} a {max}',
+  filterChipGte: 'a partir de {min}',
+  filterChipLte: 'até {max}',
+  filterChipsLabel: 'Filtros ativos',
+  filterChipRemove: 'Remover filtro {label}',
+  // Colunas
+  columnsButton: 'Colunas',
+  columnsTitle: 'Colunas visíveis',
+  columnsRestore: 'Restaurar padrão',
+  columnsRestored: 'Colunas restauradas.',
+  columnHidden: 'Coluna {column} oculta. {visible} de {total} colunas visíveis.',
+  columnShown: 'Coluna {column} exibida. {visible} de {total} colunas visíveis.',
+  columnLastVisible: 'Pelo menos uma coluna deve ficar visível.',
+  columnHandleLabel: 'Ajustar coluna {column}',
+  columnHandleHelp:
+    'Espaço pega a coluna; setas movem; Shift e setas redimensionam; Espaço solta; Esc cancela.',
+  columnGrab: '{column} pega.',
+  columnMoved: '{column}: posição {pos} de {total}.',
+  columnResized: 'Largura de {column}: {width} pixels.',
+  columnDrop: '{column} solta na posição {pos} de {total}.',
+  columnCancel: 'Ajuste cancelado.',
+  columnMoveBefore: 'Mover {column} para antes',
+  columnMoveAfter: 'Mover {column} para depois',
+  columnNarrow: 'Estreitar {column}',
+  columnWiden: 'Alargar {column}',
+  // Lote
+  bulkCount: '{count} selecionados',
+  bulkCountOne: '1 selecionado',
+  bulkAllResults: 'Selecionar todos os {total}',
+  bulkAllSelected: 'Todos os {total} selecionados.',
+  bulkClear: 'Limpar seleção',
+  bulkLabel: 'Ações em lote',
+  // Tabela remota
+  tableLoading: 'Carregando',
+  tableResults: '{count} resultados. Página {page} de {pages}.',
+  tableLoadError: 'Não foi possível carregar os dados. Os dados anteriores foram mantidos.',
+  // Edição na célula
+  editLabel: ', editar {column} de {row}',
+  editFieldLabel: '{column} de {row}',
+  editHint: 'Enter confirma, Esc cancela.',
+  editSaved: '{column} de {row} atualizado para {value}.',
+  editSaving: 'Salvando.',
+  editError: 'Erro: {message}',
 };
 
 export const DEFAULT_LOCALE = 'pt-BR';

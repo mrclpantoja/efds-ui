@@ -1,0 +1,55 @@
+<!-- Ordenação múltipla (opt-in: data-eds-sort-multi). Clique substitui a ordenação; Shift+clique ou
+     Shift+Enter acrescenta a coluna. Só o critério principal leva aria-sort; os demais levam
+     data-eds-sort-dir e o número da prioridade (.eds-table-sort-order), criados pelo JS. Aqui o markup
+     já está no estado "Cliente, depois Total decrescente". -->
+<div class="eds-table-toolbar">
+  <span>Pedidos recentes</span>
+  <button type="button" class="eds-button eds-button-ghost eds-button-sm" data-eds-sort-clear>Remover ordenação</button>
+</div>
+
+<div class="eds-table-wrap">
+  <table class="eds-table" id="pedidos-multi" data-eds-sort-multi="shift" data-eds-sort-max="3">
+    <caption class="eds-table-caption eds-visually-hidden">Pedidos recentes, com ordenação por mais de uma coluna</caption>
+    <thead>
+      <tr>
+        <th scope="col" data-eds-col="codigo" aria-sort="none">
+          <button type="button" class="eds-table-sort">
+            Código
+            <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+            </svg>
+          </button>
+        </th>
+        <th scope="col" data-eds-col="cliente" aria-sort="ascending" data-eds-sort-dir="ascending" data-eds-sort-order="1">
+          <button type="button" class="eds-table-sort">
+            Cliente
+            <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+            </svg>
+            <span class="eds-table-sort-order" aria-hidden="true">1</span>
+          </button>
+        </th>
+        <th scope="col" data-eds-col="situacao">Situação</th>
+        <th scope="col" data-eds-col="total" class="eds-table-num" data-eds-sort-dir="descending" data-eds-sort-order="2">
+          <button type="button" class="eds-table-sort">
+            Total
+            <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+            </svg>
+            <span class="eds-table-sort-order" aria-hidden="true">2</span>
+            <span class="eds-visually-hidden eds-table-sort-text">, critério 2, decrescente</span>
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PED-0004</td><td>Atelier Exemplo</td><td><span class="eds-badge eds-badge-success">Pago</span></td><td class="eds-table-num">R$ 2.480,00</td></tr>
+      <tr><td>PED-0001</td><td>Atelier Exemplo</td><td><span class="eds-badge eds-badge-success">Pago</span></td><td class="eds-table-num">R$ 1.280,50</td></tr>
+      <tr><td>PED-0002</td><td>Comércio Modelo</td><td><span class="eds-badge eds-badge-warning">Pendente</span></td><td class="eds-table-num">R$ 459,00</td></tr>
+      <tr><td>PED-0003</td><td>Oficina Fictícia</td><td><span class="eds-badge eds-badge-danger">Atrasado</span></td><td class="eds-table-num">R$ 8.920,90</td></tr>
+    </tbody>
+  </table>
+</div>

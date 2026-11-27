@@ -150,6 +150,12 @@ export {
   sortTableData,
   filterTableData,
   useTableFilter,
+  useTableColumns,
+  useTableQuery,
+  TableColumnsMenu,
+  TableColumnFilter,
+  TableBulkBar,
+  TableEditableCell,
 } from './components/Table';
 export type {
   TableProps,
@@ -172,6 +178,24 @@ export type {
   TableFilterTexts,
   UseTableFilterOptions,
   UseTableFilterResult,
+  TableColumnDef,
+  TableColumnState,
+  TableColumnsController,
+  TableColumnsReason,
+  UseTableColumnsOptions,
+  TableColumnsMenuProps,
+  TableColumnsMenuTexts,
+  TableColumnFilterOption,
+  TableColumnFilterProps,
+  TableColumnFilterTexts,
+  TableColumnFilterType,
+  TableBulkBarProps,
+  TableBulkBarTexts,
+  TableEditableCellProps,
+  TableEditableCellTexts,
+  TableEditCommitResult,
+  UseTableQueryOptions,
+  UseTableQueryResult,
 } from './components/Table';
 export { Pagination } from './components/Pagination';
 export type { PaginationProps, PaginationTexts } from './components/Pagination';

@@ -29,7 +29,7 @@ export interface ExampleProps {
 
 /** Atributos cujo valor é (lista de) id ou referência a id. */
 const ID_ATTRS =
-  /(\s(?:id|for|form|aria-labelledby|aria-describedby|aria-controls|aria-owns|aria-activedescendant|aria-errormessage|popovertarget|list|data-eds-help|data-eds-open|data-eds-status|data-eds-table-filter|data-eds-export-target|data-eds-lookup-dialog)=)"([^"]*)"/g;
+  /(\s(?:id|for|form|aria-labelledby|aria-describedby|aria-controls|aria-owns|aria-activedescendant|aria-errormessage|popovertarget|list|data-eds-help|data-eds-open|data-eds-status|data-eds-table-filter|data-eds-export-target|data-eds-table-bulk|data-eds-table-chips|data-eds-table-pagination|data-eds-table-size|data-eds-columns-for|data-eds-columns-reset|data-eds-sort-clear|data-eds-editor|data-eds-lookup-dialog)=)"([^"]*)"/g;
 
 /**
  * Dá a cada id do exemplo um sufixo único por instância, para o mesmo exemplo poder aparecer
@@ -110,9 +110,17 @@ function HtmlPreview({ html }: { html: string }) {
       if (mode === 'fetch' || mode === 'manual') return;
       event.preventDefault();
     };
+    // Tabela remota em `navigate`: a documentação é uma SPA, então a navegação é bloqueada (o
+    // evento `eds:table-query` continua saindo).
+    const noNavigate = (event: Event) => {
+      if ((event.target as Element).closest('[data-eds-table-remote="navigate"]'))
+        event.preventDefault();
+    };
     el.addEventListener('submit', block);
+    el.addEventListener('eds:table-query', noNavigate);
     return () => {
       el.removeEventListener('submit', block);
+      el.removeEventListener('eds:table-query', noNavigate);
       cancelled = true;
       stopEditors?.();
       stop();

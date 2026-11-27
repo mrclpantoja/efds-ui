@@ -89,6 +89,8 @@
 
 /* Data */
 @import './components/table.css';
+@import './components/table-columns.css';
+@import './components/table-edit.css';
 @import './components/pagination.css';
 @import './components/empty.css';
 @import './components/error-state.css';

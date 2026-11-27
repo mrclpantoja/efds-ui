@@ -1,0 +1,138 @@
+<!-- Colunas: fixas no início e no fim (.eds-table-pin-start / -end; .eds-table-pin-edge na última do
+     grupo), largura (.eds-table-resize, a borda do cabeçalho), ordem e visibilidade. A alça
+     (.eds-table-colhandle) é o único tab stop da coluna: Espaço pega, setas movem, Shift+setas
+     redimensionam, Esc cancela. O painel "Colunas" é a alternativa de clique ao arrasto. Controles que
+     dependem de JS vêm hidden. Opt-in na <table>: data-eds-table-resize, data-eds-table-reorder e
+     data-eds-table-prefs (chave estática, sem dado pessoal). -->
+<div class="eds-table-toolbar">
+  <span>Contratos e vigências</span>
+  <button type="button" class="eds-button eds-button-secondary eds-button-sm" popovertarget="colunas-painel" data-eds-columns-for="contratos-colunas" hidden>Colunas</button>
+  <div class="eds-popover eds-table-columns" id="colunas-painel" popover role="dialog" aria-labelledby="colunas-titulo">
+    <p class="eds-table-columns-title" id="colunas-titulo">Colunas visíveis</p>
+    <ul class="eds-table-columns-list" data-eds-columns-list>
+      <li class="eds-table-columns-item">
+        <label class="eds-check"><input type="checkbox" class="eds-checkbox" checked /> Fornecedor</label>
+        <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Mover Fornecedor para antes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
+        <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Mover Fornecedor para depois">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
+      </li>
+      <li class="eds-table-columns-item">
+        <label class="eds-check"><input type="checkbox" class="eds-checkbox" checked /> Categoria</label>
+        <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Mover Categoria para antes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
+        <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm" aria-label="Mover Categoria para depois">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
+      </li>
+    </ul>
+    <button type="button" class="eds-button eds-button-ghost eds-button-sm" data-eds-columns-reset>Restaurar padrão</button>
+  </div>
+</div>
+
+<div class="eds-table-wrap" role="region" tabindex="0" aria-labelledby="contratos-colunas-cap">
+  <table class="eds-table eds-table-fixed" id="contratos-colunas" data-eds-table-resize data-eds-table-reorder data-eds-table-prefs="exemplo-contratos">
+    <caption id="contratos-colunas-cap" class="eds-table-caption eds-visually-hidden">Contratos e vigências, com colunas ajustáveis</caption>
+    <colgroup>
+      <col data-eds-col="contrato" />
+      <col data-eds-col="fornecedor" />
+      <col data-eds-col="categoria" />
+      <col data-eds-col="inicio" />
+      <col data-eds-col="termino" />
+      <col data-eds-col="situacao" />
+      <col data-eds-col="valor" />
+      <col data-eds-col="acoes" />
+    </colgroup>
+    <thead>
+      <tr>
+        <th scope="col" data-eds-col="contrato" class="eds-table-pin-start eds-table-pin-edge">
+          <div class="eds-table-th">
+            Contrato
+            <button type="button" class="eds-table-colhandle" aria-pressed="false" aria-label="Ajustar coluna Contrato"></button>
+            <span class="eds-table-resize" aria-hidden="true"></span>
+          </div>
+        </th>
+        <th scope="col" data-eds-col="fornecedor">
+          <div class="eds-table-th">
+            Fornecedor
+            <button type="button" class="eds-table-colhandle" aria-pressed="false" aria-label="Ajustar coluna Fornecedor"></button>
+            <span class="eds-table-resize" aria-hidden="true"></span>
+          </div>
+        </th>
+        <th scope="col" data-eds-col="categoria">
+          <div class="eds-table-th">
+            Categoria
+            <button type="button" class="eds-table-colhandle" aria-pressed="false" aria-label="Ajustar coluna Categoria"></button>
+            <span class="eds-table-resize" aria-hidden="true"></span>
+          </div>
+        </th>
+        <th scope="col" data-eds-col="inicio">
+          <div class="eds-table-th">
+            Início
+            <button type="button" class="eds-table-colhandle" aria-pressed="false" aria-label="Ajustar coluna Início"></button>
+            <span class="eds-table-resize" aria-hidden="true"></span>
+          </div>
+        </th>
+        <th scope="col" data-eds-col="termino">
+          <div class="eds-table-th">
+            Término
+            <button type="button" class="eds-table-colhandle" aria-pressed="false" aria-label="Ajustar coluna Término"></button>
+            <span class="eds-table-resize" aria-hidden="true"></span>
+          </div>
+        </th>
+        <th scope="col" data-eds-col="situacao">
+          <div class="eds-table-th">
+            Situação
+            <button type="button" class="eds-table-colhandle" aria-pressed="false" aria-label="Ajustar coluna Situação"></button>
+            <span class="eds-table-resize" aria-hidden="true"></span>
+          </div>
+        </th>
+        <th scope="col" data-eds-col="valor" class="eds-table-num">
+          <div class="eds-table-th">
+            Valor
+            <button type="button" class="eds-table-colhandle" aria-pressed="false" aria-label="Ajustar coluna Valor"></button>
+            <span class="eds-table-resize" aria-hidden="true"></span>
+          </div>
+        </th>
+        <th scope="col" data-eds-col="acoes" data-eds-col-locked class="eds-table-actions eds-table-pin-end eds-table-pin-edge">
+          <span class="eds-visually-hidden">Ações</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row" class="eds-table-pin-start eds-table-pin-edge">CT-2026-0001</th>
+        <td>Papelaria Exemplo</td>
+        <td>Materiais</td>
+        <td>01/03/2026</td>
+        <td>28/02/2027</td>
+        <td><span class="eds-badge eds-badge-success">Vigente</span></td>
+        <td class="eds-table-num">R$ 48.000,00</td>
+        <td class="eds-table-actions eds-table-pin-end eds-table-pin-edge"><button type="button" class="eds-button eds-button-ghost eds-button-sm">Abrir</button></td>
+      </tr>
+      <tr>
+        <th scope="row" class="eds-table-pin-start eds-table-pin-edge">CT-2026-0002</th>
+        <td>Transportes Modelo</td>
+        <td>Serviços</td>
+        <td>15/04/2026</td>
+        <td>14/04/2027</td>
+        <td><span class="eds-badge eds-badge-warning">A vencer</span></td>
+        <td class="eds-table-num">R$ 120.500,00</td>
+        <td class="eds-table-actions eds-table-pin-end eds-table-pin-edge"><button type="button" class="eds-button eds-button-ghost eds-button-sm">Abrir</button></td>
+      </tr>
+      <tr>
+        <th scope="row" class="eds-table-pin-start eds-table-pin-edge">CT-2026-0003</th>
+        <td>Serviços Fictícios</td>
+        <td>Obras</td>
+        <td>02/06/2026</td>
+        <td>01/06/2028</td>
+        <td><span class="eds-badge eds-badge-success">Vigente</span></td>
+        <td class="eds-table-num">R$ 890.900,00</td>
+        <td class="eds-table-actions eds-table-pin-end eds-table-pin-edge"><button type="button" class="eds-button eds-button-ghost eds-button-sm">Abrir</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

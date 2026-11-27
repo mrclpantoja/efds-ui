@@ -633,6 +633,214 @@ function FilterWithPeriod() {
   );
 }
 
+function FunnelIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path d="M2.5 3h11l-4.25 5v4.5l-2.5 1.25V8z" />
+    </svg>
+  );
+}
+
+/* Contrato de markup da Table avançada (docs/architecture/table-avancada.md): HTML cru e estático,
+   sem o behavior. Mostra o estado final de cada recurso para o CSS ser conferido no navegador. */
+function AdvancedTable() {
+  return (
+    <Section title="Table avançada: ordenação múltipla, filtro, colunas fixas, lote e edição">
+      <ul className="eds-filter-chips" aria-label="Filtros ativos">
+        <li>
+          <button type="button" className="eds-chip">
+            Total: a partir de 500
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M4 4l8 8M12 4l-8 8" />
+            </svg>
+            <span className="eds-visually-hidden"> — remover</span>
+          </button>
+        </li>
+      </ul>
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- região rolável precisa de foco (WCAG 2.1.1) */}
+      <div className="eds-table-wrap" role="region" tabIndex={0} aria-labelledby="adv-cap">
+        <table className="eds-table eds-table-fixed">
+          <caption id="adv-cap" className="eds-table-caption eds-visually-hidden">
+            Contratos, com recursos avançados
+          </caption>
+          <thead>
+            <tr>
+              <th
+                scope="col"
+                className="eds-table-pin-start eds-table-pin-edge"
+                aria-sort="ascending"
+                data-eds-sort-dir="ascending"
+              >
+                <div className="eds-table-th">
+                  <button type="button" className="eds-table-sort">
+                    Contrato <SortIcon />
+                    <span className="eds-table-sort-order" aria-hidden="true">
+                      1
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="eds-table-colhandle"
+                    aria-pressed="true"
+                    aria-label="Ajustar coluna Contrato"
+                  />
+                  <span className="eds-table-resize" aria-hidden="true" />
+                </div>
+              </th>
+              <th scope="col">
+                <div className="eds-table-th">
+                  Fornecedor
+                  <button
+                    type="button"
+                    className="eds-table-filter-btn"
+                    popoverTarget="adv-f-forn"
+                    aria-label="Filtrar Fornecedor"
+                    aria-haspopup="dialog"
+                  >
+                    <FunnelIcon />
+                  </button>
+                  <div
+                    className="eds-popover eds-table-filter"
+                    id="adv-f-forn"
+                    popover="auto"
+                    role="dialog"
+                    aria-label="Filtrar Fornecedor"
+                  >
+                    <form method="get" action="">
+                      <div className="eds-field">
+                        <label className="eds-label" htmlFor="adv-f-forn-q">
+                          Contém
+                        </label>
+                        <input
+                          className="eds-input"
+                          id="adv-f-forn-q"
+                          type="search"
+                          name="filter[fornecedor]"
+                        />
+                      </div>
+                      <div className="eds-table-filter-actions">
+                        <button
+                          type="submit"
+                          className="eds-button eds-button-primary eds-button-sm"
+                        >
+                          Aplicar
+                        </button>
+                        <button type="reset" className="eds-button eds-button-ghost eds-button-sm">
+                          Limpar
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" data-eds-sort-dir="descending">
+                <div className="eds-table-th">
+                  <button type="button" className="eds-table-sort">
+                    Categoria <SortIcon />
+                    <span className="eds-table-sort-order" aria-hidden="true">
+                      2
+                    </span>
+                  </button>
+                </div>
+              </th>
+              <th scope="col" data-eds-dragging="">
+                <div className="eds-table-th">Início</div>
+              </th>
+              <th scope="col" className="eds-table-num" data-eds-drop="before">
+                <div className="eds-table-th">
+                  Valor
+                  <button
+                    type="button"
+                    className="eds-table-filter-btn"
+                    aria-label="Filtrar Valor"
+                    aria-haspopup="dialog"
+                    data-active=""
+                  >
+                    <FunnelIcon />
+                    <span className="eds-visually-hidden">, filtro ativo</span>
+                  </button>
+                </div>
+              </th>
+              <th scope="col" className="eds-table-actions eds-table-pin-end eds-table-pin-edge">
+                <span className="eds-visually-hidden">Ações</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {['CT-2026-0001', 'CT-2026-0002'].map((code, i) => (
+              <tr key={code}>
+                <th scope="row" className="eds-table-pin-start eds-table-pin-edge">
+                  {code}
+                </th>
+                <td>Papelaria Exemplo com nome longo para cortar</td>
+                <td>Materiais</td>
+                <td>01/03/2026</td>
+                <td className="eds-table-num">
+                  {i === 1 ? (
+                    <button type="button" className="eds-table-cell-edit">
+                      R$ 48.000,00
+                      <span className="eds-visually-hidden">, editar Valor de {code}</span>
+                    </button>
+                  ) : (
+                    'R$ 48.000,00'
+                  )}
+                </td>
+                <td className="eds-table-actions eds-table-pin-end eds-table-pin-edge">
+                  <button type="button" className="eds-button eds-button-ghost eds-button-sm">
+                    Abrir
+                  </button>
+                </td>
+              </tr>
+            ))}
+            <tr>
+              <th scope="row" className="eds-table-pin-start eds-table-pin-edge">
+                CT-2026-0003
+              </th>
+              <td>Obras Modelo</td>
+              <td>Obras</td>
+              <td>02/06/2026</td>
+              <td className="eds-table-num" data-editing="">
+                <input
+                  className="eds-input eds-input-sm"
+                  defaultValue=""
+                  aria-label="Valor de CT-2026-0003"
+                  aria-invalid="true"
+                  aria-describedby="adv-erro"
+                />
+                <p className="eds-error" id="adv-erro">
+                  Informe o valor.
+                </p>
+              </td>
+              <td className="eds-table-actions eds-table-pin-end eds-table-pin-edge">
+                <button type="button" className="eds-button eds-button-ghost eds-button-sm">
+                  Abrir
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="eds-table-bulk" role="group" aria-label="Ações em lote">
+        <p className="eds-table-bulk-count">2 selecionados</p>
+        <button type="button" className="eds-button eds-button-ghost eds-button-sm">
+          Selecionar todos os 248
+        </button>
+        <div className="eds-table-bulk-actions">
+          <button type="button" className="eds-button eds-button-secondary eds-button-sm">
+            Arquivar
+          </button>
+          <button type="button" className="eds-button eds-button-danger eds-button-sm">
+            Excluir
+          </button>
+        </div>
+        <button type="button" className="eds-button eds-button-ghost eds-button-sm">
+          Limpar seleção
+        </button>
+      </div>
+    </Section>
+  );
+}
+
 export function DataDemo() {
   return (
     <div
@@ -652,6 +860,7 @@ export function DataDemo() {
       <TableVariants />
       <StatAndDescription />
       <FilterWithPeriod />
+      <AdvancedTable />
     </div>
   );
 }

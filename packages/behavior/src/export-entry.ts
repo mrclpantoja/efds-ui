@@ -15,5 +15,21 @@ export type {
 export { datedFileName } from './export/model';
 export { format, getLocale, getMessages } from './core/config';
 // Regras de dados da Table sem DOM (ordenação e busca), as mesmas do behavior.
-export { normalizeText, sortValues } from './core/data';
-export type { SortDirection } from './core/data';
+export {
+  isEmptyFilter,
+  matchColumnFilter,
+  normalizeText,
+  parseDate,
+  parseNumber,
+  sortByCriteria,
+  sortValues,
+} from './core/data';
+export type { FilterValue, SortCriterion, SortDirection } from './core/data';
+// Consulta da Table (página, ordenação, busca, filtros) e o formato dela na URL.
+export {
+  applyQueryToUrl,
+  emptyTableQuery,
+  parseTableQuery,
+  toTableSearchParams,
+} from './core/table-query';
+export type { TableQuery, TableQueryParams } from './core/table-query';

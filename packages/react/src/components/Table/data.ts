@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type KeyboardEvent } from 'react';
-import { format, getMessages, normalizeText, sortValues } from '@efds-ui/behavior/export';
+import {
+  format,
+  getMessages,
+  matchColumnFilter,
+  normalizeText,
+  sortByCriteria,
+  type FilterValue,
+} from '@efds-ui/behavior/export';
 import { mergeTexts } from '../../utils/texts';
 import { DEFAULT_LOCALE } from '../Locale';
 import type { TableSortState } from './Table';
@@ -19,16 +26,17 @@ export interface SortTableDataOptions<T> {
  */
 export function sortTableData<T>(
   rows: readonly T[],
-  sort: TableSortState | null | undefined,
+  sort: TableSortState | readonly TableSortState[] | null | undefined,
   options: SortTableDataOptions<T> = {},
 ): T[] {
-  if (!sort) return [...rows];
+  const criteria = (Array.isArray(sort) ? sort : sort ? [sort] : []) as TableSortState[];
+  if (criteria.length === 0) return [...rows];
   const getValue =
     options.getValue ?? ((row: T, column: string) => (row as Record<string, unknown>)?.[column]);
-  return sortValues(
+  return sortByCriteria(
     rows,
-    (row) => getValue(row, sort.column),
-    sort.direction,
+    criteria.map((c) => ({ key: c.column, direction: c.direction })),
+    (row, key) => getValue(row, key),
     options.locale ?? DEFAULT_LOCALE,
   );
 }
@@ -38,6 +46,10 @@ export interface FilterTableDataOptions<T> {
   columns?: readonly string[];
   /** Texto pesquisável da linha; tem prioridade sobre `columns`. */
   getText?: (row: T) => string;
+  /** Filtros por coluna (chave → valor), em E com a busca. Texto contém; lista = igual a algum; faixa. */
+  filters?: Record<string, FilterValue>;
+  /** Valor da célula para os filtros por coluna. Padrão: `row[chave]`. */
+  getValue?: (row: T, key: string) => unknown;
 }
 
 const rowText = <T>(row: T, options: FilterTableDataOptions<T>): string => {
@@ -58,9 +70,15 @@ export function filterTableData<T>(
   options: FilterTableDataOptions<T> = {},
 ): T[] {
   const needle = normalizeText(query.trim());
-  if (needle === '') return [...rows];
-  return rows.filter((row) =>
-    normalizeText(rowText(row, options).replace(/\s+/g, ' ')).includes(needle),
+  const filters = Object.entries(options.filters ?? {});
+  if (needle === '' && filters.length === 0) return [...rows];
+  const getValue =
+    options.getValue ?? ((row: T, key: string) => (row as Record<string, unknown>)?.[key]);
+  return rows.filter(
+    (row) =>
+      (needle === '' ||
+        normalizeText(rowText(row, options).replace(/\s+/g, ' ')).includes(needle)) &&
+      filters.every(([key, value]) => matchColumnFilter(getValue(row, key), value)),
   );
 }
 

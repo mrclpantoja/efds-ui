@@ -4,7 +4,16 @@ import '@fontsource-variable/inter';
 import '@efds-ui/core/index.css';
 import '@efds-ui/themes/index.css';
 import './site.css';
-import { alert, configure, confirm, loader, prompt, submitState, toast } from '@efds-ui/behavior';
+import {
+  alert,
+  configure,
+  confirm,
+  loader,
+  prompt,
+  submitState,
+  table,
+  toast,
+} from '@efds-ui/behavior';
 import { Layout } from './Layout';
 import { installDocsMocks } from './mock-api';
 import { installRouter } from './router';
@@ -24,6 +33,7 @@ configure({ loader: { mode: 'manual' }, cepUrl: '/mock/cep/{cep}' });
   confirm,
   prompt,
   submitState,
+  table,
 };
 
 installRouter();

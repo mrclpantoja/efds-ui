@@ -1,0 +1,118 @@
+/* Table: edição na célula. A tabela continua <table> (sem role="grid"); a edição é um botão na célula.
+   Markup gerado pelo JS:
+     exibição:  <td data-eds-editable><button type="button" class="eds-table-cell-edit">R$ 1.280,50
+                  <span class="eds-visually-hidden">, editar Total de PED-0001</span></button></td>
+     edição:    <td data-editing><input class="eds-input eds-input-sm" aria-invalid="true" …>
+                  <p class="eds-error">Informe um valor.</p></td>
+     salvando:  <td data-editing aria-busy="true"> (editor readonly)
+   O lápis aparece em hover e :focus-visible (e sempre em toque, onde não há hover). */
+@layer eds.components {
+  /* A célula cede o recuo ao botão: o alvo ocupa a célula inteira. */
+  .eds-table td:has(> .eds-table-cell-edit) {
+    padding: 0;
+  }
+
+  .eds-table-cell-edit {
+    --_cell-edit-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16v4zM13 7l4 4'/%3E%3C/svg%3E");
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--eds-space-2);
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: max(
+      var(--eds-icon-size-lg),
+      calc(var(--eds-table-row-height) - var(--eds-border-width))
+    );
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--eds-inset-md);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    white-space: inherit;
+    cursor: pointer;
+
+    /* Lápis: máscara em currentColor, só como pista; o nome do botão é o texto. */
+    &::after {
+      content: '';
+      flex: none;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      background-color: var(--eds-color-text-muted);
+      mask: var(--_cell-edit-icon) center / var(--eds-icon-size-sm) no-repeat;
+      opacity: 0;
+      transition: opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+
+    /* Número à direita: o lápis vai antes do valor. */
+    .eds-table-num > & {
+      justify-content: flex-end;
+
+      &::after {
+        order: -1;
+      }
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+      opacity: 1;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background: color-mix(in srgb, var(--eds-color-bg-subtle) 60%, var(--eds-color-bg-surface));
+      }
+    }
+
+    @media (hover: none) {
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    /* Foco inset: a célula e o wrap cortariam o anel. */
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+  }
+
+  /* Em edição: o campo no lugar do botão, a célula cresce e o erro quebra linha. */
+  .eds-table td[data-editing] {
+    block-size: auto;
+    padding-block: var(--eds-space-1);
+    padding-inline: var(--eds-inset-md);
+    vertical-align: top;
+    white-space: normal;
+    outline: var(--eds-border-width-strong) solid var(--eds-color-action-primary);
+    outline-offset: calc(var(--eds-border-width-strong) * -1);
+
+    & > :is(.eds-input, .eds-select, .eds-textarea) {
+      inline-size: 100%;
+      min-inline-size: calc(var(--eds-space-9) * 2);
+    }
+
+    & > .eds-error {
+      margin-block: var(--eds-space-1) 0;
+      font-size: var(--eds-font-size-small);
+      line-height: var(--eds-line-height-small);
+      text-align: start;
+    }
+
+    &[aria-busy='true'] {
+      cursor: progress;
+
+      & > :is(.eds-input, .eds-select, .eds-textarea) {
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .eds-table td[data-editing].eds-table-num > :is(.eds-input, .eds-textarea) {
+    text-align: end;
+  }
+}

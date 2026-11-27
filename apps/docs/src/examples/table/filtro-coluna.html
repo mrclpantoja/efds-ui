@@ -1,0 +1,95 @@
+<!-- Filtro por coluna: botão no cabeçalho abre um popover nativo com um <form method="get">. Os name
+     dos campos são os parâmetros da query (filter[campo], filter[campo][gte]); sem JS o envio GET
+     funciona. Filtro ativo: data-active no botão + texto oculto, e data-eds-filtered no th. Os chips
+     (.eds-filter-chips) listam os filtros aplicados. Aqui "Total" já está filtrado (mínimo 500). -->
+<ul class="eds-filter-chips" aria-label="Filtros ativos" data-eds-table-chips="pedidos-filtro-coluna">
+  <li>
+    <button type="button" class="eds-chip" data-eds-chip-remove="total">
+      Total: a partir de 500
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+      <span class="eds-visually-hidden"> — remover</span>
+    </button>
+  </li>
+</ul>
+
+<div class="eds-table-wrap">
+  <table class="eds-table" id="pedidos-filtro-coluna">
+    <caption class="eds-table-caption eds-visually-hidden">Pedidos, com filtro por coluna</caption>
+    <thead>
+      <tr>
+        <th scope="col" data-eds-col="codigo">Código</th>
+        <th scope="col" data-eds-col="cliente">
+          <div class="eds-table-th">
+            Cliente
+            <button type="button" class="eds-table-filter-btn" popovertarget="fc-cliente" aria-label="Filtrar Cliente" aria-haspopup="dialog">
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 3h11l-4.25 5v4.5l-2.5 1.25V8z" /></svg>
+            </button>
+            <div class="eds-popover eds-table-filter" id="fc-cliente" popover role="dialog" aria-label="Filtrar Cliente">
+              <form method="get" action="" data-eds-column-filter="text">
+                <div class="eds-field">
+                  <label class="eds-label" for="fc-cliente-q">Contém</label>
+                  <input class="eds-input" id="fc-cliente-q" type="search" name="filter[cliente]" autofocus />
+                </div>
+                <div class="eds-table-filter-actions">
+                  <button type="submit" class="eds-button eds-button-primary eds-button-sm">Aplicar</button>
+                  <button type="reset" class="eds-button eds-button-ghost eds-button-sm" data-eds-filter-clear>Limpar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </th>
+        <th scope="col" data-eds-col="situacao">
+          <div class="eds-table-th">
+            Situação
+            <button type="button" class="eds-table-filter-btn" popovertarget="fc-situacao" aria-label="Filtrar Situação" aria-haspopup="dialog">
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 3h11l-4.25 5v4.5l-2.5 1.25V8z" /></svg>
+            </button>
+            <div class="eds-popover eds-table-filter" id="fc-situacao" popover role="dialog" aria-label="Filtrar Situação">
+              <form method="get" action="" data-eds-column-filter="select">
+                <fieldset class="eds-fieldset">
+                  <legend class="eds-label">Situação</legend>
+                  <label class="eds-check"><input type="checkbox" class="eds-checkbox" name="filter[situacao]" value="pago" /> Pago</label>
+                  <label class="eds-check"><input type="checkbox" class="eds-checkbox" name="filter[situacao]" value="pendente" /> Pendente</label>
+                  <label class="eds-check"><input type="checkbox" class="eds-checkbox" name="filter[situacao]" value="atrasado" /> Atrasado</label>
+                </fieldset>
+                <div class="eds-table-filter-actions">
+                  <button type="submit" class="eds-button eds-button-primary eds-button-sm">Aplicar</button>
+                  <button type="reset" class="eds-button eds-button-ghost eds-button-sm" data-eds-filter-clear>Limpar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </th>
+        <th scope="col" data-eds-col="total" class="eds-table-num" data-eds-filtered>
+          <div class="eds-table-th">
+            Total
+            <button type="button" class="eds-table-filter-btn" popovertarget="fc-total" aria-label="Filtrar Total" aria-haspopup="dialog" data-active>
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 3h11l-4.25 5v4.5l-2.5 1.25V8z" /></svg>
+              <span class="eds-visually-hidden">, filtro ativo</span>
+            </button>
+            <div class="eds-popover eds-table-filter" id="fc-total" popover role="dialog" aria-label="Filtrar Total">
+              <form method="get" action="" data-eds-column-filter="number">
+                <div class="eds-field">
+                  <label class="eds-label" for="fc-total-min">Mínimo</label>
+                  <input class="eds-input" id="fc-total-min" name="filter[total][gte]" inputmode="decimal" value="500" />
+                </div>
+                <div class="eds-field">
+                  <label class="eds-label" for="fc-total-max">Máximo</label>
+                  <input class="eds-input" id="fc-total-max" name="filter[total][lte]" inputmode="decimal" />
+                </div>
+                <div class="eds-table-filter-actions">
+                  <button type="submit" class="eds-button eds-button-primary eds-button-sm">Aplicar</button>
+                  <button type="reset" class="eds-button eds-button-ghost eds-button-sm" data-eds-filter-clear>Limpar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PED-0001</td><td>Atelier Exemplo</td><td><span class="eds-badge eds-badge-success">Pago</span></td><td class="eds-table-num">R$ 1.280,50</td></tr>
+      <tr><td>PED-0003</td><td>Oficina Fictícia</td><td><span class="eds-badge eds-badge-danger">Atrasado</span></td><td class="eds-table-num">R$ 8.920,90</td></tr>
+    </tbody>
+  </table>
+</div>

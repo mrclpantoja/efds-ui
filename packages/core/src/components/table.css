@@ -30,7 +30,10 @@
    - .eds-table-hide-narrow (em th e td): a coluna some quando o .eds-table-wrap tem menos de 40rem
      de largura (mede o contêiner, não a viewport). Use em colunas secundárias para a tabela caber
      sem rolar; a informação que só existe nessas colunas precisa estar disponível por outro caminho
-     (display:none tira a coluna também do leitor de tela). Não combine com .eds-table-stack. */
+     (display:none tira a coluna também do leitor de tela). Não combine com .eds-table-stack.
+   Tabela avançada (th composto, ordenação múltipla, filtro por coluna, fixas no início e no fim,
+   ações em lote): ver os comentários junto de cada regra. Colunas (alça, largura, painel) em
+   table-columns.css; edição na célula em table-edit.css. Contrato: docs/architecture/table-avancada.md. */
 @layer eds.components {
   .eds-table-wrap {
     /* Bloco de contenção: filhos absolutos (ex.: .eds-visually-hidden em th) ficam presos à
@@ -97,7 +100,13 @@
     /* Hover discreto (só com ponteiro real), nunca no estado vazio. */
     @media (hover: hover) {
       & tbody tr:hover:not(:has(.eds-table-empty), .eds-table-loading) {
-        background: color-mix(in srgb, var(--eds-color-bg-subtle) 60%, var(--eds-color-bg-surface));
+        --_sticky-bg: color-mix(
+          in srgb,
+          var(--eds-color-bg-subtle) 60%,
+          var(--eds-color-bg-surface)
+        );
+
+        background: var(--_sticky-bg);
       }
     }
 
@@ -117,7 +126,9 @@
 
     /* Selecionada: vem do checkbox marcado; vence o hover. */
     & tbody tr:has(.eds-table-check input:checked) {
-      background: var(--eds-color-action-primary-subtle);
+      --_sticky-bg: var(--eds-color-action-primary-subtle);
+
+      background: var(--_sticky-bg);
 
       /* Barra na primeira célula: o fundo sozinho quase não se vê em alguns temas claros. */
       & > :first-child {
@@ -271,7 +282,10 @@
     stroke-linejoin: round;
   }
 
-  .eds-table th:is([aria-sort='ascending'], [aria-sort='descending']) {
+  /* Ordenação múltipla: o th secundário não leva aria-sort, só data-eds-sort-dir; os dois casos
+     pintam igual. O número da prioridade (.eds-table-sort-order) acompanha o chevron: a ordem
+     nunca depende só de cor. */
+  .eds-table th:is([aria-sort='ascending'], [aria-sort='descending'], [data-eds-sort-dir]) {
     color: var(--eds-color-text-primary);
 
     & .eds-table-sort > svg {
@@ -279,9 +293,140 @@
     }
   }
 
-  .eds-table th[aria-sort='ascending'] .eds-table-sort-down,
-  .eds-table th[aria-sort='descending'] .eds-table-sort-up {
+  .eds-table th:is([aria-sort='ascending'], [data-eds-sort-dir='ascending']) .eds-table-sort-down,
+  .eds-table th:is([aria-sort='descending'], [data-eds-sort-dir='descending']) .eds-table-sort-up {
     display: none;
+  }
+
+  .eds-table-sort-order {
+    min-inline-size: 1ch;
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Sem JS a ordenação é link (<a class="eds-table-sort" href>). */
+  a.eds-table-sort {
+    text-decoration: none;
+  }
+
+  /* Dentro do th o overflow (wrap, colunas de largura fixa) cortaria o anel: foco inset. */
+  .eds-table-th :is(.eds-table-sort, .eds-table-filter-btn):focus-visible {
+    outline-offset: calc(var(--eds-focus-ring-width) * -1);
+  }
+
+  /* Cabeçalho composto: .eds-table-th agrupa, no th, o botão de ordenação, o de filtro, a alça de
+     coluna e a borda de redimensionar (table-columns.css). É o único acréscimo ao th. */
+  .eds-table th:has(> .eds-table-th) {
+    padding-block: 0;
+  }
+
+  .eds-table-th {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: calc(var(--eds-table-row-height) - var(--eds-border-width));
+
+    /* Coluna numérica: o grupo acompanha o alinhamento ao fim. */
+    .eds-table-num > & {
+      justify-content: flex-end;
+    }
+  }
+
+  /* Filtro por coluna: botão que abre o popover (.eds-popover.eds-table-filter). Filtro ativo =
+     fundo suave + ponto + texto oculto (", filtro ativo"): nunca só cor. */
+  .eds-table-filter-btn {
+    position: relative;
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--eds-icon-size-lg);
+    block-size: var(--eds-icon-size-lg);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: var(--eds-color-text-muted);
+    cursor: pointer;
+    transition: background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    & > svg {
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
+      color: var(--eds-color-text-secondary);
+    }
+
+    &:active,
+    &[aria-expanded='true'] {
+      background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 14%);
+      color: var(--eds-color-text-secondary);
+    }
+
+    &[data-active] {
+      background: var(--eds-color-action-primary-subtle);
+      color: var(--eds-color-text-primary);
+
+      /* Ponto no canto: o estado também é forma. */
+      &::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        inline-size: var(--eds-space-2);
+        block-size: var(--eds-space-2);
+        border-radius: 50%;
+        background: var(--eds-color-action-primary);
+      }
+
+      & > svg {
+        fill: currentColor;
+        fill-opacity: 0.25;
+      }
+    }
+
+    @media (pointer: coarse) {
+      inline-size: var(--eds-control-height-sm);
+      block-size: var(--eds-control-height-sm);
+    }
+  }
+
+  /* Popover do filtro: filho do th, herda nowrap/peso/cor do cabeçalho; redefine tudo isso. */
+  .eds-popover.eds-table-filter {
+    min-inline-size: min(calc(var(--eds-space-9) * 4), 100%);
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    font-weight: var(--eds-font-weight-regular);
+    text-align: start;
+    white-space: normal;
+
+    & form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--eds-space-3);
+    }
+  }
+
+  .eds-table-filter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--eds-space-2);
   }
 
   /* Cabeçalho fixo no topo do wrap. */
@@ -296,38 +441,60 @@
     --_table-min-inline-size: 0;
   }
 
-  /* Primeira coluna fixa na rolagem horizontal. O fundo da célula é opaco (senão o conteúdo que rola
-     aparece por baixo) e acompanha o estado da linha pela variável --_sticky-bg; a borda à direita
-     separa a coluna fixa do que passa por baixo. */
-  .eds-table-sticky-col {
-    & :is(th, td):first-child:not(.eds-table-empty) {
-      position: sticky;
-      inset-inline-start: 0;
-      z-index: 1;
-      border-inline-end: var(--eds-border-width) solid var(--eds-color-border-default);
-      background: var(--_sticky-bg, var(--eds-color-bg-surface));
-    }
+  /* Colunas fixas. .eds-table-sticky-col fixa a primeira; .eds-table-pin-start / -end (em th e td)
+     fixam qualquer coluna nas bordas, e .eds-table-pin-edge marca a última do grupo do início ou a
+     primeira do grupo do fim (leva a borda de separação). O deslocamento --_pin-inset é do JS (soma
+     das larguras das fixas anteriores); sem ele, 0. O fundo da célula é opaco (senão o conteúdo que
+     rola aparece por baixo) e acompanha o estado da linha por --_sticky-bg. Canto do cabeçalho:
+     acima das células fixas e do cabeçalho fixo. */
+  .eds-table-sticky-col :is(th, td):first-child:not(.eds-table-empty) {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: var(--eds-z-raised);
+    border-inline-end: var(--eds-border-width) solid var(--eds-color-border-default);
+    background: var(--_sticky-bg, var(--eds-color-bg-surface));
+  }
 
-    /* Canto superior: acima das células fixas e do cabeçalho fixo. */
-    & thead th:first-child {
-      --_sticky-bg: var(--eds-color-bg-subtle);
+  .eds-table :is(th, td):is(.eds-table-pin-start, .eds-table-pin-end):not(.eds-table-empty) {
+    position: sticky;
+    z-index: var(--eds-z-raised);
+    background: var(--_sticky-bg, var(--eds-color-bg-surface));
+  }
 
-      z-index: calc(var(--eds-z-sticky) + 1);
-    }
+  .eds-table .eds-table-pin-start {
+    inset-inline-start: var(--_pin-inset, 0);
+  }
 
-    @media (hover: hover) {
-      & tbody tr:hover:not(:has(.eds-table-empty), .eds-table-loading) {
-        --_sticky-bg: color-mix(
-          in srgb,
-          var(--eds-color-bg-subtle) 60%,
-          var(--eds-color-bg-surface)
-        );
-      }
-    }
+  .eds-table .eds-table-pin-end {
+    inset-inline-end: var(--_pin-inset, 0);
+  }
 
-    & tbody tr:has(.eds-table-check input:checked) {
-      --_sticky-bg: var(--eds-color-action-primary-subtle);
-    }
+  .eds-table .eds-table-pin-edge.eds-table-pin-start {
+    border-inline-end: var(--eds-border-width) solid var(--eds-color-border-default);
+  }
+
+  .eds-table .eds-table-pin-edge.eds-table-pin-end {
+    border-inline-start: var(--eds-border-width) solid var(--eds-color-border-default);
+  }
+
+  .eds-table-sticky-col thead th:first-child,
+  .eds-table thead :is(th, td):is(.eds-table-pin-start, .eds-table-pin-end) {
+    --_sticky-bg: var(--eds-color-bg-subtle);
+
+    z-index: calc(var(--eds-z-sticky) + 1);
+  }
+
+  /* Foco não encoberto (2.4.11): a rolagem do wrap reserva o espaço das fixas (JS grava os
+     tamanhos). Reflow (1.4.10): o JS põe data-pin-disabled quando as fixas passam de 60% do wrap;
+     sem deslocamento horizontal a célula só mantém, se houver, o cabeçalho fixo vertical. */
+  .eds-table-wrap {
+    scroll-padding-inline: var(--_pin-start-size, 0) var(--_pin-end-size, 0);
+  }
+
+  .eds-table-wrap[data-pin-disabled]
+    :is(.eds-table-pin-start, .eds-table-pin-end, .eds-table-sticky-col :is(th, td):first-child) {
+    inset-inline: auto;
+    border-inline: 0;
   }
 
   /* Coluna secundária que some em tela estreita. O wrap vira contêiner só quando há uma coluna
@@ -451,6 +618,12 @@
 
       & tbody tr:has(.eds-table-empty) {
         padding-block: 0;
+      }
+
+      /* Colunas fixas não existem no bloco empilhado. */
+      & tbody :is(.eds-table-pin-start, .eds-table-pin-end) {
+        border-inline: 0;
+        background: transparent;
       }
     }
   }
@@ -612,12 +785,74 @@
     translate: -50% -50%;
   }
 
+  /* Ações em lote: fica depois do wrap, colada à base da área visível enquanto a tabela estiver na
+     tela. Aparece com a seleção (o JS tira o hidden). A contagem é texto comum: o anúncio é o da
+     região de status da tabela. */
+  .eds-table-bulk {
+    position: sticky;
+    inset-block-end: var(--eds-space-4);
+    z-index: var(--eds-z-sticky);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2) var(--eds-space-3);
+    box-sizing: border-box;
+    margin-block-start: var(--eds-space-3);
+    padding: var(--eds-space-2) var(--eds-inset-md);
+    border: var(--eds-border-width) solid var(--eds-color-border-strong);
+    border-radius: var(--eds-radius-lg);
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    box-shadow: var(--eds-shadow-md);
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: eds-table-bulk-in var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+  }
+
+  @keyframes eds-table-bulk-in {
+    from {
+      opacity: 0;
+      translate: 0 var(--eds-space-2);
+    }
+  }
+
+  .eds-table-bulk-count {
+    margin: 0;
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-table-bulk-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--eds-space-2);
+    margin-inline-start: auto;
+  }
+
+  /* Foco não encoberto (2.4.11): a barra cobre a base da área visível; o scroller reserva o espaço
+     (o maior entre esta folga e a dos toasts, que usa --_toast-clearance em layout/app.css). */
+  :where(html):has(.eds-table-bulk:not([hidden])),
+  :where(html):has(.eds-table-bulk:not([hidden])) .eds-app-main {
+    scroll-padding-block-end: max(
+      var(--_toast-clearance, 0px),
+      calc(var(--eds-target-min) + var(--eds-space-6))
+    );
+  }
+
   @media (forced-colors: active) {
     .eds-table tbody tr:has(.eds-table-check input:checked) > :first-child {
       /* box-shadow e fundo são anulados em forced-colors; outline interno sobrevive e não altera o layout. */
       box-shadow: none;
       outline: calc(var(--eds-focus-ring-width) * 2) solid Highlight;
       outline-offset: calc(var(--eds-focus-ring-width) * -2);
+    }
+
+    /* Filtro ativo: o ponto perde a cor de fundo; o contorno do botão marca o estado. */
+    .eds-table-filter-btn[data-active] {
+      outline: var(--eds-border-width-strong) solid Highlight;
+      outline-offset: calc(var(--eds-border-width-strong) * -1);
     }
   }
 }

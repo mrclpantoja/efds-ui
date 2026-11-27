@@ -1,22 +1,30 @@
 import { format, getMessages } from '../core/config';
-import { emit, normalizeText } from '../core/dom';
+import { emit, normalizeText, uid } from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer } from '../core/status';
+import { columnIndex, hubFor, isRemote } from '../core/table-hub';
+import { refreshRows, removeRowSource, scheduleRefresh, setRowSource } from '../core/table-rows';
 
 const DEBOUNCE_MS = 150;
+const REMOTE_DEBOUNCE_MS = 300;
 
-const isEmptyRow = (row: HTMLTableRowElement) =>
-  row.hasAttribute('data-eds-filter-empty') || row.querySelector('.eds-table-empty') !== null;
-
-/** Colunas (base 1) de `data-eds-filter-columns="1,2"`; `null` = todas. */
-function parseColumns(value: string | null): Set<number> | null {
+/**
+ * Colunas de `data-eds-filter-columns`: índices (base 1) e/ou ids (`data-eds-col`); `null` = todas.
+ * Os ids viram índice (base 1) pela posição atual do cabeçalho.
+ */
+function parseColumns(value: string | null, table: HTMLTableElement | null): Set<number> | null {
   if (!value) return null;
-  const set = new Set(
-    value
-      .split(',')
-      .map((part) => Number(part.trim()))
-      .filter((n) => Number.isInteger(n) && n > 0),
-  );
+  const set = new Set<number>();
+  for (const part of value.split(',')) {
+    const token = part.trim();
+    if (token === '') continue;
+    const n = Number(token);
+    if (Number.isInteger(n) && n > 0) set.add(n);
+    else if (table) {
+      const index = columnIndex(table, token);
+      if (index >= 0) set.add(index + 1);
+    }
+  }
   return set.size > 0 ? set : null;
 }
 
@@ -61,12 +69,12 @@ export const tableFilterBehavior: Behavior = {
     input.after(region);
     const announcer = createAnnouncer(region);
 
+    const sourceId = uid('search');
     let table: HTMLTableElement | null = null;
     let observer: MutationObserver | null = null;
-    let created: HTMLTableRowElement | null = null;
     let timer: ReturnType<typeof setTimeout> | null = null;
-    let queued = false;
     let lastQuery = '';
+    let registered: HTMLTableElement | null = null;
 
     const findTable = (): HTMLTableElement | null => {
       const id = input.getAttribute('data-eds-table-filter');
@@ -74,38 +82,19 @@ export const tableFilterBehavior: Behavior = {
       return found instanceof HTMLTableElement ? found : null;
     };
 
-    const allRows = (t: HTMLTableElement): HTMLTableRowElement[] =>
-      Array.from(t.tBodies).flatMap((body) => Array.from(body.rows));
-
-    const dataRows = (t: HTMLTableElement): HTMLTableRowElement[] =>
-      allRows(t).filter((row) => !isEmptyRow(row));
-
-    const emptyRow = (t: HTMLTableElement, query: string): HTMLTableRowElement | null => {
-      const authored = allRows(t).find((row) => row !== created && isEmptyRow(row));
-      if (authored) return authored;
-      const body = t.tBodies[0];
-      if (!body) return null;
-      if (!created) {
-        const cols = Math.max(1, ...Array.from(t.rows).map((row) => row.cells.length));
-        created = doc.createElement('tr');
-        created.setAttribute('data-eds-filter-empty', '');
-        created.hidden = true;
-        const td = doc.createElement('td');
-        td.className = 'eds-table-empty';
-        td.colSpan = cols;
-        const box = doc.createElement('div');
-        box.className = 'eds-empty';
-        const text = doc.createElement('p');
-        text.className = 'eds-empty-text';
-        box.append(text);
-        td.append(box);
-        created.append(td);
-      }
-      if (!created.isConnected) body.append(created);
-      const text = created.querySelector('.eds-empty-text');
-      const message = format(getMessages().tableFilterEmpty, { query });
-      if (text && text.textContent !== message) text.textContent = message;
-      return created;
+    /** Registra o predicado da busca no coordenador de linhas da tabela. */
+    const register = (t: HTMLTableElement) => {
+      registered = t;
+      const needle = normalizeText(input.value.trim());
+      const attr = input.getAttribute('data-eds-filter-columns');
+      const columns = parseColumns(attr, t);
+      const key = `${attr ?? ''}|${[...(columns ?? [])].join(',')}`;
+      setRowSource(
+        t,
+        sourceId,
+        (row) => needle === '' || cachedRowText(row, columns, key).includes(needle),
+        input.value.trim(),
+      );
     };
 
     /** Aplica o filtro; `user` = veio do usuário (anuncia e emite o evento). */
@@ -114,27 +103,22 @@ export const tableFilterBehavior: Behavior = {
       if (!table) return;
       watch(table);
       const raw = input.value.trim();
-      const needle = normalizeText(raw);
-      const columns = parseColumns(input.getAttribute('data-eds-filter-columns'));
-      const columnsKey = input.getAttribute('data-eds-filter-columns') ?? '';
-      const rows = dataRows(table);
-      let count = 0;
-      for (const row of rows) {
-        const hide = needle !== '' && !cachedRowText(row, columns, columnsKey).includes(needle);
-        if (row.hidden !== hide) row.hidden = hide;
-        if (!hide) count += 1;
+      if (isRemote(table)) {
+        // Tabela remota: nada é filtrado aqui; a consulta vai ao servidor.
+        const hub = hubFor(table);
+        if (hub.query.q === raw) return;
+        hub.query.q = raw;
+        hub.query.page = 1;
+        lastQuery = raw;
+        hub.fire('sync', ['q']);
+        if (user && !hub.request('q')) emit(input, 'table-filter', { query: raw, count: 0 });
+        return;
       }
-      const showEmpty = rows.length > 0 && count === 0;
-      if (showEmpty) {
-        const empty = emptyRow(table, raw);
-        if (empty) empty.hidden = false;
-      } else if (rows.length > 0) {
-        for (const row of allRows(table)) if (isEmptyRow(row)) row.hidden = true;
-      }
-      // A Table (seleção) relê as linhas visíveis.
-      table.dispatchEvent(new CustomEvent('eds:table-filtered', { bubbles: true }));
+      register(table);
+      const count = refreshRows(table);
       if (!user) return;
       const m = getMessages();
+      let message: string;
       if (raw === '' && lastQuery !== '') {
         // Linhas marcadas continuam marcadas: o total volta a ser dito junto.
         const checked = Array.from(
@@ -144,10 +128,10 @@ export const tableFilterBehavior: Behavior = {
           checked === 0
             ? ''
             : ` ${checked === 1 ? m.tableFilterSelectedOne : format(m.tableFilterSelectedMany, { count: checked })}`;
-        announcer.say(
+        message =
           (count === 1 ? m.tableFilterClearedOne : format(m.tableFilterCleared, { count })) +
-            selection,
-        );
+          selection;
+        announcer.say(message);
       } else if (raw !== '') {
         announcer.say(
           count === 0
@@ -158,32 +142,21 @@ export const tableFilterBehavior: Behavior = {
         );
       }
       lastQuery = raw;
+      hubFor(table).query.q = raw;
       emit(input, 'table-filter', { query: raw, count });
     };
 
-    // Linhas acrescentadas (ou reordenadas) depois passam pelo filtro.
+    // Texto das linhas mudou: descarta o cache e refiltra.
     function watch(t: HTMLTableElement) {
       if (observer) return;
       observer = new MutationObserver((records) => {
-        // Qualquer mudança dentro de uma linha descarta o texto em cache dela.
         for (const record of records) {
           const target =
             record.target instanceof Element ? record.target : record.target.parentElement;
           const row = target?.closest('tr');
           if (row) rowCache.delete(row);
         }
-        const foreign = records.some(
-          (record) =>
-            record.type === 'childList' &&
-            !(created && created.contains(record.target)) &&
-            [...record.addedNodes, ...record.removedNodes].some((node) => node !== created),
-        );
-        if (!foreign || queued) return;
-        queued = true;
-        queueMicrotask(() => {
-          queued = false;
-          if (!signal.aborted) apply(false);
-        });
+        if (registered) scheduleRefresh(registered);
       });
       observer.observe(t, {
         childList: true,
@@ -204,7 +177,7 @@ export const tableFilterBehavior: Behavior = {
       'input',
       () => {
         if (timer) clearTimeout(timer);
-        timer = setTimeout(flush, DEBOUNCE_MS);
+        timer = setTimeout(flush, table && isRemote(table) ? REMOTE_DEBOUNCE_MS : DEBOUNCE_MS);
       },
       { signal },
     );
@@ -239,11 +212,7 @@ export const tableFilterBehavior: Behavior = {
       observer?.disconnect();
       announcer.dispose();
       region.remove();
-      created?.remove();
-      if (table) {
-        for (const row of dataRows(table)) row.hidden = false;
-        table.dispatchEvent(new CustomEvent('eds:table-filtered', { bubbles: true }));
-      }
+      if (registered) removeRowSource(registered, sourceId);
     };
   },
 };

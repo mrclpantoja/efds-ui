@@ -1,0 +1,44 @@
+<!-- Ações em lote: a barra (.eds-table-bulk) fica depois do .eds-table-wrap e vem hidden; o JS a revela
+     com a seleção. Fica colada à base da área visível (sticky). A contagem é texto comum (o anúncio é
+     da região de status da tabela). Cada linha precisa de data-eds-row-id: é o que o evento
+     eds:table-bulk-action devolve em ids. "Selecionar todos os N" só existe em tabela remota
+     (data-eds-total). Aqui a barra está visível, para mostrar o estado com 2 linhas selecionadas. -->
+<div class="eds-table-wrap">
+  <table class="eds-table" id="pedidos-lote" data-eds-total="248">
+    <caption class="eds-table-caption eds-visually-hidden">Pedidos, com ações em lote</caption>
+    <thead>
+      <tr>
+        <th scope="col" class="eds-table-check">
+          <label class="eds-check"><input type="checkbox" class="eds-checkbox" aria-label="Selecionar todos desta página" data-eds-select-all /></label>
+        </th>
+        <th scope="col">Código</th>
+        <th scope="col">Cliente</th>
+        <th scope="col" class="eds-table-num">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-eds-row-id="PED-0001">
+        <td class="eds-table-check"><label class="eds-check"><input type="checkbox" class="eds-checkbox" aria-label="Selecionar PED-0001" data-eds-select-row checked /></label></td>
+        <td>PED-0001</td><td>Atelier Exemplo</td><td class="eds-table-num">R$ 1.280,50</td>
+      </tr>
+      <tr data-eds-row-id="PED-0002">
+        <td class="eds-table-check"><label class="eds-check"><input type="checkbox" class="eds-checkbox" aria-label="Selecionar PED-0002" data-eds-select-row checked /></label></td>
+        <td>PED-0002</td><td>Comércio Modelo</td><td class="eds-table-num">R$ 459,00</td>
+      </tr>
+      <tr data-eds-row-id="PED-0003">
+        <td class="eds-table-check"><label class="eds-check"><input type="checkbox" class="eds-checkbox" aria-label="Selecionar PED-0003" data-eds-select-row /></label></td>
+        <td>PED-0003</td><td>Oficina Fictícia</td><td class="eds-table-num">R$ 8.920,90</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="eds-table-bulk" role="group" aria-label="Ações em lote" data-eds-table-bulk="pedidos-lote">
+  <p class="eds-table-bulk-count"><span data-eds-bulk-count>2 selecionados</span></p>
+  <button type="button" class="eds-button eds-button-ghost eds-button-sm" data-eds-bulk-all-results hidden>Selecionar todos os <span data-eds-bulk-total>248</span></button>
+  <div class="eds-table-bulk-actions">
+    <button type="button" class="eds-button eds-button-secondary eds-button-sm" data-eds-bulk-action="arquivar">Arquivar</button>
+    <button type="button" class="eds-button eds-button-danger eds-button-sm" data-eds-bulk-action="excluir" data-eds-confirm="Excluir os itens selecionados?">Excluir</button>
+  </div>
+  <button type="button" class="eds-button eds-button-ghost eds-button-sm" data-eds-bulk-clear>Limpar seleção</button>
+</div>

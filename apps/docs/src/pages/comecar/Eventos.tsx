@@ -86,12 +86,67 @@ const eventos: Record<string, readonly Evento[]> = {
       on: 'table',
       cancelable: true,
       detail:
-        "{ column, label, direction: 'ascending' | 'descending', th }: cancele para ordenar no servidor.",
+        '{ column, label, direction, th, key, sort: [{ key, direction }], multi, reason }: cancele para ordenar no servidor e chame setState({ sort }).',
+    },
+    {
+      name: 'eds:table-column-filter',
+      on: 'table',
+      cancelable: true,
+      detail:
+        '{ key, value, filters }: filtro por coluna aplicado ou removido; cancele para filtrar no servidor.',
+    },
+    {
+      name: 'eds:table-columns-change',
+      on: 'table',
+      detail:
+        "{ order, hidden, widths, reason: 'move' | 'resize' | 'visibility' | 'reset' | 'prefs' }.",
+    },
+    {
+      name: 'eds:table-bulk-action',
+      on: 'table',
+      cancelable: true,
+      detail: "{ action, ids, rows, count, scope: 'page' | 'all' }: ação da barra em lote.",
+    },
+    {
+      name: 'eds:table-select-all-results',
+      on: 'table',
+      detail: '{ total }: "selecionar todos os N" (tabela remota).',
+    },
+    {
+      name: 'eds:table-query',
+      on: 'table[data-eds-table-remote]',
+      cancelable: true,
+      detail:
+        '{ query, params, reason, respondWith(promessa) }: a consulta ao servidor; em navigate, sai antes de navegar.',
+    },
+    {
+      name: 'eds:table-load / eds:table-error',
+      on: 'table[data-eds-table-remote="event"]',
+      detail: '{ query, total } / { error, retry() }.',
+    },
+    {
+      name: 'eds:table-edit-start',
+      on: 'table',
+      cancelable: true,
+      detail: '{ cell, row, rowId, field, value }: a célula vai entrar em edição.',
+    },
+    {
+      name: 'eds:table-edit-commit',
+      on: 'table',
+      cancelable: true,
+      detail:
+        '{ cell, row, rowId, field, value, previous, setError, respondWith }: valor confirmado.',
+    },
+    {
+      name: 'eds:table-edit-cancel / eds:table-edit-error',
+      on: 'table',
+      detail: '{ cell, row, rowId, field } / com message.',
     },
     {
       name: 'eds:table-select-change',
       on: 'table',
-      detail: '{ count, rows, total }: marcadas, as linhas marcadas e o total de linhas visíveis.',
+      detail:
+        "{ count, rows, total, ids, scope }: marcadas, as linhas marcadas, o total e os data-eds-row-id (scope 'page' ou 'all').",
     },
     {
       name: 'eds:table-filter',

@@ -257,6 +257,108 @@ Objetivo e escopo do projeto fictício.</textarea>
             </tbody>
           </table>
         </div>
+        <div class="eds-table-wrap">
+          <table class="eds-table">
+            <caption class="eds-table-caption eds-visually-hidden">
+              Contratos, com ordenação múltipla, filtro por coluna e colunas fixas (dados fictícios)
+            </caption>
+            <thead>
+              <tr>
+                <th
+                  scope="col"
+                  class="eds-table-pin-start eds-table-pin-edge"
+                  aria-sort="ascending"
+                  data-eds-sort-dir="ascending"
+                >
+                  <div class="eds-table-th">
+                    <button type="button" class="eds-table-sort">
+                      Contrato
+                      <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true">
+                        <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+                        <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+                      </svg>
+                      <span class="eds-table-sort-order" aria-hidden="true">1</span>
+                    </button>
+                  </div>
+                </th>
+                <th scope="col" data-eds-sort-dir="descending">
+                  <div class="eds-table-th">
+                    <button type="button" class="eds-table-sort">
+                      Categoria
+                      <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true">
+                        <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+                        <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+                      </svg>
+                      <span class="eds-table-sort-order" aria-hidden="true">2</span>
+                    </button>
+                    <button
+                      type="button"
+                      class="eds-table-filter-btn"
+                      aria-label="Filtrar Categoria"
+                      aria-haspopup="dialog"
+                      data-active
+                    >
+                      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                        <path d="M2.5 3h11l-4.25 5v4.5l-2.5 1.25V8z" />
+                      </svg>
+                    </button>
+                  </div>
+                </th>
+                <th scope="col" class="eds-table-num">
+                  <div class="eds-table-th">
+                    Valor
+                    <button
+                      type="button"
+                      class="eds-table-colhandle"
+                      aria-pressed="true"
+                      aria-label="Ajustar coluna Valor"
+                    ></button>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="eds-table-pin-start eds-table-pin-edge">CT-2026-0001</th>
+                <td>Materiais</td>
+                <td class="eds-table-num">
+                  <button type="button" class="eds-table-cell-edit">
+                    R$ 48.000,00<span class="eds-visually-hidden"
+                      >, editar Valor de CT-2026-0001</span
+                    >
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" class="eds-table-pin-start eds-table-pin-edge">CT-2026-0002</th>
+                <td>Serviços</td>
+                <td class="eds-table-num" data-editing>
+                  <input
+                    class="eds-input eds-input-sm"
+                    aria-label="Valor de CT-2026-0002"
+                    aria-invalid="true"
+                    aria-describedby="v-edit-erro"
+                  />
+                  <p class="eds-error" id="v-edit-erro">Informe o valor.</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="eds-table-bulk" role="group" aria-label="Ações em lote">
+          <p class="eds-table-bulk-count">2 selecionados</p>
+          <div class="eds-table-bulk-actions">
+            <button type="button" class="eds-button eds-button-secondary eds-button-sm">
+              Arquivar
+            </button>
+            <button type="button" class="eds-button eds-button-danger eds-button-sm">
+              Excluir
+            </button>
+          </div>
+          <button type="button" class="eds-button eds-button-ghost eds-button-sm">
+            Limpar seleção
+          </button>
+        </div>
         <div class="eds-grid eds-grid-auto">
           <article class="eds-card">
             <header class="eds-card-header"><h4 class="eds-card-title">Padrão</h4></header>

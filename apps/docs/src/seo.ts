@@ -126,6 +126,8 @@ const componentDescriptions: Record<string, string> = {
   switch: 'Switch (interruptor liga e desliga) acessível em HTML, CSS e React.',
   table:
     'Tabela de dados com ordenação, seleção, filtro e exportação para Excel e PDF, em HTML, CSS e React.',
+  'table-avancada':
+    'Table avançada: ordenação múltipla, filtro por coluna, colunas fixas e redimensionáveis, ações em lote, consulta no servidor e edição na célula, em HTML e React.',
   pagination: 'Paginação acessível para tabelas e listas, em HTML, CSS e React.',
   'empty-state':
     'Estado vazio (empty state) para tabelas e listas sem resultado, em HTML, CSS e React.',

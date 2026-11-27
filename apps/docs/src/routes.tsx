@@ -68,6 +68,7 @@ import RadioPage from './pages/componentes/Radio';
 import SelectPage from './pages/componentes/Select';
 import SidebarPage from './pages/componentes/Sidebar';
 import SortablePage from './pages/componentes/Sortable';
+import TableAvancadaPage from './pages/componentes/TableAvancada';
 import SkeletonPage from './pages/componentes/Skeleton';
 import SpinnerPage from './pages/componentes/Spinner';
 import SwitchPage from './pages/componentes/Switch';
@@ -224,6 +225,7 @@ const componentCategory: Record<string, SectionId> = {
   ...Object.fromEntries(
     [
       'table',
+      'table-avancada',
       'filter-bar',
       'stat',
       'description-list',
@@ -251,6 +253,7 @@ const experimentalComponents: ReadonlySet<string> = new Set([
   'tree',
   'sortable',
   'lookup',
+  'table-avancada',
 ]);
 
 const allRoutes: readonly DocRoute[] = [
@@ -472,6 +475,12 @@ const allRoutes: readonly DocRoute[] = [
   { path: '/componentes/spinner', title: 'Spinner', section: 'componentes', page: SpinnerPage },
   { path: '/componentes/switch', title: 'Switch', section: 'componentes', page: SwitchPage },
   { path: '/componentes/table', title: 'Table', section: 'componentes', page: TablePage },
+  {
+    path: '/componentes/table-avancada',
+    title: 'Table avançada',
+    section: 'componentes',
+    page: TableAvancadaPage,
+  },
   {
     path: '/componentes/pagination',
     title: 'Pagination',

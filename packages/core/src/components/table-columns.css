@@ -1,0 +1,231 @@
+/* Table: colunas (largura, ordem, visibilidade). Continuação de table.css; o JS só liga atributos.
+   Markup (dentro do th, em .eds-table-th):
+     <button type="button" class="eds-table-colhandle" aria-pressed="false" aria-label="Ajustar coluna Cliente"></button>
+     <span class="eds-table-resize" aria-hidden="true"></span>
+   - Alça: um tab stop por coluna; "pega" com aria-pressed="true". Aparece em hover e foco do th, e sempre em
+     toque. Sem ícone filho, o CSS desenha o pegador (seis pontos); com <svg>, usa o do autor.
+   - Borda de redimensionar: decorativa (aria-hidden), alvo do ponteiro; a alternativa de teclado é a alça e o
+     painel "Colunas". O JS marca th[data-eds-resizing] durante o arrasto.
+   - Reordenar por arrasto: th[data-eds-dragging] (e as células da coluna) = origem;
+     th[data-eds-drop="before|after"] = destino (a marca vale para o lado lógico, vira no RTL).
+   - .eds-table-fixed (na table): table-layout fixo; as larguras vêm de <col> e a soma delas, de
+     --_table-inline-size (ou inline-size direto). O texto que não cabe é cortado com reticências;
+     .eds-table-wrap-text na célula devolve a quebra.
+   - Painel "Colunas": <div class="eds-popover eds-table-columns" popover role="dialog">
+       <p class="eds-table-columns-title">…</p>
+       <ul class="eds-table-columns-list"><li class="eds-table-columns-item">
+         <label class="eds-check"><input type="checkbox" class="eds-checkbox"> Cliente</label>
+         <button class="eds-button eds-button-ghost eds-button-icon eds-button-sm">…</button> …</li></ul>
+       <button class="eds-button eds-button-ghost eds-button-sm">Restaurar padrão</button></div> */
+@layer eds.components {
+  /* Larguras fixas por coluna. A tabela passa a medir a soma das larguras e rola dentro do wrap. */
+  .eds-table.eds-table-fixed {
+    --_table-min-inline-size: 0;
+
+    table-layout: fixed;
+    inline-size: var(--_table-inline-size, 100%);
+
+    & :is(th, td):not(.eds-table-wrap-text) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    & .eds-table-sort {
+      min-inline-size: 0;
+    }
+  }
+
+  .eds-table-colhandle {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--eds-icon-size-lg);
+    block-size: var(--eds-icon-size-lg);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--eds-radius-sm);
+    background: transparent;
+    color: var(--eds-color-text-secondary);
+    cursor: grab;
+    /* Toque na alça arrasta a coluna em vez de rolar a tabela. */
+    touch-action: none;
+    opacity: 0;
+    transition:
+      opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    & > svg {
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      fill: currentColor;
+    }
+
+    &:not(:has(> svg))::before {
+      content: '';
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5 3.5a1.25 1.25 0 1 1 0 .01zM11 3.5a1.25 1.25 0 1 1 0 .01zM5 8a1.25 1.25 0 1 1 0 .01zM11 8a1.25 1.25 0 1 1 0 .01zM5 12.5a1.25 1.25 0 1 1 0 .01zM11 12.5a1.25 1.25 0 1 1 0 .01z'/%3E%3C/svg%3E")
+        center / var(--eds-icon-size-sm) no-repeat;
+    }
+
+    /* Visível quando algo da coluna recebe foco ou ponteiro, e sempre em toque. */
+    &:focus-visible,
+    &[aria-pressed='true'] {
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      outline-offset: calc(var(--eds-focus-ring-width) * -1);
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--eds-color-bg-subtle), var(--eds-color-text-primary) 8%);
+    }
+
+    &[aria-pressed='true'] {
+      background: var(--eds-color-action-primary);
+      color: var(--eds-color-text-on-action);
+      cursor: grabbing;
+    }
+
+    @media (pointer: coarse) {
+      inline-size: var(--eds-control-height-sm);
+      block-size: var(--eds-control-height-sm);
+      opacity: 1;
+    }
+  }
+
+  .eds-table th:is(:hover, :focus-within) .eds-table-colhandle {
+    opacity: 1;
+  }
+
+  /* Borda de redimensionar: faixa na borda final do th (dentro dele, para o overflow não cortar). */
+  .eds-table-resize {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: calc(var(--eds-inset-md) * -1);
+    z-index: var(--eds-z-raised);
+    inline-size: var(--eds-space-2);
+    cursor: col-resize;
+    touch-action: none;
+
+    /* Linha: borda (não fundo) para sobreviver ao forced-colors. */
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      inset-inline-end: 0;
+      border-inline-end: var(--eds-border-width-strong) solid var(--eds-color-action-primary);
+      opacity: 0;
+      transition: opacity var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+    }
+
+    @media (pointer: coarse) {
+      inline-size: var(--eds-space-4);
+    }
+  }
+
+  .eds-table th:is(:hover, :focus-within, [data-eds-resizing]) .eds-table-resize::after,
+  .eds-table .eds-table-resize:hover::after {
+    opacity: 1;
+  }
+
+  @media (pointer: coarse) {
+    .eds-table-resize::after {
+      border-inline-end-color: var(--eds-color-border-strong);
+      opacity: 1;
+    }
+
+    .eds-table th[data-eds-resizing] .eds-table-resize::after {
+      border-inline-end-color: var(--eds-color-action-primary);
+    }
+  }
+
+  /* Reordenar por arrasto: origem esmaecida em cor de ação suave; destino com marca de inserção. */
+  .eds-table :is(th, td)[data-eds-dragging] {
+    --_sticky-bg: var(--eds-color-action-primary-subtle);
+
+    background: var(--_sticky-bg);
+  }
+
+  .eds-table th[data-eds-drop] {
+    --_drop-dir: 1;
+
+    &:dir(rtl) {
+      --_drop-dir: -1;
+    }
+
+    &[data-eds-drop='before'] {
+      box-shadow: inset calc(var(--eds-border-width-strong) * var(--_drop-dir)) 0 0
+        var(--eds-color-action-primary);
+    }
+
+    &[data-eds-drop='after'] {
+      box-shadow: inset calc(var(--eds-border-width-strong) * var(--_drop-dir) * -1) 0 0
+        var(--eds-color-action-primary);
+    }
+  }
+
+  /* Painel "Colunas": alternativa de clique e teclado ao arrasto e à largura (WCAG 2.5.7). */
+  .eds-popover.eds-table-columns {
+    min-inline-size: min(calc(var(--eds-space-9) * 4), 100%);
+    color: var(--eds-color-text-primary);
+    font-weight: var(--eds-font-weight-regular);
+    text-align: start;
+    white-space: normal;
+  }
+
+  .eds-table-columns-title {
+    margin: 0;
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-table-columns-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-table-columns-item {
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-1);
+    min-block-size: var(--eds-control-height-sm);
+
+    & > .eds-check {
+      flex: 1 1 auto;
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+    }
+
+    & > .eds-button {
+      flex: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-table-colhandle[aria-pressed='true'] {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    .eds-table th[data-eds-drop],
+    .eds-table :is(th, td)[data-eds-dragging] {
+      outline: var(--eds-border-width-strong) dashed Highlight;
+      outline-offset: calc(var(--eds-border-width-strong) * -1);
+    }
+
+    .eds-table-colhandle::before {
+      background-color: CanvasText;
+    }
+  }
+}

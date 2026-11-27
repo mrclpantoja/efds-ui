@@ -14,7 +14,10 @@ import {
   sidebarCollapseBehavior,
   sidebarScrollBehavior,
 } from './components/sidebar';
-import { tableBehavior } from './components/table';
+import { sortClearBehavior, tableBehavior } from './components/table';
+import { tableBulkBehavior } from './components/table-bulk';
+import { columnFilterBehavior, tableChipsBehavior } from './components/table-column-filter';
+import { tablePaginationBehavior, tableRemoteBehavior } from './components/table-remote';
 import { tableFilterBehavior } from './components/table-filter';
 import { tabsBehavior } from './components/tabs';
 import { initToast } from './components/toast';
@@ -64,7 +67,14 @@ export function initWith(
       dropdownBehavior,
       alertDismissBehavior,
       tableBehavior,
+      sortClearBehavior,
       tableFilterBehavior,
+      // Table avançada (núcleo): filtro por coluna, lote e consulta remota
+      columnFilterBehavior,
+      tableChipsBehavior,
+      tableBulkBehavior,
+      tableRemoteBehavior,
+      tablePaginationBehavior,
       sidebarBehavior,
       sidebarCollapseBehavior,
       sidebarScrollBehavior,

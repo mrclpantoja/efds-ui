@@ -24,7 +24,10 @@ import { initDropdown } from './components/dropdown';
 import { initLoader, loader, setLoaderConfig, type LoaderOptions } from './components/loader';
 import { initModal } from './components/modal';
 import { initSidebar } from './components/sidebar';
-import { initTable } from './components/table';
+import { initTable, tableController } from './components/table';
+import { initTableBulk } from './components/table-bulk';
+import { initTableColumnFilter } from './components/table-column-filter';
+import { initTableRemote } from './components/table-remote';
 import { initTableFilter } from './components/table-filter';
 import { initTabs } from './components/tabs';
 import { initToast, toast } from './components/toast';
@@ -113,7 +116,18 @@ export type { DialogInputType, DialogOptions, DialogVariant } from './components
 export type { ComboboxOption } from './components/combobox';
 // Onda D
 export { avatarInitials, avatarTone } from './components/avatar';
-export type { SortDirection } from './components/table';
+export type { SortCriterion, SortDirection } from './components/table';
+// Table avançada: controlador (`EDS.table(el)`) e consulta
+export { tableController, tableController as table };
+export type {
+  TableController,
+  TableState,
+  TableColumnState,
+  TableSelection,
+} from './core/table-hub';
+export type { TableQueryDetail } from './components/table-remote';
+export type { FilterValue } from './core/data';
+export type { TableQuery } from './core/table-query';
 export type { TreeChangeAction, TreeNodeData } from './components/tree';
 export type { FilterChange } from './components/filter-bar';
 export type { Placement } from './core/position';
@@ -131,7 +145,10 @@ export {
   initSelectReadonly,
   initSidebar,
   initTable,
+  initTableBulk,
+  initTableColumnFilter,
   initTableFilter,
+  initTableRemote,
   initTabs,
   initToast,
   initUpload,

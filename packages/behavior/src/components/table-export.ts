@@ -2,6 +2,7 @@ import { format, getMessages } from '../core/config';
 import { emit, hidePopover } from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer, type Announcer } from '../core/status';
+import { statusRegion } from '../core/table-hub';
 import { MIME, downloadFile, generate } from '../export';
 import { datedFileName } from '../export/model';
 import type {
@@ -70,8 +71,16 @@ export interface CollectResult {
  * Lê a tabela do DOM: colunas de `thead th` (menos seleção, ações e `data-eds-export-ignore`),
  * valor da célula em `data-value` ou no texto, tipo em `th[data-type]`. Só vê o que está no DOM.
  */
-export function collectTable(table: HTMLTableElement, scope: ExportScope = 'auto'): CollectResult {
-  const ths = headerCells(table).filter((th) => !isAutoIgnored(th));
+export function collectTable(
+  table: HTMLTableElement,
+  scope: ExportScope = 'auto',
+  includeHidden = false,
+): CollectResult {
+  // Colunas ocultas pelo usuário ficam de fora (`data-eds-export-hidden-columns` inclui tudo); a
+  // ordem é a visual, porque reordenar move as células no DOM.
+  const ths = headerCells(table).filter(
+    (th) => !isAutoIgnored(th) && (includeHidden || !th.hidden),
+  );
   const used = new Set<string>();
   const columns: (ExportColumn & { index: number })[] = ths.map((th, n) => {
     const label = clean(th.textContent);
@@ -131,23 +140,6 @@ function resolveTable(trigger: HTMLElement): HTMLTableElement | null {
   return found?.querySelector('table') ?? null;
 }
 
-/** Região `role=status` da tabela (a mesma da ordenação), criada na falta. */
-function statusRegion(table: HTMLTableElement): HTMLElement {
-  const byId = table.getAttribute('data-eds-status');
-  const explicit = byId ? table.ownerDocument.getElementById(byId) : null;
-  if (explicit) return explicit;
-  const wrap = table.closest<HTMLElement>('.eds-table-wrap') ?? table;
-  const sibling = Array.from(wrap.parentElement?.children ?? []).find(
-    (el): el is HTMLElement => el instanceof HTMLElement && el.getAttribute('role') === 'status',
-  );
-  if (sibling) return sibling;
-  const created = table.ownerDocument.createElement('div');
-  created.className = 'eds-visually-hidden';
-  created.setAttribute('role', 'status');
-  wrap.after(created);
-  return created;
-}
-
 /**
  * Botões e itens de menu `[data-eds-export="csv|xlsx|json|pdf"][data-eds-export-target="ID"]`.
  * Opcionais: `data-eds-export-filename` (sem extensão; ganha `-aaaa-mm-dd`),
@@ -185,6 +177,8 @@ export const tableExportBehavior: Behavior = {
         const { data, scope } = collectTable(
           table,
           scopeAttr && SCOPES.includes(scopeAttr) ? scopeAttr : 'auto',
+          trigger.hasAttribute('data-eds-export-hidden-columns') ||
+            table.hasAttribute('data-eds-export-hidden-columns'),
         );
         if (data.rows.length === 0) {
           announcer.say(m.exportEmpty);

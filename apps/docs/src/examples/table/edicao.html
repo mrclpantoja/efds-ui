@@ -1,0 +1,44 @@
+<!-- Edição na célula (experimental): a tabela continua <table>, sem role="grid". O editor da coluna é um
+     <template> (th[data-eds-editor]); o JS troca o texto da célula por um botão (.eds-table-cell-edit)
+     e, ao editar, por esse campo. Enter confirma, Esc cancela. Abaixo, PED-0002 já está em edição com
+     erro, para mostrar o estado; sem JS a célula é só texto. -->
+<div class="eds-table-wrap">
+  <table class="eds-table" id="pedidos-edicao">
+    <caption class="eds-table-caption eds-visually-hidden">Pedidos, com total editável</caption>
+    <thead>
+      <tr>
+        <th scope="col" data-eds-col="codigo">Código</th>
+        <th scope="col" data-eds-col="cliente">Cliente</th>
+        <th scope="col" data-eds-col="total" class="eds-table-num" data-eds-editor="edicao-total">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-eds-row-id="PED-0001" data-eds-row-label="PED-0001">
+        <td>PED-0001</td>
+        <td>Atelier Exemplo</td>
+        <td class="eds-table-num" data-eds-editable data-eds-edit-field="total" data-eds-edit-format="moeda" data-sort-value="1280.5">
+          <button type="button" class="eds-table-cell-edit">R$ 1.280,50<span class="eds-visually-hidden">, editar Total de PED-0001</span></button>
+        </td>
+      </tr>
+      <tr data-eds-row-id="PED-0002" data-eds-row-label="PED-0002">
+        <td>PED-0002</td>
+        <td>Comércio Modelo</td>
+        <td class="eds-table-num" data-eds-editable data-eds-edit-field="total" data-eds-edit-format="moeda" data-sort-value="459" data-editing>
+          <input class="eds-input eds-input-sm" type="text" inputmode="decimal" value="" required aria-label="Total de PED-0002" aria-invalid="true" aria-describedby="edicao-erro-2" />
+          <p class="eds-error" id="edicao-erro-2">Informe o total.</p>
+        </td>
+      </tr>
+      <tr data-eds-row-id="PED-0003" data-eds-row-label="PED-0003">
+        <td>PED-0003</td>
+        <td>Oficina Fictícia</td>
+        <td class="eds-table-num" data-eds-editable data-eds-edit-field="total" data-eds-edit-format="moeda" data-sort-value="8920.9">
+          <button type="button" class="eds-table-cell-edit">R$ 8.920,90<span class="eds-visually-hidden">, editar Total de PED-0003</span></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<template id="edicao-total">
+  <input class="eds-input eds-input-sm" type="text" inputmode="decimal" data-eds-mask="moeda" required />
+</template>

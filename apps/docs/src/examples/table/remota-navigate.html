@@ -1,0 +1,63 @@
+<!-- Tabela remota sem JavaScript (data-eds-table-remote="navigate"): ordenação por links, busca por
+     <form method="get"> e paginação por links. O servidor devolve aria-sort, os hrefs da próxima
+     ordenação e repete os parâmetros que não estão no formulário em <input type="hidden">. Com o JS
+     do efDS.ui a mesma marcação emite eds:table-query antes de navegar. Dados fictícios. -->
+<form method="get" action="" class="eds-table-toolbar" role="search" aria-label="Buscar pedidos">
+  <input type="hidden" name="sort" value="cliente" />
+  <input type="search" class="eds-input eds-input-sm" name="q" aria-label="Buscar pedido" placeholder="Buscar pedido" />
+  <button type="submit" class="eds-button eds-button-secondary eds-button-sm">Buscar</button>
+</form>
+
+<div class="eds-table-wrap">
+  <table class="eds-table" id="pedidos-remota" data-eds-table-remote="navigate" data-eds-total="248" data-eds-table-anchor="pedidos-remota">
+    <caption class="eds-table-caption eds-visually-hidden">Pedidos, página 1 de 25, ordenados por cliente</caption>
+    <thead>
+      <tr>
+        <th scope="col" data-eds-col="codigo" aria-sort="none">
+          <a class="eds-table-sort" href="?sort=codigo&amp;page=1">
+            Código
+            <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+            </svg>
+          </a>
+        </th>
+        <th scope="col" data-eds-col="cliente" aria-sort="ascending">
+          <a class="eds-table-sort" href="?sort=-cliente&amp;page=1">
+            Cliente
+            <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+            </svg>
+          </a>
+        </th>
+        <th scope="col" data-eds-col="situacao">Situação</th>
+        <th scope="col" data-eds-col="total" class="eds-table-num" aria-sort="none">
+          <a class="eds-table-sort" href="?sort=total&amp;page=1">
+            Total
+            <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+            </svg>
+          </a>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PED-0004</td><td>Atelier Exemplo</td><td><span class="eds-badge eds-badge-success">Pago</span></td><td class="eds-table-num">R$ 2.480,00</td></tr>
+      <tr><td>PED-0002</td><td>Comércio Modelo</td><td><span class="eds-badge eds-badge-warning">Pendente</span></td><td class="eds-table-num">R$ 459,00</td></tr>
+      <tr><td>PED-0003</td><td>Oficina Fictícia</td><td><span class="eds-badge eds-badge-danger">Atrasado</span></td><td class="eds-table-num">R$ 8.920,90</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="eds-table-footer">
+  <p>1–10 de 248</p>
+  <nav class="eds-pagination" aria-label="Paginação dos pedidos" data-eds-table-pagination="pedidos-remota">
+    <ul>
+      <li><a href="?page=1&amp;sort=cliente" aria-current="page" data-eds-page="1">1</a></li>
+      <li><a href="?page=2&amp;sort=cliente" data-eds-page="2">2</a></li>
+      <li><a href="?page=3&amp;sort=cliente" data-eds-page="3">3</a></li>
+    </ul>
+  </nav>
+</div>

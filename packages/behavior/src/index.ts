@@ -4,6 +4,14 @@ import { errorSummaryBehavior } from './components/error-summary';
 import { validateBehavior, validateFormBehavior } from './components/form-validation';
 import { initValidate } from './components/validate-init';
 import type { BehaviorOptions } from './setup';
+// Table avançada (só na compilação completa): colunas, preferências e edição na célula
+import {
+  columnsPanelBehavior,
+  columnsResetBehavior,
+  initTableColumns,
+  tableColumnsBehavior,
+} from './components/table-columns';
+import { initTableEdit, tableEditBehavior } from './components/table-edit';
 // Exportação
 import { initTableExport, tableExportBehavior } from './components/table-export';
 // Máscara de entrada
@@ -28,6 +36,10 @@ export * from './setup';
 export function init(root: ParentNode = document, options?: BehaviorOptions): () => void {
   return initWith(root, options, [
     tableExportBehavior,
+    tableColumnsBehavior,
+    columnsPanelBehavior,
+    columnsResetBehavior,
+    tableEditBehavior,
     validateBehavior,
     validateFormBehavior,
     errorSummaryBehavior,
@@ -52,7 +64,7 @@ export type {
   ExportOptions,
 } from './export';
 export type { ExportScope } from './components/table-export';
-export { initTableExport };
+export { initTableExport, initTableColumns, initTableEdit };
 // Validação de formulários e validadores brasileiros
 export { initValidate };
 export {

@@ -2,6 +2,15 @@
 
 Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons`, `@efds-ui/behavior` e `@efds-ui/editor`.
 
+## Não publicado (1.0.0)
+
+### Table avançada
+
+- Ordenação por mais de uma coluna (`data-eds-sort-multi`; no React, `multiSort`), filtro por coluna (popover com `<form method="get">`), colunas fixas no início e no fim, redimensionar, reordenar e ocultar (alça de teclado e painel "Colunas"), preferências salvas em `localStorage`, barra de ações em lote, consulta no servidor (`data-eds-table-remote`, `eds:table-query`, `useTableQuery`) e edição na célula (experimental). Colunas, preferências e edição só no `eds-behavior.js` completo.
+- `@efds-ui/behavior`: `EDS.table(el)` (controlador), `parseTableQuery`, `toTableSearchParams`, `sortByCriteria`, `matchColumnFilter` em `@efds-ui/behavior/export`; ~70 mensagens novas em `Messages`.
+- `@efds-ui/react`: `useTableColumns`, `TableColumnsMenu`, `TableColumnFilter`, `TableBulkBar`, `TableEditableCell`, `useTableQuery`; `sortTableData` aceita lista e `filterTableData` aceita `filters`.
+- Migração (sem quebra obrigatória): o detalhe de `eds:table-sort` ganha `key`, `sort`, `multi` e `reason`; `eds:table-select-change` ganha `ids` e `scope`; o filtro local passa pelo coordenador de linhas (mesmos atributos e eventos); a exportação omite colunas ocultas pelo usuário; `data-eds-filter-columns` aceita ids.
+
 ## 0.1.2 (24/11/2026)
 
 Primeira versão publicada pelo GitHub Actions, com proveniência (selo que liga cada pacote ao commit e ao build que o geraram). Sem mudança de API.

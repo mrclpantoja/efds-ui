@@ -49,6 +49,11 @@
       "types": "./dist/mask-entry.d.ts",
       "default": "./dist/mask-entry.js"
     },
+    "./validate": {
+      "development": "./src/validate-entry.ts",
+      "types": "./dist/validate-entry.d.ts",
+      "default": "./dist/validate-entry.js"
+    },
     "./fields": {
       "development": "./src/fields-entry.ts",
       "types": "./dist/fields-entry.d.ts",
@@ -119,6 +124,10 @@
       "./theme": {
         "types": "./dist/theme-entry.d.ts",
         "default": "./dist/theme-entry.js"
+      },
+      "./validate": {
+        "types": "./dist/validate-entry.d.ts",
+        "default": "./dist/validate-entry.js"
       },
       "./fields": {
         "types": "./dist/fields-entry.d.ts",

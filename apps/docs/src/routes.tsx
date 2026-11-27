@@ -78,6 +78,10 @@ import TreePage from './pages/componentes/Tree';
 // Onda C: campos
 import ProgressPage from './pages/componentes/Progress';
 import ErrorStatePage from './pages/componentes/ErrorState';
+import ErrorSummaryPage from './pages/componentes/ErrorSummary';
+import FormSubmitPage from './pages/componentes/FormSubmit';
+import ValidacaoPage from './pages/comecar/Validacao';
+import ReceitasPage from './pages/comecar/Receitas';
 import CopyPage from './pages/componentes/Copy';
 import TimelinePage from './pages/componentes/Timeline';
 import NotificationsPage from './pages/componentes/Notifications';
@@ -157,6 +161,7 @@ const componentCategory: Record<string, SectionId> = {
     [
       'field',
       'fieldset',
+      'error-summary',
       'input',
       'textarea',
       'select',
@@ -232,7 +237,7 @@ const componentCategory: Record<string, SectionId> = {
   ),
   ...Object.fromEntries(['image', 'gallery', 'image-cropper'].map((s) => [s, 'midia'])),
   ...Object.fromEntries(
-    ['dirty-guard', 'session-timeout', 'conditional'].map((s) => [s, 'pagina']),
+    ['dirty-guard', 'session-timeout', 'conditional', 'form-submit'].map((s) => [s, 'pagina']),
   ),
 };
 
@@ -267,6 +272,18 @@ const allRoutes: readonly DocRoute[] = [
     page: EventosPage,
   },
   { path: '/comecar/mascara', title: 'Máscara de entrada', section: 'comecar', page: MascaraPage },
+  {
+    path: '/comecar/validacao',
+    title: 'Validação de formulários',
+    section: 'comecar',
+    page: ValidacaoPage,
+  },
+  {
+    path: '/comecar/receitas-formulario',
+    title: 'Receitas de formulário',
+    section: 'comecar',
+    page: ReceitasPage,
+  },
   {
     path: '/comecar/formatadores',
     title: 'Formatadores',
@@ -479,6 +496,18 @@ const allRoutes: readonly DocRoute[] = [
     title: 'Estado de erro',
     section: 'componentes',
     page: ErrorStatePage,
+  },
+  {
+    path: '/componentes/error-summary',
+    title: 'Resumo de erros',
+    section: 'componentes',
+    page: ErrorSummaryPage,
+  },
+  {
+    path: '/componentes/form-submit',
+    title: 'Envio de formulário',
+    section: 'componentes',
+    page: FormSubmitPage,
   },
   { path: '/componentes/copy', title: 'Copiar e segredo', section: 'componentes', page: CopyPage },
   { path: '/componentes/timeline', title: 'Timeline', section: 'componentes', page: TimelinePage },

@@ -1,0 +1,15 @@
+<!-- Behavior: form[data-eds-submit="fetch"] — o behavior envia com fetch usando o method, o action e o enctype do
+     form (ou formmethod/formaction do botão) e conclui sozinho: resposta 2xx = sucesso, outra ou falha de rede = erro.
+     Eventos: eds:form-submit (cancelável; detail.data é o FormData e aceita campos extras, ex.: token CSRF),
+     eds:form-success e eds:form-error (detail.response, detail.status, detail.error).
+     Aqui o primeiro botão pede um arquivo que existe (200) e o segundo um POST num arquivo estático (erro). -->
+<form class="eds-stack eds-gap-4" data-eds-submit="fetch" method="get" action="/favicon.svg">
+  <div class="eds-field">
+    <label class="eds-label" for="ff-busca">Observação</label>
+    <input class="eds-input" id="ff-busca" name="obs" value="Teste" />
+  </div>
+  <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+    <button type="submit" class="eds-button eds-button-primary">Enviar</button>
+    <button type="submit" formmethod="post" class="eds-button eds-button-secondary">Enviar e falhar</button>
+  </div>
+</form>

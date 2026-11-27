@@ -35,6 +35,10 @@ export default defineConfig({
         replacement: fromSource('../../../packages/behavior/src/theme-entry.ts'),
       },
       {
+        find: '@efds-ui/behavior/validate',
+        replacement: fromSource('../../../packages/behavior/src/validate-entry.ts'),
+      },
+      {
         find: '@efds-ui/behavior/fields',
         replacement: fromSource('../../../packages/behavior/src/fields-entry.ts'),
       },

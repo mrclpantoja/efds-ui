@@ -209,6 +209,31 @@ export function ActionsDemo() {
         </div>
       </Section>
 
+      <Section title="Resultado do envio (data-state)">
+        {(['success', 'error'] as const).map((state) => (
+          <div key={state} style={row}>
+            {variants.map((variant) => (
+              <button
+                key={variant}
+                type="button"
+                className={`eds-button eds-button-${variant}`}
+                data-state={state}
+              >
+                {state === 'success' ? 'Salvo' : 'Falhou'}
+              </button>
+            ))}
+            <button
+              type="button"
+              className="eds-button eds-button-primary"
+              data-state={state}
+              disabled
+            >
+              Desabilitado
+            </button>
+          </div>
+        ))}
+      </Section>
+
       <Section title="Link como botão">
         <div style={row}>
           <a className="eds-button eds-button-primary" href="#ver-contratos">

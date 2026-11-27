@@ -36,6 +36,10 @@ export const pageMessageDefaults = {
   sessionMinute: '{count} minuto',
   sessionMinutes: '{count} minutos',
   sessionAnd: ' e ',
+  /** Envio de formulário. */
+  submitBusy: 'Enviando…',
+  submitSuccess: 'Salvo',
+  submitError: 'Não foi possível salvar',
 } as const;
 
 export type PageMessageKey = keyof typeof pageMessageDefaults;

@@ -1,4 +1,8 @@
 import { initWith } from './init-with';
+// Validação de formulários e validadores brasileiros (só na compilação completa)
+import { errorSummaryBehavior } from './components/error-summary';
+import { validateBehavior, validateFormBehavior } from './components/form-validation';
+import { initValidate } from './components/validate-init';
 import type { BehaviorOptions } from './setup';
 // Exportação
 import { initTableExport, tableExportBehavior } from './components/table-export';
@@ -24,6 +28,9 @@ export * from './setup';
 export function init(root: ParentNode = document, options?: BehaviorOptions): () => void {
   return initWith(root, options, [
     tableExportBehavior,
+    validateBehavior,
+    validateFormBehavior,
+    errorSummaryBehavior,
     maskBehavior,
     cepBehavior,
     formatBehavior,
@@ -46,6 +53,24 @@ export type {
 } from './export';
 export type { ExportScope } from './components/table-export';
 export { initTableExport };
+// Validação de formulários e validadores brasileiros
+export { initValidate };
+export {
+  isCep,
+  isCnpj,
+  isCpf,
+  isCpfOuCnpj,
+  isDataValida,
+  isEmail,
+  isIntervaloDatas,
+  isPis,
+  isPlaca,
+  isTelefone,
+  isTituloEleitor,
+  validateBy,
+} from './core/validate';
+export type { ValidatorName } from './core/validate';
+export type { InvalidField } from './core/form-errors';
 // Máscara de entrada
 export { createMask } from './core/mask';
 export type { Mask, MaskName, MaskOptions } from './core/mask';

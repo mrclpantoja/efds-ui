@@ -1,0 +1,24 @@
+<!-- Só CSS: .eds-error-summary com o título e a lista de links. Sem [data-eds-error-summary] o JS não mexe;
+     o servidor renderiza o resumo já visível (sem o atributo hidden) depois de recusar o envio e
+     leva o foco a ele (autofocus no carregamento ou script do seu framework). Cada link aponta para o id do campo. -->
+<div class="eds-stack eds-gap-4">
+  <div class="eds-error-summary" tabindex="-1" aria-labelledby="ese-titulo">
+    <h2 class="eds-error-summary-title" id="ese-titulo">Corrija 2 campos</h2>
+    <ul class="eds-error-summary-list">
+      <li><a href="#ese-cpf">CPF: informe um CPF válido.</a></li>
+      <li><a href="#ese-email">E-mail: informe um e-mail válido, como nome@exemplo.com.br.</a></li>
+    </ul>
+  </div>
+  <div class="eds-grid eds-grid-auto">
+    <div class="eds-field">
+      <label class="eds-label" for="ese-cpf">CPF</label>
+      <input class="eds-input" id="ese-cpf" value="111.111.111-11" aria-invalid="true" aria-describedby="ese-cpf-erro" />
+      <p class="eds-error" id="ese-cpf-erro">Informe um CPF válido.</p>
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="ese-email">E-mail</label>
+      <input class="eds-input" id="ese-email" value="maria@" aria-invalid="true" aria-describedby="ese-email-erro" />
+      <p class="eds-error" id="ese-email-erro">Informe um e-mail válido, como nome@exemplo.com.br.</p>
+    </div>
+  </div>
+</div>

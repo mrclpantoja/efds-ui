@@ -38,6 +38,8 @@ import { initFilterBar } from './components/filter-bar';
 import { initPopover } from './components/popover';
 import { initTooltip } from './components/tooltip';
 import { initWizard } from './components/wizard';
+// Estado de envio de formulário
+import { initFormSubmit, setSubmitConfig, type SubmitOptions } from './components/form-submit';
 // Onda C (campos)
 import { initNumber } from './components/number';
 import { initLookup } from './components/lookup';
@@ -71,6 +73,8 @@ export interface BehaviorOptions {
    * autor escolher o serviço. Só vale na compilação completa (`data-eds-cep`).
    */
   cepUrl?: string;
+  /** Estado de envio de formulário (`data-eds-submit`): tempo do resultado no botão. */
+  submit?: SubmitOptions;
 }
 
 /** Configura locale, textos e loader. Pode ser chamado antes ou depois de `init`. */
@@ -79,12 +83,21 @@ export function configure(options: BehaviorOptions): void {
   setMessages(options.messages);
   setLoaderConfig(options.loader);
   setCepUrl(options.cepUrl);
+  setSubmitConfig(options.submit);
 }
 
 export { defaultMessages, resetCepUrl, resetLocale, resetMessages };
 // Onda C (página e feedback)
 export { session, initSession } from './components/session';
 export { markClean } from './components/dirty-guard';
+// Estado de envio de formulário
+export { submitState } from './components/form-submit';
+export type {
+  SubmitController,
+  SubmitMode,
+  SubmitOptions,
+  SubmitStatus,
+} from './components/form-submit';
 export { copyText } from './components/copy';
 export type { Messages, LoaderOptions };
 export type {
@@ -128,6 +141,7 @@ export {
   // Onda B
   initAccordion,
   initFilterBar,
+  initFormSubmit,
   initPopover,
   initTooltip,
   initWizard,

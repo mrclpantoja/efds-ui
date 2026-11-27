@@ -1012,6 +1012,109 @@ export function FormsDemo() {
         </div>
       </Section>
 
+      <Section title="Validação e resumo de erros">
+        <p className="eds-helper">
+          Resumo já visível (só CSS, sem JavaScript) e um formulário interativo com
+          @efds-ui/behavior: data-eds-validate nos campos e data-eds-error-summary no resumo. Dados
+          fictícios (CPF válido: 529.982.247-25).
+        </p>
+        <div style={cols}>
+          <div className="eds-stack eds-gap-4">
+            <div className="eds-error-summary" tabIndex={-1} aria-labelledby="es-fixo-t">
+              <h2 className="eds-error-summary-title" id="es-fixo-t">
+                Corrija 2 campos
+              </h2>
+              <ul className="eds-error-summary-list">
+                <li>
+                  <a href="#es-fixo-cpf">CPF: informe um CPF válido.</a>
+                </li>
+                <li>
+                  <a href="#es-fixo-email">E-mail: preencha este campo.</a>
+                </li>
+              </ul>
+            </div>
+            <div className="eds-field">
+              <label className="eds-label" htmlFor="es-fixo-cpf">
+                CPF
+              </label>
+              <input
+                id="es-fixo-cpf"
+                className="eds-input"
+                defaultValue="111.111.111-11"
+                aria-invalid="true"
+                aria-describedby="es-fixo-cpf-e"
+              />
+              <p className="eds-error" id="es-fixo-cpf-e">
+                Informe um CPF válido.
+              </p>
+            </div>
+            <div className="eds-field">
+              <label className="eds-label" htmlFor="es-fixo-email">
+                E-mail
+              </label>
+              <input
+                id="es-fixo-email"
+                className="eds-input"
+                aria-invalid="true"
+                aria-describedby="es-fixo-email-e"
+              />
+              <p className="eds-error" id="es-fixo-email-e">
+                Preencha este campo.
+              </p>
+            </div>
+          </div>
+          <form
+            className="eds-stack eds-gap-4"
+            data-eds-live
+            action="#"
+            aria-label="Cadastro interativo"
+          >
+            <div
+              className="eds-error-summary"
+              data-eds-error-summary=""
+              tabIndex={-1}
+              aria-labelledby="es-vivo-t"
+              hidden
+            >
+              <h2 className="eds-error-summary-title" id="es-vivo-t">
+                Corrija os campos
+              </h2>
+              <ul className="eds-error-summary-list" />
+            </div>
+            <div className="eds-field">
+              <label className="eds-label" htmlFor="es-vivo-cpf" data-required>
+                CPF
+              </label>
+              <input
+                id="es-vivo-cpf"
+                name="cpf"
+                className="eds-input"
+                required
+                autoComplete="off"
+                data-eds-validate="cpf"
+              />
+            </div>
+            <div className="eds-field">
+              <label className="eds-label" htmlFor="es-vivo-placa">
+                Placa
+              </label>
+              <input
+                id="es-vivo-placa"
+                name="placa"
+                className="eds-input"
+                autoComplete="off"
+                data-eds-validate="placa"
+              />
+            </div>
+            <div>
+              <button className="eds-button eds-button-primary" type="submit">
+                Enviar
+              </button>
+            </div>
+          </form>
+        </div>
+      </Section>
+
       <Section title="Data nativa (sem JS)">
         <div style={cols}>
           <div className="eds-field">

@@ -1,0 +1,43 @@
+<!-- Behavior: data-eds-validate="cpf|cnpj|cpf-cnpj|cep|telefone|email|pis|titulo|placa|data" no campo.
+     O formulário ganha novalidate por JS e o erro vira um p.eds-error visível, ligado por aria-describedby
+     (sem balão nativo): ao sair do campo, ao enviar e, depois do primeiro erro, ao digitar até sumir.
+     required, minlength e pattern nativos valem do mesmo jeito; data-eds-validate-message troca o texto.
+     O resumo [data-eds-error-summary] dentro do form recebe a lista e o foco ao recusar o envio; cada
+     link leva o foco ao campo. Evento no form: eds:form-invalid (detail.fields). Sem JS o navegador
+     ainda valida required/pattern. Dados fictícios. -->
+<form class="eds-stack eds-gap-4" action="/cadastro" method="post">
+  <div class="eds-error-summary" data-eds-error-summary tabindex="-1" aria-labelledby="val-erros-titulo" hidden>
+    <h2 class="eds-error-summary-title" id="val-erros-titulo"></h2>
+    <ul class="eds-error-summary-list"></ul>
+  </div>
+  <div class="eds-grid eds-grid-auto">
+    <div class="eds-field">
+      <label class="eds-label" for="val-nome" data-required>Nome completo</label>
+      <input class="eds-input" id="val-nome" name="nome" required autocomplete="off" minlength="5" />
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="val-cpf" data-required>CPF</label>
+      <input class="eds-input" id="val-cpf" name="cpf" required autocomplete="off" inputmode="numeric"
+        data-eds-mask="cpf" data-eds-validate="cpf" aria-describedby="val-cpf-ajuda" />
+      <p class="eds-helper" id="val-cpf-ajuda">Para testar: 529.982.247-25 é válido.</p>
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="val-email" data-required>E-mail institucional</label>
+      <input class="eds-input" id="val-email" name="email" type="email" required autocomplete="off"
+        data-eds-validate="email" data-eds-validate-message="Use o e-mail institucional, como nome@orgao.gov.br." />
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="val-tel">Telefone</label>
+      <input class="eds-input" id="val-tel" name="telefone" autocomplete="off" inputmode="tel"
+        data-eds-mask="telefone" data-eds-validate="telefone" />
+    </div>
+    <div class="eds-field">
+      <label class="eds-label" for="val-data">Data de nascimento</label>
+      <input class="eds-input" id="val-data" name="nascimento" autocomplete="off" inputmode="numeric"
+        placeholder="dd/mm/aaaa" maxlength="10" min="01/01/1900" max="31/12/2026" data-eds-validate="data" />
+    </div>
+  </div>
+  <div>
+    <button class="eds-button eds-button-primary" type="submit">Cadastrar</button>
+  </div>
+</form>

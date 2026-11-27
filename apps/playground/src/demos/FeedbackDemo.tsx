@@ -688,6 +688,52 @@ function ToneActions() {
   );
 }
 
+function ErrorSummaryDemo() {
+  return (
+    <Section title="Resumo de erros (ErrorSummary)">
+      <div
+        className="eds-error-summary"
+        data-eds-error-summary
+        tabIndex={-1}
+        aria-labelledby="demo-erros-titulo"
+      >
+        <h2 className="eds-error-summary-title" id="demo-erros-titulo">
+          Corrija 2 campos
+        </h2>
+        <ul className="eds-error-summary-list">
+          <li>
+            <a href="#cpf">CPF: informe um CPF válido.</a>
+          </li>
+          <li>
+            <a href="#competencia">
+              Competência: informe um mês com ano, no formato mm/aaaa, que não seja futuro.
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div
+        className="eds-error-summary"
+        data-eds-error-summary
+        tabIndex={-1}
+        aria-labelledby="demo-erros-foco"
+        id="demo-erros-focado"
+      >
+        <h2 className="eds-error-summary-title" id="demo-erros-foco">
+          Corrija 1 campo (com foco)
+        </h2>
+        <ul className="eds-error-summary-list">
+          <li>
+            <a href="#nome">Nome: campo obrigatório.</a>
+          </li>
+        </ul>
+      </div>
+      <div className="eds-error-summary" tabIndex={-1} aria-label="Oculto" hidden>
+        <h2 className="eds-error-summary-title">Este resumo está oculto (hidden)</h2>
+      </div>
+    </Section>
+  );
+}
+
 export function FeedbackDemo() {
   return (
     <div
@@ -696,6 +742,7 @@ export function FeedbackDemo() {
       <h2 className="eds-text-h2">Feedback</h2>
       <Alerts />
       <ToneActions />
+      <ErrorSummaryDemo />
       <Toasts />
       <Badges />
       <Spinners />

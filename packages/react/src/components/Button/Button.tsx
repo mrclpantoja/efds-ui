@@ -11,9 +11,21 @@ import {
   type RefAttributes,
 } from 'react';
 import { cx } from '../../utils/cx';
+import { mergeTexts } from '../../utils/texts';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
+/** Resultado de uma operação, mostrado no próprio botão por um tempo. */
+export type ButtonStatus = 'success' | 'error';
+
+export interface ButtonTexts {
+  /** Texto do botão com `status="success"`. */
+  success: string;
+  /** Texto do botão com `status="error"`. */
+  error: string;
+}
+
+const defaultTexts: ButtonTexts = { success: 'Salvo', error: 'Não foi possível salvar' };
 
 interface ButtonOwnProps {
   /** Hierarquia da ação. Padrão: `secondary`. */
@@ -25,6 +37,14 @@ interface ButtonOwnProps {
    * O botão continua focável (não recebe `disabled`).
    */
   loading?: boolean;
+  /**
+   * Resultado da operação: troca o conteúdo pelo texto de `texts` e põe `data-state` (o ícone é do
+   * core). Vale só sem `loading`. O anúncio para leitor de tela é de quem muda o estado
+   * (ex.: `useSubmit`).
+   */
+  status?: ButtonStatus;
+  /** Textos do `status` (pt-BR por padrão). */
+  texts?: Partial<ButtonTexts>;
 }
 
 /** Botão só de ícone: o nome acessível é obrigatório. */
@@ -65,6 +85,9 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ImplProp
     variant = 'secondary',
     size = 'md',
     loading = false,
+    status,
+    texts,
+    children,
     iconOnly = false,
     disabled = false,
     href,
@@ -78,6 +101,8 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ImplProp
 ) {
   const isLink = href !== undefined;
   // Link não tem `disabled` nativo; botão desabilitado já é inerte pelo navegador.
+  const shown = loading ? undefined : status;
+  const statusText = shown ? mergeTexts(defaultTexts, texts)[shown] : undefined;
   const blocked = loading || (isLink && disabled);
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
@@ -109,6 +134,13 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ImplProp
       ? { href, 'aria-disabled': disabled || undefined, tabIndex: disabled ? -1 : rest.tabIndex }
       : { type: type ?? 'button', disabled }),
     'aria-busy': loading || undefined,
+    ...(shown
+      ? {
+          'data-state': shown,
+          children: <span>{statusText}</span>,
+          ...(iconOnly ? { 'aria-label': statusText } : {}),
+        }
+      : { children }),
     onClick: handleClick,
     onKeyDown: handleKeyDown,
   });

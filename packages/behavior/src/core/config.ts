@@ -1,6 +1,7 @@
 /** Textos e configuração global. Sem efeitos colaterais: só estado de módulo. */
+import { validationMessages, type ValidationMessages } from './validate';
 
-export interface Messages {
+export interface Messages extends ValidationMessages {
   /** Botão de fechar do toast. */
   toastClose: string;
   /** Prefixos ocultos de severidade do toast sem `title`. */
@@ -304,9 +305,14 @@ export interface Messages {
   cropperFailed: string;
   cropperSmall: string;
   cropperApplied: string;
+  // Envio de formulário
+  submitBusy: string;
+  submitSuccess: string;
+  submitError: string;
 }
 
 export const defaultMessages: Messages = {
+  ...validationMessages,
   toastClose: 'Fechar notificação',
   severityInfo: 'Informação:',
   severitySuccess: 'Sucesso:',
@@ -598,6 +604,10 @@ export const defaultMessages: Messages = {
   cropperApplied: 'Foto ajustada.',
   cropperSmall:
     'A imagem é menor que o tamanho final ({size} px): a foto pode ficar com pouca nitidez.',
+  // Envio de formulário
+  submitBusy: 'Enviando…',
+  submitSuccess: 'Salvo',
+  submitError: 'Não foi possível salvar',
 };
 
 export const DEFAULT_LOCALE = 'pt-BR';

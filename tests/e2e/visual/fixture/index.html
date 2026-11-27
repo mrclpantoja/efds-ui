@@ -68,6 +68,26 @@
           <span class="eds-badge eds-badge-warning">Pendente</span>
           <span class="eds-badge eds-badge-danger">Atrasado</span>
         </div>
+        <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
+          <button type="button" class="eds-button eds-button-primary" data-state="success">
+            Salvo
+          </button>
+          <button type="button" class="eds-button eds-button-secondary" data-state="success">
+            Salvo
+          </button>
+          <button type="button" class="eds-button eds-button-ghost" data-state="success">
+            Salvo
+          </button>
+          <button type="button" class="eds-button eds-button-primary" data-state="error">
+            Falhou
+          </button>
+          <button type="button" class="eds-button eds-button-secondary" data-state="error">
+            Falhou
+          </button>
+          <button type="button" class="eds-button eds-button-danger" data-state="error">
+            Falhou
+          </button>
+        </div>
       </div>
     </section>
 
@@ -182,6 +202,20 @@ Objetivo e escopo do projeto fictício.</textarea>
             </p>
             <p>12 lançamentos não puderam ser conciliados.</p>
           </div>
+        </div>
+        <div
+          class="eds-error-summary"
+          data-eds-error-summary
+          tabindex="-1"
+          aria-labelledby="erros-titulo"
+        >
+          <h2 class="eds-error-summary-title" id="erros-titulo">Corrija 2 campos</h2>
+          <ul class="eds-error-summary-list">
+            <li><a href="#cpf">CPF: informe um CPF válido.</a></li>
+            <li>
+              <a href="#competencia">Competência: informe o mês e o ano, no formato mm/aaaa.</a>
+            </li>
+          </ul>
         </div>
       </div>
     </section>

@@ -49,6 +49,10 @@ export function scopeIds(html: string, suffix: string): string {
           .join(' ');
         return `${attr}"${scoped}"`;
       })
+      // `href="#id"` (links do resumo de erros e âncoras) também aponta para ids do exemplo.
+      .replace(/(\shref=)"#([^"]+)"/g, (all, attr: string, id: string) =>
+        ids.has(id) ? `${attr}"#${id}-${suffix}"` : all,
+      )
       // `data-eds-cep-fill="campo:#id,..."`, `data-eds-copy="#id"` e `data-eds-cropper-preview="#id"`: os seletores `#id` também
       // apontam para ids do exemplo.
       .replace(
@@ -101,6 +105,9 @@ function HtmlPreview({ html }: { html: string }) {
       const submitter = (event as SubmitEvent).submitter;
       const method = submitter?.getAttribute('formmethod') ?? form.getAttribute('method');
       if (method?.toLowerCase() === 'dialog') return;
+      // Envio por fetch ou manual (estado de envio) já não navega: o behavior cuida dele.
+      const mode = form.getAttribute('data-eds-submit');
+      if (mode === 'fetch' || mode === 'manual') return;
       event.preventDefault();
     };
     el.addEventListener('submit', block);

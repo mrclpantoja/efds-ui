@@ -53,6 +53,12 @@ const eventos: Record<string, readonly Evento[]> = {
       on: 'form[data-eds-wizard]',
       detail: '{ from, to, step, total }: step é o painel novo.',
     },
+    {
+      name: 'eds:form-invalid',
+      on: 'form',
+      detail:
+        '{ fields }: envio recusado pela validação; cada campo traz { element, id, name, label, message }.',
+    },
   ],
   Feedback: [
     {

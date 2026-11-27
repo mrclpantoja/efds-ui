@@ -16,6 +16,8 @@ export type {
   ButtonAsLinkProps,
   ButtonVariant,
   ButtonSize,
+  ButtonStatus,
+  ButtonTexts,
 } from './components/Button';
 export { ButtonGroup } from './components/ButtonGroup';
 export type { ButtonGroupProps } from './components/ButtonGroup';
@@ -287,6 +289,35 @@ export { NumberInput } from './components/NumberInput';
 export type { NumberInputProps, NumberInputTexts } from './components/NumberInput';
 export { Lookup } from './components/Lookup';
 export type { LookupColumn, LookupItem, LookupProps, LookupTexts } from './components/Lookup';
+// Validação de formulários
+export { ErrorSummary } from './components/ErrorSummary';
+export type {
+  ErrorSummaryItem,
+  ErrorSummaryProps,
+  ErrorSummaryTexts,
+} from './components/ErrorSummary';
+export { useFormValidation } from './components/FormValidation';
+export type {
+  FormValidationError,
+  FormValidationProps,
+  UseFormValidationOptions,
+  UseFormValidationResult,
+} from './components/FormValidation';
+export {
+  isCep,
+  isCnpj,
+  isCpf,
+  isCpfOuCnpj,
+  isDataValida,
+  isEmail,
+  isIntervaloDatas,
+  isPis,
+  isPlaca,
+  isTelefone,
+  isTituloEleitor,
+  validateBy,
+} from '@efds-ui/behavior/validate';
+export type { ValidationMessages, ValidatorName } from '@efds-ui/behavior/validate';
 export { useCep } from './components/Cep';
 export type { CepStatus, UseCepOptions, UseCepResult } from './components/Cep';
 export type { CepAddress } from '@efds-ui/behavior/fields';
@@ -346,6 +377,14 @@ export type {
 } from './components/SessionTimeout';
 export { useUnsavedChanges } from './components/UnsavedChanges';
 export type { UnsavedChangesOptions, UnsavedChangesTexts } from './components/UnsavedChanges';
+// Estado de envio de formulário
+export { useSubmit } from './components/Submit';
+export type {
+  SubmitState,
+  SubmitTexts,
+  UseSubmitOptions,
+  UseSubmitResult,
+} from './components/Submit';
 
 // Onda D
 export { Avatar, AvatarGroup } from './components/Avatar';

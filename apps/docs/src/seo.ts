@@ -28,6 +28,10 @@ const descriptions: Record<string, string> = {
     'Referência dos eventos eds:* do efDS.ui (CustomEvent): abrir e fechar modal, ordenar tabela, mudar aba, escolher data e mais.',
   '/comecar/mascara':
     'Máscara de entrada para CPF, CNPJ alfanumérico, telefone, CEP, moeda e número, em HTML (data-eds-mask) e React, sem dependência.',
+  '/comecar/validacao':
+    'Validação de formulários em pt-BR: CPF, CNPJ alfanumérico, CEP, telefone, e-mail, PIS, título e placa, com erro visível, resumo de erros e foco, em HTML e React.',
+  '/comecar/receitas-formulario':
+    'Receitas de formulário: React Hook Form, Zod e validação no servidor (Laravel, Spring, ASP.NET) com o resumo de erros do efDS.ui.',
   '/comecar/formatadores':
     'Formatadores em pt-BR para moeda, número, data, CPF, CNPJ, telefone e CEP, com mascaramento de CPF para LGPD.',
   '/comecar/exportacao':
@@ -127,6 +131,10 @@ const componentDescriptions: Record<string, string> = {
     'Estado vazio (empty state) para tabelas e listas sem resultado, em HTML, CSS e React.',
   stepper: 'Stepper (etapas) e wizard de formulário com validação por etapa, em HTML e React.',
   progress: 'Barra de progresso acessível com <progress> nativo, em HTML, CSS e React.',
+  'error-summary':
+    'Resumo de erros do formulário com links que levam o foco ao campo inválido (WCAG 3.3.1 e 3.3.3), em HTML, CSS e React.',
+  'form-submit':
+    'Estado de envio de formulário: bloqueia envio duplo e mostra enviando, salvo ou falhou no botão, em HTML e React.',
   'error-state': 'Estado de erro com botão de tentar de novo, em HTML, CSS e React.',
   copy: 'Botão de copiar para a área de transferência e campo de segredo (mostrar e ocultar), em HTML e React.',
   timeline: 'Timeline (linha do tempo) de eventos e histórico, em HTML, CSS e React.',

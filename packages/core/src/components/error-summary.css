@@ -1,0 +1,110 @@
+/* ErrorSummary: resumo dos erros de um formulário, no topo, com um link por campo inválido.
+   Markup:
+     <div class="eds-error-summary" data-eds-error-summary tabindex="-1"
+          aria-labelledby="erros-titulo" hidden>
+       <h2 class="eds-error-summary-title" id="erros-titulo">Corrija 2 campos</h2>
+       <ul class="eds-error-summary-list">
+         <li><a href="#cpf">CPF: informe um CPF válido.</a></li>
+       </ul>
+     </div>
+   - Mesmo vocabulário do Alert danger (fundo -subtle, borda no tom, ícone por máscara). O ícone é
+     decorativo: o título diz "Corrija N campos", então a cor nunca é o único sinal.
+   - tabindex="-1": o JS leva o foco ao próprio contêiner ao recusar o envio. O anel aparece em
+     :focus (não só :focus-visible) porque o foco é programático, depois de um clique no botão.
+   - Cada link move o foco ao campo (âncora); o JS cuida de campos sem id.
+   - [hidden] é respeitado: oculto até haver erro.
+   - O título é um elemento qualquer (h2 por padrão) com a classe do componente; o core não estiliza
+     h1–h4 por tag. */
+@layer eds.components {
+  .eds-error-summary {
+    --_summary-bg: var(--eds-color-status-danger-subtle);
+    --_summary-fg: var(--eds-color-status-danger-text);
+    --_summary-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 4.5h1.5v4.5h-1.5V4.5Zm0 5.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--eds-space-3) var(--eds-inset-md);
+    border: var(--eds-border-width) solid color-mix(in srgb, var(--_summary-fg) 30%, transparent);
+    border-radius: var(--eds-radius-md);
+    background: var(--_summary-bg);
+    color: var(--_summary-fg);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+    overflow-wrap: anywhere;
+
+    &:focus {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: var(--eds-focus-ring-offset);
+    }
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .eds-error-summary-title {
+    display: flex;
+    align-items: start;
+    gap: var(--eds-space-3);
+    margin: 0;
+    font-family: var(--eds-font-family);
+    font-size: var(--eds-font-size-h4);
+    line-height: var(--eds-line-height-h4);
+    font-weight: var(--eds-font-weight-semibold);
+
+    &::before {
+      content: '';
+      flex: none;
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-line-height-h4);
+      background-color: currentColor;
+      mask: var(--_summary-icon) center / var(--eds-icon-size-sm) no-repeat;
+    }
+  }
+
+  /* Marcador discreto: ajuda a contar os erros e separa itens que quebram linha. A lista fica
+     alinhada ao texto do título (ícone + espaço). */
+  .eds-error-summary-list {
+    margin: var(--eds-space-2) 0 0;
+    padding-inline-start: calc(var(--eds-icon-size-sm) + var(--eds-space-3) + var(--eds-space-4));
+    list-style: disc;
+
+    & > li + li {
+      margin-block-start: var(--eds-space-1);
+    }
+
+    & > li::marker {
+      color: currentColor;
+    }
+
+    & a {
+      color: var(--_summary-fg);
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+
+      &:hover {
+        text-decoration-thickness: 0.125em;
+      }
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    .eds-error-summary {
+      border-color: currentColor;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-error-summary {
+      border-color: CanvasText;
+    }
+
+    .eds-error-summary-title::before {
+      background-color: CanvasText;
+    }
+
+    .eds-error-summary-list a {
+      color: LinkText;
+    }
+  }
+}

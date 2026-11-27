@@ -1,0 +1,55 @@
+<!-- data-eds-validate aceita: cpf, cnpj (inclusive o alfanumérico de 2026), cpf-cnpj, cep, telefone,
+     email, pis, titulo, placa e data. Aceitam o valor com ou sem máscara e recusam sequências repetidas
+     (111.111.111-11). Campo vazio é válido: use required. Os valores de ajuda são fictícios, gerados por
+     algoritmo. Em data, min e max do campo definem a faixa; em telefone, data-eds-validate-tipo="fixo|celular".
+     Sem [data-eds-validate-form], o formulário ainda valida: basta ter um campo com data-eds-validate. -->
+<form class="eds-grid eds-grid-auto">
+  <div class="eds-field">
+    <label class="eds-label" for="vv-cpf">CPF</label>
+    <input class="eds-input" id="vv-cpf" data-eds-validate="cpf" autocomplete="off" aria-describedby="vv-cpf-a" />
+    <p class="eds-helper" id="vv-cpf-a">Válido: 529.982.247-25</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="vv-cnpj">CNPJ</label>
+    <input class="eds-input" id="vv-cnpj" data-eds-validate="cnpj" autocomplete="off" aria-describedby="vv-cnpj-a" />
+    <p class="eds-helper" id="vv-cnpj-a">Válidos: 11.222.333/0001-81 e 12.ABC.345/01DE-35</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="vv-doc">CPF ou CNPJ</label>
+    <input class="eds-input" id="vv-doc" data-eds-validate="cpf-cnpj" autocomplete="off" />
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="vv-cep">CEP</label>
+    <input class="eds-input" id="vv-cep" data-eds-validate="cep" autocomplete="off" aria-describedby="vv-cep-a" />
+    <p class="eds-helper" id="vv-cep-a">Válido: 90010-100</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="vv-tel">Telefone (celular)</label>
+    <input class="eds-input" id="vv-tel" data-eds-validate="telefone" data-eds-validate-tipo="celular" autocomplete="off" aria-describedby="vv-tel-a" />
+    <p class="eds-helper" id="vv-tel-a">Válido: (53) 99912-3456</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="vv-email">E-mail</label>
+    <input class="eds-input" id="vv-email" data-eds-validate="email" autocomplete="off" />
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="vv-pis">PIS/PASEP/NIS</label>
+    <input class="eds-input" id="vv-pis" data-eds-validate="pis" autocomplete="off" aria-describedby="vv-pis-a" />
+    <p class="eds-helper" id="vv-pis-a">Válido: 123.45678.90-0</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="vv-titulo">Título de eleitor</label>
+    <input class="eds-input" id="vv-titulo" data-eds-validate="titulo" autocomplete="off" aria-describedby="vv-titulo-a" />
+    <p class="eds-helper" id="vv-titulo-a">Válido: 1234 5678 0396</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="vv-placa">Placa</label>
+    <input class="eds-input" id="vv-placa" data-eds-validate="placa" autocomplete="off" aria-describedby="vv-placa-a" />
+    <p class="eds-helper" id="vv-placa-a">Válidas: ABC-1234 e ABC1D23</p>
+  </div>
+  <div class="eds-field">
+    <label class="eds-label" for="vv-data">Data</label>
+    <input class="eds-input" id="vv-data" data-eds-validate="data" autocomplete="off" placeholder="dd/mm/aaaa" aria-describedby="vv-data-a" />
+    <p class="eds-helper" id="vv-data-a">Recusa 31/02/2026 e 29/02 em ano comum.</p>
+  </div>
+</form>

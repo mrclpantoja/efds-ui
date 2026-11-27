@@ -103,6 +103,76 @@
     }
   }
 
+  /* Resultado do envio (o JS troca o texto: a cor nunca é o único sinal). data-state="success" e
+     "error" ganham um ícone antes do texto e o tom de status; aria-busy continua com prioridade
+     (o spinner usa o mesmo ::before). Sólidos (primary, danger) invertem o tom do Alert (fundo no
+     texto de status, texto no subtle); os demais ficam em fundo subtle com texto e borda de status.
+     Os tokens de hover/active são reatribuídos para o hover não devolver a cor da variante. */
+  .eds-button[data-state='success'] {
+    --_state-fg: var(--eds-color-status-success-text);
+    --_state-bg: var(--eds-color-status-success-subtle);
+    --_state-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm3.2-8.3-3.7 4-2.7-2.6 1-1 1.7 1.6 2.7-3 1 1Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-button[data-state='error'] {
+    --_state-fg: var(--eds-color-status-danger-text);
+    --_state-bg: var(--eds-color-status-danger-subtle);
+    --_state-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM7.25 4.5h1.5v4.5h-1.5V4.5Zm0 5.75h1.5v1.5h-1.5v-1.5Z'/%3E%3C/svg%3E");
+  }
+
+  .eds-button:is([data-state='success'], [data-state='error']):not(
+      :disabled,
+      [aria-disabled='true'],
+      [aria-busy='true']
+    ) {
+    --_button-bg: var(--_state-bg);
+    --_button-bg-hover: var(--_state-bg);
+    --_button-bg-active: var(--_state-bg);
+    --_button-fg: var(--_state-fg);
+    --_button-border: var(--_state-fg);
+    --_button-border-hover: var(--_state-fg);
+
+    &::before {
+      content: '';
+      flex: none;
+      inline-size: var(--_button-icon-size);
+      block-size: var(--_button-icon-size);
+      background-color: currentColor;
+      mask: var(--_state-icon) center / contain no-repeat;
+      animation: eds-button-state-in var(--eds-motion-duration-fast)
+        var(--eds-motion-easing-standard);
+    }
+
+    &:is(.eds-button-primary, .eds-button-danger) {
+      --_button-bg: var(--_state-fg);
+      --_button-bg-hover: var(--_state-fg);
+      --_button-bg-active: var(--_state-fg);
+      --_button-fg: var(--_state-bg);
+    }
+  }
+
+  @keyframes eds-button-state-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-button[data-state]::before {
+      animation: none;
+    }
+
+    .eds-button[data-state] {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-button[data-state]:not([aria-busy='true'])::before {
+      background-color: ButtonText;
+    }
+  }
+
   /* Variantes */
   .eds-button-primary {
     --_button-bg: var(--eds-color-action-primary);

@@ -42,7 +42,7 @@ export default function StepperPage() {
       <Section title="Exemplos">
         <Example
           title="Stepper"
-          description="Só visual: o estado vem de data-state (complete, current, upcoming, error) e aria-current. Número, check e “!” são do CSS e o estado também vai em texto oculto, nunca só em cor. Em contêiner estreito mostra só a etapa atual e “Etapa 2 de 4”."
+          description="Só visual: o estado vem de data-state (done, current, upcoming, error) e aria-current. Número, check e “!” são do CSS e o estado também vai em texto oculto, nunca só em cor. Em contêiner estreito mostra só a etapa atual e “Etapa 2 de 4”."
           html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
         />
@@ -67,7 +67,7 @@ export default function StepperPage() {
       </Section>
 
       <Section title="HTML puro: o Wizard">
-        <Alert variant="info" title="Wizard com data-eds-wizard">
+        <Alert tone="info" title="Wizard com data-eds-wizard">
           <p>
             No <code>&lt;form&gt;</code>, <code>data-eds-wizard</code>; em cada painel,{' '}
             <code>data-eds-wizard-step</code> (os outros ficam <code>hidden</code>); nos botões,{' '}
@@ -90,7 +90,7 @@ export default function StepperPage() {
       </Section>
 
       <Section title="HTML puro: indicador de seções">
-        <Alert variant="info" title="data-eds-stepper-sections">
+        <Alert tone="info" title="data-eds-stepper-sections">
           <p>
             No <code>ol.eds-stepper</code> (ou no <code>nav</code> que o contém), ponha{' '}
             <code>data-eds-stepper-sections</code>; em cada item, um{' '}
@@ -120,7 +120,7 @@ export default function StepperPage() {
             },
             {
               name: 'steps',
-              type: '{ label: string; state?: StepState; href?: string }[]',
+              type: '{ label: string; state?: StepperStepState; href?: string }[]',
               required: true,
               description: (
                 <>
@@ -137,7 +137,12 @@ export default function StepperPage() {
               description:
                 'Índice da etapa atual (a partir de 0). Antes: concluídas; depois: futuras.',
             },
-            { name: 'vertical', type: 'boolean', default: 'false', description: 'Na vertical.' },
+            {
+              name: 'orientation',
+              type: "'horizontal' | 'vertical'",
+              default: "'horizontal'",
+              description: 'Direção do indicador.',
+            },
             {
               name: 'onStepClick',
               type: '(index: number) => void',
@@ -167,7 +172,7 @@ export default function StepperPage() {
             },
             {
               name: 'retorno',
-              type: '{ current: number; states: StepState[] }',
+              type: '{ current: number; states: StepperStepState[] }',
               description:
                 'current é a seção lida; states (done, current, upcoming) vai em steps[i].state.',
             },
@@ -189,6 +194,12 @@ export default function StepperPage() {
               description: 'Todos os painéis ficam montados (os valores se preservam).',
             },
             { name: 'defaultStep', type: 'number', default: '0', description: 'Etapa inicial.' },
+            {
+              name: 'step',
+              type: 'number',
+              description:
+                'Etapa atual (controlada). Use com onStepChange: quem controla decide se step muda.',
+            },
             {
               name: 'validate',
               type: '(index, panel) => boolean',
@@ -231,10 +242,10 @@ export default function StepperPage() {
             {
               name: '.eds-stepper-link',
               effect:
-                'Link do rótulo (indicador de seções); aria-current="step" no link da seção lida. data-state="done" é sinônimo de complete.',
+                'Link do rótulo (indicador de seções); aria-current="step" no link da seção lida.',
             },
             {
-              name: '[data-state="complete|current|upcoming|error"]',
+              name: '[data-state="done|current|upcoming|error"]',
               effect: 'Concluída (check), atual, futura e com erro (“!”): sempre também em texto.',
             },
             {
@@ -270,10 +281,10 @@ export default function StepperPage() {
             <strong>Validação:</strong> cada painel é validado antes de avançar; cada campo inválido
             ganha <code>aria-invalid</code> e um <code>p.eds-error</code> ligado por{' '}
             <code>aria-describedby</code> (a mensagem nativa ou o texto de{' '}
-            <code>data-eds-error</code>; um <code>p.eds-error</code> do <code>.eds-field</code> é
-            reaproveitado), o primeiro recebe o foco e o erro some quando o campo fica válido. Não
-            há balão nativo. No envio final, um painel anterior que ficou inválido volta a ser
-            aberto e marcado com erro.
+            <code>data-eds-error-message</code>; um <code>p.eds-error</code> do{' '}
+            <code>.eds-field</code> é reaproveitado), o primeiro recebe o foco e o erro some quando
+            o campo fica válido. Não há balão nativo. No envio final, um painel anterior que ficou
+            inválido volta a ser aberto e marcado com erro.
           </li>
           <li>
             <strong>Voltar:</strong> só etapas concluídas são clicáveis; não se pula para a frente.

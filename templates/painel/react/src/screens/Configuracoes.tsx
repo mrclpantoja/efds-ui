@@ -81,7 +81,7 @@ export function Configuracoes({ sessao, onSessaoChange, ...props }: Configuracoe
       resumoSemanal: dados.has('resumoSemanal'),
       sons: dados.has('sons'),
     });
-    toast.show({ variant: 'success', message: 'Preferências salvas.' });
+    toast.show({ tone: 'success', message: 'Preferências salvas.' });
   };
 
   const salvarSessao = (event: FormEvent<HTMLFormElement>) => {
@@ -89,7 +89,7 @@ export function Configuracoes({ sessao, onSessaoChange, ...props }: Configuracoe
     const minutos = Number(new FormData(event.currentTarget).get('sessao'));
     gravarPreferencias({ ...lerPreferencias(), sessao: minutos });
     onSessaoChange(minutos);
-    toast.show({ variant: 'success', message: 'Tempo de sessão atualizado.' });
+    toast.show({ tone: 'success', message: 'Tempo de sessão atualizado.' });
   };
 
   const preferencias = lerPreferencias();
@@ -129,21 +129,21 @@ export function Configuracoes({ sessao, onSessaoChange, ...props }: Configuracoe
             name="modo"
             options={modos}
             value={aparencia.mode}
-            onChange={(v) => mudar('mode', v)}
+            onValueChange={(v) => mudar('mode', v)}
           />
           <SegmentedControl
             legend="Densidade"
             name="densidade"
             options={densidades}
             value={aparencia.density}
-            onChange={(v) => mudar('density', v)}
+            onValueChange={(v) => mudar('density', v)}
           />
           <SegmentedControl
             legend="Forma"
             name="forma"
             options={formas}
             value={aparencia.shape}
-            onChange={(v) => mudar('shape', v)}
+            onValueChange={(v) => mudar('shape', v)}
           />
         </CardBody>
         <CardFooter>

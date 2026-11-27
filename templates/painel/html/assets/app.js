@@ -52,8 +52,8 @@
     }
   }
 
-  function avisar(variant, message) {
-    if (window.EDS) window.EDS.toast({ variant: variant, message: message });
+  function avisar(tone, message) {
+    if (window.EDS) window.EDS.toast({ tone: tone, message: message });
   }
 
   aplicarAparencia(ler(CHAVE_APARENCIA, APARENCIA));

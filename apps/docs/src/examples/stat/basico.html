@@ -1,10 +1,10 @@
 <!-- Só visual. data-trend = direção da seta (up | down | flat; o CSS gira o svg, desenhado para cima);
-     data-tone = leitura do resultado (positive | negative | warning | neutral). O texto oculto diz a
+     eds-stat-delta-success | -danger | -warning = leitura do resultado (neutral é o padrão). O texto oculto diz a
      direção em voz. Carregando: aria-busy="true" + blocos Skeleton (ver grade.html). -->
 <div class="eds-card eds-stat">
   <p class="eds-stat-label">Pedidos no mês</p>
   <p class="eds-stat-value">1.284</p>
-  <p class="eds-stat-delta" data-trend="up" data-tone="positive">
+  <p class="eds-stat-delta eds-stat-delta-success" data-trend="up">
     <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" /></svg>
     <span class="eds-visually-hidden">Aumento de</span> 12,4%
     <span class="eds-stat-meta">vs. mês anterior</span>

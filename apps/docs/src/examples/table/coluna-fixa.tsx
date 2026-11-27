@@ -43,10 +43,12 @@ const contratos = [
 
 export default function ColunaFixa() {
   return (
-    <Table caption="Contratos e vigências" className="eds-table-sticky-col">
+    <Table caption="Contratos e vigências">
       <TableHead>
         <TableRow>
-          <TableHeaderCell>Contrato</TableHeaderCell>
+          <TableHeaderCell className="eds-table-pin-start eds-table-pin-edge">
+            Contrato
+          </TableHeaderCell>
           <TableHeaderCell>Fornecedor</TableHeaderCell>
           <TableHeaderCell>Categoria</TableHeaderCell>
           <TableHeaderCell>Início</TableHeaderCell>
@@ -59,14 +61,16 @@ export default function ColunaFixa() {
       <TableBody>
         {contratos.map(([codigo, fornecedor, categoria, inicio, fim, resp, situacao, valor]) => (
           <TableRow key={codigo}>
-            <TableHeaderCell scope="row">{codigo}</TableHeaderCell>
+            <TableHeaderCell scope="row" className="eds-table-pin-start eds-table-pin-edge">
+              {codigo}
+            </TableHeaderCell>
             <TableCell>{fornecedor}</TableCell>
             <TableCell>{categoria}</TableCell>
             <TableCell>{inicio}</TableCell>
             <TableCell>{fim}</TableCell>
             <TableCell>{resp}</TableCell>
             <TableCell>
-              <Badge variant={situacao === 'Vigente' ? 'success' : 'warning'}>{situacao}</Badge>
+              <Badge tone={situacao === 'Vigente' ? 'success' : 'warning'}>{situacao}</Badge>
             </TableCell>
             <TableCell numeric>{valor}</TableCell>
           </TableRow>

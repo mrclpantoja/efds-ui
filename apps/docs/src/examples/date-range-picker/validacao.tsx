@@ -25,7 +25,7 @@ export default function Validacao() {
             min="2026-01-01"
             max="2026-12-31"
             maxDays={30}
-            onChange={(value) => {
+            onValueChange={(value) => {
               setRange(value);
               if (value.start && value.end) setError('');
             }}

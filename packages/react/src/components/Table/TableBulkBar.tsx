@@ -1,5 +1,13 @@
-import { useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
-import { format, getMessages } from '@efds-ui/behavior/export';
+import {
+  forwardRef,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type ReactNode,
+  type RefObject,
+} from 'react';
+import { mergeRefs } from '../../internal/refs-d';
+import { formatMessage as format, getMessages } from '@efds-ui/behavior/export';
 import { useAnnouncer } from '../../internal/announcer';
 import { mergeTexts } from '../../utils/texts';
 import { Button } from '../Button';
@@ -18,11 +26,11 @@ export interface TableBulkBarTexts {
 const defaultTexts = (): TableBulkBarTexts => {
   const m = getMessages();
   return {
-    label: m.bulkLabel,
-    count: (count) => (count === 1 ? m.bulkCountOne : format(m.bulkCount, { count })),
-    allResults: (total) => format(m.bulkAllResults, { total }),
-    allSelected: (total) => format(m.bulkAllSelected, { total }),
-    clear: m.bulkClear,
+    label: m.tableBulkLabel,
+    count: (count) => (count === 1 ? m.tableBulkCountOne : format(m.tableBulkCountMany, { count })),
+    allResults: (total) => format(m.tableBulkAllResults, { total }),
+    allSelected: (total) => format(m.tableBulkAllSelected, { total }),
+    clear: m.tableBulkClear,
   };
 };
 
@@ -67,16 +75,10 @@ function returnFocus(
  * Barra de ações em lote, depois do `.eds-table-wrap`. Fica sempre montada (`hidden` sem seleção);
  * a contagem é texto comum e o anúncio sai pela região de status própria (uma só leitura).
  */
-export function TableBulkBar({
-  count,
-  total,
-  scope = 'page',
-  onClear,
-  onSelectAllResults,
-  returnFocusTo,
-  texts,
-  children,
-}: TableBulkBarProps) {
+export const TableBulkBar = forwardRef<HTMLDivElement, TableBulkBarProps>(function TableBulkBar(
+  { count, total, scope = 'page', onClear, onSelectAllResults, returnFocusTo, texts, children },
+  ref,
+) {
   const t = mergeTexts(defaultTexts(), texts);
   const group = useRef<HTMLDivElement>(null);
   const focusState = useRef({ had: false });
@@ -104,7 +106,7 @@ export function TableBulkBar({
   return (
     <>
       <div
-        ref={group}
+        ref={mergeRefs(ref, group)}
         className="eds-table-bulk"
         role="group"
         aria-label={t.label}
@@ -134,4 +136,5 @@ export function TableBulkBar({
       </span>
     </>
   );
-}
+});
+TableBulkBar.displayName = 'TableBulkBar';

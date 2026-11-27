@@ -15,7 +15,7 @@
      caixa tem a altura natural da imagem (use width e height no <img>: o navegador reserva o espaço
      antes de baixar, sem layout shift). Com proporção o espaço é reservado pela caixa.
    - Ajuste: cover por padrão; .eds-image-contain mostra a imagem inteira sobre bg-subtle.
-     O raio segue data-shape (radius-md); .eds-image-circle força círculo (1:1).
+     O raio segue data-shape (radius-md); .eds-image-round força círculo (1:1).
    - Estado por atributo: sem data-state a imagem aparece normal (sem JS). loading: fundo bg-subtle
      com o brilho do Skeleton e <img> em opacity 0; ao virar loaded a imagem entra por fade. error:
      o <img> some (visibility, o espaço fica) e o .eds-image-fallback (ícone + texto) aparece,
@@ -135,7 +135,7 @@
     --_image-bg: var(--eds-color-bg-subtle);
   }
 
-  .eds-image-circle {
+  .eds-image-round {
     --_image-radius: 50%;
     --_image-ratio: 1 / 1;
     --_image-block: 100%;

@@ -47,7 +47,7 @@ export default function AccordionPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Sem JavaScript, com uma exceção">
+        <Alert tone="info" title="Sem JavaScript, com uma exceção">
           <p>
             Abrir, fechar, o teclado (Enter e Espaço no <code>&lt;summary&gt;</code>) e o grupo
             exclusivo (<code>name</code>) são do navegador. Só o item indisponível precisa do{' '}

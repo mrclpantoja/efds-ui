@@ -7,7 +7,7 @@ describe('Image', () => {
   it('monta o markup do core: proporção, ajuste, círculo e fallback', () => {
     const ref = createRef<HTMLDivElement>();
     const { container } = render(
-      <Image ref={ref} src="a.png" alt="Fachada" ratio="16x9" fit="contain" circle className="x" />,
+      <Image ref={ref} src="a.png" alt="Fachada" ratio="16x9" fit="contain" round className="x" />,
     );
     const root = container.firstElementChild as HTMLElement;
     expect(ref.current).toBe(root);
@@ -15,7 +15,7 @@ describe('Image', () => {
       'eds-image',
       'eds-image-ratio-16x9',
       'eds-image-contain',
-      'eds-image-circle',
+      'eds-image-round',
       'x',
     );
     expect(screen.getByRole('img', { name: 'Fachada' })).toHaveAttribute('loading', 'lazy');

@@ -10,9 +10,9 @@ import {
 import type { EditorView } from 'prosemirror-view';
 import { createEditor, type EditorInstance } from '../bind';
 import type { EditorPreset } from '../editor';
-import type { EditorMessages } from '../messages';
+import type { EditorTexts } from '../messages';
 
-export interface EditorRef {
+export interface EditorHandle {
   focus: () => void;
   getHTML: () => string;
   setHTML: (html: string) => void;
@@ -35,7 +35,7 @@ export interface EditorProps extends Omit<
   /** Não controlado: HTML inicial. */
   defaultValue?: string;
   /** HTML a cada mudança (agrupa digitação em 150 ms). */
-  onChange?: (html: string) => void;
+  onValueChange?: (html: string) => void;
   preset?: EditorPreset;
   rows?: number;
   placeholder?: string;
@@ -46,18 +46,18 @@ export interface EditorProps extends Omit<
   required?: boolean;
   'aria-describedby'?: string;
   /** Textos (parcial; pt-BR por padrão). Lidos na montagem. */
-  texts?: Partial<EditorMessages>;
+  texts?: Partial<EditorTexts>;
 }
 
 /** Editor de conteúdo (edição Básica). O visual é todo do core (`.eds-editor`). */
-export const Editor = forwardRef<EditorRef, EditorProps>(function Editor(
+export const Editor = forwardRef<EditorHandle, EditorProps>(function Editor(
   {
     label,
     id,
     name,
     value,
     defaultValue,
-    onChange,
+    onValueChange,
     preset = 'basic',
     rows,
     placeholder,
@@ -78,8 +78,8 @@ export const Editor = forwardRef<EditorRef, EditorProps>(function Editor(
   const fieldElRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<HTMLInputElement>(null);
   const instanceRef = useRef<EditorInstance | null>(null);
-  const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
+  const onValueChangeRef = useRef(onValueChange);
+  onValueChangeRef.current = onValueChange;
   const lastEmitted = useRef<string | null>(null);
   const initial = useRef(value ?? defaultValue ?? '');
   // O hidden é controlado: um `defaultValue` o devolveria ao HTML inicial a cada renderização do React
@@ -107,7 +107,7 @@ export const Editor = forwardRef<EditorRef, EditorProps>(function Editor(
       onChange(html) {
         lastEmitted.current = html;
         setSerialized(html);
-        onChangeRef.current?.(html);
+        onValueChangeRef.current?.(html);
       },
     });
     instanceRef.current = instance;

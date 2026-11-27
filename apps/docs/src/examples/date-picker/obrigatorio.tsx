@@ -18,7 +18,7 @@ export default function Obrigatorio() {
         <Field label="Vencimento" required error={error}>
           <DatePicker
             name="vencimento"
-            onChange={(value) => {
+            onValueChange={(value) => {
               setIso(value);
               if (value) setError('');
             }}

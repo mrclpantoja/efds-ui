@@ -8,7 +8,7 @@ export default function Grade() {
         value="1.284"
         delta="12,4%"
         trend="up"
-        tone="positive"
+        tone="success"
         meta="vs. mês anterior"
       />
       <Stat
@@ -16,7 +16,7 @@ export default function Grade() {
         value="R$ 86.410,00"
         delta="3,1%"
         trend="down"
-        tone="negative"
+        tone="danger"
         meta="vs. mês anterior"
         texts={{ down: 'Queda de' }}
       />
@@ -25,7 +25,7 @@ export default function Grade() {
         value="4,8%"
         delta="0,6 ponto"
         trend="up"
-        tone="negative"
+        tone="danger"
         meta="vs. mês anterior"
       />
       <Stat label="Carregando" value="" loading />

@@ -87,7 +87,7 @@ export default function SegmentedPage() {
             },
             { name: 'value / defaultValue', type: 'string', description: 'Controlado ou inicial.' },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(value: string) => void',
               description: 'Escolha de uma opção.',
             },

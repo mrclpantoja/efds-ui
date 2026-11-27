@@ -19,7 +19,7 @@ export default function ImageCropperPage() {
         Input e com o File Upload.
       </p>
 
-      <Alert variant="info" title="Privacidade (LGPD)">
+      <Alert tone="info" title="Privacidade (LGPD)">
         <p>
           A foto de uma pessoa é dado pessoal. O corte roda <strong>só no navegador</strong>: nada é
           enviado a lugar nenhum pelo efDS.ui, não há chamada externa e a imagem não é guardada. Ela
@@ -117,7 +117,7 @@ export default function ImageCropperPage() {
               description: 'Foto atual (URL), mostrada até haver uma nova.',
             },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(file: File, crop) => void',
               description: 'Uma foto nova foi aplicada: o arquivo pronto e o recorte.',
             },
@@ -161,7 +161,7 @@ export default function ImageCropperPage() {
               description: 'Desenho do quadro.',
             },
             {
-              name: 'value, onChange',
+              name: 'value, onValueChange',
               type: 'CropState',
               description: 'Enquadramento controlado ({ x, y, scale, rotation }).',
             },

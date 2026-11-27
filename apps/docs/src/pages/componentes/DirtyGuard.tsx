@@ -37,17 +37,17 @@ export default function DirtyGuardPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Behavior @efds-ui/behavior">
+        <Alert tone="info" title="Behavior @efds-ui/behavior">
           <p>
             Ponha <code>data-eds-dirty-guard</code> no <code>&lt;form&gt;</code>. O behavior compara
             os campos com o estado inicial. Com alterações, fechar a aba mostra o aviso nativo do
             navegador (o texto dele não é configurável) e um link interno abre a confirmação do
             efDS.ui (<code>confirm</code>), com o texto de <code>data-eds-dirty-message</code>. O
-            envio comum do formulário tira o aviso. Para envio por fetch, dispare{' '}
-            <code>eds:dirty-reset</code> no formulário depois do sucesso.{' '}
-            <code>data-eds-dirty-ignore</code> tira um campo ou bloco da comparação. O formulário
-            ganha <code>data-dirty=&quot;true&quot;</code> e o evento <code>eds:dirty-change</code>{' '}
-            (<code>detail.dirty</code>).
+            envio comum do formulário tira o aviso. Para envio por fetch, chame{' '}
+            <code>EDS.markClean(form)</code> depois do sucesso (o estado de envio{' '}
+            <code>data-eds-submit</code> já faz isso). <code>data-eds-dirty-ignore</code> tira um
+            campo ou bloco da comparação. O formulário ganha o atributo <code>data-dirty</code> e o
+            evento <code>eds:dirty-change</code> (<code>detail.dirty</code>).
           </p>
         </Alert>
       </Section>

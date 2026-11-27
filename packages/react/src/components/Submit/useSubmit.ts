@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { announceStatus } from '../../internal/status-region';
 import { mergeTexts } from '../../utils/texts';
-import type { ButtonStatus, ButtonTexts } from '../Button';
+import type { ButtonResult, ButtonTexts } from '../Button';
 
 /** `idle` normal · `busy` enviando · `success`/`error` resultado temporário. */
 export type SubmitState = 'idle' | 'busy' | 'success' | 'error';
@@ -33,8 +33,8 @@ export interface UseSubmitOptions {
 
 export interface UseSubmitResult {
   state: SubmitState;
-  /** Atalho de `state === 'busy'` (use em `aria-disabled` dos outros botões de envio). */
-  busy: boolean;
+  /** Atalho de `state === 'busy'` (use em `aria-disabled` dos outros botões de envio). Só `loading`, como no Button. */
+  loading: boolean;
   /** O que o último envio lançou (limpo no próximo envio). */
   error: unknown;
   /** Para `<form onSubmit>`: cancela o envio nativo, ignora envio repetido e chama o handler. */
@@ -42,14 +42,14 @@ export interface UseSubmitResult {
   /** Volta ao normal na hora. */
   reset: () => void;
   /** Para espalhar no `<Button type="submit">` que envia. */
-  buttonProps: { loading: boolean; status?: ButtonStatus; texts: ButtonTexts };
+  buttonProps: { loading: boolean; result?: ButtonResult; texts: ButtonTexts };
 }
 
 const BUSY_ANNOUNCE_MS = 1000;
 
 /**
  * Estado de envio de um formulário: embrulha um handler assíncrono e devolve `state`, o
- * `handleSubmit` (que bloqueia o duplo envio) e as props do Button (`loading`, `status`, `texts`).
+ * `handleSubmit` (que bloqueia o duplo envio) e as props do Button (`loading`, `result`, `texts`).
  * Sucesso e falha ficam no botão por `feedbackMs` e são anunciados; na falha o foco vai para o
  * resumo de erros (`[data-eds-error-summary]` dentro do formulário) ou para o botão que enviou.
  * Com `PageLoaderProvider auto`, passe `edsLoader: false` no `fetch` do handler para não somar o
@@ -146,13 +146,13 @@ export function useSubmit(
 
   return {
     state,
-    busy: state === 'busy',
+    loading: state === 'busy',
     error,
     handleSubmit,
     reset,
     buttonProps: {
       loading: state === 'busy',
-      status: state === 'success' || state === 'error' ? state : undefined,
+      result: state === 'success' || state === 'error' ? state : undefined,
       texts: { success: t.success, error: t.error },
     },
   };

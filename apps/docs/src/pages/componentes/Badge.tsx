@@ -65,10 +65,11 @@ export default function BadgePage() {
           caption="Props de Badge"
           rows={[
             {
-              name: 'variant',
+              name: 'tone',
               type: "'neutral' | 'info' | 'success' | 'warning' | 'danger'",
               default: "'neutral'",
-              description: 'Cor semântica. A cor nunca é o único sinal: o texto diz a situação.',
+              description:
+                'Tom semântico (cor). A cor nunca é o único sinal: o texto diz a situação.',
             },
             {
               name: 'size',

@@ -111,7 +111,7 @@ describe('alert fechável', () => {
         <button type="button" id="antes">Antes</button>
         <div class="eds-alert eds-alert-info" id="aviso">
           <div class="eds-alert-content">Novidade</div>
-          <button type="button" id="fechar" class="eds-alert-close" data-eds-dismiss aria-label="Fechar aviso">x</button>
+          <button type="button" id="fechar" class="eds-alert-close" data-eds-close aria-label="Fechar aviso">x</button>
         </div>
         <button type="button" id="depois">Depois</button>
       </main>`;
@@ -129,9 +129,9 @@ describe('alert fechável', () => {
     expect(document.activeElement).toBe(byId('depois'));
   });
 
-  it('eds:alert-dismiss cancelável mantém o aviso', async () => {
+  it('eds:alert-close cancelável mantém o aviso', async () => {
     const user = userEvent.setup();
-    document.addEventListener('eds:alert-dismiss', (e) => e.preventDefault(), { once: true });
+    document.addEventListener('eds:alert-close', (e) => e.preventDefault(), { once: true });
     await user.click(byId('fechar'));
     expect(document.getElementById('aviso')).not.toBeNull();
   });
@@ -249,7 +249,7 @@ describe('sidebar', () => {
   it('botão de colapsar alterna data-collapsed e aria-expanded', async () => {
     const user = userEvent.setup();
     const onCollapse = vi.fn();
-    document.addEventListener('eds:sidebar-collapse', onCollapse);
+    document.addEventListener('eds:sidebar-toggle', onCollapse);
     expect(byId('colapsar')).toHaveAttribute('aria-expanded', 'true');
     expect(byId('colapsar')).toHaveAttribute('aria-controls', 'nav');
     await user.click(byId('colapsar'));
@@ -258,6 +258,6 @@ describe('sidebar', () => {
     await user.click(byId('colapsar'));
     expect(byId('nav')).not.toHaveAttribute('data-collapsed');
     expect(onCollapse).toHaveBeenCalledTimes(2);
-    document.removeEventListener('eds:sidebar-collapse', onCollapse);
+    document.removeEventListener('eds:sidebar-toggle', onCollapse);
   });
 });

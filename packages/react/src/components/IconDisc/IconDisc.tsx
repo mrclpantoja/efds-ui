@@ -1,7 +1,11 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
+import type { Tone } from '../../internal/tone';
 
-export type IconDiscTone = 'accent' | 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+export type IconDiscTone = Extract<
+  Tone,
+  'accent' | 'neutral' | 'info' | 'success' | 'warning' | 'danger'
+>;
 export type IconDiscSize = 'sm' | 'md' | 'lg';
 
 export interface IconDiscProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
@@ -27,11 +31,11 @@ export const IconDisc = forwardRef<HTMLSpanElement, IconDiscProps>(function Icon
       ref={ref}
       className={cx(
         'eds-icon-disc',
+        tone !== 'accent' && `eds-icon-disc-${tone}`,
         size !== 'md' && `eds-icon-disc-${size}`,
         round && 'eds-icon-disc-round',
         className,
       )}
-      data-tone={tone === 'accent' ? undefined : tone}
     >
       {children}
     </span>

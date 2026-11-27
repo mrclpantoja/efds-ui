@@ -1,6 +1,6 @@
 {
   "name": "@efds-ui/behavior",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "license": "MIT",
   "author": "Marcelo Pantoja",
   "homepage": "https://efds-ui.com.br",
@@ -69,10 +69,10 @@
       "types": "./dist/theme-entry.d.ts",
       "default": "./dist/theme-entry.js"
     },
-    "./balloon": {
-      "development": "./src/balloon-entry.ts",
-      "types": "./dist/balloon-entry.d.ts",
-      "default": "./dist/balloon-entry.js"
+    "./internal": {
+      "development": "./src/internal-entry.ts",
+      "types": "./dist/internal-entry.d.ts",
+      "default": "./dist/internal-entry.js"
     },
     "./image": {
       "development": "./src/image-entry.ts",
@@ -80,7 +80,8 @@
       "default": "./dist/image-entry.js"
     },
     "./eds-behavior.js": "./dist/eds-behavior.js",
-    "./eds-behavior-core.js": "./dist/eds-behavior-core.js"
+    "./eds-behavior-core.js": "./dist/eds-behavior-core.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "vite build && vite build --config vite.iife.config.ts && vite build --config vite.iife-core.config.ts && tsc -p tsconfig.build.json",
@@ -117,9 +118,9 @@
         "types": "./dist/mask-entry.d.ts",
         "default": "./dist/mask-entry.js"
       },
-      "./balloon": {
-        "types": "./dist/balloon-entry.d.ts",
-        "default": "./dist/balloon-entry.js"
+      "./internal": {
+        "types": "./dist/internal-entry.d.ts",
+        "default": "./dist/internal-entry.js"
       },
       "./theme": {
         "types": "./dist/theme-entry.d.ts",
@@ -142,7 +143,8 @@
         "default": "./dist/image-entry.js"
       },
       "./eds-behavior.js": "./dist/eds-behavior.js",
-      "./eds-behavior-core.js": "./dist/eds-behavior-core.js"
+      "./eds-behavior-core.js": "./dist/eds-behavior-core.js",
+      "./package.json": "./package.json"
     }
   }
 }

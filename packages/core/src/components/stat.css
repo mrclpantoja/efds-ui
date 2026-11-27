@@ -3,7 +3,7 @@
      <div class="eds-card eds-stat">
        <p class="eds-stat-label">Pedidos no mês</p>
        <p class="eds-stat-value">1.284</p>
-       <p class="eds-stat-delta" data-trend="up" data-tone="positive">
+       <p class="eds-stat-delta eds-stat-delta-success" data-trend="up">
          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">…seta para cima…</svg>
          <span class="eds-visually-hidden">Aumento de</span> 12,4%
          <span class="eds-stat-meta">vs. mês anterior</span>
@@ -12,7 +12,7 @@
    - O valor usa algarismos tabulares; use <h2>/<h3> no .eds-stat-value se a página precisar de estrutura.
    - data-trend = direção (up | down | flat): o CSS gira a seta do markup (desenhada para cima:
      down = 180deg, flat = 90deg), então a direção nunca depende só de cor.
-   - data-tone = leitura do resultado (positive | negative | warning | neutral): cor via status-*-text.
+   - .eds-stat-delta-{success,danger,warning} = leitura do resultado (neutral é o padrão): cor via status-*-text.
      Subir pode ser ruim (ex.: inadimplência): por isso trend e tone são independentes.
    - Carregando: aria-busy="true" no .eds-stat com .eds-skeleton dentro do rótulo, do valor e da variação.
    - .eds-stat-grid: grade que responde à largura do próprio contêiner (1 → 2 → 4 colunas). */
@@ -87,15 +87,15 @@
       rotate: 90deg;
     }
 
-    &[data-tone='positive'] {
+    &.eds-stat-delta-success {
       --_delta-fg: var(--eds-color-status-success-text);
     }
 
-    &[data-tone='negative'] {
+    &.eds-stat-delta-danger {
       --_delta-fg: var(--eds-color-status-danger-text);
     }
 
-    &[data-tone='warning'] {
+    &.eds-stat-delta-warning {
       --_delta-fg: var(--eds-color-status-warning-text);
     }
   }

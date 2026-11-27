@@ -61,7 +61,7 @@ function Rotas() {
           onExpire={() =>
             // Num sistema real, aqui vai a saída (ex.: location.assign('/sair')).
             toast.show({
-              variant: 'warning',
+              tone: 'warning',
               message:
                 'Sessão encerrada por inatividade. Num sistema real, você voltaria à tela de entrada.',
             })

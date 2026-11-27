@@ -18,7 +18,7 @@ function mount(html: string) {
 const field = (attrs: string, extra = '') =>
   `<form id="f"><label for="c">Campo</label><input id="c" class="eds-input" name="campo" ${attrs} />${extra}</form>`;
 const input = () => document.getElementById('c') as HTMLInputElement;
-const hidden = () => document.querySelector<HTMLInputElement>('input[data-eds-mask-raw]');
+const hidden = () => document.querySelector<HTMLInputElement>('input[data-mask-raw]');
 
 afterEach(() => {
   stop();

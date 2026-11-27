@@ -12,15 +12,15 @@ describe('Badge', () => {
     expect(el).not.toHaveClass('eds-badge-dot');
   });
 
-  it.each(['neutral', 'info', 'success', 'warning', 'danger'] as const)('variante %s', (v) => {
-    render(<Badge variant={v}>x</Badge>);
+  it.each(['neutral', 'info', 'success', 'warning', 'danger'] as const)('tom %s', (v) => {
+    render(<Badge tone={v}>x</Badge>);
     expect(screen.getByText('x')).toHaveClass(`eds-badge-${v}`);
   });
 
   it('dot, className, ref e props nativas', () => {
     const ref = createRef<HTMLSpanElement>();
     render(
-      <Badge ref={ref} dot variant="danger" className="extra" data-testid="b">
+      <Badge ref={ref} dot tone="danger" className="extra" data-testid="b">
         Atrasado
       </Badge>,
     );

@@ -24,7 +24,7 @@ const html = `
   </div>
   <div class="eds-field">
     <label class="eds-label" for="email">E-mail</label>
-    <input class="eds-input" id="email" name="email" data-eds-validate="email" data-eds-validate-message="Escreva um e-mail como nome@exemplo.com." />
+    <input class="eds-input" id="email" name="email" data-eds-validate="email" data-eds-error-message="Escreva um e-mail como nome@exemplo.com." />
   </div>
   <button type="submit" id="enviar">Enviar</button>
   <button type="submit" id="rascunho" formnovalidate>Salvar rascunho</button>
@@ -100,7 +100,7 @@ describe('validação declarativa', () => {
     expect(errorOf('nome')).toHaveTextContent('Preencha este campo.');
   });
 
-  it('data-eds-validate-message troca o texto', async () => {
+  it('data-eds-error-message troca o texto', async () => {
     const user = userEvent.setup();
     await user.type($('email'), 'sem-arroba');
     await user.tab();

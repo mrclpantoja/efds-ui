@@ -23,19 +23,19 @@ function nextFocusTarget(alert: HTMLElement): HTMLElement | null {
 }
 
 /**
- * Alert fechável: `[data-eds-dismiss]` dentro de `.eds-alert` remove o aviso e move o foco para
- * o elemento lógico seguinte. `eds:alert-dismiss` (cancelável) sai antes; com `preventDefault` o aviso
+ * Alert fechável: `[data-eds-close]` dentro de `.eds-alert` remove o aviso e move o foco para
+ * o elemento lógico seguinte. `eds:alert-close` (cancelável) sai antes; com `preventDefault` o aviso
  * fica.
  */
 export const alertDismissBehavior: Behavior = {
-  name: 'alert-dismiss',
-  selector: '.eds-alert [data-eds-dismiss]',
+  name: 'alert-close',
+  selector: '.eds-alert [data-eds-close]',
   bind(button) {
     const onClick = (event: Event) => {
       const alert = button.closest<HTMLElement>('.eds-alert');
       if (!alert) return;
       event.preventDefault();
-      if (!emit(alert, 'alert-dismiss', { alert }, true)) return;
+      if (!emit(alert, 'alert-close', { alert }, true)) return;
       // O botão acionado sai do DOM (e nem todo navegador o foca ao clicar): sempre move o foco.
       const target = nextFocusTarget(alert);
       alert.remove();

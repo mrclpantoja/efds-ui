@@ -3,9 +3,10 @@ import { CloseGlyph } from '../../internal/glyphs';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { mergeRefs } from '../../internal/refs-d';
+import type { Tone } from '../../internal/tone';
 import { Button } from '../Button';
 
-export type BannerTone = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
+export type BannerTone = Extract<Tone, 'neutral' | 'info' | 'success' | 'warning' | 'danger'>;
 
 export interface BannerTexts {
   /** Nome do botão de fechar. Padrão: "Fechar aviso". */

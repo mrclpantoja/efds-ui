@@ -88,7 +88,7 @@ export default function FiltroColuna() {
                 type="text"
                 label="Cliente"
                 value={filtros.cliente}
-                onChange={definir('cliente')}
+                onValueChange={definir('cliente')}
               />
             }
           >
@@ -102,7 +102,7 @@ export default function FiltroColuna() {
                 label="Situação"
                 options={situacoes}
                 value={filtros.situacao}
-                onChange={definir('situacao')}
+                onValueChange={definir('situacao')}
               />
             }
           >
@@ -116,7 +116,7 @@ export default function FiltroColuna() {
                 type="number"
                 label="Total"
                 value={filtros.total}
-                onChange={definir('total')}
+                onValueChange={definir('total')}
               />
             }
           >
@@ -128,7 +128,7 @@ export default function FiltroColuna() {
                 type="date"
                 label="Data"
                 value={filtros.data}
-                onChange={definir('data')}
+                onValueChange={definir('data')}
               />
             }
           >

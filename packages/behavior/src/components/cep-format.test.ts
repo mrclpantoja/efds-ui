@@ -48,7 +48,7 @@ describe('CEP', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('com a URL do autor, ao completar 8 dígitos preenche os campos e emite eds:cep-result', async () => {
+  it('com a URL do autor, ao completar 8 dígitos preenche os campos e emite eds:cep-lookup', async () => {
     const fetchMock = vi.fn<(url: string) => Promise<Response>>(() =>
       json({
         logradouro: 'Rua Fictícia',
@@ -60,7 +60,7 @@ describe('CEP', () => {
     vi.stubGlobal('fetch', fetchMock);
     destroy = init(document, { cepUrl: 'https://exemplo.test/cep/{cep}/json/' });
     const results: string[] = [];
-    cep().addEventListener('eds:cep-result', (e) =>
+    cep().addEventListener('eds:cep-lookup', (e) =>
       results.push((e as CustomEvent<{ status: string }>).detail.status),
     );
     await userEvent.type(cep(), '90010100');

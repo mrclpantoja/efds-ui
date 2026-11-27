@@ -1,7 +1,7 @@
 import {
   VALIDATOR_MESSAGE_KEY,
   isValidatorName,
-  parseData,
+  parseDateParts,
   validateBy,
   type ValidateOptions,
   type ValidationMessages,
@@ -115,13 +115,13 @@ function dateRange(control: FormControl): ValidateOptions {
   const max = control.getAttribute('max');
   if (min) options.min = min;
   if (max) options.max = max;
-  const tipo = control.getAttribute('data-eds-validate-tipo');
-  if (tipo === 'fixo' || tipo === 'celular') options.tipo = tipo;
+  const phoneType = control.getAttribute('data-eds-validate-phone-type');
+  if (phoneType === 'landline' || phoneType === 'mobile') options.type = phoneType;
   return options;
 }
 
 const asBr = (value: string): string => {
-  const parts = parseData(value);
+  const parts = parseDateParts(value);
   if (!parts) return value;
   const pad = (n: number, size = 2) => String(n).padStart(size, '0');
   return `${pad(parts.day)}/${pad(parts.month)}/${pad(parts.year, 4)}`;
@@ -138,15 +138,15 @@ export function validatorMessage(
   messages: ValidationMessages,
 ): string {
   if (validateBy(name, value, options)) return '';
-  if (name === 'data' && parseData(value)) {
+  if (name === 'data' && parseDateParts(value)) {
     const min = options.min ? asBr(options.min) : '';
     const max = options.max ? asBr(options.max) : '';
-    if (min && max) return format(messages.validateDataRange, { min, max });
+    if (min && max) return format(messages.validateDateRange, { min, max });
     if (min && validateBy('data', value, { max: options.max })) {
-      return format(messages.validateDataMin, { min });
+      return format(messages.validateDateMin, { min });
     }
-    if (max) return format(messages.validateDataMax, { max });
-    return format(messages.validateDataMin, { min });
+    if (max) return format(messages.validateDateMax, { max });
+    return format(messages.validateDateMin, { min });
   }
   return messages[VALIDATOR_MESSAGE_KEY[name]];
 }
@@ -154,7 +154,7 @@ export function validatorMessage(
 /**
  * Aplica o validador `name` ao valor do campo na validade nativa (`setCustomValidity`), para que
  * `checkValidity`, o Wizard e o envio enxerguem o erro. `own` troca o texto padrão. `min`, `max` e
- * `data-eds-validate-tipo` do campo entram nas opções.
+ * `data-eds-validate-phone-type` do campo entram nas opções.
  */
 export function applyValidatorBy(
   control: FormControl,
@@ -167,26 +167,26 @@ export function applyValidatorBy(
 }
 
 /**
- * Aplica `data-eds-validate` do campo (HTML): mensagem de `data-eds-validate-message` ou o texto padrão.
+ * Aplica `data-eds-validate` do campo (HTML): mensagem de `data-eds-error-message` ou o texto padrão.
  * Campos que se validam sozinhos (`SELF_REPORTING`) ficam de fora. Devolve `true` se o campo é tratado aqui.
  */
 export function applyValidator(control: FormControl, messages: ValidationMessages): boolean {
   const name = control.getAttribute('data-eds-validate')?.trim() ?? '';
   if (!isValidatorName(name) || control.closest(SELF_REPORTING)) return false;
-  applyValidatorBy(control, name, messages, control.getAttribute('data-eds-validate-message'));
+  applyValidatorBy(control, name, messages, control.getAttribute('data-eds-error-message'));
   return true;
 }
 
 /**
  * Texto do erro atual do campo, em pt-BR e no idioma de `messages` (não no do navegador): a validade
- * personalizada (`setCustomValidity`) vale como está; `data-eds-error` do campo troca o texto das
+ * personalizada (`setCustomValidity`) vale como está; `data-eds-error-message` do campo troca o texto das
  * restrições nativas.
  */
 export function fieldMessage(control: FormControl, messages: ValidationMessages): string {
   const v = control.validity;
   if (v.valid) return '';
   if (v.customError) return control.validationMessage;
-  const own = control.getAttribute('data-eds-error');
+  const own = control.getAttribute('data-eds-error-message');
   if (own) return own;
   if (v.valueMissing) {
     if (control instanceof HTMLSelectElement) return messages.validateRequiredChoice;

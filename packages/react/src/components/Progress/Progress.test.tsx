@@ -14,7 +14,7 @@ describe('Progress', () => {
     expect(bar).toHaveClass('eds-progress', 'eds-progress-sm');
     expect(bar).toHaveAttribute('value', '45');
     expect(bar).toHaveAttribute('max', '100');
-    expect(bar).toHaveAttribute('data-tone', 'success');
+    expect(bar).toHaveClass('eds-progress-success');
     expect(container.querySelector('.eds-progress-value')).toHaveTextContent('45%');
     expect(container.querySelector('.eds-progress-field')).not.toBeNull();
   });

@@ -18,6 +18,6 @@ describe('Textarea', () => {
     const { rerender } = render(<Textarea aria-label="T" invalid />);
     expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
     rerender(<Textarea aria-label="T" valid />);
-    expect(screen.getByRole('textbox')).toHaveAttribute('data-valid', 'true');
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-valid');
   });
 });

@@ -1,6 +1,6 @@
 import { format, getMessages } from '../core/config';
 import { cloneGhost, createDragEngine, type DragSession } from '../core/drag';
-import { emit, ensureId, hidePopover, normalizeText, showPopover, uid } from '../core/dom';
+import { emit, ensureId, flag, hidePopover, normalizeText, showPopover, uid } from '../core/dom';
 import { placeMenuFallback } from '../core/position';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer } from '../core/status';
@@ -10,7 +10,8 @@ import { toast } from './toast';
 /**
  * Tree: árvore navegável e editável (APG Tree View + edição). O markup é o do core
  * (`.eds-tree > ul[role=tree] > li[role=treeitem] > .eds-tree-row + ul[role=group]`), pronto do
- * servidor ou montado de `data-eds-source` (JSON `[{ id, label, children?, hasChildren? }]`).
+ * servidor ou montado de `<script type="application/json" data-eds-tree-items>` (JSON local) ou de
+ * `data-eds-source` (URL que devolve `[{ id, label, children?, hasChildren? }]`).
  * Edição só com `data-eds-editable`. Ver `docs/architecture/behavior.md`.
  */
 
@@ -32,11 +33,6 @@ export type TreeChangeAction = 'add' | 'rename' | 'move' | 'delete' | 'wrap';
 type FetchInit = RequestInit & { edsLoader?: false };
 type DropZone = 'before' | 'inside' | 'after';
 
-const flag = (el: Element, name: string): boolean => {
-  const value = el.getAttribute(name);
-  return value !== null && value !== 'false';
-};
-
 // ---- navegação na estrutura ------------------------------------------------------------------
 
 const isItem = (el: Element): el is HTMLElement => el.matches(ITEM);
@@ -52,16 +48,19 @@ const parentItem = (li: HTMLElement): HTMLElement | null =>
 const siblingsOf = (li: HTMLElement): HTMLElement[] => itemsIn(li.parentElement);
 const labelEl = (li: HTMLElement): HTMLElement | null =>
   rowOf(li)?.querySelector<HTMLElement>(':scope > .eds-tree-label') ?? null;
-const isLazy = (li: HTMLElement): boolean => li.hasAttribute('data-eds-lazy');
+const isLazy = (li: HTMLElement): boolean => li.hasAttribute('data-lazy');
 const isParent = (li: HTMLElement): boolean => childItems(li).length > 0 || isLazy(li);
 const isExpanded = (li: HTMLElement): boolean => li.getAttribute('aria-expanded') === 'true';
 const descendantsOf = (li: HTMLElement): HTMLElement[] =>
   childItems(li).flatMap((c) => [c, ...descendantsOf(c)]);
 
+/** Nome original de cada campo de renomear aberto (some junto com o campo). */
+const originalName = new WeakMap<HTMLInputElement, string>();
+
 function labelOf(li: HTMLElement): string {
   const el = li.querySelector<HTMLElement>(`:scope > ${ROW} > .eds-tree-label`);
   const input = li.querySelector<HTMLInputElement>(`:scope > ${ROW} > .eds-input`);
-  return (el?.textContent ?? input?.dataset.edsOriginal ?? '').trim();
+  return (el?.textContent ?? (input ? originalName.get(input) : undefined) ?? '').trim();
 }
 
 function visibleItems(list: Element | null): HTMLElement[] {
@@ -90,7 +89,7 @@ export const treeBehavior: Behavior = {
     const doc = tree.ownerDocument;
     const createdNodes: HTMLElement[] = [];
     const editable = () => flag(tree, 'data-eds-editable');
-    const multiselect = () => flag(tree, 'data-eds-multiselect');
+    const multiselect = () => flag(tree, 'data-eds-multiple');
     const rootList = (): HTMLElement | null =>
       Array.from(tree.children).find((c): c is HTMLElement => c.matches('ul[role="tree"]')) ?? null;
     const aborts = new Set<AbortController>();
@@ -325,7 +324,7 @@ export const treeBehavior: Behavior = {
         if (!response.ok) throw new Error(String(response.status));
         const data = (await response.json()) as TreeNodeData[];
         if (!Array.isArray(data)) throw new Error('formato');
-        li.removeAttribute('data-eds-lazy');
+        li.removeAttribute('data-lazy');
         const group = groupOf(li) ?? ensureGroup(li);
         group.replaceChildren(...data.map((d) => buildNode(d)));
         li.setAttribute('aria-expanded', 'true');
@@ -393,7 +392,7 @@ export const treeBehavior: Behavior = {
         group.append(...data.children.map((c) => buildNode(c)));
         li.setAttribute('aria-expanded', String(data.expanded === true));
       } else if (data.hasChildren) {
-        li.setAttribute('data-eds-lazy', '');
+        li.setAttribute('data-lazy', '');
         li.setAttribute('aria-expanded', 'false');
       }
       return li;
@@ -509,7 +508,7 @@ export const treeBehavior: Behavior = {
       input.type = 'text';
       input.className = 'eds-input eds-input-sm';
       input.value = previous;
-      input.dataset.edsOriginal = previous;
+      originalName.set(input, previous);
       input.setAttribute('aria-label', format(getMessages().treeRenameLabel, { label: previous }));
       label.replaceWith(input);
       li.setAttribute('data-editing', '');
@@ -644,9 +643,13 @@ export const treeBehavior: Behavior = {
       changed('delete', li, parent, index);
       focusItem(next ?? visibleItems(rootList())[0]);
       const base =
-        count === 0 ? m.treeDeleted : count === 1 ? m.treeDeletedOneChild : m.treeDeletedChildren;
+        count === 0
+          ? m.treeDeleted
+          : count === 1
+            ? m.treeDeletedChildrenOne
+            : m.treeDeletedChildrenMany;
       const id = toast({
-        variant: 'info',
+        tone: 'info',
         message: `${format(base, { label, count })} ${m.treeUndoHint}`,
         duration: 8000,
         action: { label: m.treeUndo, onClick: () => restore(li, parent, index) },
@@ -670,7 +673,7 @@ export const treeBehavior: Behavior = {
     const undoLast = (): boolean => {
       const last = undoStack.pop();
       if (!last) return false;
-      toast.dismiss(last.id);
+      toast.close(last.id);
       restore(last.li, last.parent, last.index);
       return true;
     };
@@ -996,8 +999,8 @@ export const treeBehavior: Behavior = {
     const clearDrop = () => {
       if (expandTimer) clearTimeout(expandTimer);
       expandTimer = null;
-      for (const row of Array.from(tree.querySelectorAll(`${ROW}[data-drop]`))) {
-        row.removeAttribute('data-drop');
+      for (const row of Array.from(tree.querySelectorAll(`${ROW}[data-drop-target]`))) {
+        row.removeAttribute('data-drop-target');
         row.removeAttribute('data-drop-invalid');
       }
       dropTarget = null;
@@ -1042,7 +1045,7 @@ export const treeBehavior: Behavior = {
           if (!found) return;
           dropTarget = found;
           const row = rowOf(found.li);
-          row?.setAttribute('data-drop', found.zone);
+          row?.setAttribute('data-drop-target', found.zone);
           if (found.invalid) row?.setAttribute('data-drop-invalid', '');
           else if (found.zone === 'inside' && isParent(found.li) && !isExpanded(found.li)) {
             const li = found.li;
@@ -1095,7 +1098,23 @@ export const treeBehavior: Behavior = {
       });
 
     const source = tree.getAttribute('data-eds-source');
-    if (!rootList() && source) {
+    const itemsScript = tree.querySelector<HTMLScriptElement>(
+      'script[type="application/json"][data-eds-tree-items]',
+    );
+    if (!rootList() && itemsScript) {
+      try {
+        const data: unknown = JSON.parse(itemsScript.textContent ?? '[]');
+        if (Array.isArray(data)) {
+          const list = doc.createElement('ul');
+          list.setAttribute('role', 'tree');
+          list.append(...(data as TreeNodeData[]).map((d) => buildNode(d)));
+          tree.insertBefore(list, tree.firstChild);
+          refresh();
+        }
+      } catch {
+        say(getMessages().treeLoadError);
+      }
+    } else if (!rootList() && source) {
       const control = new AbortController();
       aborts.add(control);
       tree.setAttribute('aria-busy', 'true');

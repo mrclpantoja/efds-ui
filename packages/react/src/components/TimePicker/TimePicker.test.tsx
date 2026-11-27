@@ -42,19 +42,19 @@ describe('TimePicker', () => {
     );
   });
 
-  it('máscara, hidden HH:MM e onChange só com horário completo e válido', async () => {
-    const onChange = vi.fn();
+  it('máscara, hidden HH:MM e onValueChange só com horário completo e válido', async () => {
+    const onValueChange = vi.fn();
     const user = userEvent.setup();
     const { container } = render(
-      <TimePicker aria-label="Início" name="inicio" onChange={onChange} />,
+      <TimePicker aria-label="Início" name="inicio" onValueChange={onValueChange} />,
     );
     const input = screen.getByRole('combobox');
     await user.type(input, '1430');
     expect(input).toHaveValue('14:30');
     expect(container.querySelector<HTMLInputElement>('input[type="hidden"]')?.value).toBe('14:30');
-    expect(onChange).toHaveBeenLastCalledWith('14:30');
+    expect(onValueChange).toHaveBeenLastCalledWith('14:30');
     await user.clear(input);
-    expect(onChange).toHaveBeenLastCalledWith('');
+    expect(onValueChange).toHaveBeenLastCalledWith('');
     await user.type(input, '143');
     expect(container.querySelector<HTMLInputElement>('input[type="hidden"]')?.value).toBe('');
   });
@@ -107,7 +107,7 @@ describe('TimePicker', () => {
     const user = userEvent.setup();
     function Harness() {
       const [v, setV] = useState('');
-      return <TimePicker aria-label="Início" step={15} value={v} onChange={setV} />;
+      return <TimePicker aria-label="Início" step={15} value={v} onValueChange={setV} />;
     }
     render(<Harness />);
     const input = screen.getByRole('combobox');

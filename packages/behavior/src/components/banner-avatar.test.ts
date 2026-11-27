@@ -63,7 +63,7 @@ describe('banner', () => {
   const html = (attrs = '') => `
 <div id="b" class="eds-banner" data-eds-banner="manutencao" ${attrs} role="region" aria-label="Aviso">
   <p>Manutenção programada.</p>
-  <button type="button" data-eds-banner-close aria-label="Fechar aviso">x</button>
+  <button type="button" data-eds-close aria-label="Fechar aviso">x</button>
 </div>
 <a id="depois" href="#x">depois</a>`;
 
@@ -72,7 +72,7 @@ describe('banner', () => {
     destroy = initBanner(document);
     const onClose = vi.fn();
     document.getElementById('b')?.addEventListener('eds:banner-close', onClose);
-    const button = document.querySelector<HTMLButtonElement>('[data-eds-banner-close]');
+    const button = document.querySelector<HTMLButtonElement>('[data-eds-close]');
     button?.focus();
     button?.click();
     expect(document.getElementById('b')?.hidden).toBe(true);
@@ -87,7 +87,7 @@ describe('banner', () => {
       '<a id="oculto" href="#o" style="display:none">oculto</a><a id="depois"',
     );
     destroy = initBanner(document);
-    const button = document.querySelector<HTMLButtonElement>('[data-eds-banner-close]');
+    const button = document.querySelector<HTMLButtonElement>('[data-eds-close]');
     button?.focus();
     button?.click();
     expect(document.activeElement).toBe(document.getElementById('depois'));
@@ -101,13 +101,13 @@ describe('banner', () => {
   });
 
   it('lembrança desligável: fecha mas não grava nem esconde na próxima', () => {
-    document.body.innerHTML = html('data-eds-banner-remember="off"');
+    document.body.innerHTML = html('data-eds-banner-remember="false"');
     destroy = initBanner(document);
-    document.querySelector<HTMLButtonElement>('[data-eds-banner-close]')?.click();
+    document.querySelector<HTMLButtonElement>('[data-eds-close]')?.click();
     expect(document.getElementById('b')?.hidden).toBe(true);
     expect(localStorage.length).toBe(0);
     destroy();
-    document.body.innerHTML = html('data-eds-banner-remember="off"');
+    document.body.innerHTML = html('data-eds-banner-remember="false"');
     localStorage.setItem('eds:banner:manutencao', '1');
     destroy = initBanner(document);
     expect(document.getElementById('b')?.hidden).toBe(false);
@@ -119,7 +119,7 @@ describe('banner', () => {
     });
     document.body.innerHTML = html();
     destroy = initBanner(document);
-    document.querySelector<HTMLButtonElement>('[data-eds-banner-close]')?.click();
+    document.querySelector<HTMLButtonElement>('[data-eds-close]')?.click();
     expect(document.getElementById('b')?.hidden).toBe(true);
   });
 
@@ -136,9 +136,9 @@ describe('banner', () => {
 
   it('sem id não lembra', () => {
     document.body.innerHTML =
-      '<div id="b" class="eds-banner" data-eds-banner><p>Oi</p><button type="button" data-eds-banner-close>x</button></div>';
+      '<div id="b" class="eds-banner" data-eds-banner><p>Oi</p><button type="button" data-eds-close>x</button></div>';
     destroy = initBanner(document);
-    document.querySelector<HTMLButtonElement>('[data-eds-banner-close]')?.click();
+    document.querySelector<HTMLButtonElement>('[data-eds-close]')?.click();
     expect(localStorage.length).toBe(0);
   });
 });

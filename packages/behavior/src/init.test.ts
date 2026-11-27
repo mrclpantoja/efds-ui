@@ -83,7 +83,10 @@ describe('init', () => {
 
   it('configure troca as mensagens', async () => {
     configure({
-      messages: { sortedBy: 'Sorted by {column}, {direction}.', sortAscending: 'ascending' },
+      messages: {
+        tableSortedBy: 'Sorted by {column}, {direction}.',
+        tableSortAscending: 'ascending',
+      },
     });
     document.body.innerHTML = `<div class="eds-table-wrap"><table class="eds-table"><caption>t</caption>
       <thead><tr><th aria-sort="none"><button class="eds-table-sort">Name</button></th></tr></thead>
@@ -94,9 +97,12 @@ describe('init', () => {
     destroy();
   });
 
-  it('liga tooltip, popover, wizard e barra de filtros (onda B) e usa os textos configurados', async () => {
+  it('liga tooltip, popover, wizard e barra de filtros e usa os textos configurados', async () => {
     configure({
-      messages: { wizardStep: 'Step {current} of {total}: {title}.', filterRemove: ' - remove' },
+      messages: {
+        wizardStep: 'Step {current} of {total}: {title}.',
+        filterChipRemoveHint: ' - remove',
+      },
     });
     document.body.innerHTML = `
       <button id="tb" aria-describedby="tt" data-eds-tooltip>x</button>

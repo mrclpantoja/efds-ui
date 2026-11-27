@@ -56,7 +56,7 @@ describe('tree', () => {
   });
   afterEach(() => {
     destroy();
-    toast.dismissAll();
+    toast.closeAll();
     document.body.innerHTML = '';
     restore();
     vi.useRealTimers();
@@ -167,7 +167,7 @@ describe('tree', () => {
     it('seleção múltipla com Ctrl, Shift e Espaço', async () => {
       const user = userEvent.setup();
       destroy();
-      document.body.innerHTML = html('data-eds-multiselect');
+      document.body.innerHTML = html('data-eds-multiple');
       destroy = initTree(document);
       expect(document.querySelector('ul[role=tree]')).toHaveAttribute(
         'aria-multiselectable',
@@ -639,25 +639,25 @@ describe('tree', () => {
       pointer(document, 'pointerup', 50, y);
     };
 
-    it('mostra data-drop por zona e fantasma; solta antes, dentro e depois', () => {
+    it('mostra data-drop-target por zona e fantasma; solta antes, dentro e depois', () => {
       const onChange = vi.fn();
       tree().addEventListener('eds:tree-change', onChange);
       pointer(grab('n6'), 'pointerdown', 50, 165);
       pointer(document, 'pointermove', 50, 124); // n5: terço de cima (120..150)
       const rowOf = (id: string) => $(id).querySelector('.eds-tree-row') as HTMLElement;
-      expect(rowOf('n5')).toHaveAttribute('data-drop', 'before');
+      expect(rowOf('n5')).toHaveAttribute('data-drop-target', 'before');
       expect($('n6')).toHaveAttribute('data-dragging');
       const ghost = document.querySelector('.eds-sortable-ghost.eds-tree-ghost');
       expect(ghost).not.toBeNull();
       expect(tree().contains(ghost)).toBe(true);
       pointer(document, 'pointermove', 50, 135);
-      expect(rowOf('n5')).toHaveAttribute('data-drop', 'inside');
+      expect(rowOf('n5')).toHaveAttribute('data-drop-target', 'inside');
       expect(rowOf('n5')).not.toHaveAttribute('data-drop-invalid');
       pointer(document, 'pointermove', 50, 128 + 20);
-      expect(rowOf('n5')).toHaveAttribute('data-drop', 'after');
+      expect(rowOf('n5')).toHaveAttribute('data-drop-target', 'after');
       pointer(document, 'pointerup', 50, 148);
       expect(outline()).toEqual(['n1(n2(n3,n4),n5,n6)']);
-      expect(document.querySelector('[data-drop]')).toBeNull();
+      expect(document.querySelector('[data-drop-target]')).toBeNull();
       expect(document.querySelector('.eds-sortable-ghost')).toBeNull();
       expect($('n6')).not.toHaveAttribute('data-dragging');
       expect(onChange.mock.calls[0]?.[0].detail).toMatchObject({
@@ -691,7 +691,7 @@ describe('tree', () => {
       pointer(grab('n1'), 'pointerdown', 50, 15);
       pointer(document, 'pointermove', 50, 75); // n3 (inside)
       const row = $('n3').querySelector('.eds-tree-row') as HTMLElement;
-      expect(row).toHaveAttribute('data-drop', 'inside');
+      expect(row).toHaveAttribute('data-drop-target', 'inside');
       expect(row).toHaveAttribute('data-drop-invalid');
       pointer(document, 'pointerup', 50, 75);
       expect(outline()).toEqual(['n1(n2(n3,n4),n5)', 'n6']);
@@ -723,7 +723,7 @@ describe('tree', () => {
       document.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
       );
-      expect(document.querySelector('[data-drop]')).toBeNull();
+      expect(document.querySelector('[data-drop-target]')).toBeNull();
       expect($('n6')).not.toHaveAttribute('data-dragging');
       pointer(document, 'pointerup', 50, 135);
       expect(outline()).toEqual(['n1(n2(n3,n4),n5)', 'n6']);
@@ -833,7 +833,7 @@ describe('tree', () => {
       document.body.innerHTML = `
         <div class="eds-tree" id="tree" data-eds-tree data-eds-children-url="/api/nos/{id}">
           <ul role="tree" aria-label="x">
-            <li role="treeitem" data-id="p 1" data-eds-lazy aria-expanded="false" tabindex="0">${row('Pai')}</li>
+            <li role="treeitem" data-id="p 1" data-lazy aria-expanded="false" tabindex="0">${row('Pai')}</li>
           </ul>
         </div>`;
       destroy = initTree(document);
@@ -845,7 +845,7 @@ describe('tree', () => {
       resolve({ ok: true, json: async () => [{ id: 'f1', label: 'Filho um' }] });
       await pause(20);
       expect(li).not.toHaveAttribute('aria-busy');
-      expect(li).not.toHaveAttribute('data-eds-lazy');
+      expect(li).not.toHaveAttribute('data-lazy');
       expect(li).toHaveAttribute('aria-expanded', 'true');
       expect(li.querySelector('[role=group] > li')).toHaveAttribute('aria-level', '2');
     });
@@ -858,7 +858,7 @@ describe('tree', () => {
       document.body.innerHTML = `
         <div class="eds-tree" id="tree" data-eds-tree data-eds-children-url="/api/nos/">
           <ul role="tree" aria-label="x">
-            <li role="treeitem" data-id="p" data-eds-lazy aria-expanded="false" tabindex="0">${row('Pai')}</li>
+            <li role="treeitem" data-id="p" data-lazy aria-expanded="false" tabindex="0">${row('Pai')}</li>
           </ul>
         </div>`;
       destroy = initTree(document);
@@ -867,7 +867,7 @@ describe('tree', () => {
       await user.keyboard('{ArrowRight}');
       await pause(20);
       expect(li).toHaveAttribute('aria-expanded', 'false');
-      expect(li).toHaveAttribute('data-eds-lazy');
+      expect(li).toHaveAttribute('data-lazy');
       expect(status()).toHaveTextContent(
         'Não foi possível carregar os itens de Pai. Pressione → para tentar de novo.',
       );
@@ -955,5 +955,23 @@ describe('tree', () => {
       expect($('n5').querySelector('input')).toBeNull();
       destroy = initTree(document);
     });
+  });
+});
+
+describe('tree: dados locais em <script data-eds-tree-items>', () => {
+  it('monta a árvore do JSON dentro do contêiner, sem rede', () => {
+    const restore = installDomPolyfills();
+    document.body.innerHTML = `<div class="eds-tree" id="tree" data-eds-tree aria-label="Estrutura">
+      <script type="application/json" data-eds-tree-items>
+        [{ "id": "a", "label": "Diretoria Fictícia", "children": [{ "id": "b", "label": "Filial Teste" }] }]
+      </script></div>`;
+    const destroy = initTree(document);
+    expect(document.querySelectorAll('ul[role=tree] > li[role=treeitem]')).toHaveLength(1);
+    expect(document.querySelector('[data-id="b"] .eds-tree-label')?.textContent).toBe(
+      'Filial Teste',
+    );
+    destroy();
+    restore();
+    document.body.innerHTML = '';
   });
 });

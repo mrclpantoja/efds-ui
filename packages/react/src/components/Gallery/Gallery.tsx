@@ -2,6 +2,7 @@ import {
   forwardRef,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type HTMLAttributes,
@@ -13,12 +14,14 @@ import {
   indexForKey,
   neighborIndexes,
   swipeDirection,
-} from '@efds-ui/behavior/image';
+} from '@efds-ui/behavior/internal';
 import { useAnnouncer } from '../../internal/announcer';
+import { useControllable } from '../../internal/useControllable';
 import { ChevronLeftGlyph, ChevronRightGlyph, CloseGlyph } from '../../internal/glyphs';
 import { ImageGlyph } from '../../internal/glyphs-image';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
+import { mergeRefs } from '../../internal/refs-d';
 
 export interface GalleryItem {
   /** Imagem grande, aberta no visualizador (e o destino do link sem JS). */
@@ -58,8 +61,12 @@ export interface GalleryProps extends Omit<HTMLAttributes<HTMLUListElement>, 'ch
   items: readonly GalleryItem[];
   /** Proporção das miniaturas: quadrada (padrão) ou 4x3. */
   ratio?: '1x1' | '4x3';
-  /** A imagem mostrada no visualizador mudou (ou abriu). */
-  onIndexChange?: (index: number) => void;
+  /** Índice da imagem aberta no visualizador (controlado); `null` = visualizador fechado. */
+  index?: number | null;
+  /** Índice aberto ao montar (não controlado). Padrão: `null` (fechado). */
+  defaultIndex?: number | null;
+  /** A imagem mostrada no visualizador mudou, abriu ou fechou (`null`). */
+  onIndexChange?: (index: number | null) => void;
   texts?: Partial<GalleryTexts>;
 }
 
@@ -263,14 +270,38 @@ function Lightbox({ items, index, label, theme, texts, onIndexChange, onClose }:
  * anunciados a cada troca; o foco volta à miniatura da última imagem vista.
  */
 export const Gallery = forwardRef<HTMLUListElement, GalleryProps>(function Gallery(
-  { label, items, ratio = '1x1', onIndexChange, texts, className, ...rest },
+  {
+    label,
+    items,
+    ratio = '1x1',
+    index: indexProp,
+    defaultIndex = null,
+    onIndexChange,
+    texts,
+    className,
+    ...rest
+  },
   ref,
 ) {
   const t = mergeTexts(defaultTexts, texts);
-  const [open, setOpen] = useState<{ index: number; theme: string | null } | null>(null);
+  const [openIndex, setOpenIndex] = useControllable<number | null>(
+    indexProp,
+    defaultIndex,
+    onIndexChange,
+  );
+  const open = openIndex !== null;
+  const [theme, setTheme] = useState<string | null>(null);
+  const listRef = useRef<HTMLUListElement | null>(null);
   const anchors = useRef<(HTMLAnchorElement | null)[]>([]);
   const lastIndex = useRef(0);
   const wasOpen = useRef(false);
+
+  // O visualizador herda o tema vigente da galeria (ele é um <dialog> no topo da página).
+  useLayoutEffect(() => {
+    if (open) {
+      setTheme(listRef.current?.closest('[data-theme]')?.getAttribute('data-theme') ?? null);
+    }
+  }, [open]);
 
   useEffect(() => {
     if (open) {
@@ -285,15 +316,14 @@ export const Gallery = forwardRef<HTMLUListElement, GalleryProps>(function Galle
 
   const show = (index: number) => {
     lastIndex.current = index;
-    setOpen((current) => (current ? { ...current, index } : current));
-    onIndexChange?.(index);
+    setOpenIndex(index);
   };
 
   return (
     <>
       <ul
         {...rest}
-        ref={ref}
+        ref={mergeRefs(ref, listRef)}
         className={cx('eds-gallery', ratio === '4x3' && 'eds-gallery-4x3', className)}
         aria-label={label}
       >
@@ -310,13 +340,7 @@ export const Gallery = forwardRef<HTMLUListElement, GalleryProps>(function Galle
               onClick={(event) => {
                 if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey) return;
                 event.preventDefault();
-                lastIndex.current = i;
-                setOpen({
-                  index: i,
-                  theme:
-                    event.currentTarget.closest('[data-theme]')?.getAttribute('data-theme') ?? null,
-                });
-                onIndexChange?.(i);
+                show(i);
               }}
             >
               <img
@@ -334,12 +358,12 @@ export const Gallery = forwardRef<HTMLUListElement, GalleryProps>(function Galle
       {open ? (
         <Lightbox
           items={items}
-          index={clampIndex(open.index, items.length)}
+          index={clampIndex(openIndex, items.length)}
           label={label}
-          theme={open.theme}
+          theme={theme}
           texts={t}
           onIndexChange={show}
-          onClose={() => setOpen(null)}
+          onClose={() => setOpenIndex(null)}
         />
       ) : null}
     </>

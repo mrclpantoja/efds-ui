@@ -13,7 +13,7 @@ export default function Basico() {
       rows={8}
       placeholder="Escreva a descrição…"
       value={html}
-      onChange={setHtml}
+      onValueChange={setHtml}
     />
   );
 }

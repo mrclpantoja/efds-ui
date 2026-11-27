@@ -1,12 +1,13 @@
-import { forwardRef, type HTMLAttributes, type MouseEventHandler, type ReactNode } from 'react';
+import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { Button } from '../Button/Button';
 import { CloseGlyph } from '../../internal/glyphs';
+import type { Tone } from '../../internal/tone';
 
-export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+export type AlertTone = Extract<Tone, 'info' | 'success' | 'warning' | 'danger'>;
 
-const severityDefault: Record<AlertVariant, string> = {
+const severityDefault: Record<AlertTone, string> = {
   info: 'Informação:',
   success: 'Sucesso:',
   warning: 'Atenção:',
@@ -16,7 +17,7 @@ const severityDefault: Record<AlertVariant, string> = {
 export interface AlertTexts {
   /**
    * Severidade para leitores de tela, antes do título (a cor e o ícone não bastam). Padrão por
-   * variante: "Informação:", "Sucesso:", "Atenção:", "Erro:". Passe `false` quando o título já
+   * tom: "Informação:", "Sucesso:", "Atenção:", "Erro:". Passe `false` quando o título já
    * diz a severidade.
    */
   severity: string | false;
@@ -26,7 +27,7 @@ export interface AlertTexts {
 
 export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Padrão: `info`. O ícone vem do core (decorativo): diga a severidade no texto ("Erro:"). */
-  variant?: AlertVariant;
+  tone?: AlertTone;
   /** Textos internos (padrões em pt-BR): `severity` (prefixo oculto) e `close`. */
   texts?: Partial<AlertTexts>;
   /** Título opcional, em linha própria acima do conteúdo. */
@@ -34,11 +35,11 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
   /** Botões de ação (ex.: `<Button size="sm">`), à direita do conteúdo. */
   actions?: ReactNode;
   /**
-   * Mostra o botão de fechar. O Alert NÃO se remove: o consumidor desmonta o aviso e, como o botão
-   * (que tinha o foco) sai do DOM, deve mover o foco para um elemento lógico seguinte
-   * (ex.: o gatilho que reabre o aviso ou o próximo campo).
+   * Mostra o botão de fechar e o chama ao clicar. O Alert NÃO se remove: o consumidor desmonta o
+   * aviso e, como o botão (que tinha o foco) sai do DOM, deve mover o foco para um elemento lógico
+   * seguinte (ex.: o gatilho que reabre o aviso ou o próximo campo).
    */
-  onClose?: MouseEventHandler<HTMLButtonElement>;
+  onDismiss?: () => void;
 }
 
 /**
@@ -46,18 +47,18 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
  * (urgente) ou `role="status"` (informativo).
  */
 export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  { variant = 'info', texts, title, actions, onClose, className, children, ...rest },
+  { tone = 'info', texts, title, actions, onDismiss, className, children, ...rest },
   ref,
 ) {
   const hasTitle = title != null && title !== false;
   const t = mergeTexts(
-    { severity: severityDefault[variant], close: 'Fechar aviso' } as AlertTexts,
+    { severity: severityDefault[tone], close: 'Fechar aviso' } as AlertTexts,
     texts,
   );
   const severity = t.severity === false ? null : t.severity;
   const hidden = severity ? <span className="eds-visually-hidden">{severity} </span> : null;
   return (
-    <div {...rest} ref={ref} className={cx('eds-alert', `eds-alert-${variant}`, className)}>
+    <div {...rest} ref={ref} className={cx('eds-alert', `eds-alert-${tone}`, className)}>
       <div className="eds-alert-content">
         {hasTitle ? (
           <p className="eds-alert-title">
@@ -70,14 +71,14 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
         {children}
       </div>
       {actions != null && actions !== false && <div className="eds-alert-actions">{actions}</div>}
-      {onClose && (
+      {onDismiss && (
         <Button
           variant="ghost"
           size="sm"
           iconOnly
           className="eds-alert-close"
           aria-label={t.close}
-          onClick={onClose}
+          onClick={() => onDismiss()}
         >
           <CloseGlyph />
         </Button>

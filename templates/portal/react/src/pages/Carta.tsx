@@ -122,7 +122,7 @@ export function Carta({ params }: { params: URLSearchParams }) {
               return (
                 <Stack as="section" gap={3} key={category.slug} aria-labelledby={headingId}>
                   <h2 className="eds-text-h3" id={headingId}>
-                    {category.name} <Badge variant="neutral">{items.length}</Badge>
+                    {category.name} <Badge tone="neutral">{items.length}</Badge>
                   </h2>
                   <Accordion>
                     {items.map((s) => (

@@ -10,7 +10,7 @@ import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { mergeRefs } from '../../internal/refs-d';
 
-export interface ActiveFilter {
+export interface FilterBarActiveFilter {
   /** Chave estável do filtro (também a `key` do chip). */
   key: string;
   /** Texto do chip, já com o rótulo: "Situação: Ativo". */
@@ -48,7 +48,7 @@ export interface FilterBarProps extends Omit<
   /** "Limpar": zere os campos e refaça a busca. */
   onClear?: () => void;
   /** Filtros aplicados, um chip cada. */
-  active?: readonly ActiveFilter[];
+  active?: readonly FilterBarActiveFilter[];
   /** Campos principais (a busca leva `.eds-filter-bar-search` no `<Field>`). */
   children?: ReactNode;
   /** Campos extras: dentro de "Mais filtros" (`<details>`). */

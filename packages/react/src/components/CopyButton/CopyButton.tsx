@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { forwardRef, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useAnnouncer } from '../../internal/announcer';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
@@ -96,82 +96,89 @@ export type CopyButtonProps =
  * Botão de copiar. Depois de copiar, o rótulo vira "Copiado" por 2 s (`data-copied`) e um
  * status à parte anuncia. Só ícone (`iconOnly` + `aria-label`): o nome acessível também muda.
  */
-export function CopyButton(props: CopyButtonProps) {
-  const {
-    text,
-    onCopy,
-    onCopyError,
-    feedbackMs = 2000,
-    texts,
-    className,
-    variant = 'secondary',
-    size = 'sm',
-    ...rest
-  } = props;
-  const t = mergeTexts(defaultTexts, texts);
-  const [copied, setCopied] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { text: status, announce } = useAnnouncer();
+export const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
+  function CopyButton(props, ref) {
+    const {
+      text,
+      onCopy,
+      onCopyError,
+      feedbackMs = 2000,
+      texts,
+      className,
+      variant = 'secondary',
+      size = 'sm',
+      ...rest
+    } = props;
+    const t = mergeTexts(defaultTexts, texts);
+    const [copied, setCopied] = useState(false);
+    const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const { text: status, announce } = useAnnouncer();
 
-  useEffect(
-    () => () => {
-      if (timer.current) clearTimeout(timer.current);
-    },
-    [],
-  );
+    useEffect(
+      () => () => {
+        if (timer.current) clearTimeout(timer.current);
+      },
+      [],
+    );
 
-  const onClick = useCallback(() => {
-    const value = typeof text === 'function' ? text() : text;
-    void copyToClipboard(value).then((ok) => {
-      if (!ok) {
-        announce(t.failed);
-        onCopyError?.();
-        return;
-      }
-      setCopied(true);
-      announce(t.announce);
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => setCopied(false), feedbackMs);
-      onCopy?.(value);
-    });
-  }, [text, announce, t.failed, t.announce, onCopy, onCopyError, feedbackMs]);
+    const onClick = useCallback(() => {
+      const value = typeof text === 'function' ? text() : text;
+      void copyToClipboard(value).then((ok) => {
+        if (!ok) {
+          announce(t.failed);
+          onCopyError?.();
+          return;
+        }
+        setCopied(true);
+        announce(t.announce);
+        if (timer.current) clearTimeout(timer.current);
+        timer.current = setTimeout(() => setCopied(false), feedbackMs);
+        onCopy?.(value);
+      });
+    }, [text, announce, t.failed, t.announce, onCopy, onCopyError, feedbackMs]);
 
-  const icons = (
-    <>
-      <svg className="eds-copy-icon-idle" {...iconProps}>
-        <rect x="9" y="9" width="11" height="11" rx="2" />
-        <path d="M5 15V6a2 2 0 012-2h9" />
-      </svg>
-      <svg className="eds-copy-icon-done" {...iconProps}>
-        <path d="M5 12l5 5 9-10" />
-      </svg>
-    </>
-  );
-  const common = {
-    variant,
-    size,
-    className: cx('eds-copy', className),
-    'data-copied': copied ? 'true' : undefined,
-    disabled: rest.disabled,
-    id: rest.id,
-    onClick,
-  };
-  return (
-    <>
-      {rest.iconOnly ? (
-        <Button {...common} iconOnly aria-label={copied ? t.copied : rest['aria-label']}>
-          {icons}
-        </Button>
-      ) : (
-        <Button {...common} aria-label={rest['aria-label']}>
-          {icons}
-          <span className="eds-copy-label">{copied ? t.copied : (rest.children ?? t.copy)}</span>
-        </Button>
-      )}
-      <span className="eds-visually-hidden" role="status" aria-live="polite">
-        {status}
-      </span>
-    </>
-  );
-}
+    const icons = (
+      <>
+        <svg className="eds-copy-icon-idle" {...iconProps}>
+          <rect x="9" y="9" width="11" height="11" rx="2" />
+          <path d="M5 15V6a2 2 0 012-2h9" />
+        </svg>
+        <svg className="eds-copy-icon-done" {...iconProps}>
+          <path d="M5 12l5 5 9-10" />
+        </svg>
+      </>
+    );
+    const common = {
+      variant,
+      size,
+      className: cx('eds-copy', className),
+      'data-copied': copied ? '' : undefined,
+      disabled: rest.disabled,
+      id: rest.id,
+      onClick,
+    };
+    return (
+      <>
+        {rest.iconOnly ? (
+          <Button
+            {...common}
+            ref={ref}
+            iconOnly
+            aria-label={copied ? t.copied : rest['aria-label']}
+          >
+            {icons}
+          </Button>
+        ) : (
+          <Button {...common} ref={ref} aria-label={rest['aria-label']}>
+            {icons}
+            <span className="eds-copy-label">{copied ? t.copied : (rest.children ?? t.copy)}</span>
+          </Button>
+        )}
+        <span className="eds-visually-hidden" role="status" aria-live="polite">
+          {status}
+        </span>
+      </>
+    );
+  },
+);
 CopyButton.displayName = 'CopyButton';

@@ -10,7 +10,9 @@ describe('DescriptionList', () => {
   ];
 
   it('dl com div > dt + dd', () => {
-    const { container } = render(<DescriptionList items={items} columns={2} horizontal striped />);
+    const { container } = render(
+      <DescriptionList items={items} columns={2} orientation="horizontal" striped />,
+    );
     const dl = container.querySelector('dl')!;
     expect(dl).toHaveClass(
       'eds-description-list',

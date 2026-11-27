@@ -94,7 +94,7 @@ export interface FileUploadProps extends Omit<
   /** Erro: `aria-invalid="true"`. Dentro de um Field com `error` já é automático. */
   invalid?: boolean;
   /** Arquivos válidos mudaram (adição ou remoção). */
-  onChange?: (files: File[]) => void;
+  onValueChange?: (files: File[]) => void;
   /**
    * Modo imediato: cada arquivo válido é enviado na hora por esta função, que devolve o id (vira
    * um `hidden` com `name`; o input perde o `name`, para não reenviar o binário). Sem ela, os
@@ -211,7 +211,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
     compact,
     invalid,
     disabled,
-    onChange,
+    onValueChange,
     upload,
     onUploadError,
     texts: textsProp,
@@ -342,7 +342,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
     if (added.length === 0 && multiple) return;
     const next = [...list, ...added];
     setItems(next);
-    onChange?.(validFiles(next));
+    onValueChange?.(validFiles(next));
     if (immediate) for (const i of ok) startUpload(i.key);
   };
 
@@ -401,7 +401,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
     const next = list.filter((i) => i.key !== item.key);
     setItems(next);
     announce(t.removed(item.file.name));
-    onChange?.(validFiles(next));
+    onValueChange?.(validFiles(next));
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

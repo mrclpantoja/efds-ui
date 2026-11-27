@@ -103,7 +103,7 @@ export default function InputGroupPage() {
               effect: 'No .eds-number: liga os botões e o teclado (@efds-ui/behavior).',
             },
             {
-              name: 'min, max, step (no input) ou data-eds-number-min/-max/-step',
+              name: 'min, max, step (no input) ou data-eds-min/-max/-step',
               effect:
                 'Faixa e passo (padrão 1). Os atributos do input valem mesmo com type="text".',
             },
@@ -155,7 +155,7 @@ export default function InputGroupPage() {
               description: 'Valor controlado ou inicial; null é vazio.',
             },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(value: number | null) => void',
               description: 'Ao confirmar (sair, Enter, setas, botões), nunca a cada tecla.',
             },

@@ -20,6 +20,7 @@ export interface LocaleProviderProps {
 export function LocaleProvider({ locale = DEFAULT_LOCALE, children }: LocaleProviderProps) {
   return <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>;
 }
+LocaleProvider.displayName = 'LocaleProvider';
 
 /** Locale em vigor (o do `LocaleProvider` mais próximo, ou `pt-BR`). */
 export function useLocale(): string {

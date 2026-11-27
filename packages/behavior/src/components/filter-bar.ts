@@ -41,9 +41,9 @@ const cleanText = (el: Element): string => {
 
 function labelOf(control: Control, wrapper: Element | null): string {
   const override =
-    control.getAttribute('data-eds-filter-label') ??
-    wrapper?.getAttribute('data-eds-filter-label') ??
-    control.closest('[data-eds-filter-label]')?.getAttribute('data-eds-filter-label');
+    control.getAttribute('data-eds-filter-label-text') ??
+    wrapper?.getAttribute('data-eds-filter-label-text') ??
+    control.closest('[data-eds-filter-label-text]')?.getAttribute('data-eds-filter-label-text');
   if (override) return override;
   const visible = wrapper?.querySelector<HTMLInputElement>('input:not([type="hidden"])');
   const source = visible ?? control;
@@ -62,8 +62,8 @@ function labelOf(control: Control, wrapper: Element | null): string {
 /** Rótulo de um grupo de opções: o `legend` do fieldset (checkbox e radio têm rótulo próprio). */
 function groupLabel(control: HTMLInputElement): string {
   const override = control
-    .closest('[data-eds-filter-label]')
-    ?.getAttribute('data-eds-filter-label');
+    .closest('[data-eds-filter-label-text]')
+    ?.getAttribute('data-eds-filter-label-text');
   if (override) return override;
   const legend = control.closest('fieldset')?.querySelector(':scope > legend');
   return legend ? cleanText(legend) : '';
@@ -286,7 +286,7 @@ function clearControl(control: Control, only?: string): void {
  * próximo chip (ou ao primeiro campo). O envio é o normal do formulário (GET sem JS continua
  * valendo). `eds:filter-change` no formulário a cada envio (`detail`: `reason`, `values`,
  * `filters`, `count`). Campo fora da barra: `data-eds-filter-ignore`; rótulo do chip:
- * `data-eds-filter-label`.
+ * `data-eds-filter-label-text`.
  */
 export const filterBarBehavior: Behavior = {
   name: 'filter-bar',
@@ -307,7 +307,7 @@ export const filterBarBehavior: Behavior = {
     }
     const chips = list;
     if (!chips.hasAttribute('aria-label') && !chips.hasAttribute('aria-labelledby')) {
-      chips.setAttribute('aria-label', getMessages().filterChips);
+      chips.setAttribute('aria-label', getMessages().filterChipsLabel);
     }
     let status = f.querySelector<HTMLElement>('[data-eds-filter-status]');
     let ownStatus = false;
@@ -328,8 +328,8 @@ export const filterBarBehavior: Behavior = {
 
     const countText = (count: number): string => {
       const m = getMessages();
-      if (count === 0) return m.filterCountNone;
-      return count === 1 ? m.filterCountOne : format(m.filterCountMany, { count });
+      if (count === 0) return m.filterBarCountNone;
+      return count === 1 ? m.filterBarCountOne : format(m.filterBarCountMany, { count });
     };
 
     const chipText = (item: ActiveFilter): string =>
@@ -348,7 +348,7 @@ export const filterBarBehavior: Behavior = {
           if (item.value) button.setAttribute('data-eds-filter-value', item.value);
           const hidden = doc.createElement('span');
           hidden.className = 'eds-visually-hidden';
-          hidden.textContent = m.filterRemove;
+          hidden.textContent = m.filterChipRemoveHint;
           button.append(`${chipText(item)} `, chipIcon(), hidden);
           li.append(button);
           return li;
@@ -377,7 +377,7 @@ export const filterBarBehavior: Behavior = {
           ownCounter = true;
         }
       }
-      counter.textContent = format(getMessages().filterMoreCount, { count: inMore.length });
+      counter.textContent = format(getMessages().filterBarMoreCount, { count: inMore.length });
     };
 
     let reason: FilterChange['reason'] = 'submit';
@@ -425,7 +425,7 @@ export const filterBarBehavior: Behavior = {
       for (const control of filterControls(f)) {
         if (control.name === key) clearControl(control, only ?? undefined);
       }
-      announcer.say(format(getMessages().filterRemoved, { label }));
+      announcer.say(format(getMessages().filterBarRemoved, { label }));
       reason = 'remove';
       submit();
       // Sem preventDefault do aplicativo o formulário navega; senão o status já foi dito.
@@ -435,7 +435,7 @@ export const filterBarBehavior: Behavior = {
     const onReset = (event: Event) => {
       event.preventDefault();
       for (const control of filterControls(f)) clearControl(control);
-      announcer.say(getMessages().filterCleared);
+      announcer.say(getMessages().filterBarCleared);
       reason = 'clear';
       submit();
       announcer.say(countText(chips.querySelectorAll('button').length));

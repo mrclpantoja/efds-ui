@@ -46,7 +46,7 @@ export default function CommandPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="@efds-ui/behavior">
+        <Alert tone="info" title="@efds-ui/behavior">
           <p>
             Um <code>dialog.eds-modal.eds-command</code> com <code>data-eds-command</code>. Os itens
             podem estar na marcação (<code>.eds-command-item</code> com <code>data-value</code>,{' '}
@@ -63,9 +63,9 @@ export default function CommandPage() {
           </p>
           <p>
             Atalho: <code>data-eds-command-shortcut=&quot;mod+k&quot;</code> (padrão; também{' '}
-            <code>ctrl+shift+p</code>, <code>/</code>; <code>off</code> desliga). Recentes:{' '}
-            <code>data-eds-command-recent=&quot;5&quot;</code> (desligado se ausente;{' '}
-            <code>off</code> desliga); a chave do <code>localStorage</code> é{' '}
+            <code>ctrl+shift+p</code>, <code>/</code>; <code>=&quot;false&quot;</code> desliga).
+            Recentes: <code>data-eds-command-recent=&quot;5&quot;</code> (desligado se ausente;{' '}
+            <code>=&quot;false&quot;</code> desliga); a chave do <code>localStorage</code> é{' '}
             <code>data-eds-command-storage</code> (padrão <code>eds:command-recent</code>). O evento{' '}
             <code>eds:command-select</code> (cancelável) traz{' '}
             <code>

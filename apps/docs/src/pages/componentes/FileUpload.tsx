@@ -111,7 +111,7 @@ export default function FileUploadPage() {
       />
 
       <Section title="Modo formulário">
-        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
+        <Alert tone="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             Sem JavaScript o componente continua funcionando: o <code>label</code> abre o seletor
             nativo e o formulário envia o input. A lista, a validação visível, o acúmulo entre
@@ -292,7 +292,7 @@ export default function FileUploadPage() {
             },
             { name: 'disabled', type: 'boolean', description: 'Desabilita o input e o arrastar.' },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(files: File[]) => void',
               description: 'Os arquivos válidos mudaram (adição ou remoção).',
             },

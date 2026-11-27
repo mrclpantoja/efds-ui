@@ -8,8 +8,8 @@ const html = `
 <div id="n" class="eds-popover" popover role="dialog" aria-labelledby="nt" data-eds-notifications>
   <h2 id="nt" class="eds-popover-title">Notificações</h2>
   <ul>
-    <li id="a" class="eds-notification" data-unread="true"><a href="#a1">Pedido aprovado</a></li>
-    <li id="b" class="eds-notification" data-unread="true"><button type="button">Relatório pronto</button></li>
+    <li id="a" class="eds-notification" data-unread><a href="#a1">Pedido aprovado</a></li>
+    <li id="b" class="eds-notification" data-unread><button type="button">Relatório pronto</button></li>
     <li id="c" class="eds-notification"><a href="#c1">Backup concluído</a></li>
   </ul>
   <p class="eds-notifications-empty" hidden>Nenhuma notificação.</p>
@@ -76,7 +76,7 @@ describe('notificações', () => {
 
   it('já nasce desabilitado quando nada está não lido', () => {
     destroy();
-    document.body.innerHTML = html.replace(/ data-unread="true"/g, '');
+    document.body.innerHTML = html.replace(/ data-unread/g, '');
     destroy = initNotifications(document);
     expect($('all')).toBeDisabled();
   });
@@ -87,7 +87,7 @@ describe('notificações', () => {
     for (let i = 0; i < 120; i += 1) {
       list.insertAdjacentHTML(
         'beforeend',
-        '<li class="eds-notification" data-unread="true"><a href="#x">n</a></li>',
+        '<li class="eds-notification" data-unread><a href="#x">n</a></li>',
       );
     }
     destroy = initNotifications(document);

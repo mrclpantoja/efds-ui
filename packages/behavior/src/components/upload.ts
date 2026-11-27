@@ -382,7 +382,7 @@ export const uploadBehavior: Behavior = {
       parts.push(...notes);
       if (limit) {
         parts.push(
-          maxFiles === 1 ? m.uploadMaxFilesOne : format(m.uploadMaxFiles, { max: maxFiles }),
+          maxFiles === 1 ? m.uploadMaxFilesOne : format(m.uploadMaxFilesMany, { max: maxFiles }),
         );
         parts.push(
           skipped === 1 ? m.uploadNotAddedOne : format(m.uploadNotAddedMany, { count: skipped }),

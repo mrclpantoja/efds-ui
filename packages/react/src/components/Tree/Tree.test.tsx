@@ -170,8 +170,8 @@ describe('Tree: navegação por teclado (APG)', () => {
 
   it('Espaço seleciona (única); clique troca; multiselect usa Ctrl e Shift', async () => {
     const user = userEvent.setup();
-    const onSelect = vi.fn();
-    const { unmount } = render(<Harness onSelect={onSelect} />);
+    const onSelectedChange = vi.fn();
+    const { unmount } = render(<Harness onSelectedChange={onSelectedChange} />);
     item('Sede Modelo').focus();
     await user.keyboard(' ');
     expect(item('Sede Modelo')).toHaveAttribute('aria-selected', 'true');
@@ -179,7 +179,7 @@ describe('Tree: navegação por teclado (APG)', () => {
     expect(item('Sede Modelo')).toHaveAttribute('aria-selected', 'false');
     expect(item('Almoxarifado')).toHaveAttribute('aria-selected', 'true');
     expect(item('Almoxarifado')).toHaveFocus();
-    expect(onSelect).toHaveBeenLastCalledWith(['n6']);
+    expect(onSelectedChange).toHaveBeenLastCalledWith(['n6']);
     unmount();
 
     render(<Harness multiselect />);
@@ -493,18 +493,18 @@ const move = (y: number) =>
 const up = (y: number) => fireEvent.pointerUp(document, { pointerId: 1, clientX: 20, clientY: y });
 
 describe('Tree: arrastar e soltar', () => {
-  it('terço do meio: dentro; mostra data-drop e move para o fim dos filhos', () => {
+  it('terço do meio: dentro; mostra data-drop-target e move para o fim dos filhos', () => {
     const onChanged = vi.fn();
     render(<Harness editable onChanged={onChanged} />);
     setRows();
     down('Almoxarifado');
     move(rowTop('Filial Teste') + 15);
     const row = item('Filial Teste').querySelector('.eds-tree-row')!;
-    expect(row).toHaveAttribute('data-drop', 'inside');
+    expect(row).toHaveAttribute('data-drop-target', 'inside');
     expect(item('Almoxarifado')).toHaveAttribute('data-dragging');
     expect(document.querySelector('.eds-sortable-ghost')).toBeTruthy();
     up(rowTop('Filial Teste') + 15);
-    expect(row).not.toHaveAttribute('data-drop');
+    expect(row).not.toHaveAttribute('data-drop-target');
     expect(levels()).toContain('Almoxarifado@3');
     expect(onChanged.mock.calls[0]![1]).toMatchObject({
       action: 'move',
@@ -519,7 +519,7 @@ describe('Tree: arrastar e soltar', () => {
     down('Almoxarifado');
     move(rowTop('Sede Modelo') + 3);
     expect(item('Sede Modelo').querySelector('.eds-tree-row')).toHaveAttribute(
-      'data-drop',
+      'data-drop-target',
       'before',
     );
     up(rowTop('Sede Modelo') + 3);
@@ -530,7 +530,7 @@ describe('Tree: arrastar e soltar', () => {
     down('Setor Beta');
     move(rowTop('Almoxarifado') + 27);
     expect(item('Almoxarifado').querySelector('.eds-tree-row')).toHaveAttribute(
-      'data-drop',
+      'data-drop-target',
       'after',
     );
     up(rowTop('Almoxarifado') + 27);
@@ -545,7 +545,7 @@ describe('Tree: arrastar e soltar', () => {
     move(rowTop('Setor Alfa') + 15);
     const row = item('Setor Alfa').querySelector('.eds-tree-row')!;
     expect(row).toHaveAttribute('data-drop-invalid');
-    expect(row).not.toHaveAttribute('data-drop');
+    expect(row).not.toHaveAttribute('data-drop-target');
     await waitFor(() =>
       expect(status()).toHaveTextContent(
         'Não é possível soltar um item dentro dele mesmo ou de um subitem.',

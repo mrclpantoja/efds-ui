@@ -1,13 +1,14 @@
-<!-- .eds-table-sticky-col na <table>: a primeira coluna fica fixa ao rolar na horizontal, com o fundo
-     da linha (hover e selecionada incluídos) e uma borda de separação. A tabela rola dentro do
+<!-- .eds-table-pin-start nas células da primeira coluna (th e td), com .eds-table-pin-edge na última
+     fixa: a coluna fica fixa ao rolar na horizontal, com o fundo da linha (hover e selecionada
+     incluídos) e uma borda de separação. A tabela rola dentro do
      .eds-table-wrap (role="region" + tabindex="0" + aria-labelledby quando rola). Combina com
      .eds-table-sticky (cabeçalho fixo): o canto fica acima dos dois. -->
 <div class="eds-table-wrap" role="region" tabindex="0" aria-labelledby="tcf-cap">
-  <table class="eds-table eds-table-sticky-col">
+  <table class="eds-table">
     <caption id="tcf-cap" class="eds-table-caption eds-visually-hidden">Contratos e vigências</caption>
     <thead>
       <tr>
-        <th scope="col">Contrato</th>
+        <th scope="col" class="eds-table-pin-start eds-table-pin-edge">Contrato</th>
         <th scope="col">Fornecedor</th>
         <th scope="col">Categoria</th>
         <th scope="col">Início</th>
@@ -19,7 +20,7 @@
     </thead>
     <tbody>
       <tr>
-        <th scope="row">CT-2026-0001</th>
+        <th scope="row" class="eds-table-pin-start eds-table-pin-edge">CT-2026-0001</th>
         <td>Papelaria Exemplo</td>
         <td>Materiais</td>
         <td>01/03/2026</td>
@@ -29,7 +30,7 @@
         <td class="eds-table-num">R$ 48.000,00</td>
       </tr>
       <tr>
-        <th scope="row">CT-2026-0002</th>
+        <th scope="row" class="eds-table-pin-start eds-table-pin-edge">CT-2026-0002</th>
         <td>Transportes Modelo</td>
         <td>Serviços</td>
         <td>15/04/2026</td>
@@ -39,7 +40,7 @@
         <td class="eds-table-num">R$ 120.500,00</td>
       </tr>
       <tr>
-        <th scope="row">CT-2026-0003</th>
+        <th scope="row" class="eds-table-pin-start eds-table-pin-edge">CT-2026-0003</th>
         <td>Serviços Fictícios</td>
         <td>Obras</td>
         <td>02/06/2026</td>

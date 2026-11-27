@@ -17,7 +17,11 @@ describe('ConfirmButton', () => {
     const onClick = vi.fn();
     render(
       <DialogProvider>
-        <ConfirmButton confirm="Excluir o pedido?" confirmTitle="Excluir pedido" onClick={onClick}>
+        <ConfirmButton
+          confirm="Excluir o pedido?"
+          confirmOptions={{ title: 'Excluir pedido' }}
+          onClick={onClick}
+        >
           Excluir
         </ConfirmButton>
       </DialogProvider>,
@@ -40,7 +44,11 @@ describe('ConfirmButton', () => {
     render(
       <DialogProvider>
         <form onSubmit={onSubmit}>
-          <ConfirmButton type="submit" confirm="Enviar?" confirmOkText="Enviar agora">
+          <ConfirmButton
+            type="submit"
+            confirm="Enviar?"
+            confirmOptions={{ okText: 'Enviar agora' }}
+          >
             Salvar
           </ConfirmButton>
         </form>

@@ -1,2 +1,2 @@
 export { useUnsavedChanges } from './useUnsavedChanges';
-export type { UnsavedChangesOptions, UnsavedChangesTexts } from './useUnsavedChanges';
+export type { UseUnsavedChangesOptions, UnsavedChangesTexts } from './useUnsavedChanges';

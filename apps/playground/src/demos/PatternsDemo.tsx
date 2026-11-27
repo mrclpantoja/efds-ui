@@ -104,14 +104,17 @@ function IconDiscs() {
     <Section title="Disco de ícone">
       <div className="eds-stack eds-stack-row eds-stack-wrap eds-gap-4">
         {tones.map((tone) => (
-          <span className="eds-icon-disc" data-tone={tone} key={tone}>
+          <span
+            className={`eds-icon-disc${tone === 'accent' ? '' : ` eds-icon-disc-${tone}`}`}
+            key={tone}
+          >
             <Icon d="M12 8v5M12 17h.01" />
           </span>
         ))}
         <span className="eds-icon-disc eds-icon-disc-sm">
           <Icon d="M12 5v14M5 12h14" />
         </span>
-        <span className="eds-icon-disc eds-icon-disc-lg eds-icon-disc-round" data-tone="info">
+        <span className="eds-icon-disc eds-icon-disc-lg eds-icon-disc-round eds-icon-disc-info">
           <Icon d="M12 8h.01M11 12h1v5h1" />
         </span>
       </div>
@@ -211,7 +214,7 @@ function LookupSuggestions() {
             aria-controls="pt-lk-lista"
             autoComplete="off"
           />
-          <output className="eds-lookup-description" htmlFor="pt-lk" data-empty="true">
+          <output className="eds-lookup-description" htmlFor="pt-lk" data-empty>
             —
           </output>
           <div

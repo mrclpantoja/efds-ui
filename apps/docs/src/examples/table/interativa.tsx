@@ -13,7 +13,7 @@ import {
   TableRow,
   TableToolbar,
   sortTableData,
-  type BadgeVariant,
+  type BadgeTone,
   type TableSortState,
 } from '@efds-ui/react';
 import { EditIcon } from '@efds-ui/icons';
@@ -22,7 +22,7 @@ interface Pedido {
   codigo: string;
   cliente: string;
   situacao: string;
-  variant: BadgeVariant;
+  variant: BadgeTone;
   total: number;
 }
 
@@ -198,7 +198,7 @@ export default function Interativa() {
               <TableCell>{p.codigo}</TableCell>
               <TableCell>{p.cliente}</TableCell>
               <TableCell>
-                <Badge variant={p.variant}>{p.situacao}</Badge>
+                <Badge tone={p.variant}>{p.situacao}</Badge>
               </TableCell>
               <TableCell numeric>{moeda.format(p.total)}</TableCell>
               <TableCell column="actions">

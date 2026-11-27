@@ -42,15 +42,15 @@ const behaviorApi = `// Com o eds-behavior.js carregado por <script> (window.EDS
 import { toast } from '@efds-ui/behavior';
 
 const id = toast({
-  variant: 'success',            // info (padrão) | success | warning | danger
+  tone: 'success',            // info (padrão) | success | warning | danger
   title: 'Sucesso:',             // opcional; sem ele, a severidade vai num prefixo oculto
   message: 'O contrato foi assinado e arquivado.',
   duration: 8000,                // opcional, em ms; 0 mantém até fechar
   action: { label: 'Desfazer', onClick: () => restaurar() },   // opcional: botão no toast
 });
 
-toast.dismiss(id);               // fecha um toast
-toast.dismissAll();              // fecha todos
+toast.close(id);               // fecha um toast
+toast.closeAll();              // fecha todos
 document.addEventListener('eds:toast-close', (e) => console.log(e.detail.id));`;
 
 export default function ToastPage() {
@@ -58,7 +58,7 @@ export default function ToastPage() {
     <>
       <p className="eds-text-body-lg docs-muted">
         Notificação passageira que confirma o resultado de uma ação sem tirar o usuário do que
-        estava fazendo. Quatro variantes, fila, fechamento automático e anúncio por leitor de tela.
+        estava fazendo. Quatro tons, fila, fechamento automático e anúncio por leitor de tela.
       </p>
 
       <UseCases
@@ -187,7 +187,7 @@ export default function ToastPage() {
               description: 'Texto da notificação.',
             },
             {
-              name: 'variant',
+              name: 'tone',
               type: "'info' | 'success' | 'warning' | 'danger'",
               default: "'info'",
               description: (
@@ -212,7 +212,7 @@ export default function ToastPage() {
               name: 'duration',
               type: 'number',
               description:
-                'Tempo até fechar sozinho, em ms; 0 mantém até fechar. Padrão: pela variante e pelo tamanho do texto.',
+                'Tempo até fechar sozinho, em ms; 0 mantém até fechar. Padrão: pelo tom e pelo tamanho do texto.',
             },
             {
               name: 'action',

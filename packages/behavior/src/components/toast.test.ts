@@ -27,7 +27,7 @@ describe('toast', () => {
   });
 
   it('cria a região aria-live vazia e só depois insere o toast', async () => {
-    toast({ variant: 'success', message: 'Pedido salvo.' });
+    toast({ tone: 'success', message: 'Pedido salvo.' });
     expect(region()).toHaveAttribute('aria-live', 'polite');
     expect(toasts()).toHaveLength(0);
     await settle();
@@ -37,25 +37,25 @@ describe('toast', () => {
   });
 
   it('sem title: prefixo oculto de severidade; com title: em destaque', async () => {
-    toast({ variant: 'success', message: 'Pedido salvo.' });
-    toast({ variant: 'warning', title: 'Atenção:', message: 'Estoque baixo.' });
+    toast({ tone: 'success', message: 'Pedido salvo.' });
+    toast({ tone: 'warning', title: 'Atenção:', message: 'Estoque baixo.' });
     await settle();
     expect(toasts()[0]?.querySelector('.eds-visually-hidden')).toHaveTextContent('Sucesso:');
     expect(toasts()[1]?.querySelector('.eds-toast-title')).toHaveTextContent('Atenção:');
   });
 
   it('danger tem role=alert; os demais não', async () => {
-    toast({ variant: 'danger', message: 'Falhou.' });
-    toast({ variant: 'info', message: 'Ok.' });
+    toast({ tone: 'danger', message: 'Falhou.' });
+    toast({ tone: 'info', message: 'Ok.' });
     await settle();
     expect(toasts()[0]).toHaveAttribute('role', 'alert');
     expect(toasts()[1]).not.toHaveAttribute('role');
   });
 
   it('info fecha sozinho depois de 5 s; danger e warning não', async () => {
-    toast({ variant: 'info', message: 'Curto.' });
-    toast({ variant: 'danger', message: 'Erro.' });
-    toast({ variant: 'warning', message: 'Aviso.' });
+    toast({ tone: 'info', message: 'Curto.' });
+    toast({ tone: 'danger', message: 'Erro.' });
+    toast({ tone: 'warning', message: 'Aviso.' });
     await settle();
     await vi.advanceTimersByTimeAsync(5000);
     await vi.advanceTimersByTimeAsync(400);
@@ -106,7 +106,7 @@ describe('toast', () => {
   it('botão de fechar remove e devolve o foco a quem disparou', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     (document.getElementById('origem') as HTMLElement).focus();
-    toast({ variant: 'danger', message: 'Erro.' });
+    toast({ tone: 'danger', message: 'Erro.' });
     await settle();
     const close = toasts()[0]?.querySelector('button') as HTMLElement;
     expect(close).toHaveAccessibleName('Fechar notificação');
@@ -121,7 +121,7 @@ describe('toast', () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     const onKey = vi.fn();
     document.addEventListener('keydown', onKey);
-    toast({ variant: 'warning', message: 'Aviso.' });
+    toast({ tone: 'warning', message: 'Aviso.' });
     await settle();
     (toasts()[0]?.querySelector('button') as HTMLElement).focus();
     await user.keyboard('{Escape}');
@@ -137,7 +137,7 @@ describe('toast', () => {
     );
     await settle();
     expect(toasts()).toHaveLength(3);
-    toast.dismiss(ids[0] as number);
+    toast.close(ids[0] as number);
     await vi.advanceTimersByTimeAsync(400);
     expect(toasts().map((t) => t.textContent)).toEqual(
       expect.arrayContaining([expect.stringContaining('Toast 4')]),
@@ -192,7 +192,7 @@ describe('toast', () => {
   it('região vazia muda de lugar sem passar por aria-live=off', async () => {
     toast({ message: 'Um.', duration: 0 });
     await settle();
-    toast.dismissAll();
+    toast.closeAll();
     document.body.insertAdjacentHTML('beforeend', '<dialog id="dlg"><button>ok</button></dialog>');
     (document.getElementById('dlg') as HTMLDialogElement).showModal();
     await vi.advanceTimersByTimeAsync(0);

@@ -1,5 +1,6 @@
 import { emit, focusEl } from '../core/dom';
 import { bindAll, refCounted, type Behavior } from '../core/registry';
+import { markClean } from './dirty-guard';
 import { pm } from './page-messages';
 import { announce } from './status-region';
 
@@ -209,7 +210,7 @@ function createController(form: HTMLFormElement): Internal {
     }
     announce(label);
     // O formulário enviado deixa de ter "alterações não salvas" (dirty-guard).
-    if (kind === 'success') emit(form, 'dirty-reset', {});
+    if (kind === 'success') markClean(form);
     emit(form, kind === 'success' ? 'form-success' : 'form-error', { ...detail, text: label });
     if (kind === 'error') {
       const summary = form.querySelector<HTMLElement>('[data-eds-error-summary]:not([hidden])');
@@ -251,7 +252,7 @@ function createController(form: HTMLFormElement): Internal {
 }
 
 /** Controle do estado de envio de um formulário (criado na primeira chamada). */
-export function submitState(form: HTMLFormElement): SubmitController {
+function controllerOf(form: HTMLFormElement): SubmitController {
   let ctl = controllers.get(form);
   if (!ctl) {
     ctl = createController(form);
@@ -260,8 +261,13 @@ export function submitState(form: HTMLFormElement): SubmitController {
   return ctl;
 }
 
+/** Controlador do envio de um formulário (`EDS.submit(form)`); `null` se não for um `<form>`. */
+export function submit(form: Element | null | undefined): SubmitController | null {
+  return form instanceof HTMLFormElement ? controllerOf(form) : null;
+}
+
 const internal = (form: HTMLFormElement): Internal => {
-  submitState(form);
+  controllerOf(form);
   return controllers.get(form) as Internal;
 };
 
@@ -389,7 +395,7 @@ const acquireGlobal = refCounted(() => {
 /**
  * Estado de envio: `form[data-eds-submit]` (`native` padrão, `="manual"` ou `="fetch"`). No envio
  * válido o form e o botão que enviou ganham `aria-busy`, os outros botões de envio ficam
- * `aria-disabled` e novos envios são ignorados até terminar. Veja `submitState()`.
+ * `aria-disabled` e novos envios são ignorados até terminar. Veja `submit()`.
  */
 export const formSubmitBehavior: Behavior = {
   name: 'form-submit',

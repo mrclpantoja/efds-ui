@@ -81,7 +81,7 @@ function labelOf(button: HTMLElement): Label {
 /**
  * Botão de copiar: `data-eds-copy="#alvo"` (valor ou texto do elemento) ou
  * `data-eds-copy-text="literal"`. Troca o rótulo por "Copiado" por 2 s (`data-copied`), anuncia
- * e emite `eds:copy` (`detail.text`) ou `eds:copy-fail`. O texto vem de `data-eds-copy-done`
+ * e emite `eds:copy-success` (`detail.text`) ou `eds:copy-error`. O texto vem de `data-eds-copy-done-text`
  * quando o botão traz o seu.
  */
 export const copyBehavior: Behavior = {
@@ -108,18 +108,18 @@ export const copyBehavior: Behavior = {
         if (!button.isConnected) return;
         if (!ok) {
           announce(pm('copyFailed'));
-          emit(button, 'copy-fail', { text });
+          emit(button, 'copy-error', { text });
           return;
         }
         reset();
         const label = labelOf(button);
         const before = label.get();
-        label.set(button.getAttribute('data-eds-copy-done') || pm('copyDone'));
-        button.setAttribute('data-copied', 'true');
+        label.set(button.getAttribute('data-eds-copy-done-text') || pm('copyDone'));
+        button.setAttribute('data-copied', '');
         restore = () => label.set(before);
         timer = setTimeout(reset, FEEDBACK_MS);
         announce(pm('copyAnnounce'));
-        emit(button, 'copy', { text });
+        emit(button, 'copy-success', { text });
       });
     };
 

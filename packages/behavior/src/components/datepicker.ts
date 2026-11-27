@@ -27,6 +27,7 @@ import {
   emit,
   ensureId,
   FOCUSABLE,
+  flag,
   hidePopover,
   safeMatches,
   showPopover,
@@ -101,9 +102,7 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
     }
     return blockedSet;
   };
-  const weekendsOff = () =>
-    root.hasAttribute('data-eds-disable-weekends') &&
-    root.getAttribute('data-eds-disable-weekends') !== 'false';
+  const weekendsOff = () => flag(root, 'data-eds-disable-weekends');
   const maxDays = () =>
     range ? Math.max(0, Math.floor(Number(root.getAttribute('data-eds-max-days')) || 0)) : 0;
 
@@ -137,7 +136,9 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
     return '';
   };
   const maxDaysMessage = () =>
-    maxDays() === 1 ? m().rangeMaxDaysOne : format(m().rangeMaxDays, { max: maxDays() });
+    maxDays() === 1
+      ? m().daterangeMaxDaysOne
+      : format(m().daterangeMaxDaysMany, { max: maxDays() });
 
   // ---- Valor: texto -> validação -> hidden ISO ------------------------------------------------
   let values: (Ymd | null)[] = fields.map(() => null);
@@ -184,12 +185,12 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
   });
 
   const toggleBase =
-    toggle.getAttribute('aria-label') ?? (range ? m().rangeChoose : m().dateChoose);
+    toggle.getAttribute('aria-label') ?? (range ? m().daterangeChoose : m().dateChoose);
   const syncToggleLabel = () => {
     const [a, b] = values;
     let label = toggleBase;
     if (range && a && b) {
-      label = format(m().rangeCurrent, { label: toggleBase, start: toBr(a), end: toBr(b) });
+      label = format(m().daterangeCurrent, { label: toggleBase, start: toBr(a), end: toBr(b) });
     } else if (!range && a) {
       label = format(m().dateCurrent, { label: toggleBase, value: toBr(a) });
     }
@@ -215,7 +216,7 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
       const [start, end] = next;
       if (start && end) {
         if (cmp(end, start) < 0) {
-          errors[1] = m().rangeEndBeforeStart;
+          errors[1] = m().daterangeEndBeforeStart;
           next[1] = null;
         } else if (maxDays() > 0 && diffDays(start, end) + 1 > maxDays()) {
           errors[1] = maxDaysMessage();
@@ -224,8 +225,9 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
       }
       const filled = fields.map((input) => input.value.trim() !== '');
       if (!errors[0] && !errors[1]) {
-        if (filled[0] && !filled[1] && !fields[1]?.required) errors[1] = m().rangeNeedEnd;
-        else if (!filled[0] && filled[1] && !fields[0]?.required) errors[0] = m().rangeNeedStart;
+        if (filled[0] && !filled[1] && !fields[1]?.required) errors[1] = m().daterangeNeedEnd;
+        else if (!filled[0] && filled[1] && !fields[0]?.required)
+          errors[0] = m().daterangeNeedStart;
       }
     }
 
@@ -347,7 +349,7 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
     calendar.setAttribute('aria-label', toggleBase);
   }
   if (!toggle.hasAttribute('aria-label')) {
-    toggle.setAttribute('aria-label', range ? m().rangeChoose : m().dateChoose);
+    toggle.setAttribute('aria-label', range ? m().daterangeChoose : m().dateChoose);
   }
   calendar.setAttribute('aria-modal', 'true');
   toggle.setAttribute('aria-haspopup', 'dialog');
@@ -490,8 +492,8 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
         band = previewOn ? 'start' : 'single';
       }
       let suffix = '';
-      if (range && start && same(date, start)) suffix = m().rangeStartLabel;
-      else if (range && end && same(date, end)) suffix = m().rangeEndLabel;
+      if (range && start && same(date, start)) suffix = m().daterangeStartLabel;
+      else if (range && end && same(date, end)) suffix = m().daterangeEndLabel;
       cell.setAttribute('aria-label', suffix ? `${label}, ${suffix}` : label);
       if (band) cell.setAttribute('data-range', band);
       else cell.removeAttribute('data-range');
@@ -610,7 +612,7 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
     }
     if (!pending || cmp(a, pending) < 0) {
       pending = a;
-      announce(format(m().rangeStart, { start: toBr(a) }));
+      announce(format(m().daterangeStart, { start: toBr(a) }));
       paint();
       return;
     }
@@ -620,7 +622,7 @@ function bindPicker(root: HTMLElement, range: boolean): (() => void) | void {
     const first = pending;
     pending = null;
     evaluate(true);
-    announce(format(m().rangePeriod, { start: toBr(first), end: toBr(a) }));
+    announce(format(m().daterangePeriod, { start: toBr(first), end: toBr(a) }));
     closeCalendar(true);
   };
 

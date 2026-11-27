@@ -1,16 +1,16 @@
-import { confirm, type DialogVariant } from './dialogs';
+import { confirm, type DialogTone } from './dialogs';
 
-const VARIANTS: readonly DialogVariant[] = ['info', 'success', 'warning', 'danger', 'question'];
+const TONES: readonly DialogTone[] = ['info', 'success', 'warning', 'danger', 'question'];
 const TRIGGER = 'button[data-eds-confirm], a[data-eds-confirm]';
 const FORM = 'form[data-eds-confirm]';
 
 function ask(el: HTMLElement): Promise<boolean> {
   const text = el.getAttribute('data-eds-confirm') ?? '';
   const title = el.getAttribute('data-eds-confirm-title') || undefined;
-  const raw = el.getAttribute('data-eds-confirm-variant');
-  const variant = VARIANTS.find((v) => v === raw);
+  const raw = el.getAttribute('data-eds-confirm-tone');
+  const tone = TONES.find((t) => t === raw);
   const okText = el.getAttribute('data-eds-confirm-ok');
-  return confirm(text, title, variant, okText ? { okText } : undefined);
+  return confirm(text, title, tone, okText ? { okText } : undefined);
 }
 
 /**
@@ -18,7 +18,7 @@ function ask(el: HTMLElement): Promise<boolean> {
  * intercepta o clique (ou o envio), pergunta com `confirm` e, só se o usuário confirmar,
  * prossegue: o link navega, o botão age (um botão de envio envia o formulário com ele como
  * `submitter`) e o formulário é enviado. Opcionais: `data-eds-confirm-title`,
- * `-variant` (`info|success|warning|danger|question`) e `-ok` (texto do botão principal).
+ * `-tone` (`info|success|warning|danger|question`) e `-ok` (texto do botão principal).
  * Ouvintes de captura em `root`; devolve a limpeza.
  */
 export function initConfirm(root: ParentNode = document): () => void {

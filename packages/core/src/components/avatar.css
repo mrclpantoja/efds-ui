@@ -4,7 +4,7 @@
      <span class="eds-avatar"><img src="…" alt="" /></span>   (foto; as iniciais ficam por baixo de fallback)
      <span class="eds-avatar eds-avatar-tone-3" aria-hidden="true">BT</span> Bruno Teste   (decorativo: o nome está ao lado)
    - Tamanhos: .eds-avatar-sm (32) · padrão (40) · .eds-avatar-lg (48). A forma segue data-shape
-     (raio lg); .eds-avatar-circle força círculo.
+     (raio lg); .eds-avatar-round força círculo.
    - Cor: .eds-avatar-tone-1..6, escolhida pelo autor, pelo JS ou pelo React a partir do nome
      (hash do nome módulo 6, mais 1), para a mesma pessoa ter sempre a mesma cor. Sem classe de
      tom: cinza suave. Todos os tons passam AA (>= 4.5:1) nos 5 temas e nos 2 modos:
@@ -87,7 +87,7 @@
     --_avatar-font-size: var(--eds-font-size-body-lg);
   }
 
-  .eds-avatar-circle {
+  .eds-avatar-round {
     --_avatar-radius: var(--eds-radius-full);
   }
 

@@ -51,7 +51,7 @@ export default function SessionTimeoutPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Behavior @efds-ui/behavior">
+        <Alert tone="info" title="Behavior @efds-ui/behavior">
           <p>
             Qualquer atividade (ponteiro, teclado, rolagem) reinicia a contagem. Faltando{' '}
             <code>warnBefore</code> segundos abre um <code>alertdialog</code> modal com{' '}

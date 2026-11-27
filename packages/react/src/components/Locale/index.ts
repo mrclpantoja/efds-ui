@@ -1,2 +1,2 @@
-export { LocaleProvider, useLocale, DEFAULT_LOCALE } from './Locale';
+export { LocaleProvider, useLocale } from './Locale';
 export type { LocaleProviderProps } from './Locale';

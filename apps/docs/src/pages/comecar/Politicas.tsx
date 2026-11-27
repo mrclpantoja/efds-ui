@@ -37,6 +37,17 @@ export default function Politicas() {
           </li>
         </ul>
 
+        <h3 className="eds-text-h3">Atualizar da 0.1 para a 1.0</h3>
+        <p>
+          A 1.0.0 revisou a API inteira antes de congelá-la e renomeou eventos, atributos, props e
+          tipos. O{' '}
+          <a href="https://github.com/mrclpantoja/efds-ui/blob/main/docs/migracao-1.0.md">
+            guia de migração
+          </a>{' '}
+          traz cada nome antigo ao lado do novo, separado por camada (HTML, JavaScript puro e
+          React).
+        </p>
+
         <h3 className="eds-text-h3">O que faz parte da API pública</h3>
         <p>Mudar ou remover qualquer item abaixo é uma quebra e só acontece numa versão maior:</p>
         <ul className="docs-list">
@@ -60,12 +71,16 @@ export default function Politicas() {
           </li>
           <li>
             <strong>API do React:</strong> nomes de componentes, props e seus tipos, valores de{' '}
-            <code>variant</code> e <code>size</code>, e as chaves de <code>texts</code>.
+            <code>variant</code>, <code>tone</code> e <code>size</code>, e as chaves de{' '}
+            <code>texts</code>.
           </li>
           <li>
             <strong>API do JavaScript puro:</strong> as funções exportadas de{' '}
             <code>@efds-ui/behavior</code> e dos subcaminhos documentados (<code>/mask</code>,{' '}
-            <code>/export</code>, <code>/format</code> e semelhantes) e o objeto <code>EDS</code>.
+            <code>/export</code>, <code>/format</code> e semelhantes) e o objeto <code>EDS</code>. O
+            subcaminho <code>@efds-ui/behavior/internal</code> existe para o{' '}
+            <code>@efds-ui/react</code> e não faz parte da API pública: pode mudar em qualquer
+            versão.
           </li>
           <li>
             <strong>Estrutura do markup</strong> descrita nas páginas de componente (partes, ordem
@@ -212,12 +227,12 @@ export default function Politicas() {
         </p>
         <ul className="docs-list">
           <li>
-            <Badge variant="success">Estável</Badge> A API segue o SemVer acima. Mudanças que
-            quebram só chegam numa versão maior, com depreciação antes.
+            <Badge tone="success">Estável</Badge> A API segue o SemVer acima. Mudanças que quebram
+            só chegam numa versão maior, com depreciação antes.
           </li>
           <li>
-            <Badge variant="warning">Experimental</Badge> O componente funciona e é testado, mas a
-            API ainda pode mudar numa versão menor, com aviso no CHANGELOG. Use e dê retorno; evite
+            <Badge tone="warning">Experimental</Badge> O componente funciona e é testado, mas a API
+            ainda pode mudar numa versão menor, com aviso no CHANGELOG. Use e dê retorno; evite
             depender dele onde uma troca de API seria cara.
           </li>
         </ul>

@@ -10,18 +10,20 @@ import {
   type ReactNode,
 } from 'react';
 import { otpFill, otpSanitize, type OtpKind } from '@efds-ui/behavior/fields';
+
+export type { OtpKind };
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 
 /** Textos internos do OtpInput (padrões em pt-BR). */
-export interface OtpTexts {
+export interface OtpInputTexts {
   /** Nome de cada célula. */
   cell: (n: number, total: number) => string;
   /** Nome de cada célula quando o código aceita letras. */
   cellChar: (n: number, total: number) => string;
 }
 
-const defaultTexts: OtpTexts = {
+const defaultTexts: OtpInputTexts = {
   cell: (n, total) => `Dígito ${n} de ${total}`,
   cellChar: (n, total) => `Caractere ${n} de ${total}`,
 };
@@ -44,7 +46,7 @@ export interface OtpInputProps extends Omit<
   /** `numeric` (padrão) ou `alphanumeric` (letras viram maiúsculas). */
   kind?: OtpKind;
   /** A cada alteração, com o código (pode estar incompleto). */
-  onChange?: (value: string) => void;
+  onValueChange?: (value: string) => void;
   /** Quando todas as células estão preenchidas. */
   onComplete?: (value: string) => void;
   /** Erro: `aria-invalid` em todas as células. Mostre a mensagem num `Field`/`<p class="eds-error">`. */
@@ -52,7 +54,7 @@ export interface OtpInputProps extends Omit<
   required?: boolean;
   /** Id da mensagem de ajuda/erro, ligado a cada célula por `aria-describedby`. */
   describedBy?: string;
-  texts?: Partial<OtpTexts>;
+  texts?: Partial<OtpInputTexts>;
 }
 
 const toCells = (code: string, length: number, kind: OtpKind): string[] =>
@@ -76,7 +78,7 @@ export const OtpInput = forwardRef<HTMLFieldSetElement, OtpInputProps>(function 
     value,
     defaultValue,
     kind = 'numeric',
-    onChange,
+    onValueChange,
     onComplete,
     invalid,
     required,
@@ -112,7 +114,7 @@ export const OtpInput = forwardRef<HTMLFieldSetElement, OtpInputProps>(function 
   const commit = (next: string[]) => {
     setCells(next);
     const joined = next.join('');
-    onChange?.(joined);
+    onValueChange?.(joined);
     if (joined.length === total && next.every((c) => c !== '')) onComplete?.(joined);
   };
 

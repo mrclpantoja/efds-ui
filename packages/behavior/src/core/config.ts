@@ -10,32 +10,32 @@ export interface Messages extends ValidationMessages {
   severityWarning: string;
   severityDanger: string;
   /** Anúncio da ordenação: `{column}` e `{direction}`. */
-  sortedBy: string;
-  sortAscending: string;
-  sortDescending: string;
+  tableSortedBy: string;
+  tableSortAscending: string;
+  tableSortDescending: string;
   /** Anúncio da seleção: `{count}`. */
-  selectedNone: string;
-  selectedOne: string;
-  selectedMany: string;
+  tableSelectedNone: string;
+  tableSelectedOne: string;
+  tableSelectedMany: string;
   /** Há linhas marcadas ocultas pelo filtro: `{count}` na busca e `{total}` no total. */
-  selectedInSearchNone: string;
-  selectedInSearchOne: string;
-  selectedInSearchMany: string;
+  tableSelectedInSearchNone: string;
+  tableSelectedInSearchOne: string;
+  tableSelectedInSearchMany: string;
   /** Filtro da Table: `{count}` e `{query}`. */
   tableFilterMany: string;
   tableFilterOne: string;
   tableFilterNone: string;
-  tableFilterCleared: string;
+  tableFilterClearedMany: string;
   tableFilterClearedOne: string;
   tableFilterEmpty: string;
   /** Ao limpar o filtro com seleção: `{count}` marcadas. */
   tableFilterSelectedOne: string;
   tableFilterSelectedMany: string;
   /** Combobox: `{count}`. */
-  comboResultsMany: string;
-  comboResultsOne: string;
-  comboNoResults: string;
-  comboError: string;
+  comboboxResultsMany: string;
+  comboboxResultsOne: string;
+  comboboxResultsNone: string;
+  comboboxError: string;
   /** PageLoader: título e texto padrão, e a saída quando demora demais. */
   loaderTitle: string;
   loaderText: string;
@@ -44,22 +44,22 @@ export interface Messages extends ValidationMessages {
   loaderContinue: string;
   /** Combobox: texto sem escolha (validação), carregando e escolha (`{label}`). */
   comboboxInvalid: string;
-  comboLoading: string;
-  comboSelected: string;
-  /** MultiSelect: `{label}` e `{max}`; o resumo reutiliza `selectedNone/One/Many`. */
-  comboMultiSelected: string;
-  comboMultiRemoved: string;
-  comboMultiRequired: string;
-  comboMaxReached: string;
-  comboMaxReachedOne: string;
-  comboTagRemove: string;
+  comboboxLoading: string;
+  comboboxSelected: string;
+  /** MultiSelect: `{label}` e `{max}`; o resumo reutiliza `tableSelectedNone/One/Many`. */
+  comboboxMultiSelected: string;
+  comboboxMultiRemoved: string;
+  comboboxMultiRequired: string;
+  comboboxMaxReachedMany: string;
+  comboboxMaxReachedOne: string;
+  comboboxTagRemove: string;
   /** FileUpload: `{name}`, `{size}`, `{count}`, `{max}`, `{reason}`. */
   uploadAddedOne: string;
   uploadAddedMany: string;
   uploadRemoved: string;
   uploadSent: string;
   uploadRejected: string;
-  uploadMaxFiles: string;
+  uploadMaxFilesMany: string;
   uploadMaxFilesOne: string;
   uploadTooLarge: string;
   uploadBadType: string;
@@ -79,7 +79,7 @@ export interface Messages extends ValidationMessages {
   uploadRequired: string;
   /** DatePicker e DateRangePicker: textos (`{date}`, `{min}`, `{max}`, `{start}`, `{end}`). */
   dateChoose: string;
-  rangeChoose: string;
+  daterangeChoose: string;
   datePrevMonth: string;
   dateNextMonth: string;
   dateMonth: string;
@@ -93,18 +93,18 @@ export interface Messages extends ValidationMessages {
   dateBlocked: string;
   dateUnavailable: string;
   dateSelected: string;
-  rangeStart: string;
-  rangePeriod: string;
-  rangeEndBeforeStart: string;
-  rangeMaxDays: string;
-  rangeMaxDaysOne: string;
-  rangeNeedStart: string;
-  rangeNeedEnd: string;
+  daterangeStart: string;
+  daterangePeriod: string;
+  daterangeEndBeforeStart: string;
+  daterangeMaxDaysMany: string;
+  daterangeMaxDaysOne: string;
+  daterangeNeedStart: string;
+  daterangeNeedEnd: string;
   dateInvalidShortYear: string;
   dateCurrent: string;
-  rangeCurrent: string;
-  rangeStartLabel: string;
-  rangeEndLabel: string;
+  daterangeCurrent: string;
+  daterangeStartLabel: string;
+  daterangeEndLabel: string;
   // Diálogos rápidos
   dialogOk: string;
   dialogCancel: string;
@@ -133,8 +133,8 @@ export interface Messages extends ValidationMessages {
   treeDeleteConfirmOne: string;
   treeDeleteConfirmMany: string;
   treeDeleted: string;
-  treeDeletedOneChild: string;
-  treeDeletedChildren: string;
+  treeDeletedChildrenOne: string;
+  treeDeletedChildrenMany: string;
   treeUndoHint: string;
   treeAddedNamed: string;
   treeUndo: string;
@@ -164,7 +164,7 @@ export interface Messages extends ValidationMessages {
   exportPage: string;
   exportNoRows: string;
   /** Status: `{name}` e `{count}`. */
-  exportDone: string;
+  exportDoneMany: string;
   exportDoneOne: string;
   exportEmpty: string;
   exportFailed: string;
@@ -175,23 +175,23 @@ export interface Messages extends ValidationMessages {
   wizardStepUntitled: string;
   wizardSummary: string;
   // Barra de filtros: `{label}`, `{count}`
-  filterChips: string;
-  filterRemove: string;
-  filterRemoved: string;
-  filterCleared: string;
-  filterCountNone: string;
-  filterCountOne: string;
-  filterCountMany: string;
-  filterMoreCount: string;
+  filterChipsLabel: string;
+  filterChipRemoveHint: string;
+  filterBarRemoved: string;
+  filterBarCleared: string;
+  filterBarCountNone: string;
+  filterBarCountOne: string;
+  filterBarCountMany: string;
+  filterBarMoreCount: string;
   // Senha: `{level}`
   passwordShow: string;
   passwordStrength: string;
   passwordStrengthEmpty: string;
   passwordStrengthAnnounce: string;
-  passwordLevel1: string;
-  passwordLevel2: string;
-  passwordLevel3: string;
-  passwordLevel4: string;
+  passwordLevelWeak: string;
+  passwordLevelFair: string;
+  passwordLevelGood: string;
+  passwordLevelStrong: string;
   passwordRuleMet: string;
   passwordRuleUnmet: string;
   // Código de verificação (OTP): `{n}`, `{total}`
@@ -223,7 +223,7 @@ export interface Messages extends ValidationMessages {
   stepperSectionSummary: string;
   // Máscaras com validação opcional
   maskInvalidTime: string;
-  maskInvalidCompetence: string;
+  maskInvalidPeriod: string;
   maskInvalidProcess: string;
   // CEP
   cepLoading: string;
@@ -251,10 +251,10 @@ export interface Messages extends ValidationMessages {
   sessionLeave: string;
   sessionAnnounce: string;
   sessionExpired: string;
-  sessionSecond: string;
-  sessionSeconds: string;
-  sessionMinute: string;
-  sessionMinutes: string;
+  sessionSecondOne: string;
+  sessionSecondMany: string;
+  sessionMinuteOne: string;
+  sessionMinuteMany: string;
   sessionAnd: string;
   // Paleta de comandos: `{query}`
   commandTitle: string;
@@ -318,67 +318,66 @@ export interface Messages extends ValidationMessages {
   submitSuccess: string;
   submitError: string;
   // Table avançada: ordenação múltipla
-  sortedByMany: string;
-  sortThen: string;
-  sortRemoved: string;
-  sortCleared: string;
-  sortHint: string;
-  sortMaxReached: string;
-  sortOrderLabel: string;
+  tableSortedByMany: string;
+  tableSortThen: string;
+  tableSortRemoved: string;
+  tableSortCleared: string;
+  tableSortHint: string;
+  tableSortMaxReached: string;
+  tableSortOrderLabel: string;
   // Filtro por coluna
-  columnFilterLabel: string;
-  columnFilterActive: string;
-  columnFilterApply: string;
-  columnFilterClear: string;
-  columnFilterApplied: string;
-  columnFilterCleared: string;
-  columnFilterRangeInvalid: string;
-  columnFilterMin: string;
-  columnFilterMax: string;
-  columnFilterFrom: string;
-  columnFilterTo: string;
+  tableColumnFilterLabel: string;
+  tableColumnFilterActive: string;
+  tableColumnFilterApply: string;
+  tableColumnFilterClear: string;
+  tableColumnFilterApplied: string;
+  tableColumnFilterCleared: string;
+  tableColumnFilterRangeInvalid: string;
+  tableColumnFilterMin: string;
+  tableColumnFilterMax: string;
+  tableColumnFilterFrom: string;
+  tableColumnFilterTo: string;
   filterChipRange: string;
   filterChipGte: string;
   filterChipLte: string;
-  filterChipsLabel: string;
   filterChipRemove: string;
   // Colunas
-  columnsButton: string;
-  columnsTitle: string;
-  columnsRestore: string;
-  columnsRestored: string;
-  columnHidden: string;
-  columnShown: string;
-  columnLastVisible: string;
-  columnHandleLabel: string;
-  columnHandleHelp: string;
-  columnGrab: string;
-  columnMoved: string;
-  columnResized: string;
-  columnDrop: string;
-  columnCancel: string;
-  columnMoveBefore: string;
-  columnMoveAfter: string;
-  columnNarrow: string;
-  columnWiden: string;
+  tableColumnsButton: string;
+  tableColumnsTitle: string;
+  tableColumnsRestore: string;
+  tableColumnsRestored: string;
+  tableColumnHidden: string;
+  tableColumnShown: string;
+  tableColumnLastVisible: string;
+  tableColumnHandleLabel: string;
+  tableColumnHandleHelp: string;
+  tableColumnGrab: string;
+  tableColumnMoved: string;
+  tableColumnResized: string;
+  tableColumnDrop: string;
+  tableColumnCancel: string;
+  tableColumnMoveBefore: string;
+  tableColumnMoveAfter: string;
+  tableColumnNarrow: string;
+  tableColumnWiden: string;
   // Lote
-  bulkCount: string;
-  bulkCountOne: string;
-  bulkAllResults: string;
-  bulkAllSelected: string;
-  bulkClear: string;
-  bulkLabel: string;
+  tableBulkCountMany: string;
+  tableBulkCountOne: string;
+  tableBulkAllResults: string;
+  tableBulkAllSelected: string;
+  tableBulkClear: string;
+  tableBulkLabel: string;
   // Tabela remota
   tableLoading: string;
   tableResults: string;
   tableLoadError: string;
   // Edição na célula
-  editLabel: string;
-  editFieldLabel: string;
-  editHint: string;
-  editSaved: string;
-  editSaving: string;
-  editError: string;
+  tableEditLabel: string;
+  tableEditFieldLabel: string;
+  tableEditHint: string;
+  tableEditSaved: string;
+  tableEditSaving: string;
+  tableEditError: string;
 }
 
 export const defaultMessages: Messages = {
@@ -388,47 +387,47 @@ export const defaultMessages: Messages = {
   severitySuccess: 'Sucesso:',
   severityWarning: 'Atenção:',
   severityDanger: 'Erro:',
-  sortedBy: 'Ordenado por {column}, {direction}.',
-  sortAscending: 'crescente',
-  sortDescending: 'decrescente',
-  selectedNone: 'Nenhum item selecionado.',
-  selectedOne: '1 item selecionado.',
-  selectedMany: '{count} itens selecionados.',
-  selectedInSearchNone: 'Nenhum item selecionado nesta busca, {total} no total.',
-  selectedInSearchOne: '1 item selecionado nesta busca, {total} no total.',
-  selectedInSearchMany: '{count} itens selecionados nesta busca, {total} no total.',
+  tableSortedBy: 'Ordenado por {column}, {direction}.',
+  tableSortAscending: 'crescente',
+  tableSortDescending: 'decrescente',
+  tableSelectedNone: 'Nenhum item selecionado.',
+  tableSelectedOne: '1 item selecionado.',
+  tableSelectedMany: '{count} itens selecionados.',
+  tableSelectedInSearchNone: 'Nenhum item selecionado nesta busca, {total} no total.',
+  tableSelectedInSearchOne: '1 item selecionado nesta busca, {total} no total.',
+  tableSelectedInSearchMany: '{count} itens selecionados nesta busca, {total} no total.',
   tableFilterMany: '{count} resultados.',
   tableFilterOne: '1 resultado.',
   tableFilterNone: 'Nenhum resultado.',
-  tableFilterCleared: 'Filtro removido. {count} linhas.',
+  tableFilterClearedMany: 'Filtro removido. {count} linhas.',
   tableFilterClearedOne: 'Filtro removido. 1 linha.',
   tableFilterEmpty: 'Nenhum resultado para "{query}".',
   tableFilterSelectedOne: '1 selecionado.',
   tableFilterSelectedMany: '{count} selecionados.',
-  comboResultsMany: '{count} resultados disponíveis.',
-  comboResultsOne: '1 resultado disponível.',
-  comboNoResults: 'Nenhum resultado.',
-  comboError: 'Não foi possível carregar as opções.',
+  comboboxResultsMany: '{count} resultados disponíveis.',
+  comboboxResultsOne: '1 resultado disponível.',
+  comboboxResultsNone: 'Nenhum resultado.',
+  comboboxError: 'Não foi possível carregar as opções.',
   loaderTitle: 'Carregando…',
   loaderText: 'Aguarde um instante.',
   loaderSlowText: 'Está demorando mais que o esperado.',
   loaderClose: 'Fechar',
   loaderContinue: 'Continuar aguardando',
   comboboxInvalid: 'Escolha uma das opções da lista.',
-  comboLoading: 'Carregando…',
-  comboSelected: '{label} selecionado.',
-  comboMultiSelected: '{label}: selecionado.',
-  comboMultiRemoved: '{label}: removido.',
-  comboMultiRequired: 'Escolha ao menos uma opção.',
-  comboMaxReached: 'Limite de {max} itens atingido.',
-  comboMaxReachedOne: 'Limite de 1 item atingido.',
-  comboTagRemove: 'Remover {label}',
+  comboboxLoading: 'Carregando…',
+  comboboxSelected: '{label} selecionado.',
+  comboboxMultiSelected: '{label}: selecionado.',
+  comboboxMultiRemoved: '{label}: removido.',
+  comboboxMultiRequired: 'Escolha ao menos uma opção.',
+  comboboxMaxReachedMany: 'Limite de {max} itens atingido.',
+  comboboxMaxReachedOne: 'Limite de 1 item atingido.',
+  comboboxTagRemove: 'Remover {label}',
   uploadAddedOne: '{name} adicionado.',
   uploadAddedMany: '{count} arquivos adicionados.',
   uploadRemoved: '{name} removido.',
   uploadSent: '{name} enviado.',
   uploadRejected: '{name}: {reason}.',
-  uploadMaxFiles: 'Limite de {max} arquivos atingido.',
+  uploadMaxFilesMany: 'Limite de {max} arquivos atingido.',
   uploadMaxFilesOne: 'Limite de 1 arquivo atingido.',
   uploadTooLarge: 'Arquivo maior que {size}',
   uploadBadType: 'Tipo não permitido',
@@ -447,7 +446,7 @@ export const defaultMessages: Messages = {
   uploadBusy: 'Aguarde o envio dos arquivos.',
   uploadRequired: 'Envie ao menos um arquivo.',
   dateChoose: 'Escolher data',
-  rangeChoose: 'Escolher período',
+  daterangeChoose: 'Escolher período',
   datePrevMonth: 'Mês anterior',
   dateNextMonth: 'Próximo mês',
   dateMonth: 'Mês',
@@ -461,18 +460,18 @@ export const defaultMessages: Messages = {
   dateBlocked: 'Data indisponível.',
   dateUnavailable: '{date}: data indisponível.',
   dateSelected: 'Data selecionada: {date}.',
-  rangeStart: 'Início: {start}. Escolha a data final.',
-  rangePeriod: 'Período: {start} a {end}.',
-  rangeEndBeforeStart: 'A data final deve ser igual ou posterior à inicial.',
-  rangeMaxDays: 'O período pode ter no máximo {max} dias.',
-  rangeMaxDaysOne: 'O período pode ter no máximo 1 dia.',
-  rangeNeedStart: 'Informe também a data inicial.',
-  rangeNeedEnd: 'Informe também a data final.',
+  daterangeStart: 'Início: {start}. Escolha a data final.',
+  daterangePeriod: 'Período: {start} a {end}.',
+  daterangeEndBeforeStart: 'A data final deve ser igual ou posterior à inicial.',
+  daterangeMaxDaysMany: 'O período pode ter no máximo {max} dias.',
+  daterangeMaxDaysOne: 'O período pode ter no máximo 1 dia.',
+  daterangeNeedStart: 'Informe também a data inicial.',
+  daterangeNeedEnd: 'Informe também a data final.',
   dateInvalidShortYear: 'Data inválida. Use dd/mm/aaaa, com o ano em 4 dígitos (ex.: 15/03/2026).',
   dateCurrent: '{label}. Atual: {value}',
-  rangeCurrent: '{label}. Atual: {start} a {end}',
-  rangeStartLabel: 'início do período',
-  rangeEndLabel: 'fim do período',
+  daterangeCurrent: '{label}. Atual: {start} a {end}',
+  daterangeStartLabel: 'início do período',
+  daterangeEndLabel: 'fim do período',
   // Diálogos rápidos
   dialogOk: 'OK',
   dialogCancel: 'Cancelar',
@@ -504,8 +503,8 @@ export const defaultMessages: Messages = {
   treeDeleteConfirmOne: 'Excluir "{label}" e 1 subitem?',
   treeDeleteConfirmMany: 'Excluir "{label}" e {count} subitens?',
   treeDeleted: 'Item excluído: {label}.',
-  treeDeletedOneChild: 'Item excluído: {label} e 1 subitem.',
-  treeDeletedChildren: 'Item excluído: {label} e {count} subitens.',
+  treeDeletedChildrenOne: 'Item excluído: {label} e 1 subitem.',
+  treeDeletedChildrenMany: 'Item excluído: {label} e {count} subitens.',
   treeUndoHint: 'Ctrl+Z desfaz.',
   treeUndo: 'Desfazer',
   treeRestored: 'Item restaurado: {label}.',
@@ -531,7 +530,7 @@ export const defaultMessages: Messages = {
   exportGeneratedAt: 'Gerado em {date}',
   exportPage: 'Página {page} de {total}',
   exportNoRows: 'Nenhum registro.',
-  exportDone: 'Arquivo {name} gerado ({count} linhas).',
+  exportDoneMany: 'Arquivo {name} gerado ({count} linhas).',
   exportDoneOne: 'Arquivo {name} gerado (1 linha).',
   exportEmpty: 'Não há linhas para exportar.',
   exportFailed: 'Não foi possível gerar o arquivo.',
@@ -542,23 +541,23 @@ export const defaultMessages: Messages = {
   wizardStepUntitled: 'sem título',
   wizardSummary: 'Etapa {current} de {total}',
   // Barra de filtros
-  filterChips: 'Filtros ativos',
-  filterRemove: ' — remover',
-  filterRemoved: 'Filtro removido: {label}.',
-  filterCleared: 'Filtros removidos.',
-  filterCountNone: 'Nenhum filtro ativo.',
-  filterCountOne: '1 filtro ativo.',
-  filterCountMany: '{count} filtros ativos.',
-  filterMoreCount: '({count})',
+  filterChipsLabel: 'Filtros ativos',
+  filterChipRemoveHint: ' — remover',
+  filterBarRemoved: 'Filtro removido: {label}.',
+  filterBarCleared: 'Filtros removidos.',
+  filterBarCountNone: 'Nenhum filtro ativo.',
+  filterBarCountOne: '1 filtro ativo.',
+  filterBarCountMany: '{count} filtros ativos.',
+  filterBarMoreCount: '({count})',
   // Senha
   passwordShow: 'Mostrar senha',
   passwordStrength: 'Força: {level}',
   passwordStrengthEmpty: 'Força: não avaliada',
   passwordStrengthAnnounce: 'Força da senha: {level}.',
-  passwordLevel1: 'fraca',
-  passwordLevel2: 'razoável',
-  passwordLevel3: 'boa',
-  passwordLevel4: 'forte',
+  passwordLevelWeak: 'fraca',
+  passwordLevelFair: 'razoável',
+  passwordLevelGood: 'boa',
+  passwordLevelStrong: 'forte',
   passwordRuleMet: 'Atendida: ',
   passwordRuleUnmet: 'Pendente: ',
   // Código de verificação
@@ -586,7 +585,7 @@ export const defaultMessages: Messages = {
   stepperSectionSummary: 'Seção {current} de {total}',
   // Máscaras com validação opcional
   maskInvalidTime: 'Hora inválida. Use hh:mm, de 00:00 a 23:59.',
-  maskInvalidCompetence: 'Competência inválida. Use mm/aaaa, com o mês de 01 a 12.',
+  maskInvalidPeriod: 'Competência inválida. Use mm/aaaa, com o mês de 01 a 12.',
   maskInvalidProcess: 'Número de processo inválido. Confira o número e o dígito verificador.',
   // CEP
   cepLoading: 'Buscando CEP…',
@@ -615,10 +614,10 @@ export const defaultMessages: Messages = {
   sessionLeave: 'Sair',
   sessionAnnounce: 'A sessão expira em {time}.',
   sessionExpired: 'Sessão encerrada por inatividade.',
-  sessionSecond: '{count} segundo',
-  sessionSeconds: '{count} segundos',
-  sessionMinute: '{count} minuto',
-  sessionMinutes: '{count} minutos',
+  sessionSecondOne: '{count} segundo',
+  sessionSecondMany: '{count} segundos',
+  sessionMinuteOne: '{count} minuto',
+  sessionMinuteMany: '{count} minutos',
   sessionAnd: ' e ',
   // Paleta de comandos
   commandTitle: 'Paleta de comandos',
@@ -683,68 +682,67 @@ export const defaultMessages: Messages = {
   submitSuccess: 'Salvo',
   submitError: 'Não foi possível salvar',
   // Table avançada: ordenação múltipla
-  sortedByMany: 'Ordenado por {criteria}.',
-  sortThen: 'depois',
-  sortRemoved: 'Ordenação por {column} removida.',
-  sortCleared: 'Ordenação removida.',
-  sortHint: 'Shift mais Enter acrescenta a coluna à ordenação.',
-  sortMaxReached: 'Máximo de {max} colunas na ordenação.',
-  sortOrderLabel: ', critério {order}, {direction}',
+  tableSortedByMany: 'Ordenado por {criteria}.',
+  tableSortThen: 'depois',
+  tableSortRemoved: 'Ordenação por {column} removida.',
+  tableSortCleared: 'Ordenação removida.',
+  tableSortHint: 'Shift mais Enter acrescenta a coluna à ordenação.',
+  tableSortMaxReached: 'Máximo de {max} colunas na ordenação.',
+  tableSortOrderLabel: ', critério {order}, {direction}',
   // Filtro por coluna
-  columnFilterLabel: 'Filtrar {column}',
-  columnFilterActive: ', filtro ativo',
-  columnFilterApply: 'Aplicar',
-  columnFilterClear: 'Limpar',
-  columnFilterApplied: '{column} filtrada. {count} resultados.',
-  columnFilterCleared: 'Filtro de {column} removido. {count} resultados.',
-  columnFilterRangeInvalid: 'O valor inicial não pode ser maior que o final.',
-  columnFilterMin: 'Mínimo',
-  columnFilterMax: 'Máximo',
-  columnFilterFrom: 'De',
-  columnFilterTo: 'Até',
+  tableColumnFilterLabel: 'Filtrar {column}',
+  tableColumnFilterActive: ', filtro ativo',
+  tableColumnFilterApply: 'Aplicar',
+  tableColumnFilterClear: 'Limpar',
+  tableColumnFilterApplied: '{column} filtrada. {count} resultados.',
+  tableColumnFilterCleared: 'Filtro de {column} removido. {count} resultados.',
+  tableColumnFilterRangeInvalid: 'O valor inicial não pode ser maior que o final.',
+  tableColumnFilterMin: 'Mínimo',
+  tableColumnFilterMax: 'Máximo',
+  tableColumnFilterFrom: 'De',
+  tableColumnFilterTo: 'Até',
   filterChipRange: 'de {min} a {max}',
   filterChipGte: 'a partir de {min}',
   filterChipLte: 'até {max}',
-  filterChipsLabel: 'Filtros ativos',
   filterChipRemove: 'Remover filtro {label}',
   // Colunas
-  columnsButton: 'Colunas',
-  columnsTitle: 'Colunas visíveis',
-  columnsRestore: 'Restaurar padrão',
-  columnsRestored: 'Colunas restauradas.',
-  columnHidden: 'Coluna {column} oculta. {visible} de {total} colunas visíveis.',
-  columnShown: 'Coluna {column} exibida. {visible} de {total} colunas visíveis.',
-  columnLastVisible: 'Pelo menos uma coluna deve ficar visível.',
-  columnHandleLabel: 'Ajustar coluna {column}',
-  columnHandleHelp:
+  tableColumnsButton: 'Colunas',
+  tableColumnsTitle: 'Colunas visíveis',
+  tableColumnsRestore: 'Restaurar padrão',
+  tableColumnsRestored: 'Colunas restauradas.',
+  tableColumnHidden: 'Coluna {column} oculta. {visible} de {total} colunas visíveis.',
+  tableColumnShown: 'Coluna {column} exibida. {visible} de {total} colunas visíveis.',
+  tableColumnLastVisible: 'Pelo menos uma coluna deve ficar visível.',
+  tableColumnHandleLabel: 'Ajustar coluna {column}',
+  tableColumnHandleHelp:
     'Espaço pega a coluna; setas movem; Shift e setas redimensionam; Espaço solta; Esc cancela.',
-  columnGrab: '{column} pega.',
-  columnMoved: '{column}: posição {pos} de {total}.',
-  columnResized: 'Largura de {column}: {width} pixels.',
-  columnDrop: '{column} solta na posição {pos} de {total}.',
-  columnCancel: 'Ajuste cancelado.',
-  columnMoveBefore: 'Mover {column} para antes',
-  columnMoveAfter: 'Mover {column} para depois',
-  columnNarrow: 'Estreitar {column}',
-  columnWiden: 'Alargar {column}',
+  tableColumnGrab: '{column} pega.',
+  tableColumnMoved: '{column}: posição {pos} de {total}.',
+  tableColumnResized: 'Largura de {column}: {width} pixels.',
+  tableColumnDrop: '{column} solta na posição {pos} de {total}.',
+  tableColumnCancel: 'Ajuste cancelado.',
+  tableColumnMoveBefore: 'Mover {column} para antes',
+  tableColumnMoveAfter: 'Mover {column} para depois',
+  tableColumnNarrow: 'Estreitar {column}',
+  tableColumnWiden: 'Alargar {column}',
   // Lote
-  bulkCount: '{count} selecionados',
-  bulkCountOne: '1 selecionado',
-  bulkAllResults: 'Selecionar todos os {total}',
-  bulkAllSelected: 'Todos os {total} selecionados.',
-  bulkClear: 'Limpar seleção',
-  bulkLabel: 'Ações em lote',
+  tableBulkCountMany: '{count} selecionados',
+  tableBulkCountOne: '1 selecionado',
+  tableBulkAllResults: 'Selecionar todos os {total}',
+  tableBulkAllSelected: 'Todos os {total} selecionados.',
+  tableBulkClear: 'Limpar seleção',
+  tableBulkLabel: 'Ações em lote',
   // Tabela remota
   tableLoading: 'Carregando',
   tableResults: '{count} resultados. Página {page} de {pages}.',
   tableLoadError: 'Não foi possível carregar os dados. Os dados anteriores foram mantidos.',
   // Edição na célula
-  editLabel: ', editar {column} de {row}',
-  editFieldLabel: '{column} de {row}',
-  editHint: 'Enter confirma, Esc cancela.',
-  editSaved: '{column} de {row} atualizado para {value}.',
-  editSaving: 'Salvando.',
-  editError: 'Erro: {message}',
+  tableEditLabel: ', editar {column} de {row}',
+  tableEditFieldLabel: '{column} de {row}',
+  tableEditHint: 'Enter confirma, Esc cancela.',
+  tableEditSaved: '{column} de {row} atualizado para {value}.',
+  tableEditSaving: 'Salvando.',
+  tableEditError: 'Erro: {message}',
 };
 
 export const DEFAULT_LOCALE = 'pt-BR';

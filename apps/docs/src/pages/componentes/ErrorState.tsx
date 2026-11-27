@@ -38,7 +38,7 @@ export default function ErrorStatePage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Só CSS">
+        <Alert tone="info" title="Só CSS">
           <p>
             Use <code>.eds-empty</code> com <code>.eds-empty-error</code>. O botão &quot;Tentar de
             novo&quot; é um botão comum: durante a nova tentativa ponha{' '}

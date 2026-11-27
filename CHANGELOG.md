@@ -2,7 +2,54 @@
 
 Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons`, `@efds-ui/behavior` e `@efds-ui/editor`.
 
-## Não publicado (1.0.0)
+## 1.0.0 (não publicada)
+
+Primeira versão estável: a API pública fica congelada e segue o SemVer descrito na página Políticas do site. Reúne tudo o que foi feito depois da 0.1.2 e uma revisão de consistência da API que **quebra contrato**. Antes de atualizar, leia o [guia de migração](docs/migracao-1.0.md), que traz cada nome antigo e o novo.
+
+### Quebras (resumo; detalhe no guia de migração)
+
+- **Eventos**: todos no formato `eds:<componente>-<ação>`. Por exemplo, `eds:copy` passa a `eds:copy-success`, `eds:alert-dismiss` a `eds:alert-close`, `eds:sidebar-collapse` a `eds:sidebar-toggle` e `eds:loader-show`/`-hide` a `-open`/`-close`. `eds:table-filtered` deixa de existir (vale `eds:table-filter`, na tabela) e `eds:dirty-reset` também (vale `markClean(form)`).
+- **Atributos HTML**:
+  - booleanos: presença liga e `="false"` desliga; `="off"` não vale mais, exceto `data-eds-loader="off"`;
+  - `data-eds-close` em todo fechamento;
+  - `data-eds-source` é sempre uma URL, e dados locais ficam em `<script type="application/json" data-eds-<comp>-items>`;
+  - `data-eds-min`/`-max`/`-step` sem o nome do componente;
+  - `data-eds-error-message`;
+  - o estado escrito pelo JS perde o prefixo `eds` e booleanos de estado são por presença;
+  - `data-eds-loader-mode` na tag `<script>`.
+- **Tom**: uma regra só. No HTML é a classe `eds-<comp>-<tom>` (sai o `data-tone`/`data-variant`); no React é a prop `tone` (sai o `variant` de Alert, Badge, Toast e Dialog). No Stat, `positive`/`negative` passam a `success`/`danger`.
+- **React**:
+  - `onValueChange` em todo controle de formulário composto (sai o `onChange(valor)`);
+  - abertura com `open` + `onClose` nos diálogos e `open`/`defaultOpen`/`onOpenChange` nos disclosures;
+  - `orientation`, `round` e `result`;
+  - Tree com `onSelectedChange`;
+  - textos internos sempre em `texts`;
+  - tipos renomeados com o prefixo do componente.
+- **behavior**:
+  - validadores em inglês (`isCpfCnpj`, `isDate`, `isPhone`…). Os valores das máscaras prontas (`telefone`, `moeda`…) continuam em português;
+  - chaves de `Messages` com plural `<base>One`/`<base>Many` e prefixo do componente;
+  - `EDS.submitState` passa a `EDS.submit`;
+  - `toast.close`/`closeAll`;
+  - helpers usados só pelo React vão para `@efds-ui/behavior/internal`, sem garantia de SemVer.
+- **Removidos**: `.eds-table-sticky-col` (use `.eds-table-pin-start`), `data-state="complete"` (use `done`), o formato `mask-cpf`, o fallback `data-eds-month` da Agenda e as classes `-circle` (use `-round`).
+
+### Confiança
+
+- Testes E2E com Playwright em Chromium, Firefox e WebKit no CI, axe-core em todas as rotas da documentação (claro e escuro), regressão visual por tema, modo e densidade, e orçamento de tamanho dos pacotes (`size-limits.json`).
+- Página Políticas (SemVer, depreciação, navegadores e React suportados), `SECURITY.md`, `CONTRIBUTING.md` e modelos de issue e PR; selo estável/experimental por componente na documentação.
+- Fallbacks para navegadores sem anchor positioning (Dropdown, menu da Tree, tooltip da Sidebar); Modal e Drawer em telas de pouca altura; `TableExport` do React com a data no nome do arquivo.
+- Templates gratuitos sem chave de licença.
+
+### Formulários
+
+- Validadores sem dependência em `@efds-ui/behavior/validate` (CPF, CNPJ alfanumérico, CEP, telefone, e-mail, PIS, título de eleitor, placa, data), validação declarativa `data-eds-validate` sobre a Constraint Validation API e o evento `eds:form-invalid`.
+- Resumo de erros (`.eds-error-summary`, `[data-eds-error-summary]`; React `ErrorSummary` e `useFormValidation`).
+- Estado de envio com bloqueio de duplo envio (`data-eds-submit`, `EDS.submit(form)`; React `useSubmit` e Button `result`).
+- Receitas de formulário na documentação: React Hook Form, Zod e validação no servidor.
+
+### Ajustes do core
+
+- Botões no tom do Alert e do Banner, contador e "Fechar menu" na Sidebar, `fit`/`stack`/`hide-narrow` na Table, ícone no título de página, Lookup maior e balões a 8 px da borda.
 
 ### Table avançada
 
@@ -14,9 +61,9 @@ Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `
 ### Padrões do template ERP
 
 - `@efds-ui/core` (CSS): cartão de opção (`.eds-option-card`), disco de ícone (`.eds-icon-disc`), linha do tempo horizontal e `data-state` nos itens, Stepper como indicador de seções (`.eds-stepper-link`) e, no Combobox, `.eds-combobox-option-code` e `-create`.
-- `@efds-ui/behavior`: Lookup com autocompletar por código ou nome (`data-eds-lookup-autocomplete="off"` desliga), opção "Cadastrar novo…" (`data-eds-lookup-create`, `eds:lookup-create`) e `EDS.lookup(el).setValue/clear/getValue`; indicador de seções `data-eds-stepper-sections` (`aria-current`, `data-state="done"`, anúncio, `eds:stepper-section-change`); mensagens `lookupCreate`, `stepperSectionDone`, `stepperDone` e `stepperSectionSummary`.
+- `@efds-ui/behavior`: Lookup com autocompletar por código ou nome (`data-eds-lookup-autocomplete="false"` desliga), opção "Cadastrar novo…" (`data-eds-lookup-create`, `eds:lookup-create`) e `EDS.lookup(el).setValue/clear/getValue`; indicador de seções `data-eds-stepper-sections` (`aria-current`, `data-state="done"`, anúncio, `eds:stepper-section-change`); mensagens `lookupCreate`, `stepperSectionDone`, `stepperDone` e `stepperSectionSummary`.
 - `@efds-ui/react`: `OptionCard`, `OptionCardGroup`, `IconDisc`, `Timeline` com `orientation="horizontal"` e `state`, `Stepper` com `href` por etapa (indicador) e `useSectionProgress`, `Lookup` com `autocomplete`, `onCreate` e `createAlways`.
-- Migração: com o autocompletar ligado por padrão, o campo do Lookup passa de `textbox` a `combobox` (ajuste testes que o buscam por papel) e a lista aparece ao digitar; use `data-eds-lookup-autocomplete="off"` (HTML) ou `autocomplete={false}` (React) para manter o comportamento antigo. O popup do Combobox e do Lookup passa a limitar a posição horizontal à janela.
+- Migração: com o autocompletar ligado por padrão, o campo do Lookup passa de `textbox` a `combobox` (ajuste testes que o buscam por papel) e a lista aparece ao digitar; use `data-eds-lookup-autocomplete="false"` (HTML) ou `autocomplete={false}` (React) para manter o comportamento antigo. O popup do Combobox e do Lookup passa a limitar a posição horizontal à janela.
 
 ## 0.1.2 (24/11/2026)
 

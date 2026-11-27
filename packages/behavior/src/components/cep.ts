@@ -42,7 +42,7 @@ function fill(field: HTMLElement, value: string): void {
  * quando ligado a uma pessoa: a escolha do serviço é de quem implanta.
  *
  * Estados: carregando (`aria-busy` no campo e no `.eds-input-group`, e o spinner do grupo: o que o autor escreveu, com `hidden`, ou um criado), não
- * encontrado e falha de rede (`p.eds-error`, esta com "Tentar de novo"). Evento `eds:cep-result`
+ * encontrado e falha de rede (`p.eds-error`, esta com "Tentar de novo"). Evento `eds:cep-lookup`
  * (`{ cep, status: 'found' | 'notfound' | 'error', data? }`).
  */
 export const cepBehavior: Behavior = {
@@ -155,15 +155,15 @@ export const cepBehavior: Behavior = {
       if (result.status === 'found') {
         apply(result.data);
         announcer.say(m.cepFilled);
-        emit(input, 'cep-result', { cep, status: 'found', data: result.data });
+        emit(input, 'cep-lookup', { cep, status: 'found', data: result.data });
       } else if (result.status === 'notfound') {
         showError(m.cepNotFound, false);
         announcer.say(m.cepNotFound);
-        emit(input, 'cep-result', { cep, status: 'notfound' });
+        emit(input, 'cep-lookup', { cep, status: 'notfound' });
       } else {
         showError(m.cepError, true);
         announcer.say(m.cepError);
-        emit(input, 'cep-result', { cep, status: 'error' });
+        emit(input, 'cep-lookup', { cep, status: 'error' });
       }
     }
 

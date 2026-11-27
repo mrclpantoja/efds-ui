@@ -1,7 +1,6 @@
 /**
- * Entrada `@efds-ui/behavior/validate`: validadores brasileiros (funções puras, sem dependência) e
- * as regras de texto do resumo de erros, para o `@efds-ui/react` usar exatamente a mesma lógica do
- * HTML por atributos (`data-eds-validate`).
+ * Entrada `@efds-ui/behavior/validate`: validadores brasileiros (funções puras, sem DOM e sem
+ * dependência), os mesmos do HTML por atributos (`data-eds-validate`) e do `@efds-ui/react`.
  */
 export {
   VALIDATOR_MESSAGE_KEY,
@@ -9,38 +8,26 @@ export {
   isCep,
   isCnpj,
   isCpf,
-  isCpfOuCnpj,
-  isDataValida,
+  isCpfCnpj,
+  isDate,
   isEmail,
-  isIntervaloDatas,
+  isDateRange,
   isPis,
-  isPlaca,
-  isTelefone,
-  isTituloEleitor,
+  isPlate,
+  isPhone,
+  isVoterId,
   isValidatorName,
   onlyDigits,
-  parseData,
+  parseDateParts,
   validateBy,
   validationMessages,
 } from './core/validate';
 export type {
-  DataOptions,
+  DateOptions,
   DateParts,
-  TelefoneOptions,
+  PhoneOptions,
   ValidateOptions,
   ValidationMessages,
   ValidatorName,
 } from './core/validate';
-export {
-  applyValidator,
-  applyValidatorBy,
-  isFormControl,
-  representativeOf,
-  validatableControls,
-  composeErrorText,
-  fieldLabel,
-  fieldMessage,
-  summaryTitle,
-  validatorMessage,
-} from './core/form-errors';
-export type { FormControl, InvalidField } from './core/form-errors';
+export type { InvalidField } from './core/form-errors';

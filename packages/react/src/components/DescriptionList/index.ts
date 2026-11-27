@@ -1,6 +1,6 @@
 export { DescriptionList } from './DescriptionList';
 export type {
-  DescriptionItem,
+  DescriptionListItem,
   DescriptionListProps,
   DescriptionListTexts,
 } from './DescriptionList';

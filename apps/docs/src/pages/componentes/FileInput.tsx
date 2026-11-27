@@ -112,7 +112,7 @@ export default function FileInputPage() {
             },
             { name: '.eds-file-sm / .eds-file-lg', effect: 'Tamanhos (altura do Input).' },
             { name: '[aria-invalid="true"]', effect: 'Erro: borda de perigo.' },
-            { name: '[data-valid="true"]', effect: 'Sucesso: borda de sucesso.' },
+            { name: '[data-valid]', effect: 'Sucesso: borda de sucesso.' },
             {
               name: ':disabled',
               effect: 'Desabilitado: fundo sutil e texto atenuado, sem opacity.',

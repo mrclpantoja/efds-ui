@@ -1,5 +1,5 @@
 import { format, getMessages } from '../core/config';
-import { emit, ensureId, normalizeText, uid } from '../core/dom';
+import { emit, ensureId, flag, normalizeText, uid } from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer } from '../core/status';
 
@@ -103,7 +103,7 @@ function cleanItem(raw: unknown): CommandItem | null {
 
 /**
  * Paleta de comandos / busca global: `<dialog class="eds-modal eds-command" data-eds-command>`.
- * Abre com Ctrl/Cmd+K (`data-eds-command-shortcut="mod+k"`; `off` desliga) ou por
+ * Abre com Ctrl/Cmd+K (`data-eds-command-shortcut="mod+k"`; `="false"` desliga) ou por
  * `[data-eds-open]`. Padrão APG combobox com lista: o foco fica no campo, a opção ativa vai em
  * `aria-activedescendant`, setas movem, Enter escolhe, Esc fecha (nativo) e o foco volta a quem
  * abriu. Itens: da própria marcação (`.eds-command-item`, com ícone e atalho do autor), de um
@@ -189,7 +189,7 @@ export const commandBehavior: Behavior = {
     const minChars = Math.max(0, Number(dialog.getAttribute('data-eds-min-chars') ?? 0) || 0);
     const recentAttr = dialog.getAttribute('data-eds-command-recent');
     const recentMax =
-      recentAttr === null || recentAttr === 'off' || recentAttr === 'false'
+      recentAttr === null || recentAttr === 'false'
         ? 0
         : Math.min(RECENT_MAX, Math.max(1, Number(recentAttr) || RECENT_DEFAULT));
     const storageKey = dialog.getAttribute('data-eds-command-storage') || RECENT_KEY;
@@ -377,8 +377,8 @@ export const commandBehavior: Behavior = {
       return count === 0
         ? format(m().commandEmpty, { query: field.value.trim() })
         : count === 1
-          ? m().comboResultsOne
-          : format(m().comboResultsMany, { count });
+          ? m().comboboxResultsOne
+          : format(m().comboboxResultsMany, { count });
     };
     const scheduleStatus = () => {
       if (statusTimer) clearTimeout(statusTimer);
@@ -397,7 +397,7 @@ export const commandBehavior: Behavior = {
       errored = false;
       dialog.setAttribute('aria-busy', 'true');
       // Busca remota: quem usa leitor de tela ouve que está carregando (o resultado vem depois).
-      announcer.say(m().comboLoading);
+      announcer.say(m().comboboxLoading);
       try {
         const init: FetchInit = {
           signal: current.signal,
@@ -574,8 +574,11 @@ export const commandBehavior: Behavior = {
     observer.observe(dialog, { attributes: true, attributeFilter: ['open'] });
 
     // Atalho global.
-    const shortcut = (dialog.getAttribute('data-eds-command-shortcut') ?? DEFAULT_SHORTCUT).trim();
-    if (shortcut !== '' && shortcut !== 'off') {
+    const shortcutAttr = (
+      dialog.getAttribute('data-eds-command-shortcut') ?? DEFAULT_SHORTCUT
+    ).trim();
+    const shortcut = shortcutAttr === '' ? DEFAULT_SHORTCUT : shortcutAttr;
+    if (flag(dialog, 'data-eds-command-shortcut', true)) {
       doc.addEventListener(
         'keydown',
         (event) => {

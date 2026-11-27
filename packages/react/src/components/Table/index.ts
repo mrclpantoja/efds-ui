@@ -21,7 +21,7 @@ export type {
   TableToolbarProps,
   TableFooterProps,
   TableLoadingRowsProps,
-  TableSort,
+  TableAriaSort,
   TableSortDirection,
   TableSortState,
   TableTexts,
@@ -47,6 +47,7 @@ export { TableColumnsMenu } from './TableColumnsMenu';
 export type { TableColumnsMenuProps, TableColumnsMenuTexts } from './TableColumnsMenu';
 export { TableColumnFilter } from './TableColumnFilter';
 export type {
+  FilterValue,
   TableColumnFilterOption,
   TableColumnFilterProps,
   TableColumnFilterTexts,

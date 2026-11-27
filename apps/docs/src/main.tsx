@@ -11,7 +11,7 @@ import {
   loader,
   lookup,
   prompt,
-  submitState,
+  submit,
   table,
   toast,
 } from '@efds-ui/behavior';
@@ -33,7 +33,7 @@ configure({ loader: { mode: 'manual' }, cepUrl: '/mock/cep/{cep}' });
   alert,
   confirm,
   prompt,
-  submitState,
+  submit,
   table,
   lookup,
 };

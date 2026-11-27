@@ -1,7 +1,7 @@
 /**
  * Erro visível e associado (WCAG 3.3.1/3.3.3) para formulários em etapas: cada campo inválido
  * ganha `aria-invalid` e um `p.eds-error` ligado por `aria-describedby`; o erro some quando o
- * campo fica válido. Mensagem: `data-eds-error` do campo ou a nativa. Reaproveita o `p.eds-error`
+ * campo fica válido. Mensagem: `data-eds-error-message` do campo ou a nativa. Reaproveita o `p.eds-error`
  * do `.eds-field`. Não chama `reportValidity` (sem balão nativo duplicado).
  */
 export type FieldControl = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -43,7 +43,7 @@ export function createFieldErrors() {
   const entries = new Map<FieldControl, Entry>();
 
   const show = (control: FieldControl): void => {
-    const message = control.getAttribute('data-eds-error') || control.validationMessage;
+    const message = control.getAttribute('data-eds-error-message') || control.validationMessage;
     const root = control.closest<HTMLElement>(COMPOSITE);
     let entry = entries.get(control);
     if (!entry) {

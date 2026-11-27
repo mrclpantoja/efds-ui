@@ -56,7 +56,7 @@ const eventos = `document.addEventListener('eds:date-change', (event) => {
 const reactDatas = `// React: ISO como valor público; Date local (sem fuso) como segundo argumento.
 <DatePicker
   value={vencimento}                 // string ISO ou null
-  onChange={(iso, date) => setVencimento(iso)}
+  onValueChange={(iso, date) => setVencimento(iso)}
 />`;
 
 const textos = `import { configure } from '@efds-ui/behavior';
@@ -97,7 +97,7 @@ export default function DatePickerPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
+        <Alert tone="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             O calendário, a máscara e a validação são JavaScript: no HTML vêm do{' '}
             <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que liga o{' '}
@@ -189,8 +189,8 @@ export default function DatePickerPage() {
           <code>role</code> e <code>pattern</code>, que ele controla), repassa <code>ref</code>{' '}
           (para o campo de texto) e mescla <code>className</code>. Dentro de um <code>Field</code>,{' '}
           <code>id</code>, rótulo, descrições, <code>required</code> e erro vêm dele. É controlado (
-          <code>value</code> e <code>onChange</code>) ou não (<code>defaultValue</code>). As datas
-          são locais, sem fuso: o valor público é a string ISO <code>aaaa-mm-dd</code>.
+          <code>value</code> e <code>onValueChange</code>) ou não (<code>defaultValue</code>). As
+          datas são locais, sem fuso: o valor público é a string ISO <code>aaaa-mm-dd</code>.
         </p>
         <PropsTable
           caption="Props de DatePicker"
@@ -206,7 +206,7 @@ export default function DatePickerPage() {
               ),
             },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(iso: string | null, date: Date | null) => void',
               description:
                 'Escolha, digitação aceita ou limpeza. date é um Date local (meia-noite), sem fuso.',

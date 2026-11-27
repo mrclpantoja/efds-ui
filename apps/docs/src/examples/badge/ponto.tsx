@@ -4,16 +4,16 @@ export default function Ponto() {
   return (
     <Stack direction="row" wrap gap={3}>
       <Badge dot>Rascunho</Badge>
-      <Badge variant="info" dot>
+      <Badge tone="info" dot>
         Em análise
       </Badge>
-      <Badge variant="success" dot>
+      <Badge tone="success" dot>
         Pago
       </Badge>
-      <Badge variant="warning" dot>
+      <Badge tone="warning" dot>
         Pendente
       </Badge>
-      <Badge variant="danger" dot>
+      <Badge tone="danger" dot>
         Atrasado
       </Badge>
     </Stack>

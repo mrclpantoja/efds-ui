@@ -36,7 +36,7 @@ export default function ConditionalPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Behavior @efds-ui/behavior">
+        <Alert tone="info" title="Behavior @efds-ui/behavior">
           <p>
             O elemento oculto recebe <code>hidden</code> e os campos dentro dele ficam{' '}
             <code>disabled</code> (não vão no envio nem entram na validação); ao reaparecer, voltam

@@ -3,7 +3,7 @@ import { Alert, Button } from '@efds-ui/react';
 export default function Acoes() {
   return (
     <Alert
-      variant="warning"
+      tone="warning"
       title="Faturas em atraso"
       actions={
         <>

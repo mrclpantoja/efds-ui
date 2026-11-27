@@ -32,7 +32,7 @@ import { Spinner } from '../Spinner';
 
 export type ComboboxSize = 'sm' | 'md' | 'lg';
 
-export type { ComboboxOption };
+export type { ComboboxFilter, ComboboxOption };
 
 export interface ComboboxTexts {
   /** Lista sem resultado. Padrão: "Nenhum resultado". */
@@ -71,7 +71,7 @@ export interface ComboboxProps extends Omit<
   /** Valor inicial (não controlado). */
   defaultValue?: string;
   /** Escolha ou limpeza (`value === ''`, `option === null`) do valor. */
-  onChange?: (value: string, option: ComboboxOption | null) => void;
+  onValueChange?: (value: string, option: ComboboxOption | null) => void;
   /** Texto digitado mudou: use para buscar opções no servidor (combine com `loading`). */
   onInputChange?: (text: string) => void;
   /**
@@ -86,10 +86,10 @@ export interface ComboboxProps extends Omit<
   /** Erro de carregamento: aparece no popup (`.eds-combobox-empty`) e é anunciado. */
   error?: ReactNode;
   /**
-   * Rótulo do `value` controlado cuja opção ainda não está em `options` (ex.: tela de edição com
-   * busca remota).
+   * Opção do `value` controlado que ainda não está em `options` (ex.: tela de edição com busca
+   * remota): dá o rótulo a mostrar no campo.
    */
-  selectedLabel?: string;
+  selectedOption?: ComboboxOption;
   /** Texto livre: o hidden recebe o texto digitado e não há validação de escolha. */
   freeText?: boolean;
   /** Gera um `<input type="hidden">` com o valor escolhido para envio em formulário. */
@@ -98,7 +98,7 @@ export interface ComboboxProps extends Omit<
   size?: ComboboxSize;
   /** Erro: `aria-invalid="true"`. Dentro de um Field com `error` já é automático. */
   invalid?: boolean;
-  /** Sucesso: `data-valid="true"`. */
+  /** Sucesso: `data-valid`. */
   valid?: boolean;
 }
 
@@ -113,13 +113,13 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
     options,
     value: valueProp,
     defaultValue,
-    onChange,
+    onValueChange,
     onInputChange,
     filter = true,
     loading = false,
     texts,
     error,
-    selectedLabel: selectedLabelProp,
+    selectedOption,
     freeText = false,
     name,
     size = 'md',
@@ -159,16 +159,16 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
 
   const selectedRef = useRef<ComboboxOption | null>(null);
   const [value, setValue] = useControllable<string>(valueProp, defaultValue ?? '', (next) =>
-    onChange?.(next, next === '' ? null : (options.find((o) => o.value === next) ?? null)),
+    onValueChange?.(next, next === '' ? null : (options.find((o) => o.value === next) ?? null)),
   );
   const known = options.find((o) => o.value === value) ?? null;
   const selected =
     known ??
     (selectedRef.current?.value === value ? selectedRef.current : null) ??
-    (value !== '' && selectedLabelProp !== undefined ? { value, label: selectedLabelProp } : null);
-  const selectedLabel = value === '' ? '' : (selected?.label ?? '');
+    (value !== '' && selectedOption !== undefined ? { ...selectedOption, value } : null);
+  const shownLabel = value === '' ? '' : (selected?.label ?? '');
 
-  const [text, setText] = useState(selectedLabel);
+  const [text, setText] = useState(shownLabel);
   const [dirty, setDirty] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
@@ -179,16 +179,16 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
   const popupRef = useRef<HTMLDivElement | null>(null);
 
   // Valor mudou de fora (ou foi escolhido): o texto passa a ser o rótulo.
-  const lastLabel = useRef(selectedLabel);
+  const lastLabel = useRef(shownLabel);
   useEffect(() => {
     if (known) selectedRef.current = known;
-    if (lastLabel.current === selectedLabel) return;
-    lastLabel.current = selectedLabel;
-    if (selectedLabel !== '') {
-      setText(selectedLabel);
+    if (lastLabel.current === shownLabel) return;
+    lastLabel.current = shownLabel;
+    if (shownLabel !== '') {
+      setText(shownLabel);
       setDirty(false);
     }
-  }, [selectedLabel, known]);
+  }, [shownLabel, known]);
 
   const visible = useMemo(
     () => filterOptions(options, filter, text, dirty),

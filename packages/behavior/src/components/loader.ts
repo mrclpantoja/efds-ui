@@ -105,6 +105,8 @@ type Timer = ReturnType<typeof setTimeout> | null;
 let pendings: Pending[] = [];
 let dialog: HTMLDialogElement | null = null;
 let ownsDialog = false;
+/** Diálogos que já receberam os ouvintes (Esc não fecha, reabre se fechado de fora). */
+const boundDialogs = new WeakSet<HTMLDialogElement>();
 let showTimer: Timer = null;
 let hideTimer: Timer = null;
 let slowTimer: Timer = null;
@@ -156,8 +158,8 @@ function ensureDialog(): HTMLDialogElement {
   }
   // Foco precisa de onde parar enquanto o resto da página está inerte.
   if (!dialog.hasAttribute('tabindex')) dialog.tabIndex = -1;
-  if (!dialog.hasAttribute('data-eds-bound')) {
-    dialog.setAttribute('data-eds-bound', '');
+  if (!boundDialogs.has(dialog)) {
+    boundDialogs.add(dialog);
     // Esc não fecha: só o código fecha.
     dialog.addEventListener('cancel', (event) => event.preventDefault());
     // No Chrome o segundo Esc seguido não gera `cancel` cancelável (sem ativação do usuário) e
@@ -245,7 +247,7 @@ function show(reopen = false): void {
     }
     if (!reopen) visibleSince = Date.now();
     setBusy(true);
-    if (!reopen) emit(el, 'loader-show', {});
+    if (!reopen) emit(el, 'loader-open', {});
   }
   if (slow) renderActions()?.focus();
 }
@@ -258,7 +260,7 @@ function hide(reason: LoaderHideReason): void {
   if (!dialog || !dialog.open) return;
   expectClose = true;
   dialog.close();
-  emit(dialog, 'loader-hide', { reason });
+  emit(dialog, 'loader-close', { reason });
 }
 
 function armSlow(): void {

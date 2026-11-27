@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type KeyboardEvent } from 'react';
 import {
-  format,
+  formatMessage as format,
   getMessages,
   matchColumnFilter,
   normalizeText,
@@ -8,7 +8,7 @@ import {
   type FilterValue,
 } from '@efds-ui/behavior/export';
 import { mergeTexts } from '../../utils/texts';
-import { DEFAULT_LOCALE } from '../Locale';
+import { DEFAULT_LOCALE } from '../Locale/Locale';
 import type { TableSortState } from './Table';
 
 export interface SortTableDataOptions<T> {
@@ -163,7 +163,7 @@ export function useTableFilter<T>(
         many: m.tableFilterMany,
         one: m.tableFilterOne,
         none: m.tableFilterNone,
-        cleared: m.tableFilterCleared,
+        cleared: m.tableFilterClearedMany,
         clearedOne: m.tableFilterClearedOne,
       },
       latest.current.texts,

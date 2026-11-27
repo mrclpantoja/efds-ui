@@ -42,7 +42,7 @@ export default function WizardExemplo() {
         ]}
       />
       {enviado !== null && (
-        <Alert variant="success" title="Cadastro concluído">
+        <Alert tone="success" title="Cadastro concluído">
           Dados de {enviado} recebidos (fictício: nada foi enviado).
         </Alert>
       )}

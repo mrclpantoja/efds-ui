@@ -2,7 +2,7 @@ import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 
-export interface DescriptionItem {
+export interface DescriptionListItem {
   /** Rótulo (o `<dt>`). */
   label: ReactNode;
   /** Valor (o `<dd>`). Vazio (`null`, `undefined`, `''`) mostra "—" e diz "não informado". */
@@ -19,14 +19,15 @@ export interface DescriptionListTexts {
 const defaultTexts: DescriptionListTexts = { empty: 'não informado' };
 
 export interface DescriptionListProps extends Omit<HTMLAttributes<HTMLDListElement>, 'children'> {
-  items: readonly DescriptionItem[];
+  items: readonly DescriptionListItem[];
   /**
    * Máximo de colunas. A lista usa menos quando o contêiner é estreito (cada coluna tem largura
    * mínima), sem media query. Padrão: `1`.
    */
   columns?: 1 | 2 | 3;
   /** Rótulo à esquerda e valor à direita em cada linha (pensada para 1 coluna). */
-  horizontal?: boolean;
+  /** Padrão: `vertical` (rótulo acima do valor). */
+  orientation?: 'vertical' | 'horizontal';
   /** Linha separadora entre os itens (1 coluna). */
   divided?: boolean;
   /** Listras alternadas (1 coluna). */
@@ -44,7 +45,7 @@ export const DescriptionList = forwardRef<HTMLDListElement, DescriptionListProps
     {
       items,
       columns = 1,
-      horizontal = false,
+      orientation = 'vertical',
       divided = false,
       striped = false,
       texts,
@@ -61,7 +62,7 @@ export const DescriptionList = forwardRef<HTMLDListElement, DescriptionListProps
         className={cx(
           'eds-description-list',
           columns > 1 && `eds-description-list-cols-${columns}`,
-          horizontal && 'eds-description-list-horizontal',
+          orientation === 'horizontal' && 'eds-description-list-horizontal',
           divided && 'eds-description-list-divided',
           striped && 'eds-description-list-striped',
           className,

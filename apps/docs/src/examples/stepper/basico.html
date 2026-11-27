@@ -1,8 +1,8 @@
-<!-- Só visual: o estado vem de data-state (complete | current | upcoming | error) e aria-current="step".
+<!-- Só visual: o estado vem de data-state (done | current | upcoming | error) e aria-current="step".
      O número, o check e o "!" são gerados por CSS; o estado também vai em texto oculto no rótulo.
      Contêiner estreito (< 36rem): só a etapa atual + .eds-stepper-summary ("Etapa 2 de 4"). -->
 <ol class="eds-stepper" aria-label="Etapas do cadastro">
-  <li class="eds-stepper-item" data-state="complete">
+  <li class="eds-stepper-item" data-state="done">
     <span class="eds-stepper-marker" aria-hidden="true"></span>
     <span class="eds-stepper-label">Dados<span class="eds-visually-hidden"> (concluída)</span></span>
   </li>

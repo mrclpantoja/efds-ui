@@ -17,7 +17,7 @@ import {
   type Ref,
   type SyntheticEvent,
 } from 'react';
-import { placeMenuFallback } from '@efds-ui/behavior/balloon';
+import { placeMenuFallback } from '@efds-ui/behavior/internal';
 import { cx } from '../../utils/cx';
 
 const MenuContext = createContext<string | undefined>(undefined);
@@ -30,6 +30,10 @@ export interface DropdownProps extends Omit<HTMLAttributes<HTMLDivElement>, 'pop
    * ao botão). Receberá `popovertarget` e `aria-expanded` sincronizado com o menu.
    */
   trigger: ReactElement<TriggerProps>;
+  /** Aberto (controlado). Use com `onOpenChange`. */
+  open?: boolean;
+  /** Aberto ao montar (não controlado). */
+  defaultOpen?: boolean;
   /** Chamado quando o popover abre ou fecha (inclusive por Esc e clique fora). */
   onOpenChange?: (open: boolean) => void;
 }
@@ -52,7 +56,17 @@ function isOpen(event: SyntheticEvent<HTMLElement>): boolean {
  * segue o evento `toggle`.
  */
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(function Dropdown(
-  { trigger, onOpenChange, className, children, id, onToggle, ...rest },
+  {
+    trigger,
+    open: openProp,
+    defaultOpen = false,
+    onOpenChange,
+    className,
+    children,
+    id,
+    onToggle,
+    ...rest
+  },
   ref,
 ) {
   const generated = useId();
@@ -60,6 +74,24 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(function Dropd
   const triggerId = trigger.props.id ?? `${generated}-trigger`;
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const initialOpen = useRef(defaultOpen);
+
+  // Aberto ao montar (`defaultOpen`) e, controlado, acompanha `open`.
+  useEffect(() => {
+    const menu = menuRef.current;
+    const wanted = openProp ?? initialOpen.current;
+    initialOpen.current = false;
+    if (!menu || (openProp === undefined && !wanted) || typeof menu.showPopover !== 'function') {
+      return;
+    }
+    try {
+      const shown = menu.matches(':popover-open');
+      if (wanted && !shown) menu.showPopover();
+      else if (!wanted && shown) menu.hidePopover();
+    } catch {
+      /* já no estado pedido */
+    }
+  }, [openProp]);
 
   // Popover "auto" fecha com Esc e clique fora, mas não quando o foco sai por Tab: com o menu
   // aberto, fecha se o foco for para fora do menu e do gatilho.

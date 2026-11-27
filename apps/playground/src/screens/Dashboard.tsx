@@ -125,7 +125,7 @@ export function Dashboard() {
               value={kpi.value}
               delta={kpi.delta.replace(/^[+−]/, '')}
               trend={kpi.up ? 'up' : 'down'}
-              tone={kpi.good ? 'positive' : 'negative'}
+              tone={kpi.good ? 'success' : 'danger'}
               meta="vs. mês anterior"
             />
           ))}
@@ -161,7 +161,7 @@ export function Dashboard() {
                 <TableRow key={p.id}>
                   <TableHeaderCell scope="row">{p.id}</TableHeaderCell>
                   <TableCell>
-                    <Badge variant={pedidoStatus[p.status].badge}>
+                    <Badge tone={pedidoStatus[p.status].badge}>
                       {pedidoStatus[p.status].label}
                     </Badge>
                   </TableCell>
@@ -213,10 +213,10 @@ export function Dashboard() {
               </CardTitle>
             </CardHeader>
             <CardBody className="eds-stack eds-gap-3">
-              <Alert variant="warning" title="17 pedidos em atraso">
+              <Alert tone="warning" title="17 pedidos em atraso">
                 <p>Cinco deles passaram de 30 dias.</p>
               </Alert>
-              <Alert variant="info" title="Fechamento do mês">
+              <Alert tone="info" title="Fechamento do mês">
                 <p>O período contábil fecha em 30/11.</p>
               </Alert>
             </CardBody>

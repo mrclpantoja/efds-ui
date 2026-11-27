@@ -1,6 +1,6 @@
 /* Tag: rótulo de classificação (área, categoria, marcador), com tom e remoção opcional.
    Markup:
-     <span class="eds-tag" data-tone="info">Financeiro</span>
+     <span class="eds-tag eds-tag-info">Financeiro</span>
      <span class="eds-tag">Prioridade alta
        <button type="button" class="eds-tag-remove" aria-label="Remover Prioridade alta"></button>
      </span>
@@ -8,7 +8,7 @@
      Badge = estado de um registro (Pago, Atrasado), pequeno e sem borda; vem do sistema.
      Tag   = classificação livre, muitas vezes escolhida pelo usuário; estática, removível ou não.
      Chip  = controle: filtro ativo ou alternável (botão); aparência irmã, mas interativo.
-   - Tom: data-tone="neutral|accent|info|success|warning|danger" (neutral é o padrão). Fundo -subtle
+   - Tom: .eds-tag-{accent,info,success,warning,danger} (neutral é o padrão, sem classe). Fundo -subtle
      e texto -text já medidos (>= 4.5:1 nos 5 temas e nos 2 modos); o texto é quem informa.
    - A Tag não é interativa: sem hover, sem cursor de clique. Só o botão .eds-tag-remove recebe foco;
      ele precisa de aria-label "Remover X" (o ícone × é desenhado em CSS quando o botão está vazio).
@@ -59,31 +59,31 @@
       padding-inline-end: 0;
     }
 
-    &[data-tone='accent'] {
+    &.eds-tag-accent {
       --_tag-bg: var(--eds-color-action-primary-subtle);
       --_tag-fg: var(--eds-color-action-primary);
       --_tag-border: color-mix(in srgb, var(--eds-color-action-primary) 30%, transparent);
     }
 
-    &[data-tone='info'] {
+    &.eds-tag-info {
       --_tag-bg: var(--eds-color-status-info-subtle);
       --_tag-fg: var(--eds-color-status-info-text);
       --_tag-border: color-mix(in srgb, var(--eds-color-status-info-text) 30%, transparent);
     }
 
-    &[data-tone='success'] {
+    &.eds-tag-success {
       --_tag-bg: var(--eds-color-status-success-subtle);
       --_tag-fg: var(--eds-color-status-success-text);
       --_tag-border: color-mix(in srgb, var(--eds-color-status-success-text) 30%, transparent);
     }
 
-    &[data-tone='warning'] {
+    &.eds-tag-warning {
       --_tag-bg: var(--eds-color-status-warning-subtle);
       --_tag-fg: var(--eds-color-status-warning-text);
       --_tag-border: color-mix(in srgb, var(--eds-color-status-warning-text) 30%, transparent);
     }
 
-    &[data-tone='danger'] {
+    &.eds-tag-danger {
       --_tag-bg: var(--eds-color-status-danger-subtle);
       --_tag-fg: var(--eds-color-status-danger-text);
       --_tag-border: color-mix(in srgb, var(--eds-color-status-danger-text) 30%, transparent);
@@ -164,14 +164,15 @@
     }
   }
 
+  /* `:is(.eds-tag)` sobe a especificidade para (0,2,0): vence as classes de tom (.eds-tag.eds-tag-info). */
   @media (prefers-contrast: more) {
-    .eds-tag:is([data-tone], :not([data-tone])) {
+    .eds-tag:is(.eds-tag) {
       --_tag-border: currentColor;
     }
   }
 
   @media (forced-colors: active) {
-    .eds-tag:is([data-tone], :not([data-tone])) {
+    .eds-tag:is(.eds-tag) {
       --_tag-bg: Canvas;
       --_tag-fg: CanvasText;
       --_tag-border: CanvasText;

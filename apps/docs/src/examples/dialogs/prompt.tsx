@@ -10,7 +10,7 @@ export default function Prompt() {
       okText: 'Salvar',
       validate: (valor) => (valor.includes('/') ? 'Não use a barra no nome.' : ''),
     });
-    if (nome !== null) toast.show({ variant: 'success', message: `Salvo como ${nome}.` });
+    if (nome !== null) toast.show({ tone: 'success', message: `Salvo como ${nome}.` });
   };
 
   const motivo = async () => {

@@ -21,7 +21,12 @@ function Demo({
       <Button type="submit" variant="primary" {...submit.buttonProps}>
         Salvar
       </Button>
-      <Button type="submit" name="acao" value="rascunho" aria-disabled={submit.busy || undefined}>
+      <Button
+        type="submit"
+        name="acao"
+        value="rascunho"
+        aria-disabled={submit.loading || undefined}
+      >
         Rascunho
       </Button>
       <output data-testid="estado">{submit.state}</output>

@@ -5,7 +5,7 @@ export default function Diferenca() {
     <Stack gap={4}>
       <p className="eds-stack eds-stack-row eds-stack-wrap eds-gap-3 eds-stack-align-center">
         <span className="eds-text-small">Badge (estado)</span>
-        <Badge variant="success">Pago</Badge>
+        <Badge tone="success">Pago</Badge>
       </p>
       <p className="eds-stack eds-stack-row eds-stack-wrap eds-gap-3 eds-stack-align-center">
         <span className="eds-text-small">Tag (classificação)</span>

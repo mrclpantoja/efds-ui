@@ -1,6 +1,6 @@
 <!-- Ordenação múltipla (opt-in: data-eds-sort-multi). Clique substitui a ordenação; Shift+clique ou
      Shift+Enter acrescenta a coluna. Só o critério principal leva aria-sort; os demais levam
-     data-eds-sort-dir e o número da prioridade (.eds-table-sort-order), criados pelo JS. Aqui o markup
+     data-sort-dir e o número da prioridade (.eds-table-sort-order), criados pelo JS. Aqui o markup
      já está no estado "Cliente, depois Total decrescente". -->
 <div class="eds-table-toolbar">
   <span>Pedidos recentes</span>
@@ -21,7 +21,7 @@
             </svg>
           </button>
         </th>
-        <th scope="col" data-eds-col="cliente" aria-sort="ascending" data-eds-sort-dir="ascending" data-eds-sort-order="1">
+        <th scope="col" data-eds-col="cliente" aria-sort="ascending" data-sort-dir="ascending" data-sort-order="1">
           <button type="button" class="eds-table-sort">
             Cliente
             <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
@@ -32,7 +32,7 @@
           </button>
         </th>
         <th scope="col" data-eds-col="situacao">Situação</th>
-        <th scope="col" data-eds-col="total" class="eds-table-num" data-eds-sort-dir="descending" data-eds-sort-order="2">
+        <th scope="col" data-eds-col="total" class="eds-table-num" data-sort-dir="descending" data-sort-order="2">
           <button type="button" class="eds-table-sort">
             Total
             <svg class="eds-table-sort-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">

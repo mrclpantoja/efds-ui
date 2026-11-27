@@ -15,7 +15,7 @@ describe('IconDisc', () => {
     expect(ref.current).toBe(el);
     expect(el).toHaveAttribute('aria-hidden', 'true');
     expect(el).toHaveClass('eds-icon-disc', 'eds-icon-disc-lg', 'eds-icon-disc-round');
-    expect(el).toHaveAttribute('data-tone', 'success');
+    expect(el).toHaveClass('eds-icon-disc-success');
   });
 
   it('padrão: accent e md não geram atributo nem classe extra', () => {
@@ -26,6 +26,5 @@ describe('IconDisc', () => {
     );
     const el = container.firstElementChild as HTMLElement;
     expect(el.className).toBe('eds-icon-disc');
-    expect(el).not.toHaveAttribute('data-tone');
   });
 });

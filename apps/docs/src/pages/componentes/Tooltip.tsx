@@ -40,7 +40,7 @@ export default function TooltipPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="O comportamento vem do @efds-ui/behavior">
+        <Alert tone="info" title="O comportamento vem do @efds-ui/behavior">
           <p>
             Marque o gatilho com <code>data-eds-tooltip</code> e ligue-o ao balão por{' '}
             <code>aria-describedby</code>. O balão é <code>role=&quot;tooltip&quot;</code> com{' '}

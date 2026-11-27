@@ -10,7 +10,7 @@ import {
   type ReactElement,
   type TdHTMLAttributes,
 } from 'react';
-import { format, getMessages } from '@efds-ui/behavior/export';
+import { formatMessage as format, getMessages } from '@efds-ui/behavior/export';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { mergeRefs } from '../../internal/refs-d';
@@ -23,16 +23,19 @@ export interface TableEditableCellTexts {
   saved: (column: string, row: string, value: string) => string;
   saving: string;
   error: (message: string) => string;
+  /** Mensagem de campo obrigatório vazio (a nativa do navegador, se houver, vence). */
+  required: string;
 }
 
 const defaultTexts = (): TableEditableCellTexts => {
   const m = getMessages();
   return {
-    edit: (column, row) => format(m.editLabel, { column, row }),
-    hint: m.editHint,
-    saved: (column, row, value) => format(m.editSaved, { column, row, value }),
-    saving: m.editSaving,
-    error: (message) => format(m.editError, { message }),
+    edit: (column, row) => format(m.tableEditLabel, { column, row }),
+    hint: m.tableEditHint,
+    saved: (column, row, value) => format(m.tableEditSaved, { column, row, value }),
+    saving: m.tableEditSaving,
+    error: (message) => format(m.tableEditError, { message }),
+    required: 'Campo obrigatório.',
   };
 };
 
@@ -170,9 +173,7 @@ export const TableEditableCell = forwardRef<HTMLTableCellElement, TableEditableC
         return true;
       }
       const message =
-        (required && draft.trim() === ''
-          ? (el?.validationMessage ?? '') || 'Campo obrigatório.'
-          : '') ||
+        (required && draft.trim() === '' ? (el?.validationMessage ?? '') || t.required : '') ||
         (el && !el.checkValidity() ? el.validationMessage : '') ||
         validate?.(draft) ||
         '';

@@ -3,11 +3,8 @@ import { cx } from '../../utils/cx';
 import { useControlAttrs } from '../../internal/field-context';
 import { mergeRefs } from '../../internal/refs-d';
 import { useInputMask, type InputMaskOptions } from '../../internal/useInputMask';
-import {
-  applyValidatorBy,
-  validationMessages,
-  type ValidatorName,
-} from '@efds-ui/behavior/validate';
+import { applyValidatorBy } from '@efds-ui/behavior/internal';
+import { validationMessages, type ValidatorName } from '@efds-ui/behavior/validate';
 
 export type { InputMaskOptions, ValidatorName };
 
@@ -26,12 +23,20 @@ export type InputMaskName =
   | 'competencia'
   | 'processo';
 
+/** Mensagens de validação do Input. Sem valor, vale a padrão (pt-BR) da máscara ou do validador. */
+export interface InputTexts {
+  /** Mensagem de `maskValidate`. Padrão: hora, competência ou número de processo inválido. */
+  maskInvalid: string;
+  /** Mensagem do `validate`. Padrão: a do validador, ex.: "Informe um CPF válido.". */
+  validate: string;
+}
+
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** Padrão: `md`. */
   size?: InputSize;
   /** Erro: `aria-invalid="true"`. Dentro de um Field com `error` já é automático. */
   invalid?: boolean;
-  /** Sucesso: `data-valid="true"`. */
+  /** Sucesso: `data-valid`. */
   valid?: boolean;
   /**
    * Máscara de entrada: o nome de uma pronta (`telefone`, `cpf`, `cnpj`, `cpf-cnpj`, `cep`,
@@ -47,17 +52,15 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
    * visível é sua (`Field error`). Padrão: não valida.
    */
   maskValidate?: boolean;
-  /** Mensagem de `maskValidate`. Padrão (pt-BR): hora, competência ou número de processo inválido. */
-  maskInvalidMessage?: string;
   /**
    * Validador brasileiro: `cpf`, `cnpj`, `cpf-cnpj`, `cep`, `telefone`, `email`, `pis`, `titulo`, `placa` ou `data`
    * (as mesmas regras de `data-eds-validate`). Vira a validade nativa do campo (`setCustomValidity`): campo
    * vazio é válido (use `required`). Para mostrar o erro, use `useFormValidation` com `Field error`.
-   * `data` lê `min` e `max`; `telefone` aceita `data-eds-validate-tipo="fixo|celular"`.
+   * `data` lê `min` e `max`; `telefone` aceita `data-eds-validate-phone-type="landline|mobile"`.
    */
   validate?: ValidatorName;
-  /** Mensagem do `validate`. Padrão (pt-BR): a do validador, ex.: "Informe um CPF válido.". */
-  validateMessage?: string;
+  /** Mensagens trocáveis (`maskInvalid`, `validate`). Sem elas, valem as padrões em pt-BR. */
+  texts?: Partial<InputTexts>;
   /** Com `name`, o campo visível deixa de ser enviado e um hidden leva só os caracteres significativos. */
   unmask?: boolean;
   /** Valor mascarado e valor limpo (moeda: `"1234.56"`), a cada alteração. */
@@ -80,9 +83,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     maskOptions,
     unmask,
     maskValidate,
-    maskInvalidMessage,
     validate,
-    validateMessage,
+    texts,
     onValueChange,
     value,
     defaultValue,
@@ -123,14 +125,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     }
     const ok = mask.validate(el.value);
     el.setCustomValidity(
-      ok ? '' : (maskInvalidMessage ?? INVALID_MESSAGES[mask.name] ?? 'Valor inválido.'),
+      ok ? '' : (texts?.maskInvalid ?? INVALID_MESSAGES[mask.name] ?? 'Valor inválido.'),
     );
   });
   // : a validade nativa acompanha o valor (a cada digitação e a cada render controlado).
   useEffect(() => {
     const el = innerRef.current;
     if (!el || !validate) return;
-    const apply = () => applyValidatorBy(el, validate, validationMessages, validateMessage);
+    const apply = () => applyValidatorBy(el, validate, validationMessages, texts?.validate);
     apply();
     el.addEventListener('input', apply);
     el.addEventListener('change', apply);
@@ -139,10 +141,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       el.removeEventListener('change', apply);
       el.setCustomValidity('');
     };
-  }, [innerRef, validate, validateMessage]);
+  }, [innerRef, validate, texts?.validate]);
   useEffect(() => {
     const el = innerRef.current;
-    if (el && validate) applyValidatorBy(el, validate, validationMessages, validateMessage);
+    if (el && validate) applyValidatorBy(el, validate, validationMessages, texts?.validate);
   });
   const sendRaw = mask !== null && unmask === true && name !== undefined && name !== '';
 

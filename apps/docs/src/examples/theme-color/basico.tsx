@@ -45,7 +45,7 @@ export default function Basico() {
         <Stack direction="row" wrap gap={3}>
           <Button variant="primary">Ação principal</Button>
           <Button variant="ghost">Ação suave</Button>
-          <Badge variant="info">Amostra</Badge>
+          <Badge tone="info">Amostra</Badge>
         </Stack>
         <p className="eds-text-small">
           Contraste do texto sobre a ação: {String(action?.ratio).replace('.', ',')}:1

@@ -60,7 +60,7 @@ export default function TabsPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="No HTML, o comportamento vem do @efds-ui/behavior">
+        <Alert tone="info" title="No HTML, o comportamento vem do @efds-ui/behavior">
           <p>
             O CSS só estiliza. Roving tabindex, setas, Home/End e a troca de painéis são JavaScript:
             carregue o <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que detecta{' '}

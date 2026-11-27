@@ -6,7 +6,7 @@ export default function Tamanhos() {
       <Avatar name="Ana Exemplo" size="sm" />
       <Avatar name="Ana Exemplo" />
       <Avatar name="Ana Exemplo" size="lg" />
-      <Avatar name="Elisa Demo" size="lg" circle />
+      <Avatar name="Elisa Demo" size="lg" round />
     </Stack>
   );
 }

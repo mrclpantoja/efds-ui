@@ -88,7 +88,7 @@ describe('page loader: saída por demora, reabertura, adoção, trigger e navega
     it('Fechar libera a página e mantém as pendências em silêncio', async () => {
       const hides: unknown[] = [];
       const onHide = (e: Event) => hides.push((e as CustomEvent).detail);
-      document.addEventListener('eds:loader-hide', onHide);
+      document.addEventListener('eds:loader-close', onHide);
       await openSlow();
       buttons()[0]?.click();
       expect(isOpen()).toBe(false);
@@ -106,7 +106,7 @@ describe('page loader: saída por demora, reabertura, adoção, trigger e navega
       expect(isOpen()).toBe(true);
       expect(buttons()).toHaveLength(0);
       expect(text()).toHaveTextContent('Aguarde um instante.');
-      document.removeEventListener('eds:loader-hide', onHide);
+      document.removeEventListener('eds:loader-close', onHide);
     });
 
     it('Continuar aguardando reinicia a contagem', async () => {
@@ -156,11 +156,11 @@ describe('page loader: saída por demora, reabertura, adoção, trigger e navega
     });
   });
 
-  describe('motivo do eds:loader-hide', () => {
+  describe('motivo do eds:loader-close', () => {
     it('done e closed (reset)', async () => {
       const hides: unknown[] = [];
       const onHide = (e: Event) => hides.push((e as CustomEvent).detail);
-      document.addEventListener('eds:loader-hide', onHide);
+      document.addEventListener('eds:loader-close', onHide);
       const done = loader.start();
       await vi.advanceTimersByTimeAsync(300);
       done();
@@ -169,7 +169,7 @@ describe('page loader: saída por demora, reabertura, adoção, trigger e navega
       await vi.advanceTimersByTimeAsync(300);
       reset();
       expect(hides).toEqual([{ reason: 'done' }, { reason: 'closed' }]);
-      document.removeEventListener('eds:loader-hide', onHide);
+      document.removeEventListener('eds:loader-close', onHide);
     });
   });
 

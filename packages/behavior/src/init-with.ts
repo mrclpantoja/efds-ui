@@ -32,12 +32,12 @@ import { wizardBehavior } from './components/wizard';
 import { stepperSectionsBehavior } from './components/stepper-sections';
 // Estado de envio de formulário
 import { formSubmitBehavior } from './components/form-submit';
-// Onda C (campos)
+// Campos (senha, OTP, número, lookup) e comportamentos de página
 import { lookupBehavior } from './components/lookup';
 import { numberBehavior } from './components/number';
 import { otpBehavior } from './components/otp';
 import { passwordBehavior } from './components/password';
-// Onda D
+// Avatar, imagem, banner e hora
 import { avatarBehavior } from './components/avatar';
 import { imageBehavior } from './components/image';
 import { bannerBehavior } from './components/banner';
@@ -86,7 +86,7 @@ export function initWith(
       // Sortable e Tree
       sortableBehavior,
       treeBehavior,
-      // Onda B
+      // Accordion, balões, wizard e filtros
       accordionBehavior,
       tooltipBehavior,
       popoverBehavior,
@@ -95,7 +95,7 @@ export function initWith(
       filterBarBehavior,
       // Estado de envio de formulário
       formSubmitBehavior,
-      // Onda C (campos)
+      // Campos e comportamentos de página
       passwordBehavior,
       otpBehavior,
       numberBehavior,
@@ -104,7 +104,7 @@ export function initWith(
       notificationsBehavior,
       dirtyGuardBehavior,
       conditionalBehavior,
-      // Onda D
+      // Avatar, banner e hora
       avatarBehavior,
       // Imagem com estado de carregamento
       imageBehavior,

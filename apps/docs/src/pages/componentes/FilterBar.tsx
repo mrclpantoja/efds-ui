@@ -57,7 +57,7 @@ export default function FilterBarPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Chips e contador pelo @efds-ui/behavior">
+        <Alert tone="info" title="Chips e contador pelo @efds-ui/behavior">
           <p>
             Marque o <code>&lt;form&gt;</code> com <code>data-eds-filter-bar</code>. O{' '}
             <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> monta os chips a partir
@@ -73,7 +73,7 @@ export default function FilterBarPage() {
             campos não vazios), <code>filters</code> (chave, rótulo e texto de cada chip) e{' '}
             <code>count</code>. Para o app que filtra sem navegar, chame <code>preventDefault</code>{' '}
             no <code>submit</code>. Campos fora dos filtros: <code>data-eds-filter-ignore</code>;
-            rótulo do chip diferente do rótulo do campo: <code>data-eds-filter-label</code>.
+            rótulo do chip diferente do rótulo do campo: <code>data-eds-filter-label-text</code>.
           </p>
         </Alert>
       </Section>

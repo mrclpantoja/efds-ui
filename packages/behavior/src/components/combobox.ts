@@ -4,6 +4,7 @@ import {
   describeBy,
   emit,
   ensureId,
+  flag,
   hidePopover,
   normalizeText,
   safeMatches,
@@ -51,7 +52,7 @@ export const comboboxBehavior: Behavior = {
     const minChars = Number(root.getAttribute('data-eds-min-chars') ?? DEFAULT_MIN_CHARS);
     const emptyText = empty?.textContent ?? '';
     // Modo múltiplo (MultiSelect): escolhidas em `selected`, destaque em `data-active`.
-    const multiple = root.hasAttribute('data-eds-multiple');
+    const multiple = flag(root, 'data-eds-multiple');
     const control = root.querySelector<HTMLElement>('.eds-combobox-control');
     const maxSelected = Number(root.getAttribute('data-eds-max-selected') ?? 0);
     const highlightAttr = multiple ? 'data-active' : 'aria-selected';
@@ -98,7 +99,7 @@ export const comboboxBehavior: Behavior = {
     }
 
     // Texto sem escolha não é valor: o formulário avisa em vez de enviar o rótulo digitado.
-    const freeText = root.hasAttribute('data-eds-free-text');
+    const freeText = flag(root, 'data-eds-free-text');
     const syncValidity = () => {
       const invalid = !freeText && input.value !== '' && currentValue === '';
       input.setCustomValidity(invalid ? getMessages().comboboxInvalid : '');
@@ -173,10 +174,10 @@ export const comboboxBehavior: Behavior = {
       const m = getMessages();
       const count = enabledOptions().length;
       return count === 0
-        ? m.comboNoResults
+        ? m.comboboxResultsNone
         : count === 1
-          ? m.comboResultsOne
-          : format(m.comboResultsMany, { count });
+          ? m.comboboxResultsOne
+          : format(m.comboboxResultsMany, { count });
     };
 
     /** Anuncia a contagem depois de uma pausa na digitação (nada ao navegar por setas). */
@@ -315,7 +316,7 @@ export const comboboxBehavior: Behavior = {
       // Carregando só é anunciado se demorar (resposta rápida não deve falar).
       loadingTimer = setTimeout(() => {
         loadingTimer = null;
-        if (controller === current) announce(getMessages().comboLoading);
+        if (controller === current) announce(getMessages().comboboxLoading);
       }, LOADING_STATUS_MS);
       try {
         const init: FetchInit = {
@@ -355,7 +356,7 @@ export const comboboxBehavior: Behavior = {
         renderRemote([]);
         setLoading(false);
         errored = true;
-        const message = getMessages().comboError;
+        const message = getMessages().comboboxError;
         if (empty) {
           empty.textContent = message;
           empty.hidden = false;
@@ -437,8 +438,8 @@ export const comboboxBehavior: Behavior = {
     const maxText = () => {
       const m = getMessages();
       return maxSelected === 1
-        ? m.comboMaxReachedOne
-        : format(m.comboMaxReached, { max: maxSelected });
+        ? m.comboboxMaxReachedOne
+        : format(m.comboboxMaxReachedMany, { max: maxSelected });
     };
 
     const maxReached = () => maxSelected > 0 && selected.size >= maxSelected;
@@ -447,10 +448,10 @@ export const comboboxBehavior: Behavior = {
       const m = getMessages();
       const count = selected.size;
       return count === 0
-        ? m.selectedNone
+        ? m.tableSelectedNone
         : count === 1
-          ? m.selectedOne
-          : format(m.selectedMany, { count });
+          ? m.tableSelectedOne
+          : format(m.tableSelectedMany, { count });
     };
 
     /** `aria-selected` = escolhida; ao atingir o máximo, as demais ficam `aria-disabled`. */
@@ -461,9 +462,9 @@ export const comboboxBehavior: Behavior = {
         option.setAttribute('aria-selected', chosen ? 'true' : 'false');
         if (full && !chosen && option.getAttribute('aria-disabled') !== 'true') {
           option.setAttribute('aria-disabled', 'true');
-          option.setAttribute('data-eds-max', '');
-        } else if ((!full || chosen) && option.hasAttribute('data-eds-max')) {
-          option.removeAttribute('data-eds-max');
+          option.setAttribute('data-max', '');
+        } else if ((!full || chosen) && option.hasAttribute('data-max')) {
+          option.removeAttribute('data-max');
           option.removeAttribute('aria-disabled');
         }
       }
@@ -472,7 +473,7 @@ export const comboboxBehavior: Behavior = {
     const syncMultiValidity = () => {
       const required = input.getAttribute('aria-required') === 'true' || input.required;
       input.setCustomValidity(
-        required && selected.size === 0 ? getMessages().comboMultiRequired : '',
+        required && selected.size === 0 ? getMessages().comboboxMultiRequired : '',
       );
       refreshError();
     };
@@ -504,7 +505,7 @@ export const comboboxBehavior: Behavior = {
         button.type = 'button';
         button.className = 'eds-combobox-tag-remove';
         button.disabled = input.disabled || input.readOnly;
-        button.setAttribute('aria-label', format(getMessages().comboTagRemove, { label }));
+        button.setAttribute('aria-label', format(getMessages().comboboxTagRemove, { label }));
         button.append(closeIcon());
         li.append(text, button);
         ul.append(li);
@@ -541,7 +542,7 @@ export const comboboxBehavior: Behavior = {
       if (selected.has(value)) {
         selected.delete(value);
         commitMultiple();
-        announce(`${format(m.comboMultiRemoved, { label })} ${selectionSummary()}`);
+        announce(`${format(m.comboboxMultiRemoved, { label })} ${selectionSummary()}`);
         return true;
       }
       if (maxReached()) {
@@ -551,7 +552,7 @@ export const comboboxBehavior: Behavior = {
       selected.set(value, label);
       commitMultiple();
       const limit = maxReached() ? ` ${maxText()}` : '';
-      announce(`${format(m.comboMultiSelected, { label })} ${selectionSummary()}${limit}`);
+      announce(`${format(m.comboboxMultiSelected, { label })} ${selectionSummary()}${limit}`);
       return true;
     };
 
@@ -564,7 +565,7 @@ export const comboboxBehavior: Behavior = {
     };
 
     const selectMultiple = (option: HTMLElement) => {
-      if (option.hasAttribute('data-eds-max')) {
+      if (option.hasAttribute('data-max')) {
         announce(maxText());
         return;
       }
@@ -599,7 +600,7 @@ export const comboboxBehavior: Behavior = {
       if (!source) filterLocal('');
       commit(valueOf(option), label);
       closePopup();
-      announce(format(getMessages().comboSelected, { label }));
+      announce(format(getMessages().comboboxSelected, { label }));
     };
 
     const move = (delta: 1 | -1) => {

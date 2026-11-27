@@ -1,4 +1,4 @@
-import type { EditorMessages } from './messages';
+import type { EditorTexts } from './messages';
 import { safeHref } from './url';
 
 export interface LinkDialogValues {
@@ -31,7 +31,7 @@ let uid = 0;
  */
 export function createLinkDialog(
   host: HTMLElement,
-  messages: EditorMessages,
+  messages: EditorTexts,
   callbacks: Callbacks,
 ): LinkDialog {
   const doc = host.ownerDocument;

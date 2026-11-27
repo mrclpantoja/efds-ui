@@ -8,7 +8,6 @@ import {
   useState,
   type ChangeEvent,
   type KeyboardEvent,
-  type ReactNode,
 } from 'react';
 import { useAnnouncer } from '../../internal/announcer';
 import {
@@ -31,6 +30,8 @@ export interface LookupItem {
   description: string;
   [key: string]: unknown;
 }
+
+export type LookupSize = InputSize;
 
 export interface LookupColumn {
   /** Propriedade do item (`code` e `description` já existem). */
@@ -91,6 +92,7 @@ export interface LookupProps extends Omit<
   | 'mask'
   | 'maskOptions'
   | 'unmask'
+  | 'texts'
   | 'onValueChange'
 > {
   /** Código (controlado). */
@@ -100,7 +102,7 @@ export interface LookupProps extends Omit<
    * Depois de resolver o código ou escolher na busca: `item` é o registro, ou `null` quando o código
    * foi apagado ou não existe.
    */
-  onChange?: (code: string, item: LookupItem | null) => void;
+  onValueChange?: (code: string, item: LookupItem | null) => void;
   /** Busca (diálogo): devolve os itens que combinam com o texto. */
   search: (query: string, signal: AbortSignal) => Promise<LookupItem[]>;
   /**
@@ -109,9 +111,6 @@ export interface LookupProps extends Omit<
   resolve?: (code: string, signal: AbortSignal) => Promise<LookupItem | null>;
   /** Colunas da tabela do diálogo. Padrão: código e descrição. */
   columns?: readonly LookupColumn[];
-  /** Nome do botão que abre a busca (ex.: "Buscar cliente") e título do diálogo. */
-  buttonLabel?: string;
-  dialogTitle?: ReactNode;
   size?: InputSize;
   texts?: Partial<LookupTexts>;
   /**
@@ -121,7 +120,7 @@ export interface LookupProps extends Omit<
   autocomplete?: boolean;
   /**
    * Liga a opção final "Cadastrar novo…" do autocompletar (quando nada é encontrado). Recebe o
-   * texto digitado; abra o seu cadastro e devolva o resultado em `value`/`onChange`.
+   * texto digitado; abra o seu cadastro e devolva o resultado em `value`/`onValueChange`.
    */
   onCreate?: (text: string) => void;
   /** Mostra a opção de cadastrar também quando há resultados. */
@@ -142,12 +141,10 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
   {
     value,
     defaultValue,
-    onChange,
+    onValueChange,
     search,
     resolve,
     columns: columnsProp,
-    buttonLabel,
-    dialogTitle,
     size = 'md',
     texts: textsProp,
     autocomplete = true,
@@ -219,7 +216,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
         setErrorText(null);
         setDescription('');
         setBusy(false);
-        if (notify) onChange?.('', null);
+        if (notify) onValueChange?.('', null);
         return;
       }
       const controller = new AbortController();
@@ -231,7 +228,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
         setBusy(false);
         setDescription(item?.description ?? '');
         setErrorText(item ? null : t.notFound);
-        if (notify) onChange?.(item?.code ?? trimmed, item);
+        if (notify) onValueChange?.(item?.code ?? trimmed, item);
       } catch {
         if (controller.signal.aborted) return;
         setBusy(false);
@@ -239,7 +236,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
         setErrorText(t.error);
       }
     },
-    [findOne, onChange, t.notFound, t.error],
+    [findOne, onValueChange, t.notFound, t.error],
   );
 
   // Controlado: o código de fora manda; descreve sem avisar.
@@ -345,7 +342,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
     resolvedFor.current = item.code;
     setDescription(item.description);
     setErrorText(null);
-    onChange?.(item.code, item);
+    onValueChange?.(item.code, item);
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -424,7 +421,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
   const searchRef = useRef<AbortController | null>(null);
   const searchInput = useRef<HTMLInputElement | null>(null);
   const searchId = `${uid}-q`;
-  const title = dialogTitle ?? buttonLabel ?? t.title;
+  const title = t.title;
 
   const runSearch = useCallback(
     async (q: string) => {
@@ -475,7 +472,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
     resolvedFor.current = item.code;
     setDescription(item.description);
     setErrorText(null);
-    onChange?.(item.code, item);
+    onValueChange?.(item.code, item);
     // O diálogo devolve o foco ao botão ao fechar; o campo o recebe em seguida.
     setTimeout(() => inputRef.current?.focus(), 0);
   };
@@ -519,7 +516,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
           type="button"
           variant="secondary"
           iconOnly
-          aria-label={buttonLabel ?? t.open}
+          aria-label={t.open}
           disabled={disabled || readOnly}
           onClick={() => {
             setQuery('');
@@ -534,7 +531,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
           id={descId}
           aria-live="polite"
           aria-busy={busy || undefined}
-          data-empty={description === '' || undefined}
+          data-empty={description === '' ? '' : undefined}
         >
           {busy ? t.loading : description === '' ? '—' : description}
         </output>
@@ -550,7 +547,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
                 id={`${uid}-list`}
                 className="eds-combobox-listbox"
                 role="listbox"
-                aria-label={rest['aria-label'] ?? buttonLabel ?? t.title}
+                aria-label={rest['aria-label'] ?? t.title}
                 hidden={optionCount === 0}
               >
                 {suggestions.map((item, i) => (

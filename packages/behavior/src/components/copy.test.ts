@@ -31,20 +31,20 @@ describe('copy', () => {
       <button id="b" type="button" data-eds-copy="#tk"><svg></svg>Copiar</button>`;
     destroy = initCopy(document);
     const onCopy = vi.fn();
-    document.addEventListener('eds:copy', onCopy);
+    document.addEventListener('eds:copy-success', onCopy);
     const b = document.getElementById('b') as HTMLButtonElement;
     b.click();
     await settle();
     expect(written).toEqual(['TOKEN-FICTICIO-123']);
     expect(b.textContent).toBe('Copiado');
     expect(b.querySelector('svg')).not.toBeNull();
-    expect(b).toHaveAttribute('data-copied', 'true');
+    expect(b).toHaveAttribute('data-copied');
     expect((onCopy.mock.calls[0]?.[0] as CustomEvent).detail.text).toBe('TOKEN-FICTICIO-123');
     expect(document.querySelector('[role="status"]')?.textContent).toContain('Copiado');
     await vi.advanceTimersByTimeAsync(2000);
     expect(b.textContent).toBe('Copiar');
     expect(b).not.toHaveAttribute('data-copied');
-    document.removeEventListener('eds:copy', onCopy);
+    document.removeEventListener('eds:copy-success', onCopy);
   });
 
   it('copia texto literal e usa aria-label em botão só de ícone', async () => {
@@ -79,12 +79,12 @@ describe('copy', () => {
     document.body.innerHTML = '<button id="b" type="button" data-eds-copy-text="x">Copiar</button>';
     destroy = initCopy(document);
     const onFail = vi.fn();
-    document.addEventListener('eds:copy-fail', onFail);
+    document.addEventListener('eds:copy-error', onFail);
     (document.getElementById('b') as HTMLElement).click();
     await settle();
     expect(onFail).toHaveBeenCalledTimes(1);
     expect(document.getElementById('b')?.textContent).toBe('Copiar');
     expect(document.querySelector('[role="status"]')?.textContent).toContain('Não foi possível');
-    document.removeEventListener('eds:copy-fail', onFail);
+    document.removeEventListener('eds:copy-error', onFail);
   });
 });

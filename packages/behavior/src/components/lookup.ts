@@ -4,6 +4,7 @@ import {
   describeBy,
   emit,
   ensureId,
+  flag,
   focusEl,
   hidePopover,
   normalizeText,
@@ -85,16 +86,17 @@ async function getJson(
  * modal com busca e tabela, e escolher devolve código e descrição e o foco ao campo.
  *
  * Fonte dos dados (nenhuma é obrigatória, nada é chamado sem o autor configurar):
- * - `data-eds-lookup-items`: JSON `[{ "code": "10", "description": "…" }]` (lista local);
- * - `data-eds-lookup-source`: URL em que a busca é acrescentada (`/api/clientes?q=`) ou tem `{q}`;
+ * - `<script type="application/json" data-eds-lookup-items>`: JSON `[{ "code": "10", "description": "…" }]`
+ *   (lista local);
+ * - `data-eds-source`: URL em que a busca é acrescentada (`/api/clientes?q=`) ou tem `{q}`;
  * - `data-eds-lookup-resolve`: URL de um código (`…?codigo=` ou `{code}`); sem ela, a busca da fonte
  *   é usada e vale o código exato.
  * Outros atributos: `data-eds-lookup-dialog` (id de um diálogo seu, com `[data-eds-lookup-search]` e
  * `tbody[data-eds-lookup-results]`), `data-eds-lookup-title`, `data-eds-lookup-columns` (JSON
  * `[{ "key", "label", "hideNarrow"? }]`). Evento `eds:lookup-change` (`{ code, description, item }`).
  *
- * Autocompletar (ligado quando há lista local ou `data-eds-lookup-source`; desligue com
- * `data-eds-lookup-autocomplete="off"`): digitar no campo busca por código OU nome e abre uma lista
+ * Autocompletar (ligado quando há lista local ou `data-eds-source`; desligue com
+ * `data-eds-lookup-autocomplete="false"`): digitar no campo busca por código OU nome e abre uma lista
  * (APG combobox "list autocomplete", visual do Combobox). `data-eds-lookup-create="Cadastrar novo…"`
  * acrescenta a opção final quando nada é encontrado (`data-eds-lookup-create-always`: sempre),
  * que dispara o evento cancelável `eds:lookup-create` (`{ text }`); o app cadastra e devolve o
@@ -118,13 +120,15 @@ export const lookupBehavior: Behavior = {
     const undo: (() => void)[] = [];
     const m = getMessages();
 
-    const source = root.getAttribute('data-eds-lookup-source') ?? '';
+    const source = root.getAttribute('data-eds-source') ?? '';
     const resolveUrl = root.getAttribute('data-eds-lookup-resolve') ?? '';
     let local: LookupItem[] | null = null;
-    const itemsAttr = root.getAttribute('data-eds-lookup-items');
-    if (itemsAttr) {
+    const itemsScript = root.querySelector<HTMLScriptElement>(
+      'script[type="application/json"][data-eds-lookup-items]',
+    );
+    if (itemsScript) {
       try {
-        local = toList(JSON.parse(itemsAttr));
+        local = toList(JSON.parse(itemsScript.textContent ?? '[]'));
       } catch {
         local = null;
       }
@@ -198,7 +202,7 @@ export const lookupBehavior: Behavior = {
       if (!output) return;
       output.textContent = text === '' ? placeholder : text;
       describeBy(input, output.id, text !== '');
-      if (text === '') output.setAttribute('data-empty', 'true');
+      if (text === '') output.setAttribute('data-empty', '');
       else output.removeAttribute('data-empty');
     };
     undo.push(clearError);
@@ -390,10 +394,10 @@ export const lookupBehavior: Behavior = {
         const msgs = getMessages();
         announcer.say(
           items.length === 0
-            ? msgs.comboNoResults
+            ? msgs.comboboxResultsNone
             : items.length === 1
-              ? msgs.comboResultsOne
-              : format(msgs.comboResultsMany, { count: items.length }),
+              ? msgs.comboboxResultsOne
+              : format(msgs.comboboxResultsMany, { count: items.length }),
         );
       } catch (error) {
         if (
@@ -461,11 +465,10 @@ export const lookupBehavior: Behavior = {
 
     // ---- Autocompletar no campo (APG combobox "list autocomplete") ---------------------------
     const canAuto =
-      root.getAttribute('data-eds-lookup-autocomplete') !== 'off' &&
-      (local !== null || source !== '');
+      flag(root, 'data-eds-lookup-autocomplete', true) && (local !== null || source !== '');
     if (canAuto) {
       const createAttr = root.getAttribute('data-eds-lookup-create');
-      const createAlways = root.hasAttribute('data-eds-lookup-create-always');
+      const createAlways = flag(root, 'data-eds-lookup-create-always');
       const minChars = Math.max(1, Number(root.getAttribute('data-eds-min-chars') ?? 1) || 1);
       const listId = uid('lookup-list');
 
@@ -618,21 +621,21 @@ export const lookupBehavior: Behavior = {
           li.id = uid('lookup-opt');
           li.className = 'eds-combobox-option eds-combobox-option-create';
           li.setAttribute('role', 'option');
-          li.setAttribute('data-eds-create', '');
+          li.setAttribute('data-create', '');
           li.textContent = createAttr.trim() === '' ? getMessages().lookupCreate : createAttr;
           listbox.append(li);
         }
-        emptyEl.textContent = getMessages().comboNoResults;
+        emptyEl.textContent = getMessages().comboboxResultsNone;
         emptyEl.hidden = listbox.children.length > 0;
       };
 
       const resultsText = (count: number) => {
         const msgs = getMessages();
         return count === 0
-          ? msgs.comboNoResults
+          ? msgs.comboboxResultsNone
           : count === 1
-            ? msgs.comboResultsOne
-            : format(msgs.comboResultsMany, { count });
+            ? msgs.comboboxResultsOne
+            : format(msgs.comboboxResultsMany, { count });
       };
 
       const run = async () => {
@@ -689,7 +692,7 @@ export const lookupBehavior: Behavior = {
       };
 
       const choose = (option: HTMLElement) => {
-        if (option.hasAttribute('data-eds-create')) {
+        if (option.hasAttribute('data-create')) {
           const text = input.value.trim();
           closeAuto();
           // O texto vai ao cadastro: sair do campo não deve acusar "código não encontrado".

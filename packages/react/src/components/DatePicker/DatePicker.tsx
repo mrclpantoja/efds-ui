@@ -29,6 +29,8 @@ import {
 } from '../../internal/calendar-shared';
 import { CalendarGlyph } from '../../internal/glyphs-f';
 
+export type { CalendarTexts };
+
 export type DatePickerSize = 'sm' | 'md' | 'lg';
 
 export interface DatePickerTexts extends Partial<CalendarTexts> {
@@ -36,7 +38,9 @@ export interface DatePickerTexts extends Partial<CalendarTexts> {
   toggle?: string;
   /** Nome do diálogo. Padrão: "Escolher data". */
   dialog?: string;
-  /** Nome do botão quando há data (recebe dd/mm/aaaa). Padrão: "Escolher data. Atual: {data}". */
+  /** Palavra do sufixo do nome do botão quando há data. Padrão: "Atual". */
+  current?: string;
+  /** Nome do botão quando há data (recebe dd/mm/aaaa). Padrão: "{toggle}. {current}: {data}". */
   toggleWithValue?: (value: string) => string;
   /** Mensagem de data malformada. Padrão: "Data inválida. Use dd/mm/aaaa, com o ano em 4 dígitos (ex.: 15/03/2026).". */
   invalid?: string;
@@ -67,7 +71,7 @@ export interface DatePickerProps extends Omit<
   /** Data inicial (não controlado). */
   defaultValue?: string | null;
   /** Escolha ou limpeza da data. Datas locais: sem fuso. */
-  onChange?: (iso: string | null, date: Date | null) => void;
+  onValueChange?: (iso: string | null, date: Date | null) => void;
   /** Menor data permitida (ISO). */
   min?: string;
   /** Maior data permitida (ISO). */
@@ -82,7 +86,7 @@ export interface DatePickerProps extends Omit<
   size?: DatePickerSize;
   /** Erro: `aria-invalid="true"`. Dentro de um Field com `error` já é automático. */
   invalid?: boolean;
-  /** Sucesso: `data-valid="true"`. */
+  /** Sucesso: `data-valid`. */
   valid?: boolean;
   /** Idioma dos nomes de mês e dia (`Intl`). Padrão: o do `LocaleProvider` (`pt-BR`). A máscara continua dd/mm/aaaa. */
   locale?: string;
@@ -99,7 +103,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
   {
     value: valueProp,
     defaultValue,
-    onChange,
+    onValueChange,
     min = '',
     max = '',
     isDateDisabled,
@@ -138,7 +142,8 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
     ...defaultCalendarTexts,
     toggle: 'Escolher data',
     dialog: 'Escolher data',
-    toggleWithValue: (value: string) => `${textsProp?.toggle ?? 'Escolher data'}. Atual: ${value}`,
+    toggleWithValue: (value: string) =>
+      `${textsProp?.toggle ?? 'Escolher data'}. ${textsProp?.current ?? 'Atual'}: ${value}`,
     invalid: 'Data inválida. Use dd/mm/aaaa, com o ano em 4 dígitos (ex.: 15/03/2026).',
     outOfRange: defaultOutOfRange,
     selected: (label: string) => `Data selecionada: ${label}.`,
@@ -155,7 +160,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
   const [value, setValue] = useControllable<string>(
     valueProp === undefined ? undefined : (valueProp ?? ''),
     defaultValue ?? '',
-    (next) => onChange?.(next || null, next ? parseIso(next) : null),
+    (next) => onValueChange?.(next || null, next ? parseIso(next) : null),
   );
   const iso = parseIso(value) ? value : '';
 

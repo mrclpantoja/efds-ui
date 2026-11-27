@@ -37,7 +37,7 @@ export default function Empilhada() {
             <TableCell data-label="Código">{p.codigo}</TableCell>
             <TableCell data-label="Cliente">{p.cliente}</TableCell>
             <TableCell data-label="Situação">
-              <Badge variant={p.situacao === 'Pago' ? 'success' : 'warning'}>{p.situacao}</Badge>
+              <Badge tone={p.situacao === 'Pago' ? 'success' : 'warning'}>{p.situacao}</Badge>
             </TableCell>
             <TableCell data-label="Total" numeric>
               {p.total}

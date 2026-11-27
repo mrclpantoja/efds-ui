@@ -146,3 +146,23 @@ describe('modal e drawer', () => {
     expect(dialog('dlg').open).toBe(false);
   });
 });
+
+describe('modal: data-eds-close dentro de um aviso', () => {
+  it('um Alert dentro do diálogo fecha só o aviso, não o diálogo', async () => {
+    const restore = installDomPolyfills();
+    document.body.innerHTML = `<dialog class="eds-modal" id="d">
+      <div class="eds-alert" id="aviso"><button type="button" id="x" data-eds-close>x</button></div>
+      <button type="button" id="sair" data-eds-close>Sair</button></dialog>`;
+    const destroy = initModal(document);
+    const d = document.getElementById('d') as HTMLDialogElement;
+    d.showModal();
+    const user = userEvent.setup();
+    await user.click(document.getElementById('x') as HTMLElement);
+    expect(d.open).toBe(true);
+    await user.click(document.getElementById('sair') as HTMLElement);
+    expect(d.open).toBe(false);
+    destroy();
+    restore();
+    document.body.innerHTML = '';
+  });
+});

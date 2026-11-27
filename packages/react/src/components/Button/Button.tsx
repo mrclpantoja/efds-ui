@@ -16,12 +16,12 @@ import { mergeTexts } from '../../utils/texts';
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 /** Resultado de uma operação, mostrado no próprio botão por um tempo. */
-export type ButtonStatus = 'success' | 'error';
+export type ButtonResult = 'success' | 'error';
 
 export interface ButtonTexts {
-  /** Texto do botão com `status="success"`. */
+  /** Texto do botão com `result="success"`. */
   success: string;
-  /** Texto do botão com `status="error"`. */
+  /** Texto do botão com `result="error"`. */
   error: string;
 }
 
@@ -42,8 +42,8 @@ interface ButtonOwnProps {
    * core). Vale só sem `loading`. O anúncio para leitor de tela é de quem muda o estado
    * (ex.: `useSubmit`).
    */
-  status?: ButtonStatus;
-  /** Textos do `status` (pt-BR por padrão). */
+  result?: ButtonResult;
+  /** Textos do `result` (pt-BR por padrão). */
   texts?: Partial<ButtonTexts>;
 }
 
@@ -85,7 +85,7 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ImplProp
     variant = 'secondary',
     size = 'md',
     loading = false,
-    status,
+    result,
     texts,
     children,
     iconOnly = false,
@@ -101,7 +101,7 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ImplProp
 ) {
   const isLink = href !== undefined;
   // Link não tem `disabled` nativo; botão desabilitado já é inerte pelo navegador.
-  const shown = loading ? undefined : status;
+  const shown = loading ? undefined : result;
   const statusText = shown ? mergeTexts(defaultTexts, texts)[shown] : undefined;
   const blocked = loading || (isLink && disabled);
 

@@ -7,7 +7,7 @@ export default function Basico() {
       value="1.284"
       delta="12,4%"
       trend="up"
-      tone="positive"
+      tone="success"
       meta="vs. mês anterior"
     />
   );

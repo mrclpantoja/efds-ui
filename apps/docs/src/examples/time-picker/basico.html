@@ -1,10 +1,10 @@
 <!-- Behavior: [data-eds-timepicker] (combobox APG com listbox; o foco fica no campo).
-     data-eds-time-step="15" (minutos entre os horários), data-eds-min="08:00" e data-eds-max="18:00" (HH:MM).
+     data-eds-step="15" (minutos entre os horários), data-eds-min="08:00" e data-eds-max="18:00" (HH:MM).
      O JS aplica a máscara hh:mm; o valor HH:MM vai no input hidden. Setas movem, Enter escolhe,
      Esc fecha. Evento: eds:time-change (detail.value). Sem JS, use <input type="time" class="eds-input"> (ver "Nativo"). -->
 <div class="eds-field">
   <label class="eds-label" for="hora-inicio">Início</label>
-  <div class="eds-timepicker" data-eds-timepicker data-eds-time-step="15" data-eds-min="08:00" data-eds-max="18:00">
+  <div class="eds-timepicker" data-eds-timepicker data-eds-step="15" data-eds-min="08:00" data-eds-max="18:00">
     <input id="hora-inicio" class="eds-input eds-timepicker-input" type="text" inputmode="numeric" maxlength="5" placeholder="hh:mm" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="hora-inicio-lista" aria-describedby="hora-inicio-ajuda" autocomplete="off" />
     <button type="button" class="eds-timepicker-toggle" aria-label="Escolher horário" aria-haspopup="listbox" aria-expanded="false" aria-controls="hora-inicio-lista" tabindex="-1"></button>
     <input type="hidden" name="inicio" />

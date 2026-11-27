@@ -10,16 +10,15 @@ import {
 import {
   baseName,
   blobToFile,
-  createCropperController,
   cropImage,
   isUpscaled,
   loadImage,
   outputSize as computeOutputSize,
   type Crop,
   type CropState,
-  type CropperController,
   type LoadedImage,
 } from '@efds-ui/behavior/image';
+import { createCropperController, type CropperController } from '@efds-ui/behavior/internal';
 import { useAnnouncer } from '../../internal/announcer';
 import {
   ChevronDownGlyph,
@@ -117,7 +116,7 @@ export interface ImageCropperProps
   /** Enquadramento controlado (arrastar, zoom e giro). */
   value?: CropState;
   /** Chamado a cada mudança de enquadramento. */
-  onChange?: (state: CropState) => void;
+  onValueChange?: (state: CropState) => void;
   /** A imagem não pôde ser carregada. */
   onError?: () => void;
   texts?: Partial<ImageCropperTexts>;
@@ -134,7 +133,7 @@ export const ImageCropper = forwardRef<ImageCropperHandle, ImageCropperProps>(fu
     aspect = 1,
     shape = 'rect',
     value,
-    onChange,
+    onValueChange,
     onError,
     outputSize = 256,
     format = 'image/webp',
@@ -155,9 +154,9 @@ export const ImageCropper = forwardRef<ImageCropperHandle, ImageCropperProps>(fu
   const [upscaled, setUpscaled] = useState(false);
 
   // Sempre o valor mais recente, sem recriar o controlador.
-  const latest = useRef({ t, onChange, outputSize, aspect, value });
+  const latest = useRef({ t, onValueChange, outputSize, aspect, value });
   useEffect(() => {
-    latest.current = { t, onChange, outputSize, aspect, value };
+    latest.current = { t, onValueChange, outputSize, aspect, value };
   });
 
   const syncWarning = () => {
@@ -180,7 +179,7 @@ export const ImageCropper = forwardRef<ImageCropperHandle, ImageCropperProps>(fu
         restored: () => latest.current.t.restored,
       },
       onChange: (state) => {
-        latest.current.onChange?.(state);
+        latest.current.onValueChange?.(state);
         syncWarning();
       },
     });
@@ -198,7 +197,7 @@ export const ImageCropper = forwardRef<ImageCropperHandle, ImageCropperProps>(fu
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [aspect]);
 
-  // Enquadramento controlado: aplica sem devolver o `onChange`.
+  // Enquadramento controlado: aplica sem devolver o `onValueChange`.
   useEffect(() => {
     if (value) controller.current?.setState(value);
   }, [value]);

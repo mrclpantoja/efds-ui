@@ -4,17 +4,17 @@ import { describe, expect, it, vi } from 'vitest';
 import { Tag } from '.';
 
 describe('Tag', () => {
-  it('é um span não interativo com tom por atributo', () => {
+  it('é um span não interativo com tom por classe', () => {
     render(<Tag tone="info">Financeiro</Tag>);
     const tag = screen.getByText('Financeiro');
     expect(tag).toHaveClass('eds-tag');
-    expect(tag).toHaveAttribute('data-tone', 'info');
+    expect(tag).toHaveClass('eds-tag-info');
     expect(screen.queryByRole('button')).toBeNull();
   });
 
-  it('neutro (padrão) não escreve data-tone', () => {
+  it('neutro (padrão) não escreve classe de tom', () => {
     render(<Tag>Interno</Tag>);
-    expect(screen.getByText('Interno')).not.toHaveAttribute('data-tone');
+    expect(screen.getByText('Interno')).not.toHaveClass('eds-tag-neutral');
   });
 
   it('removível: botão "Remover X" e callback', async () => {

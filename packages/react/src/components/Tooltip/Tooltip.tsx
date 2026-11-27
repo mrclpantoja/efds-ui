@@ -1,5 +1,5 @@
 import { cloneElement, useEffect, useId, useRef, type ReactElement, type ReactNode } from 'react';
-import { tooltipBehavior, type Placement } from '@efds-ui/behavior/balloon';
+import { tooltipBehavior, type Placement } from '@efds-ui/behavior/internal';
 import { cx } from '../../utils/cx';
 
 export type TooltipPlacement = Placement;

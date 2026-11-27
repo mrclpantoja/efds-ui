@@ -16,11 +16,11 @@ import { initTableEdit, tableEditBehavior } from './components/table-edit';
 import { initTableExport, tableExportBehavior } from './components/table-export';
 // Máscara de entrada
 import { initMask, maskBehavior } from './components/mask';
-// Onda C: CEP e formatadores (só na compilação completa)
+// CEP e formatadores (só na compilação completa)
 import { cepBehavior, initCep } from './components/cep';
 import { formatBehavior, initFormat } from './components/format';
 import { themeColorBehavior } from './components/theme-color';
-// Onda D: paleta de comandos e agenda (só na compilação completa)
+// Paleta de comandos e agenda (só na compilação completa)
 import { agendaBehavior, initAgenda } from './components/agenda';
 import { commandBehavior, initCommand } from './components/command';
 // Imagem: galeria e corte (só na compilação completa)
@@ -71,14 +71,14 @@ export {
   isCep,
   isCnpj,
   isCpf,
-  isCpfOuCnpj,
-  isDataValida,
+  isCpfCnpj,
+  isDate,
   isEmail,
-  isIntervaloDatas,
+  isDateRange,
   isPis,
-  isPlaca,
-  isTelefone,
-  isTituloEleitor,
+  isPlate,
+  isPhone,
+  isVoterId,
   validateBy,
 } from './core/validate';
 export type { ValidatorName } from './core/validate';
@@ -87,7 +87,7 @@ export type { InvalidField } from './core/form-errors';
 export { createMask } from './core/mask';
 export type { Mask, MaskName, MaskOptions } from './core/mask';
 export { initMask };
-// Onda C: CEP, formatadores e campos
+// CEP, formatadores e campos
 export { initCep, initFormat };
 export { lookupCep } from './core/cep';
 export type { CepAddress, CepResult } from './core/cep';
@@ -110,10 +110,10 @@ export {
 export type { FormatName } from './core/format';
 export { checkPassword } from './core/fields';
 export type { PasswordCheck, PasswordLevel, PasswordRuleId } from './core/fields';
-// Onda C: tema por cor da organização
+// Tema por cor da organização
 export { createTheme, applyTheme, contrastRatio, normalizeHex } from './theme/create-theme';
 export type { ContrastCheck, ThemeOptions, ThemeResult, ThemeStep } from './theme/create-theme';
-// Onda D: paleta de comandos e agenda
+// Paleta de comandos e agenda
 export { initAgenda, initCommand };
 export type { AgendaEvent, AgendaTone } from './components/agenda';
 export type { CommandItem } from './components/command';

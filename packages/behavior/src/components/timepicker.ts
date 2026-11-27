@@ -41,7 +41,7 @@ export function maskTime(raw: string): string {
 }
 
 /**
- * TimePicker: campo `hh:mm` com máscara + lista de horários (`data-eds-time-step` em minutos,
+ * TimePicker: campo `hh:mm` com máscara + lista de horários (`data-eds-step` em minutos,
  * `data-eds-min`/`data-eds-max` `HH:MM`) no padrão APG combobox com listbox: o foco fica no
  * campo, `aria-activedescendant` aponta o horário, setas movem, Enter escolhe, Esc fecha. O
  * valor `HH:MM` vai no `input[type=hidden]` (ou no próprio campo, sem hidden). Evento
@@ -105,7 +105,7 @@ export const timepickerBehavior: Behavior = {
 
     // ---- Regras (lidas a cada uso: o servidor pode trocar os atributos) -------------------------
     const step = () => {
-      const n = Math.floor(Number(root.getAttribute('data-eds-time-step')));
+      const n = Math.floor(Number(root.getAttribute('data-eds-step')));
       return Number.isFinite(n) && n >= 1 && n <= 720 ? n : DEFAULT_STEP;
     };
     const minMinutes = () => parseTime(root.getAttribute('data-eds-min') ?? '') ?? 0;

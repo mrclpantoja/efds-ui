@@ -92,7 +92,7 @@ export default function TextareaPage() {
             },
             { name: ':focus', effect: 'Borda na cor de ação e anel de foco.' },
             { name: '[aria-invalid="true"]', effect: 'Borda de perigo.' },
-            { name: '[data-valid="true"]', effect: 'Borda de sucesso.' },
+            { name: '[data-valid]', effect: 'Borda de sucesso.' },
             { name: '[readonly]', effect: 'Fundo sutil.' },
             { name: ':disabled', effect: 'Fundo sutil, texto esmaecido, sem redimensionar.' },
           ]}

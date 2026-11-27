@@ -99,7 +99,7 @@ export const sidebarCollapseBehavior: Behavior = {
       if (collapsed) sidebar.setAttribute('data-collapsed', '');
       else sidebar.removeAttribute('data-collapsed');
       sync();
-      emit(sidebar, 'sidebar-collapse', { collapsed });
+      emit(sidebar, 'sidebar-toggle', { collapsed });
     };
     button.addEventListener('click', onClick);
     return () => button.removeEventListener('click', onClick);

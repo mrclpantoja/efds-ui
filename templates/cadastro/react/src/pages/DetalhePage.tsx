@@ -60,7 +60,7 @@ export function DetalhePage({ id }: { id: string }) {
     if (!ok) return;
     remover([f.id]);
     window.location.hash = '#/';
-    show({ variant: 'success', message: `Fornecedor ${f.razao} excluído (simulação).` });
+    show({ tone: 'success', message: `Fornecedor ${f.razao} excluído (simulação).` });
   };
 
   return (
@@ -97,7 +97,7 @@ export function DetalhePage({ id }: { id: string }) {
             columns={2}
             items={[
               { label: 'Código', value: f.id },
-              { label: 'Situação', value: <Badge variant={sit.badge}>{sit.label}</Badge> },
+              { label: 'Situação', value: <Badge tone={sit.badge}>{sit.label}</Badge> },
               { label: f.tipo === 'pj' ? 'CNPJ' : 'CPF', value: f.documento },
               { label: 'Nome fantasia', value: f.tipo === 'pj' ? f.fantasia : '' },
               { label: 'Categoria', value: f.categoria },

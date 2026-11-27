@@ -81,15 +81,10 @@ describe('PasswordInput', () => {
     render(<PasswordInput aria-label="Senha" rules />);
     const items = () => Array.from(document.querySelectorAll('.eds-password-rules li'));
     expect(items()).toHaveLength(4);
-    expect(items()[0]).toHaveAttribute('data-met', 'false');
+    expect(items()[0]).not.toHaveAttribute('data-met');
     expect(items()[0]).toHaveTextContent('Pendente: Ao menos 8 caracteres');
     await user.type(screen.getByLabelText('Senha'), 'Cavalo-Azul-77!');
-    expect(items().map((li) => li.getAttribute('data-met'))).toEqual([
-      'true',
-      'true',
-      'true',
-      'true',
-    ]);
+    expect(items().map((li) => li.hasAttribute('data-met'))).toEqual([true, true, true, true]);
     expect(items()[1]).toHaveTextContent('Atendida: Letras maiúsculas e minúsculas');
   });
 

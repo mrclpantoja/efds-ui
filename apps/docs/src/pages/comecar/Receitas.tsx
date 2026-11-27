@@ -159,7 +159,7 @@ export default function ReceitasPage() {
         depende de nenhuma dessas bibliotecas, e os exemplos usam dados fictícios.
       </p>
 
-      <Alert variant="info" title="O servidor sempre valida de novo">
+      <Alert tone="info" title="O servidor sempre valida de novo">
         A validação no navegador é conveniência: ela evita a ida e volta, mas qualquer pessoa pode
         enviar dados sem passar por ela. Repita as regras no servidor (os validadores do efDS.ui são
         JavaScript; no PHP, Java ou C#, use a regra equivalente da sua plataforma).

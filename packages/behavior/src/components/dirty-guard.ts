@@ -112,10 +112,10 @@ const acquireGlobal = refCounted(() => {
  * Com alterações, fechar a aba ou recarregar mostra o aviso nativo (`beforeunload`) e clicar num
  * link interno pergunta com `confirm` ("Sair sem salvar" / "Continuar editando"); a pergunta
  * usa `data-eds-dirty-message` do formulário quando existe. Enviar o formulário (envio comum) ou
- * voltar ao estado inicial tira o aviso. Para envio por fetch, depois do sucesso dispare
- * `eds:dirty-reset` no formulário (ou chame `markClean(form)`): o estado atual vira o inicial.
+ * voltar ao estado inicial tira o aviso. Para envio por fetch, depois do sucesso chame
+ * `markClean(form)`: o estado atual vira o inicial.
  * `data-eds-dirty-ignore` num campo ou bloco o tira da comparação. O formulário recebe
- * `data-dirty="true"` enquanto há alterações e o evento `eds:dirty-change` (`detail.dirty`).
+ * `data-dirty` enquanto há alterações e o evento `eds:dirty-change` (`detail.dirty`).
  */
 export const dirtyGuardBehavior: Behavior = {
   name: 'dirty-guard',
@@ -137,7 +137,7 @@ export const dirtyGuardBehavior: Behavior = {
       isDirty = next;
       if (next) {
         dirty.add(form);
-        form.setAttribute('data-dirty', 'true');
+        form.setAttribute('data-dirty', '');
       } else {
         dirty.delete(form);
         form.removeAttribute('data-dirty');
@@ -167,7 +167,6 @@ export const dirtyGuardBehavior: Behavior = {
     form.addEventListener('change', evaluate);
     form.addEventListener('submit', onSubmit);
     form.addEventListener('reset', onReset);
-    form.addEventListener('eds:dirty-reset', rebase);
     window.addEventListener('pageshow', onPageShow);
 
     return () => {
@@ -175,7 +174,6 @@ export const dirtyGuardBehavior: Behavior = {
       form.removeEventListener('change', evaluate);
       form.removeEventListener('submit', onSubmit);
       form.removeEventListener('reset', onReset);
-      form.removeEventListener('eds:dirty-reset', rebase);
       window.removeEventListener('pageshow', onPageShow);
       dirty.delete(form);
       cleaners.delete(form);

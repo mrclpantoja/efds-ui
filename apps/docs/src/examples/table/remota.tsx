@@ -153,7 +153,7 @@ export default function Remota() {
                   label="Situação"
                   options={situacoes.map((s) => ({ value: s, label: s }))}
                   value={query.filters.situacao}
-                  onChange={(v) => consulta.setFilter('situacao', v)}
+                  onValueChange={(v) => consulta.setFilter('situacao', v)}
                 />
               }
             >

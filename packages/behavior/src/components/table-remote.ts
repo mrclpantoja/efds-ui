@@ -58,11 +58,11 @@ export const tableRemoteBehavior: Behavior = {
 
     const finish = (result: { total?: number; page?: number } | void) => {
       hub.setLoading(false);
-      table.removeAttribute('data-eds-error');
-      if (result?.total !== undefined) table.setAttribute('data-eds-total', String(result.total));
+      table.removeAttribute('data-state');
+      if (result?.total !== undefined) table.setAttribute('data-total', String(result.total));
       if (result?.page !== undefined) hub.query.page = result.page;
-      const total = Number(table.getAttribute('data-eds-total'));
-      if (Number.isFinite(total) && table.hasAttribute('data-eds-total')) {
+      const total = Number(table.getAttribute('data-total'));
+      if (Number.isFinite(total) && table.hasAttribute('data-total')) {
         const pages = hub.query.size > 0 ? Math.max(1, Math.ceil(total / hub.query.size)) : 1;
         hub.announce(
           format(getMessages().tableResults, { count: total, page: hub.query.page, pages }),
@@ -95,7 +95,7 @@ export const tableRemoteBehavior: Behavior = {
       }
       const pending = promise as Promise<{ total?: number; page?: number } | void> | null;
       if (!pending) return;
-      table.removeAttribute('data-eds-error');
+      table.removeAttribute('data-state');
       hub.setLoading(true);
       pending.then(
         (result) => {
@@ -105,7 +105,7 @@ export const tableRemoteBehavior: Behavior = {
         (error: unknown) => {
           if (id !== token) return;
           hub.setLoading(false);
-          table.setAttribute('data-eds-error', '');
+          table.setAttribute('data-state', 'error');
           hub.announce(getMessages().tableLoadError);
           emit(table, 'table-error', { error, retry: () => run(lastReason) });
         },

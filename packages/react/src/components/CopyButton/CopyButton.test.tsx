@@ -33,10 +33,7 @@ describe('CopyButton', () => {
     await user.click(button);
     expect(written).toEqual(['CHAVE-EXEMPLO-0001']);
     expect(onCopy).toHaveBeenCalledWith('CHAVE-EXEMPLO-0001');
-    expect(await screen.findByRole('button', { name: 'Copiado' })).toHaveAttribute(
-      'data-copied',
-      'true',
-    );
+    expect(await screen.findByRole('button', { name: 'Copiado' })).toHaveAttribute('data-copied');
     expect(screen.getByRole('status')).toHaveTextContent('Copiado para a área de transferência.');
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2100);

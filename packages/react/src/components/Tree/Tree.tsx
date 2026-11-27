@@ -81,7 +81,7 @@ export interface TreeProps extends Omit<
   /** Ids selecionados (controlado). */
   selected?: string[];
   defaultSelected?: string[];
-  onSelect?: (ids: string[]) => void;
+  onSelectedChange?: (ids: string[]) => void;
   /** Enter no nó. */
   onActivate?: (node: TreeNodeData) => void;
   /** Ids expandidos (controlado). */
@@ -123,7 +123,7 @@ export const Tree = forwardRef<HTMLDivElement, TreeProps>(function Tree(
     multiselect = false,
     selected: selectedProp,
     defaultSelected,
-    onSelect,
+    onSelectedChange,
     onActivate,
     expanded: expandedProp,
     defaultExpanded,
@@ -169,7 +169,7 @@ export const Tree = forwardRef<HTMLDivElement, TreeProps>(function Tree(
   const [selectedList, setSelected] = useControllable<string[]>(
     selectedProp,
     defaultSelected ?? [],
-    onSelect,
+    onSelectedChange,
   );
   const selectedSet = new Set(selectedList);
   const [focusedId, setFocusedId] = useState<string | null>(null);
@@ -845,7 +845,7 @@ export const Tree = forwardRef<HTMLDivElement, TreeProps>(function Tree(
           {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
           <div
             className="eds-tree-row"
-            data-drop={dropHere && !dropHere.invalid ? dropHere.zone : undefined}
+            data-drop-target={dropHere && !dropHere.invalid ? dropHere.zone : undefined}
             data-drop-invalid={dropHere?.invalid ? '' : undefined}
             onClick={(event) => onRowClick(event, node)}
             onDoubleClick={(event) => onRowDoubleClick(event, node)}

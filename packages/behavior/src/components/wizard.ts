@@ -3,7 +3,7 @@ import { format, getMessages } from '../core/config';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer } from '../core/status';
 
-type StepState = 'complete' | 'current' | 'upcoming' | 'error';
+type StepState = 'done' | 'current' | 'upcoming' | 'error';
 
 const CONTROLS = 'input, select, textarea';
 
@@ -30,14 +30,14 @@ interface FieldError {
 
 /**
  * Erro visível e associado (3.3.1/3.3.3): `p.eds-error` ligado por `aria-describedby`, com
- * `aria-invalid`. Mensagem: `data-eds-error` do campo (texto do autor) ou a nativa. Reaproveita o
+ * `aria-invalid`. Mensagem: `data-eds-error-message` do campo (texto do autor) ou a nativa. Reaproveita o
  * `p.eds-error` do `.eds-field` quando existe. Não chama `reportValidity` (sem balão duplicado).
  */
 function createFieldErrors() {
   const errors = new Map<Control, FieldError>();
 
   const messageOf = (control: Control): string =>
-    control.getAttribute('data-eds-error') || control.validationMessage;
+    control.getAttribute('data-eds-error-message') || control.validationMessage;
 
   const show = (control: Control) => {
     const message = messageOf(control);
@@ -126,7 +126,7 @@ function createFieldErrors() {
  * botões `[data-eds-wizard-prev]`, `[data-eds-wizard-next]` e (opcional) `[data-eds-wizard-finish]`,
  * que só aparece na última etapa. Avançar valida os campos do painel atual (cada inválido ganha
  * `aria-invalid` e um `p.eds-error` ligado por `aria-describedby`; o foco vai ao primeiro; o erro some
- * quando o campo fica válido; `data-eds-error` no campo troca a mensagem nativa); Enter avança; o envio final valida todos os painéis e leva ao primeiro
+ * quando o campo fica válido; `data-eds-error-message` no campo troca a mensagem nativa); Enter avança; o envio final valida todos os painéis e leva ao primeiro
  * inválido. O `.eds-stepper` do formulário (ou o de `data-eds-wizard-stepper="id"`) acompanha:
  * estados, `aria-current`, marcador e texto oculto; etapas concluídas voltam por clique.
  * Etapa concluída vira botão no rótulo (`.eds-stepper-label`). Sem `[data-eds-wizard-finish]`, o
@@ -186,7 +186,7 @@ export const wizardBehavior: Behavior = {
     // Etapas antes da inicial contam como concluídas (o servidor pode reabrir o formulário no meio).
     for (let i = 0; i < current; i += 1) completed.add(i);
     items.forEach((item, i) => {
-      if (item.dataset.state === 'complete') completed.add(i);
+      if (item.dataset.state === 'done') completed.add(i);
       if (item.dataset.state === 'error') errored.add(i);
     });
 
@@ -222,7 +222,7 @@ export const wizardBehavior: Behavior = {
     const stateOf = (index: number): StepState => {
       if (index === current) return 'current';
       if (errored.has(index)) return 'error';
-      return completed.has(index) ? 'complete' : 'upcoming';
+      return completed.has(index) ? 'done' : 'upcoming';
     };
 
     const renderStepperItem = (item: HTMLElement, index: number) => {
@@ -236,7 +236,7 @@ export const wizardBehavior: Behavior = {
       let label = item.querySelector<HTMLElement>('.eds-stepper-label');
       if (label) {
         // Etapa concluída vira botão (volta por clique); as demais, texto.
-        const wantButton = state === 'complete';
+        const wantButton = state === 'done';
         const isButton = label instanceof HTMLButtonElement;
         if (wantButton !== isButton) {
           const swap = doc.createElement(wantButton ? 'button' : 'span');
@@ -248,7 +248,7 @@ export const wizardBehavior: Behavior = {
         }
         let hidden = label.querySelector<HTMLElement>(':scope > .eds-visually-hidden');
         const text =
-          state === 'complete' ? m.wizardStepComplete : state === 'error' ? m.wizardStepError : '';
+          state === 'done' ? m.wizardStepComplete : state === 'error' ? m.wizardStepError : '';
         if (text) {
           if (!hidden) {
             hidden = doc.createElement('span');

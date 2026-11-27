@@ -94,8 +94,8 @@ describe('ImageCropper', () => {
   });
 
   it('escreve só custom properties e responde ao teclado', async () => {
-    const onChange = vi.fn();
-    const { container } = render(<ImageCropper src="a.png" onChange={onChange} />);
+    const onValueChange = vi.fn();
+    const { container } = render(<ImageCropper src="a.png" onValueChange={onValueChange} />);
     loadImg(container);
     const s = stage(container);
     expect(s.style.getPropertyValue('--_cropper-scale')).toBe('1');
@@ -103,7 +103,7 @@ describe('ImageCropper', () => {
     s.focus();
     await userEvent.setup().keyboard('{ArrowRight}r');
     expect(s.style.getPropertyValue('--_cropper-rotate')).toBe('90deg');
-    expect(onChange).toHaveBeenCalled();
+    expect(onValueChange).toHaveBeenCalled();
     expect(screen.getByRole('status')).toHaveTextContent('Girada 90 graus');
     await userEvent.setup().click(screen.getByRole('button', { name: 'Restaurar' }));
     expect(s.style.getPropertyValue('--_cropper-rotate')).toBe('0deg');
@@ -211,9 +211,9 @@ describe('AvatarUpload', () => {
   });
 
   it('fluxo completo: escolhe, ajusta, aplica; a prévia e o input recebem o arquivo pronto', async () => {
-    const onChange = vi.fn();
+    const onValueChange = vi.fn();
     const { container, baseElement } = render(
-      <AvatarUpload personName="Ana Exemplo" name="foto" onChange={onChange} />,
+      <AvatarUpload personName="Ana Exemplo" name="foto" onValueChange={onValueChange} />,
     );
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
     fireEvent.change(input, {
@@ -223,8 +223,8 @@ describe('AvatarUpload', () => {
     await waitFor(() => expect(baseElement.querySelector('img.eds-cropper-image')).not.toBeNull());
     loadImg(baseElement);
     await userEvent.setup().click(screen.getByRole('button', { name: 'Aplicar' }));
-    await waitFor(() => expect(onChange).toHaveBeenCalledTimes(1));
-    const file = onChange.mock.calls[0]?.[0] as File;
+    await waitFor(() => expect(onValueChange).toHaveBeenCalledTimes(1));
+    const file = onValueChange.mock.calls[0]?.[0] as File;
     expect(file.name).toBe('minha.webp');
     expect(Array.from(input.files as unknown as File[])).toEqual([file]);
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());

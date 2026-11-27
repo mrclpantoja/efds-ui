@@ -310,12 +310,12 @@ describe('DatePicker: grade e teclado', () => {
     expect(screen.getByRole('gridcell', { name: /^15 de julho de 2027/ })).toBeInTheDocument();
   });
 
-  it('Enter escolhe, fecha, devolve o foco ao botão e atualiza campo, hidden e onChange', async () => {
-    const onChange = vi.fn();
+  it('Enter escolhe, fecha, devolve o foco ao botão e atualiza campo, hidden e onValueChange', async () => {
+    const onValueChange = vi.fn();
     const { user, input, toggle, container } = setup({
       defaultValue: '2026-03-15',
       name: 'venc',
-      onChange,
+      onValueChange,
     });
     await user.click(toggle);
     await user.keyboard('{ArrowRight}{Enter}');
@@ -323,8 +323,8 @@ describe('DatePicker: grade e teclado', () => {
     expect(toggle).toHaveFocus();
     expect(input).toHaveValue('16/03/2026');
     expect(container.querySelector('input[name="venc"]')).toHaveValue('2026-03-16');
-    expect(onChange).toHaveBeenCalledTimes(1);
-    const [iso, date] = onChange.mock.calls[0] as [string, Date];
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    const [iso, date] = onValueChange.mock.calls[0] as [string, Date];
     expect(iso).toBe('2026-03-16');
     expect(date.getFullYear()).toBe(2026);
     expect(date.getMonth()).toBe(2);
@@ -376,7 +376,7 @@ describe('DatePicker: grade e teclado', () => {
 
 describe('DatePicker: bloqueios', () => {
   it('min/max: dias fora ficam aria-disabled, recebem foco, mas não são escolhidos', async () => {
-    const onChange = vi.fn();
+    const onValueChange = vi.fn();
     const user = userEvent.setup();
     const { container } = render(
       <DatePicker
@@ -384,7 +384,7 @@ describe('DatePicker: bloqueios', () => {
         defaultValue="2026-03-15"
         min="2026-03-10"
         max="2026-03-20"
-        onChange={onChange}
+        onValueChange={onValueChange}
       />,
     );
     await user.click(screen.getByRole('button', { name: /^Escolher data/ }));
@@ -399,7 +399,7 @@ describe('DatePicker: bloqueios', () => {
     await user.keyboard('{Home}{Home}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}');
     expect(focusedDate()).toBe('2026-03-10');
     await user.click(screen.getByRole('gridcell', { name: /^9 de março/ }));
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
     await waitFor(() =>
       expect(container.querySelector('[role="status"]')).toHaveTextContent(
         '09/03/2026: data indisponível.',
@@ -408,7 +408,7 @@ describe('DatePicker: bloqueios', () => {
   });
 
   it('isDateDisabled e disableWeekends bloqueiam; dia bloqueado recebe foco mas Enter não escolhe', async () => {
-    const onChange = vi.fn();
+    const onValueChange = vi.fn();
     const user = userEvent.setup();
     render(
       <DatePicker
@@ -416,7 +416,7 @@ describe('DatePicker: bloqueios', () => {
         defaultValue="2026-03-13"
         disableWeekends
         isDateDisabled={(d) => d.getMonth() === 2 && d.getDate() === 17}
-        onChange={onChange}
+        onValueChange={onValueChange}
       />,
     );
     await user.click(screen.getByRole('button', { name: /^Escolher data/ }));
@@ -431,7 +431,7 @@ describe('DatePicker: bloqueios', () => {
     await user.keyboard('{ArrowRight}');
     expect(focusedDate()).toBe('2026-03-14');
     await user.keyboard('{Enter}');
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
     expect(screen.getByRole('button', { name: /^Escolher data/ })).toHaveAttribute(
       'aria-expanded',
       'true',
@@ -459,16 +459,16 @@ describe('DatePicker: campo de texto', () => {
     expect(input).toHaveValue('15/03');
   });
 
-  it('data completa e válida atualiza o hidden e dispara onChange com Date local', async () => {
-    const onChange = vi.fn();
-    const { user, input, container } = setup({ name: 'v', onChange });
+  it('data completa e válida atualiza o hidden e dispara onValueChange com Date local', async () => {
+    const onValueChange = vi.fn();
+    const { user, input, container } = setup({ name: 'v', onValueChange });
     await user.type(input, '15032026');
     expect(container.querySelector('input[name="v"]')).toHaveValue('2026-03-15');
-    expect(onChange).toHaveBeenLastCalledWith('2026-03-15', expect.any(Date));
-    const date = onChange.mock.lastCall?.[1] as Date;
+    expect(onValueChange).toHaveBeenLastCalledWith('2026-03-15', expect.any(Date));
+    const date = onValueChange.mock.lastCall?.[1] as Date;
     expect(date.getDate()).toBe(15);
     await user.clear(input);
-    expect(onChange).toHaveBeenLastCalledWith(null, null);
+    expect(onValueChange).toHaveBeenLastCalledWith(null, null);
     expect(container.querySelector('input[name="v"]')).toHaveValue('');
   });
 
@@ -483,12 +483,12 @@ describe('DatePicker: campo de texto', () => {
   });
 
   it('colar data com espaços em volta não é cortada pelo maxlength', async () => {
-    const onChange = vi.fn();
-    const { user, input } = setup({ onChange });
+    const onValueChange = vi.fn();
+    const { user, input } = setup({ onValueChange });
     input.focus();
     await user.paste('  15/03/2026  ');
     expect(input).toHaveValue('15/03/2026');
-    expect(onChange).toHaveBeenLastCalledWith('2026-03-15', expect.any(Date));
+    expect(onValueChange).toHaveBeenLastCalledWith('2026-03-15', expect.any(Date));
     await user.clear(input);
     await user.paste(' 2026-03-16 ');
     expect(input).toHaveValue('16/03/2026');
@@ -553,7 +553,7 @@ describe('DatePicker: controlado', () => {
       const [v, setV] = useState<string | null>('2026-03-15');
       return (
         <>
-          <DatePicker aria-label="Vencimento" value={v} onChange={(iso) => setV(iso)} />
+          <DatePicker aria-label="Vencimento" value={v} onValueChange={(iso) => setV(iso)} />
           <button type="button" onClick={() => setV('2027-01-02')}>
             definir
           </button>

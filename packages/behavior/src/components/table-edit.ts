@@ -90,7 +90,7 @@ export const tableEditBehavior: Behavior = {
       button.append(doc.createTextNode(text));
       const hidden = doc.createElement('span');
       hidden.className = 'eds-visually-hidden';
-      hidden.textContent = format(getMessages().editLabel, {
+      hidden.textContent = format(getMessages().tableEditLabel, {
         column: columnName(cell),
         row: rowName(cell),
       });
@@ -142,7 +142,7 @@ export const tableEditBehavior: Behavior = {
       s.error.textContent = message;
       s.editor.setAttribute('aria-invalid', 'true');
       describeBy(s.editor, s.error.id, true);
-      hub.announce(format(getMessages().editError, { message }));
+      hub.announce(format(getMessages().tableEditError, { message }));
     };
 
     const invalidMessage = (s: Session): string | null => {
@@ -150,9 +150,7 @@ export const tableEditBehavior: Behavior = {
       const custom = s.editor.getAttribute('data-eds-validate');
       if (!s.editor.checkValidity()) return s.editor.validationMessage || m.validateRequired;
       if (custom && isValidatorName(custom) && !validateBy(custom, s.editor.value)) {
-        return (
-          s.editor.getAttribute('data-eds-validate-message') ?? m[VALIDATOR_MESSAGE_KEY[custom]]
-        );
+        return s.editor.getAttribute('data-eds-error-message') ?? m[VALIDATOR_MESSAGE_KEY[custom]];
       }
       return null;
     };
@@ -202,7 +200,7 @@ export const tableEditBehavior: Behavior = {
       const hadFocus = isFieldFocused(s);
       leave(s, text, hadFocus);
       hub.announce(
-        format(getMessages().editSaved, {
+        format(getMessages().tableEditSaved, {
           column: columnName(cell),
           row: rowName(cell),
           value: text,
@@ -216,7 +214,7 @@ export const tableEditBehavior: Behavior = {
       s.cell.removeAttribute('aria-busy');
       if ('readOnly' in s.editor) s.editor.readOnly = false;
       const message = error instanceof Error ? error.message : String(error ?? '');
-      showError(s, message || getMessages().editError.replace('{message}', '').trim());
+      showError(s, message || getMessages().tableEditError.replace('{message}', '').trim());
       s.editor.focus();
       emit(table, 'table-edit-error', {
         cell: s.cell,
@@ -265,7 +263,7 @@ export const tableEditBehavior: Behavior = {
       s.busy = true;
       s.cell.setAttribute('aria-busy', 'true');
       if ('readOnly' in s.editor) s.editor.readOnly = true;
-      hub.announce(getMessages().editSaving);
+      hub.announce(getMessages().tableEditSaving);
       pending.then(
         (result) => apply(s, value, result ?? {}),
         (error: unknown) => fail(s, error),
@@ -316,10 +314,10 @@ export const tableEditBehavior: Behavior = {
       const hint = doc.createElement('p');
       hint.id = uid('edit-hint');
       hint.className = 'eds-visually-hidden';
-      hint.textContent = m.editHint;
+      hint.textContent = m.tableEditHint;
       editor.setAttribute(
         'aria-label',
-        format(m.editFieldLabel, { column: columnName(cell), row: rowName(cell) }),
+        format(m.tableEditFieldLabel, { column: columnName(cell), row: rowName(cell) }),
       );
       describeBy(editor, hint.id, true);
       // Campo mascarado recebe o texto exibido; os demais, o valor cru.

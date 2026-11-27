@@ -22,7 +22,7 @@ export const indicadores = [
     value: '1.284',
     delta: '4,2%',
     trend: 'up',
-    tone: 'positive',
+    tone: 'success',
     meta: 'vs. outubro',
   },
   {
@@ -30,7 +30,7 @@ export const indicadores = [
     value: '37',
     delta: '12%',
     trend: 'down',
-    tone: 'positive',
+    tone: 'success',
     meta: 'vs. outubro',
   },
   {
@@ -38,7 +38,7 @@ export const indicadores = [
     value: '2 h 14 min',
     delta: '8%',
     trend: 'up',
-    tone: 'negative',
+    tone: 'danger',
     meta: 'vs. outubro',
   },
   {

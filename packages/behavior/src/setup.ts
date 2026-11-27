@@ -21,7 +21,13 @@ import { initCombobox } from './components/combobox';
 import { initDatepicker } from './components/datepicker';
 import { initNativeAlert } from './components/dialogs';
 import { initDropdown } from './components/dropdown';
-import { initLoader, loader, setLoaderConfig, type LoaderOptions } from './components/loader';
+import {
+  initLoader,
+  loader,
+  resetLoaderConfig,
+  setLoaderConfig,
+  type LoaderOptions,
+} from './components/loader';
 import { initModal } from './components/modal';
 import { initSidebar } from './components/sidebar';
 import { initTable, tableController } from './components/table';
@@ -35,8 +41,12 @@ import { initUpload } from './components/upload';
 // Sortable e Tree
 import { initSortable } from './components/sortable';
 import { initTree } from './components/tree';
-// Onda B
+// Accordion, filtros, popover, tooltip, wizard e stepper
 import { initAccordion } from './components/accordion';
+import { initConditional } from './components/conditional';
+import { initCopy } from './components/copy';
+import { initDirtyGuard } from './components/dirty-guard';
+import { initNotifications } from './components/notifications';
 import { initFilterBar } from './components/filter-bar';
 import { initPopover } from './components/popover';
 import { initTooltip } from './components/tooltip';
@@ -44,13 +54,19 @@ import { initWizard } from './components/wizard';
 import { initStepperSections } from './components/stepper-sections';
 import { lookupController } from './components/lookup';
 // Estado de envio de formulário
-import { initFormSubmit, setSubmitConfig, type SubmitOptions } from './components/form-submit';
-// Onda C (campos)
+import {
+  initFormSubmit,
+  resetSubmitConfig,
+  setSubmitConfig,
+  submit,
+  type SubmitOptions,
+} from './components/form-submit';
+// Campos
 import { initNumber } from './components/number';
 import { initLookup } from './components/lookup';
 import { initOtp } from './components/otp';
 import { initPassword } from './components/password';
-// Onda D
+// Avatar, imagem, banner e hora
 import { initAvatar } from './components/avatar';
 import { initImage } from './components/image';
 import { initBanner } from './components/banner';
@@ -92,11 +108,13 @@ export function configure(options: BehaviorOptions): void {
 }
 
 export { defaultMessages, resetCepUrl, resetLocale, resetMessages };
-// Onda C (página e feedback)
+export { resetLoaderConfig, resetSubmitConfig };
+// Página e feedback
 export { session, initSession } from './components/session';
+export type { SessionHandle, SessionOptions } from './components/session';
 export { markClean } from './components/dirty-guard';
-// Estado de envio de formulário
-export { submitState } from './components/form-submit';
+// Estado de envio de formulário: `EDS.submit(form)`
+export { submit };
 export type {
   SubmitController,
   SubmitMode,
@@ -111,18 +129,18 @@ export type {
   LoaderRequestOptions,
   LoaderTrigger,
 } from './components/loader';
-export type { ToastOptions, ToastVariant } from './components/toast';
+export type { ToastOptions, ToastTone } from './components/toast';
 // Diálogos rápidos
 export { alert, confirm, prompt } from './components/dialogs';
-export type { DialogInputType, DialogOptions, DialogVariant } from './components/dialogs';
+export type { DialogInputType, DialogOptions, DialogTone } from './components/dialogs';
 export type { ComboboxOption } from './components/combobox';
-// Onda D
+// Avatar
 export { avatarInitials, avatarTone } from './components/avatar';
 export type { SortCriterion, SortDirection } from './components/table';
 // Table avançada: controlador (`EDS.table(el)`) e consulta
-export { tableController, tableController as table };
+export { tableController as table };
 // Lookup: controle programático (`EDS.lookup(el).setValue(...)`)
-export { lookupController, lookupController as lookup };
+export { lookupController as lookup };
 export type { LookupController } from './components/lookup';
 export type {
   TableController,
@@ -160,7 +178,7 @@ export {
   // Sortable e Tree
   initSortable,
   initTree,
-  // Onda B
+  // Accordion, filtros, popover, tooltip, wizard e stepper
   initAccordion,
   initFilterBar,
   initFormSubmit,
@@ -168,12 +186,16 @@ export {
   initTooltip,
   initWizard,
   initStepperSections,
-  // Onda C (campos)
+  // Campos
+  initCopy,
+  initConditional,
+  initDirtyGuard,
+  initNotifications,
   initLookup,
   initNumber,
   initOtp,
   initPassword,
-  // Onda D
+  // Avatar, imagem, banner e hora
   initAvatar,
   initImage,
   initBanner,

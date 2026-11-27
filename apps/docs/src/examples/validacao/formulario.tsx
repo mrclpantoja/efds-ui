@@ -33,7 +33,7 @@ export default function Formulario() {
             type="email"
             autoComplete="off"
             validate="email"
-            validateMessage="Use o e-mail institucional, como nome@orgao.gov.br."
+            texts={{ validate: 'Use o e-mail institucional, como nome@orgao.gov.br.' }}
           />
         </Field>
         <Field label="Telefone" error={errorOf('telefone')}>
@@ -58,7 +58,7 @@ export default function Formulario() {
         </Button>
       </div>
       {enviado && (
-        <Alert variant="success" title="Cadastro válido">
+        <Alert tone="success" title="Cadastro válido">
           Todos os campos passaram na validação (fictício: nada foi enviado).
         </Alert>
       )}

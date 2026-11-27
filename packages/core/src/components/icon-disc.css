@@ -1,9 +1,8 @@
 /* Disco de ícone: o ícone sobre um fundo tonal suave (cabeçalho de página, cartão de tipo, seção).
    Decorativo: o <svg> filho leva aria-hidden e o significado vem do texto ao lado.
    Markup:
-     <span class="eds-icon-disc [eds-icon-disc-sm|eds-icon-disc-lg|eds-icon-disc-round]"
-           data-tone="accent|neutral|success|warning|danger|info"><svg aria-hidden="true">…</svg></span>
-   - Tom por data-tone (accent padrão). O ícone usa o par -text/-subtle do tom (contraste ≥ 3:1,
+     <span class="eds-icon-disc [eds-icon-disc-sm|-lg|-round] [eds-icon-disc-neutral|-info|-success|-warning|-danger]"><svg aria-hidden="true">…</svg></span>
+   - Tom por classe modificadora (accent padrão, sem classe). O ícone usa o par -text/-subtle do tom (contraste ≥ 3:1,
      calculado nos temas e modos); o tom é reforço, nunca o único sinal.
    - Forma: quadrado suave (segue data-shape); .eds-icon-disc-round deixa circular.
    - Título de página: <h1 class="eds-page-title"><span class="eds-icon-disc">…</span><span>Texto</span></h1>
@@ -32,27 +31,27 @@
       block-size: var(--_disc-icon);
     }
 
-    &[data-tone='neutral'] {
+    &.eds-icon-disc-neutral {
       --_disc-bg: var(--eds-color-bg-subtle);
       --_disc-fg: var(--eds-color-text-secondary);
     }
 
-    &[data-tone='info'] {
+    &.eds-icon-disc-info {
       --_disc-bg: var(--eds-color-status-info-subtle);
       --_disc-fg: var(--eds-color-status-info-text);
     }
 
-    &[data-tone='success'] {
+    &.eds-icon-disc-success {
       --_disc-bg: var(--eds-color-status-success-subtle);
       --_disc-fg: var(--eds-color-status-success-text);
     }
 
-    &[data-tone='warning'] {
+    &.eds-icon-disc-warning {
       --_disc-bg: var(--eds-color-status-warning-subtle);
       --_disc-fg: var(--eds-color-status-warning-text);
     }
 
-    &[data-tone='danger'] {
+    &.eds-icon-disc-danger {
       --_disc-bg: var(--eds-color-status-danger-subtle);
       --_disc-fg: var(--eds-color-status-danger-text);
     }

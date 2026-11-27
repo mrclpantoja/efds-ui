@@ -113,7 +113,7 @@ describe('TimePicker', () => {
   });
 
   it('min e max: lista só dentro da faixa e rejeita o digitado fora dela', async () => {
-    setup('data-eds-time-step="60" data-eds-min="08:00" data-eds-max="12:00"');
+    setup('data-eds-step="60" data-eds-min="08:00" data-eds-max="12:00"');
     const user = userEvent.setup();
     await user.click(input());
     await user.keyboard('{ArrowDown}');
@@ -133,14 +133,14 @@ describe('TimePicker', () => {
     expect(options()).toHaveLength(48);
     expect(options().slice(0, 3)).toEqual(['00:00', '00:30', '01:00']);
     destroy();
-    setup('data-eds-time-step="15" data-eds-min="09:00" data-eds-max="10:00"');
+    setup('data-eds-step="15" data-eds-min="09:00" data-eds-max="10:00"');
     await userEvent.setup().click(input());
     await userEvent.setup().keyboard('{ArrowDown}');
     expect(options()).toEqual(['09:00', '09:15', '09:30', '09:45', '10:00']);
   });
 
   it('teclado: ArrowDown abre e destaca o próximo horário; Enter escolhe; Esc fecha só a lista', async () => {
-    setup('data-eds-time-step="15"');
+    setup('data-eds-step="15"');
     const user = userEvent.setup();
     const onChange = vi.fn();
     $('.eds-timepicker').addEventListener('eds:time-change', onChange);
@@ -172,7 +172,7 @@ describe('TimePicker', () => {
   });
 
   it('clique na opção escolhe sem tirar o foco; botão abre e fecha a lista', async () => {
-    setup('data-eds-time-step="60"');
+    setup('data-eds-step="60"');
     const user = userEvent.setup();
     await user.click($('.eds-timepicker-toggle'));
     expect(input()).toHaveAttribute('aria-expanded', 'true');
@@ -187,7 +187,7 @@ describe('TimePicker', () => {
   });
 
   it('anuncia o horário escolhido e marca o atual na lista', async () => {
-    setup('data-eds-time-step="60"');
+    setup('data-eds-step="60"');
     const user = userEvent.setup();
     await user.click($('.eds-timepicker-toggle'));
     await user.click($('[data-value="09:00"]'));

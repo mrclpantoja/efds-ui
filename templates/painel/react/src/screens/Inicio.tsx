@@ -93,9 +93,7 @@ export function Inicio(props: ShellBaseProps) {
                   <TableHeaderCell scope="row">{c.protocolo}</TableHeaderCell>
                   <TableCell>{c.assunto}</TableCell>
                   <TableCell>
-                    <Badge variant={situacoes[c.situacao].badge}>
-                      {situacoes[c.situacao].label}
-                    </Badge>
+                    <Badge tone={situacoes[c.situacao].badge}>{situacoes[c.situacao].label}</Badge>
                   </TableCell>
                   <TableCell>{c.unidade}</TableCell>
                   <TableCell>{c.abertura}</TableCell>

@@ -9,6 +9,8 @@ import { cx } from '../../utils/cx';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'full';
 
+export type { DialogShellTexts };
+
 /** Textos internos do Modal (`close`). */
 export type ModalTexts = DialogShellTexts;
 

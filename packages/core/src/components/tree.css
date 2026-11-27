@@ -23,7 +23,7 @@
  *
  * Indicadores de soltar (arrastar): atributos no .eds-tree-row alvo (definidos aqui; o motor de
  * arrasto do JS só precisa aplicá-los):
- *   data-drop="before" | "inside" | "after"   linha de 2px acima/abaixo, ou contorno (dentro)
+ *   data-drop-target="before" | "inside" | "after"   linha de 2px acima/abaixo, ou contorno (dentro)
  *   data-drop-invalid                         não permitido: contorno tracejado + glifo de proibido
  * O foco aparece como anel na linha (.eds-tree-row do treeitem focado), não no <li> inteiro.
  */
@@ -352,17 +352,17 @@
   }
 
   /* Indicadores de soltar. */
-  .eds-tree-row[data-drop='before'] {
+  .eds-tree-row[data-drop-target='before'] {
     --_tree-drop-image: linear-gradient(var(--_tree-mark), var(--_tree-mark));
     --_tree-drop-pos: 0 0;
   }
 
-  .eds-tree-row[data-drop='after'] {
+  .eds-tree-row[data-drop-target='after'] {
     --_tree-drop-image: linear-gradient(var(--_tree-mark), var(--_tree-mark));
     --_tree-drop-pos: 0 100%;
   }
 
-  .eds-tree-row[data-drop='inside'] {
+  .eds-tree-row[data-drop-target='inside'] {
     --_tree-bg: var(--eds-color-action-primary-subtle);
 
     outline: var(--eds-focus-ring-width) solid var(--_tree-mark);

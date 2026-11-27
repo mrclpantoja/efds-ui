@@ -105,9 +105,9 @@ describe('FileUpload: estrutura', () => {
 });
 
 describe('FileUpload: seleção e validação', () => {
-  it('lista o arquivo com nome e tamanho, chama onChange e anuncia', async () => {
-    const onChange = vi.fn();
-    const { pick, status } = setup({ onChange });
+  it('lista o arquivo com nome e tamanho, chama onValueChange e anuncia', async () => {
+    const onValueChange = vi.fn();
+    const { pick, status } = setup({ onValueChange });
     const file = pdf('contrato.pdf', 1.2 * 1024 * 1024);
     await pick(file);
     const list = screen.getByRole('list', { name: 'Arquivos selecionados' });
@@ -116,17 +116,17 @@ describe('FileUpload: seleção e validação', () => {
     expect(item).toHaveAttribute('data-state', 'ready');
     expect(item).toHaveTextContent('contrato.pdf');
     expect(item).toHaveTextContent('1,2 MB');
-    expect(onChange).toHaveBeenLastCalledWith([file]);
+    expect(onValueChange).toHaveBeenLastCalledWith([file]);
     expect(status()).toHaveTextContent('contrato.pdf adicionado.');
   });
 
   it('acumula entre seleções e ignora duplicado', async () => {
-    const onChange = vi.fn();
-    const { pick, status } = setup({ onChange });
+    const onValueChange = vi.fn();
+    const { pick, status } = setup({ onValueChange });
     await pick(pdf('a.pdf'));
     await pick(pdf('b.pdf'), pdf('a.pdf'));
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
-    expect(onChange.mock.lastCall![0].map((f: File) => f.name)).toEqual(['a.pdf', 'b.pdf']);
+    expect(onValueChange.mock.lastCall![0].map((f: File) => f.name)).toEqual(['a.pdf', 'b.pdf']);
     expect(status()).toHaveTextContent('b.pdf adicionado.');
   });
 
@@ -137,15 +137,18 @@ describe('FileUpload: seleção e validação', () => {
   });
 
   it('rejeita tipo fora de accept (extensão, MIME e curinga)', async () => {
-    const onChange = vi.fn();
-    const { pick, status } = setup({ accept: '.pdf,image/*', onChange });
+    const onValueChange = vi.fn();
+    const { pick, status } = setup({ accept: '.pdf,image/*', onValueChange });
     const exe = new File(['x'], 'setup.exe', { type: 'application/x-msdownload' });
     const png = new File(['x'], 'foto.png', { type: 'image/png' });
     await pick(exe, png, pdf('ok.pdf'));
     const items = screen.getAllByRole('listitem');
     expect(items.map((i) => i.getAttribute('data-state'))).toEqual(['error', 'ready', 'ready']);
     expect(items[0]).toHaveTextContent('Tipo não permitido');
-    expect(onChange.mock.lastCall![0].map((f: File) => f.name)).toEqual(['foto.png', 'ok.pdf']);
+    expect(onValueChange.mock.lastCall![0].map((f: File) => f.name)).toEqual([
+      'foto.png',
+      'ok.pdf',
+    ]);
     expect(status()).toHaveTextContent('setup.exe: tipo não permitido.');
   });
 
@@ -158,12 +161,12 @@ describe('FileUpload: seleção e validação', () => {
   });
 
   it('respeita maxFiles e avisa o limite', async () => {
-    const onChange = vi.fn();
-    const { pick, status } = setup({ maxFiles: 2, onChange });
+    const onValueChange = vi.fn();
+    const { pick, status } = setup({ maxFiles: 2, onValueChange });
     await pick(pdf('a.pdf'), pdf('b.pdf'), pdf('c.pdf'));
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
     expect(status()).toHaveTextContent('Limite de 2 arquivos atingido.');
-    expect(onChange.mock.lastCall![0]).toHaveLength(2);
+    expect(onValueChange.mock.lastCall![0]).toHaveLength(2);
   });
 
   it('multiple={false}: a nova seleção substitui a anterior', async () => {
@@ -177,14 +180,14 @@ describe('FileUpload: seleção e validação', () => {
 });
 
 describe('FileUpload: remover e foco', () => {
-  it('remove, anuncia e chama onChange', async () => {
-    const onChange = vi.fn();
-    const { user, pick, status } = setup({ onChange });
+  it('remove, anuncia e chama onValueChange', async () => {
+    const onValueChange = vi.fn();
+    const { user, pick, status } = setup({ onValueChange });
     await pick(pdf('a.pdf'), pdf('b.pdf'));
     await user.click(screen.getByRole('button', { name: 'Remover a.pdf' }));
     expect(screen.getAllByRole('listitem')).toHaveLength(1);
     expect(status()).toHaveTextContent('a.pdf removido.');
-    expect(onChange.mock.lastCall![0].map((f: File) => f.name)).toEqual(['b.pdf']);
+    expect(onValueChange.mock.lastCall![0].map((f: File) => f.name)).toEqual(['b.pdf']);
   });
 
   it('foco após remover: próximo item, senão o anterior, senão o input', async () => {
@@ -414,8 +417,8 @@ describe('FileUpload: required e reset', () => {
 describe('FileUpload: vagas, avisos e status', () => {
   it('item com falha de envio ocupa vaga; recusado por tipo não ocupa', async () => {
     const upload = vi.fn().mockRejectedValue(new Error('x'));
-    const onChange = vi.fn();
-    const { pick, user, status } = setup({ upload, maxFiles: 1, accept: '.pdf', onChange });
+    const onValueChange = vi.fn();
+    const { pick, user, status } = setup({ upload, maxFiles: 1, accept: '.pdf', onValueChange });
     await pick(new File(['x'], 'ruim.exe'));
     await pick(pdf('a.pdf'));
     await waitFor(() =>
@@ -425,17 +428,17 @@ describe('FileUpload: vagas, avisos e status', () => {
       ]),
     );
     // a.pdf (falhou, retryable) ocupa a vaga; b.pdf fica de fora
-    onChange.mockClear();
+    onValueChange.mockClear();
     await pick(pdf('b.pdf'));
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
     await waitFor(() =>
       expect(status()).toHaveTextContent('Limite de 1 arquivo atingido. 1 arquivo não adicionado.'),
     );
-    // removê-lo chama onChange com os que ocupam vaga
+    // removê-lo chama onValueChange com os que ocupam vaga
     await user.click(screen.getByRole('button', { name: 'Remover ruim.exe' }));
-    expect(onChange.mock.lastCall![0].map((f: File) => f.name)).toEqual(['a.pdf']);
+    expect(onValueChange.mock.lastCall![0].map((f: File) => f.name)).toEqual(['a.pdf']);
     await user.click(screen.getByRole('button', { name: 'Remover a.pdf' }));
-    expect(onChange.mock.lastCall![0]).toEqual([]);
+    expect(onValueChange.mock.lastCall![0]).toEqual([]);
   });
 
   it('anuncia duplicado', async () => {

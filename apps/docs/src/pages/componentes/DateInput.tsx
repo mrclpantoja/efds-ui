@@ -51,7 +51,7 @@ export default function DateInputPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="Sem JavaScript">
+        <Alert tone="info" title="Sem JavaScript">
           <p>
             Nada aqui depende do <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>:
             basta o <code>type</code> certo e a classe <code>eds-input</code>. No React, é o próprio{' '}
@@ -165,7 +165,7 @@ export default function DateInputPage() {
               effect: 'Tamanhos, iguais ao Input.',
             },
             {
-              name: '[aria-invalid="true"] / [data-valid="true"]',
+              name: '[aria-invalid="true"] / [data-valid]',
               effect: 'Borda de erro ou de sucesso. Acompanhe com .eds-error ou .eds-success.',
             },
             { name: '[readonly] / :disabled', effect: 'Fundo sutil; desabilitado também esmaece.' },

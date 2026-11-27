@@ -1,6 +1,6 @@
 <!-- Filtro por coluna: botão no cabeçalho abre um popover nativo com um <form method="get">. Os name
      dos campos são os parâmetros da query (filter[campo], filter[campo][gte]); sem JS o envio GET
-     funciona. Filtro ativo: data-active no botão + texto oculto, e data-eds-filtered no th. Os chips
+     funciona. Filtro ativo: data-active no botão + texto oculto, e data-filtered no th. Os chips
      (.eds-filter-chips) listam os filtros aplicados. Aqui "Total" já está filtrado (mínimo 500). -->
 <ul class="eds-filter-chips" aria-label="Filtros ativos" data-eds-table-chips="pedidos-filtro-coluna">
   <li>
@@ -60,7 +60,7 @@
             </div>
           </div>
         </th>
-        <th scope="col" data-eds-col="total" class="eds-table-num" data-eds-filtered>
+        <th scope="col" data-eds-col="total" class="eds-table-num" data-filtered>
           <div class="eds-table-th">
             Total
             <button type="button" class="eds-table-filter-btn" popovertarget="fc-total" aria-label="Filtrar Total" aria-haspopup="dialog" data-active>

@@ -2,9 +2,9 @@ import { forwardRef, useId, type FieldsetHTMLAttributes, type ReactNode } from '
 import { cx } from '../../utils/cx';
 import { useControllable } from '../../internal/useControllable';
 
-export type SegmentedSize = 'sm' | 'md';
+export type SegmentedControlSize = 'sm' | 'md';
 
-export interface SegmentedOption {
+export interface SegmentedControlOption {
   value: string;
   /** Texto do segmento. Com `icon` e `iconOnly`, vira texto oculto (nome acessível). */
   label: string;
@@ -24,16 +24,16 @@ export interface SegmentedControlProps extends Omit<
   /** Esconde a legenda visualmente (o contexto já nomeia o grupo); ela segue lida. */
   hideLegend?: boolean;
   /** 2 a 4 opções; para mais, use Select ou Tabs. */
-  options: readonly SegmentedOption[];
+  options: readonly SegmentedControlOption[];
   /** Valor escolhido (controlado). */
   value?: string;
   /** Valor inicial (não controlado). Padrão: nenhum. */
   defaultValue?: string;
-  onChange?: (value: string) => void;
+  onValueChange?: (value: string) => void;
   /** `name` dos rádios (envio em formulário). Padrão: gerado. */
   name?: string;
   /** Padrão: `md`. */
-  size?: SegmentedSize;
+  size?: SegmentedControlSize;
   /** Segmentos iguais ocupando a largura toda. */
   fill?: boolean;
 }
@@ -50,7 +50,7 @@ export const SegmentedControl = forwardRef<HTMLFieldSetElement, SegmentedControl
       options,
       value: valueProp,
       defaultValue = '',
-      onChange,
+      onValueChange,
       name: nameProp,
       size = 'md',
       fill = false,
@@ -61,7 +61,7 @@ export const SegmentedControl = forwardRef<HTMLFieldSetElement, SegmentedControl
   ) {
     const generated = useId();
     const name = nameProp ?? generated;
-    const [value, setValue] = useControllable<string>(valueProp, defaultValue, onChange);
+    const [value, setValue] = useControllable<string>(valueProp, defaultValue, onValueChange);
     return (
       <fieldset
         {...rest}

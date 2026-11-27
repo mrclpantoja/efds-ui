@@ -38,7 +38,7 @@ export default function OptionCardPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Só CSS">
+        <Alert tone="info" title="Só CSS">
           <p>
             Não há JavaScript. Coloque o grupo num <code>fieldset.eds-fieldset</code> com{' '}
             <code>legend</code>; o erro do grupo vai em um <code>p.eds-error</code> ligado a cada

@@ -58,11 +58,10 @@ export default function TagPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Sem JS">
+        <Alert tone="info" title="Sem JS">
           <p>
-            A Tag é só marcação:{' '}
-            <code>&lt;span class=&quot;eds-tag&quot; data-tone=&quot;info&quot;&gt;</code>. Remover
-            é decisão da aplicação: ouça o clique em <code>.eds-tag-remove</code>.
+            A Tag é só marcação: <code>&lt;span class=&quot;eds-tag eds-tag-info&quot;&gt;</code>.
+            Remover é decisão da aplicação: ouça o clique em <code>.eds-tag-remove</code>.
           </p>
         </Alert>
       </Section>
@@ -98,8 +97,12 @@ export default function TagPage() {
           caption="Classes da Tag"
           rows={[
             {
-              name: '.eds-tag[data-tone]',
-              effect: 'A tag; data-tone: neutral, accent, info, success, warning, danger.',
+              name: '.eds-tag',
+              effect: 'A tag (neutral é o padrão).',
+            },
+            {
+              name: '.eds-tag-accent / -info / -success / -warning / -danger',
+              effect: 'Tom da tag.',
             },
             {
               name: '.eds-tag-remove',

@@ -1,12 +1,12 @@
 /* Lookup de entidade: código curto + botão de busca + descrição resolvida (o JS liga por data-eds-lookup).
    Markup:
-     <div class="eds-lookup" data-eds-lookup data-eds-lookup-source="/api/clientes?q=" data-eds-lookup-dialog="dlg-cli">
+     <div class="eds-lookup" data-eds-lookup data-eds-source="/api/clientes?q=" data-eds-lookup-dialog="dlg-cli">
        <input class="eds-input eds-lookup-code" name="cliente" aria-label="Código do cliente" />
        <button type="button" class="eds-button eds-button-secondary eds-button-icon" aria-label="Buscar cliente">…</button>
        <output class="eds-lookup-description" aria-live="polite">—</output>
      </div>
    - A descrição é só leitura (<output>), na altura dos controles. Sem resultado/antes de buscar, o JS
-     deixa "—" e [data-empty="true"] (cor atenuada). Código inexistente: aria-invalid no input e
+     deixa "—" e [data-empty] (cor atenuada). Código inexistente: aria-invalid no input e
      p.eds-error fora do .eds-lookup, ligada por aria-describedby.
    - Em largura estreita, a descrição desce para a linha de baixo (quebra o flex).
    - Diálogo de busca: abaixo de 768px de viewport ocupa a tela inteira (qualquer .eds-modal que
@@ -85,7 +85,7 @@
     line-height: var(--eds-line-height-body);
     overflow-wrap: anywhere;
 
-    &[data-empty='true'] {
+    &[data-empty] {
       color: var(--eds-color-text-secondary);
     }
   }

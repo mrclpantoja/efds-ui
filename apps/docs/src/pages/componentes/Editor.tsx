@@ -31,7 +31,7 @@ export default function EditorPage() {
         sem o atributo <code>style</code>.
       </p>
 
-      <Alert variant="warning" title="Sanitize o HTML no servidor">
+      <Alert tone="warning" title="Sanitize o HTML no servidor">
         <p>
           O HTML que o editor produz é limpo no navegador, mas{' '}
           <strong>o navegador não é fronteira de confiança</strong>: quem envia o formulário pode
@@ -59,7 +59,7 @@ export default function EditorPage() {
         ]}
       />
 
-      <Alert variant="info" title="Edições">
+      <Alert tone="info" title="Edições">
         <p>
           Esta é a edição <strong>Básica</strong>. A edição <strong>Completa</strong> (gratuita) e a
           edição <strong>Pro</strong> virão em próximas versões.
@@ -150,7 +150,7 @@ export default function EditorPage() {
               description: 'Com name, um input hidden leva o HTML no envio do formulário.',
             },
             {
-              name: 'value / onChange',
+              name: 'value / onValueChange',
               type: 'string / (html) => void',
               description: 'Uso controlado.',
             },

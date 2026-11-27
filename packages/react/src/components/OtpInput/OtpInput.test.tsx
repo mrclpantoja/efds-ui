@@ -24,13 +24,13 @@ describe('OtpInput', () => {
 
   it('digitar avança e preenche o hidden', async () => {
     const user = userEvent.setup();
-    const onChange = vi.fn();
-    render(<OtpInput legend="Código" name="codigo" onChange={onChange} />);
+    const onValueChange = vi.fn();
+    render(<OtpInput legend="Código" name="codigo" onValueChange={onValueChange} />);
     await user.click(cells()[0]!);
     await user.keyboard('123');
     expect(hidden().value).toBe('123');
     expect(cells()[3]).toHaveFocus();
-    expect(onChange).toHaveBeenLastCalledWith('123');
+    expect(onValueChange).toHaveBeenLastCalledWith('123');
   });
 
   it('só dígitos; Backspace volta e apaga; setas movem', async () => {
@@ -77,7 +77,7 @@ describe('OtpInput', () => {
             legend="Código"
             length={4}
             value={v}
-            onChange={setV}
+            onValueChange={setV}
             invalid
             describedBy="msg"
           />

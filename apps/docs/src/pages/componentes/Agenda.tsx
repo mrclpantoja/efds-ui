@@ -46,7 +46,7 @@ export default function AgendaPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="@efds-ui/behavior">
+        <Alert tone="info" title="@efds-ui/behavior">
           <p>
             Um <code>.eds-agenda</code> com <code>data-eds-agenda</code> e o mês em{' '}
             <code>data-eds-agenda-month=&quot;2026-03&quot;</code>. Há dois modos:
@@ -163,8 +163,9 @@ export default function AgendaPage() {
                 'Cabeçalho do dia; o nome do dia e o “Hoje” só aparecem no contêiner estreito.',
             },
             {
-              name: 'ul.eds-agenda-events > li > .eds-agenda-event[data-tone]',
-              effect: 'Evento (a ou button); accent, neutral, info, success, warning, danger.',
+              name: 'ul.eds-agenda-events > li > .eds-agenda-event',
+              effect:
+                'Evento (a ou button). Tom por classe: eds-agenda-event-neutral, -info, -success, -warning, -danger (accent é o padrão).',
             },
             { name: '.eds-agenda-event-time / -title', effect: 'Hora e título (truncado).' },
             {

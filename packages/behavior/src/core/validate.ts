@@ -11,15 +11,15 @@ export const validationMessages = {
   validateCnpj: 'Informe um CNPJ válido.',
   validateCpfCnpj: 'Informe um CPF ou CNPJ válido.',
   validateCep: 'Informe um CEP válido, com 8 dígitos.',
-  validateTelefone: 'Informe um telefone válido, com DDD.',
+  validatePhone: 'Informe um telefone válido, com DDD.',
   validateEmail: 'Informe um e-mail válido, como nome@exemplo.com.br.',
   validatePis: 'Informe um PIS/PASEP/NIS válido.',
-  validateTitulo: 'Informe um título de eleitor válido.',
-  validatePlaca: 'Informe uma placa válida, como ABC-1234 ou ABC1D23.',
-  validateData: 'Informe uma data válida, como 31/12/2026.',
-  validateDataMin: 'Informe uma data a partir de {min}.',
-  validateDataMax: 'Informe uma data até {max}.',
-  validateDataRange: 'Informe uma data entre {min} e {max}.',
+  validateVoterId: 'Informe um título de eleitor válido.',
+  validatePlate: 'Informe uma placa válida, como ABC-1234 ou ABC1D23.',
+  validateDate: 'Informe uma data válida, como 31/12/2026.',
+  validateDateMin: 'Informe uma data a partir de {min}.',
+  validateDateMax: 'Informe uma data até {max}.',
+  validateDateRange: 'Informe uma data entre {min} e {max}.',
   // Restrições nativas (no lugar do texto do navegador, que segue o idioma dele)
   validateRequired: 'Preencha este campo.',
   validateRequiredCheck: 'Marque esta opção para continuar.',
@@ -62,12 +62,12 @@ export const VALIDATOR_MESSAGE_KEY: Record<ValidatorName, keyof ValidationMessag
   cnpj: 'validateCnpj',
   'cpf-cnpj': 'validateCpfCnpj',
   cep: 'validateCep',
-  telefone: 'validateTelefone',
+  telefone: 'validatePhone',
   email: 'validateEmail',
   pis: 'validatePis',
-  titulo: 'validateTitulo',
-  placa: 'validatePlaca',
-  data: 'validateData',
+  titulo: 'validateVoterId',
+  placa: 'validatePlate',
+  data: 'validateDate',
 };
 
 const allSame = (text: string): boolean =>
@@ -128,7 +128,7 @@ export function isCnpj(value: string): boolean {
 }
 
 /** CPF (11 posições) ou CNPJ (14), pelo tamanho. */
-export function isCpfOuCnpj(value: string): boolean {
+export function isCpfCnpj(value: string): boolean {
   const text = value.trim().replace(/[.\-/\s]/g, '');
   if (text.length === 11) return isCpf(text);
   if (text.length === 14) return isCnpj(text);
@@ -154,16 +154,16 @@ const DDDS = new Set(
   ).split(' '),
 );
 
-export interface TelefoneOptions {
-  /** `fixo` (8 dígitos, começa em 2 a 5), `celular` (9 dígitos, começa em 9) ou `qualquer` (padrão). */
-  tipo?: 'fixo' | 'celular' | 'qualquer';
+export interface PhoneOptions {
+  /** `landline` (8 dígitos, começa em 2 a 5), `mobile` (9 dígitos, começa em 9) ou `any` (padrão). */
+  type?: 'landline' | 'mobile' | 'any';
 }
 
 /**
  * Telefone brasileiro com DDD, fixo ou celular: `(53) 3222-1234`, `53 99999-1234`, `+55 53 99999-1234`.
  * O DDD precisa existir; números com todos os dígitos iguais são recusados.
  */
-export function isTelefone(value: string, options: TelefoneOptions = {}): boolean {
+export function isPhone(value: string, options: PhoneOptions = {}): boolean {
   let text = value.trim();
   if (/^\+/.test(text)) {
     if (!/^\+\s*55/.test(text)) return false;
@@ -175,12 +175,12 @@ export function isTelefone(value: string, options: TelefoneOptions = {}): boolea
   const ddd = text.slice(0, 2);
   const local = text.slice(2);
   if (!DDDS.has(ddd) || allSame(local)) return false;
-  const tipo = options.tipo ?? 'qualquer';
-  const fixo = /^[2-5]\d{7}$/.test(local);
-  const celular = /^9\d{8}$/.test(local);
-  if (tipo === 'fixo') return fixo;
-  if (tipo === 'celular') return celular;
-  return fixo || celular;
+  const type = options.type ?? 'any';
+  const landline = /^[2-5]\d{7}$/.test(local);
+  const mobile = /^9\d{8}$/.test(local);
+  if (type === 'landline') return landline;
+  if (type === 'mobile') return mobile;
+  return landline || mobile;
 }
 
 // E-mail -----------------------------------------------------------------------------------------
@@ -220,7 +220,7 @@ const daysIn = (year: number, month: number): number => new Date(year, month, 0)
  * Lê `dd/mm/aaaa` ou `aaaa-mm-dd` (ISO) e devolve as partes, ou `null` se o formato ou o calendário
  * não fecham (31/02, 29/02 em ano comum, mês 13). Ano de 1000 a 9999. Sem fuso.
  */
-export function parseData(value: string): DateParts | null {
+export function parseDateParts(value: string): DateParts | null {
   const text = value.trim();
   let match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(text);
   let day: number;
@@ -243,7 +243,7 @@ export function parseData(value: string): DateParts | null {
 
 const dateKey = (p: DateParts): number => p.year * 10000 + p.month * 100 + p.day;
 
-export interface DataOptions {
+export interface DateOptions {
   /** Menor data aceita (`dd/mm/aaaa` ou ISO). */
   min?: string;
   /** Maior data aceita. */
@@ -251,20 +251,20 @@ export interface DataOptions {
 }
 
 /** Data real em `dd/mm/aaaa` ou ISO; com `min`/`max`, também confere a faixa (limites inclusos). */
-export function isDataValida(value: string, options: DataOptions = {}): boolean {
-  const date = parseData(value);
+export function isDate(value: string, options: DateOptions = {}): boolean {
+  const date = parseDateParts(value);
   if (!date) return false;
-  const min = options.min ? parseData(options.min) : null;
-  const max = options.max ? parseData(options.max) : null;
+  const min = options.min ? parseDateParts(options.min) : null;
+  const max = options.max ? parseDateParts(options.max) : null;
   if (min && dateKey(date) < dateKey(min)) return false;
   if (max && dateKey(date) > dateKey(max)) return false;
   return true;
 }
 
 /** Período: as duas datas existem e o início não é depois do fim (iguais valem). */
-export function isIntervaloDatas(inicio: string, fim: string): boolean {
-  const a = parseData(inicio);
-  const b = parseData(fim);
+export function isDateRange(start: string, end: string): boolean {
+  const a = parseDateParts(start);
+  const b = parseDateParts(end);
   return a !== null && b !== null && dateKey(a) <= dateKey(b);
 }
 
@@ -289,7 +289,7 @@ export function isPis(value: string): boolean {
  * Título de eleitor: 8 dígitos de sequência, 2 da UF (01 a 28; 28 é o exterior) e 2 verificadores.
  * Resto 10 vira 0; para SP (01) e MG (02), resto 0 vira 1.
  */
-export function isTituloEleitor(value: string): boolean {
+export function isVoterId(value: string): boolean {
   const text = value.trim().replace(/[.\-\s]/g, '');
   if (!/^\d{12}$/.test(text) || allSame(text)) return false;
   const d = text.split('').map(Number);
@@ -310,14 +310,14 @@ export function isTituloEleitor(value: string): boolean {
 // Placa ------------------------------------------------------------------------------------------
 
 /** Placa de veículo: padrão antigo (`ABC-1234`) ou Mercosul (`ABC1D23`), em qualquer caixa. */
-export function isPlaca(value: string): boolean {
+export function isPlate(value: string): boolean {
   const text = value.trim().replace(/[-\s]/g, '').toUpperCase();
   return /^[A-Z]{3}\d{4}$/.test(text) || /^[A-Z]{3}\d[A-Z]\d{2}$/.test(text);
 }
 
 // Despacho por nome ------------------------------------------------------------------------------
 
-export interface ValidateOptions extends DataOptions, TelefoneOptions {}
+export interface ValidateOptions extends DateOptions, PhoneOptions {}
 
 /** Valida pelo nome (`data-eds-validate` / `validate`). Valor vazio é válido: use `required`. */
 export function validateBy(
@@ -332,20 +332,20 @@ export function validateBy(
     case 'cnpj':
       return isCnpj(value);
     case 'cpf-cnpj':
-      return isCpfOuCnpj(value);
+      return isCpfCnpj(value);
     case 'cep':
       return isCep(value);
     case 'telefone':
-      return isTelefone(value, options);
+      return isPhone(value, options);
     case 'email':
       return isEmail(value);
     case 'pis':
       return isPis(value);
     case 'titulo':
-      return isTituloEleitor(value);
+      return isVoterId(value);
     case 'placa':
-      return isPlaca(value);
+      return isPlate(value);
     case 'data':
-      return isDataValida(value, options);
+      return isDate(value, options);
   }
 }

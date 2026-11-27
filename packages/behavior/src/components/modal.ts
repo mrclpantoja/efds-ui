@@ -58,7 +58,12 @@ export const dialogBehavior: Behavior = {
       (event) => {
         const target = event.target as Element;
         const closer = target.closest<HTMLElement>('[data-eds-close]');
-        if (closer && closer.closest('dialog') === dialog) {
+        // `data-eds-close` dentro de um Alert ou Banner fecha o aviso, não o diálogo que o contém.
+        if (
+          closer &&
+          closer.closest('dialog') === dialog &&
+          !closer.closest('.eds-alert, .eds-banner')
+        ) {
           dialog.close(closer.getAttribute('data-eds-close') || undefined);
           return;
         }

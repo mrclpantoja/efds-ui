@@ -65,7 +65,7 @@ export default function Idiomas() {
       </p>
 
       <Section title="O que foi decidido">
-        <Alert variant="info" title="Sem pacotes de idioma por enquanto">
+        <Alert tone="info" title="Sem pacotes de idioma por enquanto">
           <p>
             O pacote não traz mensagens em inglês ou espanhol. São mais de duzentas chaves no{' '}
             <code>@efds-ui/behavior</code> e outros textos espalhados pelos componentes React;
@@ -106,6 +106,15 @@ export default function Idiomas() {
       <Section title="Chaves do @efds-ui/behavior">
         <p>
           Valores com <code>{'{chave}'}</code> recebem o dado no lugar. O padrão é pt-BR.
+        </p>
+        <p>
+          As chaves seguem três regras. O prefixo é o do componente (<code>combobox*</code>,{' '}
+          <code>daterange*</code>, <code>table*</code>, <code>filterBar*</code>). O plural é sempre{' '}
+          <code>&lt;base&gt;One</code> e <code>&lt;base&gt;Many</code>, com{' '}
+          <code>&lt;base&gt;None</code> quando há texto para zero (<code>tableSelectedNone</code>,{' '}
+          <code>tableSelectedOne</code>, <code>tableSelectedMany</code>). E o sufixo{' '}
+          <code>Label</code> é sempre um nome acessível (lido por leitor de tela), não um texto
+          visível.
         </p>
         <Field
           label="Filtrar chaves"

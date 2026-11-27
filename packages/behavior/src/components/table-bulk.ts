@@ -7,7 +7,7 @@ import { hubFor, isRemote, tableById } from '../core/table-hub';
  * Barra de ações em lote: `[data-eds-table-bulk="ID"]` (vem `hidden`; aparece com a seleção).
  * Contagem em texto comum (o anúncio é o da região de status da tabela), `[data-eds-bulk-action]`
  * emite `eds:table-bulk-action` (cancelável), `[data-eds-bulk-all-results]` ("selecionar todos os
- * N", só tabela remota com `data-eds-total`) e `[data-eds-bulk-clear]`.
+ * N", só tabela remota com `data-total`) e `[data-eds-bulk-clear]`.
  */
 export const tableBulkBehavior: Behavior = {
   name: 'table-bulk',
@@ -21,7 +21,7 @@ export const tableBulkBehavior: Behavior = {
     const ac = new AbortController();
     const { signal } = ac;
     if (!bar.hasAttribute('aria-label') && !bar.hasAttribute('aria-labelledby')) {
-      bar.setAttribute('aria-label', getMessages().bulkLabel);
+      bar.setAttribute('aria-label', getMessages().tableBulkLabel);
     }
     if (!bar.hasAttribute('role')) bar.setAttribute('role', 'group');
 
@@ -37,7 +37,7 @@ export const tableBulkBehavior: Behavior = {
         .filter((row): row is HTMLTableRowElement => row !== null && !row.hidden);
     const idsOf = (rows: HTMLTableRowElement[]) =>
       rows.map((row) => row.getAttribute('data-eds-row-id')).filter((id): id is string => !!id);
-    const total = () => Number(table.getAttribute('data-eds-total')) || 0;
+    const total = () => Number(table.getAttribute('data-total')) || 0;
 
     const update = () => {
       const m = getMessages();
@@ -49,10 +49,10 @@ export const tableBulkBehavior: Behavior = {
       if (countEl) {
         countEl.textContent =
           hub.scope === 'all'
-            ? format(m.bulkAllSelected, { total: total() })
+            ? format(m.tableBulkAllSelected, { total: total() })
             : count === 1
-              ? m.bulkCountOne
-              : format(m.bulkCount, { count });
+              ? m.tableBulkCountOne
+              : format(m.tableBulkCountMany, { count });
       }
       // "Selecionar todos os N": cabeçalho marca todas as linhas da página e há mais resultados.
       const all = table.querySelector<HTMLInputElement>('input[data-eds-select-all]');
@@ -73,7 +73,7 @@ export const tableBulkBehavior: Behavior = {
     };
 
     table.addEventListener('eds:table-select-change', update, { signal });
-    table.addEventListener('eds:table-filtered', update, { signal });
+    table.addEventListener('eds:table-filter', update, { signal });
     update();
 
     bar.addEventListener(
@@ -104,7 +104,7 @@ export const tableBulkBehavior: Behavior = {
         if (target.closest('[data-eds-bulk-all-results]')) {
           hub.scope = 'all';
           update();
-          hub.announce(format(getMessages().bulkAllSelected, { total: total() }));
+          hub.announce(format(getMessages().tableBulkAllSelected, { total: total() }));
           emit(table, 'table-select-all-results', { total: total() });
           bar.querySelector<HTMLElement>('[data-eds-bulk-action]')?.focus();
         }

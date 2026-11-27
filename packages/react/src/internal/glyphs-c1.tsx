@@ -3,7 +3,7 @@ import { Glyph } from './Glyph';
 
 type P = SVGProps<SVGSVGElement>;
 
-/* Glifos privados da onda C, parte "campos" (senha, número, lookup). Não exportados pelo pacote. */
+/* Glifos privados, parte "campos" (senha, número, lookup). Não exportados pelo pacote. */
 export const EyeGlyph = (p: P) => (
   <Glyph
     d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM15 12a3 3 0 11-6 0 3 3 0 016 0z"

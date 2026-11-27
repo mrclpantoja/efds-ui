@@ -57,7 +57,7 @@ export default function ComboboxPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
+        <Alert tone="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             O teclado, o filtro, o foco e o posicionamento do popup são JavaScript: no HTML vêm do{' '}
             <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que detecta o{' '}
@@ -123,7 +123,7 @@ export default function ComboboxPage() {
           <code>type</code>, <code>role</code> e <code>list</code>), repassa <code>ref</code> (para
           o campo de texto) e mescla <code>className</code>. Dentro de um <code>Field</code>,{' '}
           <code>id</code>, rótulo e descrições vêm dele, como no Input. É controlado (
-          <code>value</code> e <code>onChange</code>) ou não (<code>defaultValue</code>).
+          <code>value</code> e <code>onValueChange</code>) ou não (<code>defaultValue</code>).
         </p>
         <PropsTable
           caption="Props de Combobox"
@@ -144,7 +144,7 @@ export default function ComboboxPage() {
               ),
             },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(value: string, option: ComboboxOption | null) => void',
               description: (
                 <>
@@ -156,6 +156,12 @@ export default function ComboboxPage() {
               name: 'onInputChange',
               type: '(text: string) => void',
               description: 'Texto digitado mudou: use para buscar no servidor.',
+            },
+            {
+              name: 'selectedOption',
+              type: 'ComboboxOption',
+              description:
+                'Opção do value controlado que ainda não está em options (tela de edição com busca remota): dá o rótulo a mostrar.',
             },
             {
               name: 'filter',

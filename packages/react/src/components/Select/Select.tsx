@@ -10,7 +10,7 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
   size?: SelectSize;
   /** Erro: `aria-invalid="true"`. Dentro de um Field com `error` já é automático. */
   invalid?: boolean;
-  /** Sucesso: `data-valid="true"`. */
+  /** Sucesso: `data-valid`. */
   valid?: boolean;
   /**
    * Somente leitura (o `<select>` não tem o atributo): a lista não abre e o valor não muda, mas o

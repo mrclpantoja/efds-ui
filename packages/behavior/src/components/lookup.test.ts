@@ -15,7 +15,7 @@ const markup = (attrs: string) => `
   <div class="eds-lookup" data-eds-lookup ${attrs}>
     <input class="eds-input eds-lookup-code" id="c" name="cliente" autocomplete="off" aria-describedby="c-err" />
     <button type="button" class="eds-button" aria-label="Buscar cliente">lupa</button>
-    <output class="eds-lookup-description" aria-live="polite" data-empty="true">—</output>
+    <output class="eds-lookup-description" aria-live="polite" data-empty>—</output>
   </div>
   <p class="eds-error" id="c-err" hidden></p>
 </form>`;
@@ -33,7 +33,17 @@ let restore: () => void;
 let destroy: (() => void) | undefined;
 
 function mount(attrs: string) {
-  document.body.innerHTML = markup(attrs);
+  // A lista local vem num <script type="application/json" data-eds-lookup-items> dentro do .eds-lookup.
+  const local = /data-eds-lookup-items='([^']*)'/.exec(attrs);
+  const rest = attrs.replace(/data-eds-lookup-items='[^']*'/, '');
+  document.body.innerHTML = markup(rest);
+  if (local) {
+    const script = document.createElement('script');
+    script.type = 'application/json';
+    script.setAttribute('data-eds-lookup-items', '');
+    script.textContent = local[1] ?? '';
+    document.querySelector('[data-eds-lookup]')?.prepend(script);
+  }
   destroy = initLookup(document);
 }
 
@@ -76,7 +86,7 @@ describe('Lookup (lista local)', () => {
     expect(error().hidden).toBe(false);
     expect(input()).toHaveAttribute('aria-invalid', 'true');
     expect(input().getAttribute('aria-describedby')).toContain('c-err');
-    expect(description()).toHaveAttribute('data-empty', 'true');
+    expect(description()).toHaveAttribute('data-empty');
     // Corrigir limpa o erro.
     await user.clear(input());
     await user.type(input(), '10');
@@ -93,7 +103,7 @@ describe('Lookup (lista local)', () => {
     await user.clear(input());
     await user.tab();
     await vi.waitFor(() => expect(description()).toHaveTextContent('—'));
-    expect(description()).toHaveAttribute('data-empty', 'true');
+    expect(description()).toHaveAttribute('data-empty');
   });
 
   it('o botão abre o diálogo com a lista, a busca filtra e escolher devolve o foco ao campo', async () => {
@@ -139,7 +149,7 @@ describe('Lookup (fonte remota)', () => {
           ]),
     );
     vi.stubGlobal('fetch', fetchMock);
-    mount('data-eds-lookup-source="/api/clientes?q="');
+    mount('data-eds-source="/api/clientes?q="');
     const user = userEvent.setup();
     await user.type(input(), '10');
     await user.tab();
@@ -163,7 +173,7 @@ describe('Lookup (fonte remota)', () => {
       'fetch',
       vi.fn(() => Promise.reject(new TypeError('rede'))),
     );
-    mount('data-eds-lookup-source="/api/clientes?q="');
+    mount('data-eds-source="/api/clientes?q="');
     const user = userEvent.setup();
     await user.type(input(), '10');
     await user.tab();

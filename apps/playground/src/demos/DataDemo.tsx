@@ -452,14 +452,16 @@ function TableVariants() {
       </article>
 
       <h3 className="eds-text-h4" id={`${id}-fix`}>
-        eds-table-sticky-col
+        eds-table-pin-start
       </h3>
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- região rolável precisa de foco (WCAG 2.1.1) */}
       <div className="eds-table-wrap" role="region" aria-labelledby={`${id}-fix`} tabIndex={0}>
-        <table className="eds-table eds-table-sticky-col">
+        <table className="eds-table">
           <thead>
             <tr>
-              <th scope="col">Código</th>
+              <th scope="col" className="eds-table-pin-start eds-table-pin-edge">
+                Código
+              </th>
               {['Cliente', 'Categoria', 'Início', 'Término', 'Responsável', 'Situação'].map((h) => (
                 <th key={h} scope="col">
                   {h}
@@ -473,7 +475,9 @@ function TableVariants() {
           <tbody>
             {orders.slice(0, 4).map((row) => (
               <tr key={row.code}>
-                <th scope="row">{row.code}</th>
+                <th scope="row" className="eds-table-pin-start eds-table-pin-edge">
+                  {row.code}
+                </th>
                 <td>{row.client}</td>
                 <td>Materiais</td>
                 <td>01/03/2026</td>
@@ -542,7 +546,7 @@ function StatAndDescription() {
           <div key={label} className="eds-card eds-stat">
             <p className="eds-stat-label">{label}</p>
             <p className="eds-stat-value">{value}</p>
-            <p className="eds-stat-delta" data-tone="neutral">
+            <p className="eds-stat-delta">
               <span className="eds-stat-meta">vs. mês anterior</span>
             </p>
           </div>
@@ -669,7 +673,7 @@ function AdvancedTable() {
                 scope="col"
                 className="eds-table-pin-start eds-table-pin-edge"
                 aria-sort="ascending"
-                data-eds-sort-dir="ascending"
+                data-sort-dir="ascending"
               >
                 <div className="eds-table-th">
                   <button type="button" className="eds-table-sort">
@@ -733,7 +737,7 @@ function AdvancedTable() {
                   </div>
                 </div>
               </th>
-              <th scope="col" data-eds-sort-dir="descending">
+              <th scope="col" data-sort-dir="descending">
                 <div className="eds-table-th">
                   <button type="button" className="eds-table-sort">
                     Categoria <SortIcon />
@@ -743,10 +747,10 @@ function AdvancedTable() {
                   </button>
                 </div>
               </th>
-              <th scope="col" data-eds-dragging="">
+              <th scope="col" data-dragging="">
                 <div className="eds-table-th">Início</div>
               </th>
-              <th scope="col" className="eds-table-num" data-eds-drop="before">
+              <th scope="col" className="eds-table-num" data-drop-target="before">
                 <div className="eds-table-th">
                   Valor
                   <button

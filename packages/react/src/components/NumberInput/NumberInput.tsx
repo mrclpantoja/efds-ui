@@ -35,6 +35,8 @@ const defaultTexts: NumberInputTexts = {
   adjusted: (value) => `Valor ajustado para ${value}.`,
 };
 
+export type NumberInputSize = InputSize;
+
 export interface NumberInputProps extends Omit<
   InputProps,
   | 'type'
@@ -43,6 +45,7 @@ export interface NumberInputProps extends Omit<
   | 'onChange'
   | 'mask'
   | 'maskOptions'
+  | 'texts'
   | 'onValueChange'
   | 'min'
   | 'max'
@@ -53,7 +56,7 @@ export interface NumberInputProps extends Omit<
   value?: number | null;
   defaultValue?: number | null;
   /** Ao confirmar (sair do campo, Enter, setas, botões), nunca a cada tecla. */
-  onChange?: (value: number | null) => void;
+  onValueChange?: (value: number | null) => void;
   min?: number;
   max?: number;
   /** Passo das setas e dos botões. Padrão: 1. */
@@ -77,7 +80,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
   {
     value,
     defaultValue,
-    onChange,
+    onValueChange,
     min,
     max,
     step: stepProp,
@@ -142,7 +145,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
     if (value !== parse(textRef.current)) setText(show(value));
   }, [value, parse, show]);
 
-  // Último valor entregue ao `onChange` (só avisa quando muda).
+  // Último valor entregue ao `onValueChange` (só avisa quando muda).
   const emitted = useRef<number | null>(parse(text));
   const apply = useCallback(
     (next: number | null) => {
@@ -151,10 +154,10 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
       setText(shown);
       if (emitted.current !== next) {
         emitted.current = next;
-        onChange?.(next);
+        onValueChange?.(next);
       }
     },
-    [onChange, show],
+    [onValueChange, show],
   );
 
   const stepBy = useCallback(

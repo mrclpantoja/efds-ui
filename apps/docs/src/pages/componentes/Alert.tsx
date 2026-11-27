@@ -69,8 +69,8 @@ export default function AlertPage() {
             <>
               O Alert não se remove sozinho: no React, o consumidor o desmonta e leva o foco para um
               elemento lógico, já que o botão que tinha o foco sai do DOM. No HTML, o{' '}
-              <code>@efds-ui/behavior</code> faz isso com <code>data-eds-dismiss</code> no botão (e
-              dispara <code>eds:alert-dismiss</code>, cancelável).
+              <code>@efds-ui/behavior</code> faz isso com <code>data-eds-close</code> no botão (e
+              dispara <code>eds:alert-close</code>, cancelável).
             </>
           }
           html={fechavelHtml}
@@ -100,10 +100,10 @@ export default function AlertPage() {
           caption="Props de Alert"
           rows={[
             {
-              name: 'variant',
+              name: 'tone',
               type: "'info' | 'success' | 'warning' | 'danger'",
               default: "'info'",
-              description: 'Severidade: define a cor e o ícone.',
+              description: 'Tom (severidade): define a cor e o ícone.',
             },
             {
               name: 'title',
@@ -119,11 +119,11 @@ export default function AlertPage() {
               type: 'Partial<AlertTexts>',
               description: (
                 <>
-                  Textos internos. <code>severity</code> (padrão por variante:
-                  &quot;Informação:&quot;, &quot;Sucesso:&quot;, &quot;Atenção:&quot; ou
-                  &quot;Erro:&quot;) é o texto oculto antes do título: passe outro para traduzir, ou{' '}
-                  <code>false</code> quando o título já diz a severidade. <code>close</code>{' '}
-                  (&quot;Fechar aviso&quot;) é o nome acessível do botão de fechar.
+                  Textos internos. <code>severity</code> (padrão por tom: &quot;Informação:&quot;,
+                  &quot;Sucesso:&quot;, &quot;Atenção:&quot; ou &quot;Erro:&quot;) é o texto oculto
+                  antes do título: passe outro para traduzir, ou <code>false</code> quando o título
+                  já diz a severidade. <code>close</code> (&quot;Fechar aviso&quot;) é o nome
+                  acessível do botão de fechar.
                 </>
               ),
             },
@@ -138,10 +138,10 @@ export default function AlertPage() {
               ),
             },
             {
-              name: 'onClose',
-              type: 'MouseEventHandler<HTMLButtonElement>',
+              name: 'onDismiss',
+              type: '() => void',
               description:
-                'Mostra o botão de fechar. O Alert não se remove: o consumidor o desmonta e move o foco.',
+                'Mostra o botão de fechar e o chama ao clicar. O Alert não se remove: o consumidor o desmonta e move o foco.',
             },
             {
               name: 'role',

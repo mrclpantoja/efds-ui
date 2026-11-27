@@ -44,7 +44,7 @@ export default function LookupPage() {
       <Section title="Exemplos">
         <Example
           title="Cliente, com autocompletar e busca em modal"
-          description="Digite parte do código ou do nome (aur, 11) e escolha na lista com as setas e Enter; o botão abre a busca avançada no modal. Digitar o código e sair do campo também resolve a descrição. As consultas desta página vão a um serviço fictício local; no seu sistema, data-eds-lookup-source aponta para a sua API."
+          description="Digite parte do código ou do nome (aur, 11) e escolha na lista com as setas e Enter; o botão abre a busca avançada no modal. Digitar o código e sair do campo também resolve a descrição. As consultas desta página vão a um serviço fictício local; no seu sistema, data-eds-source aponta para a sua API."
           html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
         />
@@ -73,7 +73,7 @@ export default function LookupPage() {
           headers={['Item', 'Efeito']}
           rows={[
             {
-              name: 'data-eds-lookup-source="/api/clientes?q="',
+              name: 'data-eds-source="/api/clientes?q="',
               effect:
                 'URL da busca; o texto digitado (codificado) é acrescentado, ou entra no lugar de {q}. Resposta: JSON [{ code, description }] ou { items: [...] }.',
             },
@@ -83,8 +83,9 @@ export default function LookupPage() {
                 'URL de um código (ou {code}); 404 = não existe. Sem ela, a busca da fonte é usada e vale o código exato.',
             },
             {
-              name: 'data-eds-lookup-items=\'[{"code":"1",...}]\'',
-              effect: 'Lista local em JSON (sem rede).',
+              name: 'script[type="application/json"][data-eds-lookup-items]',
+              effect:
+                'Dentro do .eds-lookup: lista local em JSON, [{ "code", "description" }] (sem rede).',
             },
             {
               name: 'data-eds-lookup-dialog',
@@ -101,7 +102,7 @@ export default function LookupPage() {
                 'Colunas da tabela (padrão: código e descrição). "hideNarrow": true esconde a coluna quando a tabela do diálogo fica estreita (ver .eds-table-hide-narrow).',
             },
             {
-              name: 'data-eds-lookup-autocomplete="off"',
+              name: 'data-eds-lookup-autocomplete="false"',
               effect:
                 'Desliga o autocompletar no campo (ligado quando há lista local ou fonte). A lista busca por código ou nome, no padrão combobox, com a mesma fonte do diálogo.',
             },
@@ -149,7 +150,7 @@ export default function LookupPage() {
               description: 'Código controlado ou inicial.',
             },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(code, item | null) => void',
               description: 'Depois de resolver ou escolher. Valor de fora não dispara.',
             },
@@ -160,9 +161,10 @@ export default function LookupPage() {
                 'Colunas do diálogo (padrão: código e descrição). hideNarrow esconde a coluna quando a tabela fica estreita (.eds-table-hide-narrow).',
             },
             {
-              name: 'buttonLabel / dialogTitle',
-              type: 'string / ReactNode',
-              description: 'Nome do botão de busca e título do diálogo.',
+              name: 'texts',
+              type: 'Partial<LookupTexts>',
+              description:
+                'Textos (pt-BR). open é o nome do botão de busca (ex.: “Buscar cliente”) e title, o título do diálogo.',
             },
             { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Tamanho.' },
             {
@@ -176,7 +178,7 @@ export default function LookupPage() {
               name: 'onCreate / createAlways',
               type: '(text: string) => void / boolean',
               description:
-                'onCreate liga a opção final “Cadastrar novo…” (texts.create) e recebe o texto digitado; createAlways a mostra também com resultados. Devolva o cadastro em value/onChange.',
+                'onCreate liga a opção final “Cadastrar novo…” (texts.create) e recebe o texto digitado; createAlways a mostra também com resultados. Devolva o cadastro em value/onValueChange.',
             },
             {
               name: 'texts',
@@ -221,7 +223,7 @@ export default function LookupPage() {
             o código digitado ainda não foi resolvido.
           </li>
         </ul>
-        <Alert variant="info" title="Dados e LGPD">
+        <Alert tone="info" title="Dados e LGPD">
           <p>
             Códigos e descrições vão à sua API: use HTTPS, limite o que a busca devolve ao
             necessário e não coloque dados pessoais em exemplos ou logs.

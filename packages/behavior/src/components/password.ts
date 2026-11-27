@@ -1,6 +1,6 @@
 import { format, getMessages } from '../core/config';
 import { checkPassword, type PasswordLevel, type PasswordRuleId } from '../core/fields';
-import { emit } from '../core/dom';
+import { emit, flag } from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer } from '../core/status';
 
@@ -32,7 +32,7 @@ function ruleIdsOf(item: HTMLElement): PasswordRuleId[] {
  * `aria-pressed` e nome fixo), e, com `data-eds-password-strength`, a força (`.eds-password-strength`,
  * `data-level` 0 a 4, texto sempre visível) e as regras (`.eds-password-rules > li`, `data-met`).
  * A senha nunca sai do navegador. O anúncio da força é por pausa na digitação ou ao sair do campo
- * (nunca por tecla). Ao enviar o formulário o campo volta a ser oculto. Evento `eds:password-strength`
+ * (nunca por tecla). Ao enviar o formulário o campo volta a ser oculto. Evento `eds:password-strength-change`
  * (`{ level, rules }`).
  */
 export const passwordBehavior: Behavior = {
@@ -44,7 +44,7 @@ export const passwordBehavior: Behavior = {
     const scope =
       input.closest<HTMLElement>('.eds-field, .eds-secret') ?? input.parentElement ?? input;
     const toggle = scope.querySelector<HTMLElement>('[data-eds-password-toggle]');
-    const meter = input.hasAttribute('data-eds-password-strength')
+    const meter = flag(input, 'data-eds-password-strength')
       ? scope.querySelector<HTMLElement>('.eds-password-strength')
       : null;
     const rulesList = scope.querySelector<HTMLElement>('.eds-password-rules');
@@ -133,12 +133,12 @@ export const passwordBehavior: Behavior = {
       const levelName = (level: PasswordLevel): string => {
         const m = getMessages();
         return level === 1
-          ? m.passwordLevel1
+          ? m.passwordLevelWeak
           : level === 2
-            ? m.passwordLevel2
+            ? m.passwordLevelFair
             : level === 3
-              ? m.passwordLevel3
-              : m.passwordLevel4;
+              ? m.passwordLevelGood
+              : m.passwordLevelStrong;
       };
       const announce = () => {
         if (timer) clearTimeout(timer);
@@ -163,12 +163,12 @@ export const passwordBehavior: Behavior = {
         for (const { item, hint, ids } of items) {
           if (ids.length === 0) continue;
           const met = ids.every((id) => result.rules[id]);
-          item.setAttribute('data-met', String(met));
+          item.toggleAttribute('data-met', met);
           hint.textContent = met ? m.passwordRuleMet : m.passwordRuleUnmet;
         }
         if (result.level !== lastLevel) {
           lastLevel = result.level;
-          emit(input, 'password-strength', { level: result.level, rules: result.rules });
+          emit(input, 'password-strength-change', { level: result.level, rules: result.rules });
         }
       };
       update();

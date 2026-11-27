@@ -29,12 +29,12 @@ import {
   type BlockKind,
 } from './commands';
 import { createIcon, type IconName } from './icons';
-import type { EditorMessages } from './messages';
+import type { EditorTexts } from './messages';
 import { basicSchema, type Align } from './schema';
 
 export interface ToolbarContext {
   view: EditorView;
-  messages: EditorMessages;
+  messages: EditorTexts;
   /** `id` do conteúdo (aria-controls da barra). */
   contentId: string;
   announce: (text: string) => void;

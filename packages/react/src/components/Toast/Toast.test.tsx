@@ -48,12 +48,12 @@ describe('Toast', () => {
     spy.mockRestore();
   });
 
-  it('renderiza variante, título e mensagem; só o danger leva role="alert"', async () => {
+  it('renderiza tom, título e mensagem; só o danger leva role="alert"', async () => {
     const user = setupUser();
     render(
       <ToastProvider>
-        <Trigger options={{ variant: 'success', title: 'Sucesso:', message: 'Pedido salvo.' }} />
-        <Trigger options={{ variant: 'danger', title: 'Erro:', message: 'Falha.' }} label="Erro" />
+        <Trigger options={{ tone: 'success', title: 'Sucesso:', message: 'Pedido salvo.' }} />
+        <Trigger options={{ tone: 'danger', title: 'Erro:', message: 'Falha.' }} label="Erro" />
       </ToastProvider>,
     );
     await user.click(screen.getByRole('button', { name: 'Disparar' }));
@@ -89,7 +89,7 @@ describe('Toast', () => {
     const message = Array.from({ length: 80 }, (_, i) => `p${i}`).join(' ');
     render(
       <ToastProvider>
-        <Trigger options={{ variant: 'success', message }} />
+        <Trigger options={{ tone: 'success', message }} />
       </ToastProvider>,
     );
     await user.click(screen.getByRole('button'));
@@ -99,11 +99,11 @@ describe('Toast', () => {
     expect(document.querySelector('[data-closing]')).not.toBeNull();
   });
 
-  it.each(['danger', 'warning'] as const)('%s não fecha sozinho', async (variant) => {
+  it.each(['danger', 'warning'] as const)('%s não fecha sozinho', async (tone) => {
     const user = setupUser();
     render(
       <ToastProvider>
-        <Trigger options={{ variant, message: 'Atenção.' }} />
+        <Trigger options={{ tone, message: 'Atenção.' }} />
       </ToastProvider>,
     );
     await user.click(screen.getByRole('button'));
@@ -116,7 +116,7 @@ describe('Toast', () => {
     const user = setupUser();
     render(
       <ToastProvider texts={{ close: 'Dismiss' }}>
-        <Trigger options={{ variant: 'warning', message: 'Aviso.' }} />
+        <Trigger options={{ tone: 'warning', message: 'Aviso.' }} />
       </ToastProvider>,
     );
     await user.click(screen.getByRole('button', { name: 'Disparar' }));
@@ -134,7 +134,7 @@ describe('Toast', () => {
           type="button"
           onClick={() =>
             ['um', 'dois', 'tres', 'quatro'].forEach((m) =>
-              toast.show({ variant: 'warning', message: m }),
+              toast.show({ tone: 'warning', message: m }),
             )
           }
         >
@@ -164,9 +164,9 @@ describe('Toast', () => {
         <button
           type="button"
           onClick={() => {
-            toast.show({ variant: 'warning', message: 'a' });
-            toast.show({ variant: 'warning', message: 'b' });
-            toast.show({ variant: 'warning', message: 'c' });
+            toast.show({ tone: 'warning', message: 'a' });
+            toast.show({ tone: 'warning', message: 'b' });
+            toast.show({ tone: 'warning', message: 'c' });
             toast.show({ message: 'd' });
           }}
         >
@@ -234,7 +234,7 @@ describe('Toast', () => {
     const user = setupUser();
     render(
       <ToastProvider>
-        <Trigger options={{ variant: 'warning', message: 'Aviso.' }} />
+        <Trigger options={{ tone: 'warning', message: 'Aviso.' }} />
       </ToastProvider>,
     );
     const origin = screen.getByRole('button', { name: 'Disparar' });
@@ -252,7 +252,7 @@ describe('Toast', () => {
     render(
       <ToastProvider>
         <main tabIndex={-1}>
-          <Trigger options={{ variant: 'warning', message: 'Aviso.' }} />
+          <Trigger options={{ tone: 'warning', message: 'Aviso.' }} />
         </main>
       </ToastProvider>,
     );
@@ -274,7 +274,7 @@ describe('Toast', () => {
         <>
           <button
             type="button"
-            onClick={() => setId(toast.show({ variant: 'warning', message: 'x' }))}
+            onClick={() => setId(toast.show({ tone: 'warning', message: 'x' }))}
           >
             Abrir
           </button>
@@ -306,11 +306,11 @@ describe('Toast', () => {
       ['success', 'Sucesso:'],
       ['warning', 'Atenção:'],
       ['danger', 'Erro:'],
-    ] as const)('sem title, %s ganha o prefixo oculto "%s"', async (variant, label) => {
+    ] as const)('sem title, %s ganha o prefixo oculto "%s"', async (tone, label) => {
       const user = setupUser();
       render(
         <ToastProvider>
-          <Trigger options={{ variant, message: 'Pedido salvo.' }} />
+          <Trigger options={{ tone, message: 'Pedido salvo.' }} />
         </ToastProvider>,
       );
       await user.click(screen.getByRole('button', { name: 'Disparar' }));
@@ -324,7 +324,7 @@ describe('Toast', () => {
       const user = setupUser();
       render(
         <ToastProvider>
-          <Trigger options={{ variant: 'success', title: 'Sucesso:', message: 'Salvo.' }} />
+          <Trigger options={{ tone: 'success', title: 'Sucesso:', message: 'Salvo.' }} />
         </ToastProvider>,
       );
       await user.click(screen.getByRole('button', { name: 'Disparar' }));
@@ -332,12 +332,12 @@ describe('Toast', () => {
       expect(document.querySelector('.eds-toast-content')).toHaveTextContent('Sucesso: Salvo.');
     });
 
-    it('texts.severity substitui só as variantes informadas', async () => {
+    it('texts.severity substitui só as tons informados', async () => {
       const user = setupUser();
       render(
         <ToastProvider texts={{ severity: { success: 'Done:' } }}>
-          <Trigger options={{ variant: 'success', message: 'Ok.' }} label="S" />
-          <Trigger options={{ variant: 'warning', message: 'Cuidado.' }} label="W" />
+          <Trigger options={{ tone: 'success', message: 'Ok.' }} label="S" />
+          <Trigger options={{ tone: 'warning', message: 'Cuidado.' }} label="W" />
         </ToastProvider>,
       );
       await user.click(screen.getByRole('button', { name: 'S' }));
@@ -352,9 +352,9 @@ describe('Toast', () => {
     function Page({ open }: { open: boolean }) {
       return (
         <ToastProvider>
-          <Trigger options={{ variant: 'warning', message: 'Aviso.' }} />
+          <Trigger options={{ tone: 'warning', message: 'Aviso.' }} />
           <Modal open={open} onClose={() => {}} title="Modal">
-            <Trigger options={{ variant: 'warning', message: 'Do modal.' }} label="No modal" />
+            <Trigger options={{ tone: 'warning', message: 'Do modal.' }} label="No modal" />
           </Modal>
         </ToastProvider>
       );
@@ -407,7 +407,7 @@ describe('Toast', () => {
       function Host({ open }: { open: boolean }) {
         return (
           <ToastProvider>
-            <Trigger options={{ variant: 'warning', message: 'Aviso.' }} />
+            <Trigger options={{ tone: 'warning', message: 'Aviso.' }} />
             <Modal open={open} onClose={() => {}} title="Modal">
               <input aria-label="Campo" />
             </Modal>

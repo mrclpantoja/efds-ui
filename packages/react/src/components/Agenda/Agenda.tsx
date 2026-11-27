@@ -2,13 +2,17 @@ import { forwardRef, useId, useMemo, type HTMLAttributes } from 'react';
 import { addDays, addMonths, makeDate, parseIso, toIso } from '../../internal/calendar-shared';
 import { ChevronLeftGlyph, ChevronRightGlyph } from '../../internal/glyphs';
 import { useControllable } from '../../internal/useControllable';
+import type { Tone } from '../../internal/tone';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { useLocale } from '../Locale';
 import { Button } from '../Button';
 import { Popover } from '../Popover';
 
-export type AgendaTone = 'accent' | 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+export type AgendaTone = Extract<
+  Tone,
+  'accent' | 'neutral' | 'info' | 'success' | 'warning' | 'danger'
+>;
 
 export interface AgendaEvent {
   /** Identificador estável (chave e retorno de `onEventClick`). */
@@ -197,8 +201,10 @@ export const Agenda = forwardRef<HTMLElement, AgendaProps>(function Agenda(
       </>
     );
     const common = {
-      className: 'eds-agenda-event',
-      'data-tone': event.tone,
+      className: cx(
+        'eds-agenda-event',
+        event.tone && event.tone !== 'accent' && `eds-agenda-event-${event.tone}`,
+      ),
       'data-continues': event.date !== day ? '' : undefined,
     };
     return (

@@ -6,7 +6,7 @@ export default function Basico() {
   return (
     <>
       <Field label="Início" helper="Das 08:00 às 18:00, de 15 em 15 minutos.">
-        <TimePicker name="inicio" step={15} min="08:00" max="18:00" onChange={setHora} />
+        <TimePicker name="inicio" step={15} min="08:00" max="18:00" onValueChange={setHora} />
       </Field>
       <p className="eds-text-small">Valor enviado: {hora || 'nenhum'}</p>
     </>

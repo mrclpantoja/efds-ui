@@ -43,7 +43,7 @@
         [readonly],
         [aria-readonly='true'],
         [aria-invalid='true'],
-        [data-valid='true']
+        [data-valid]
       ) {
       --_select-border: var(--eds-color-text-muted);
     }
@@ -65,7 +65,7 @@
       outline-offset: 0;
     }
 
-    &[data-valid='true'] {
+    &[data-valid] {
       --_select-border: var(--eds-color-status-success-text);
     }
 

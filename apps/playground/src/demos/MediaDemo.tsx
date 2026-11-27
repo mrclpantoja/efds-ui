@@ -116,8 +116,8 @@ function Images() {
         <Frame caption="4x5 contain (letterbox em bg-subtle)">
           <Img n={5} ratio="4x5" extra="eds-image-contain" />
         </Frame>
-        <Frame caption=".eds-image-circle">
-          <div className="eds-image eds-image-circle">
+        <Frame caption=".eds-image-round">
+          <div className="eds-image eds-image-round">
             <img src="/media/rosto-1.svg" alt="Rosto genérico" width={400} height={400} />
           </div>
         </Frame>
@@ -154,7 +154,7 @@ function Images() {
           </div>
         </Frame>
         <Frame caption="error em círculo">
-          <div className="eds-image eds-image-circle" data-state="error">
+          <div className="eds-image eds-image-round" data-state="error">
             <img src="/media/rosto-1.svg" alt="Rosto genérico" width={400} height={400} />
             <Fallback />
           </div>
@@ -403,13 +403,13 @@ function Croppers() {
         </Frame>
         <Frame caption="Prévia com .eds-avatar existente">
           <div className="eds-stack eds-stack-row eds-stack-align-start eds-gap-3">
-            <span className="eds-avatar eds-avatar-lg eds-avatar-circle">
+            <span className="eds-avatar eds-avatar-lg eds-avatar-round">
               <img src="/media/rosto-1.svg" alt="" />
             </span>
-            <span className="eds-avatar eds-avatar-circle">
+            <span className="eds-avatar eds-avatar-round">
               <img src="/media/rosto-2.svg" alt="" />
             </span>
-            <span className="eds-avatar eds-avatar-sm eds-avatar-circle">
+            <span className="eds-avatar eds-avatar-sm eds-avatar-round">
               <img src="/media/rosto-1.svg" alt="" />
             </span>
           </div>

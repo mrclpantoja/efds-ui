@@ -358,7 +358,7 @@ export function PageLoaderProvider({
       <PageLoader
         open={shown !== null}
         title={shown?.title ?? t.title}
-        text={slow ? t.slowText : (shown?.text ?? t.text)}
+        texts={{ text: slow ? t.slowText : (shown?.text ?? t.text) }}
       >
         {slow && (
           <Stack direction="row" gap={3} justify="center" wrap>
@@ -374,3 +374,4 @@ export function PageLoaderProvider({
     </PageLoaderContext.Provider>
   );
 }
+PageLoaderProvider.displayName = 'PageLoaderProvider';

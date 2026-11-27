@@ -18,7 +18,7 @@ const scriptTag = `<link rel="stylesheet" href="/assets/eds/core/index.css" />
 
 const scriptApi = `<script>
   // window.EDS expõe a API quando o script é carregado por <script>.
-  EDS.toast({ variant: 'success', message: 'Pedido salvo.' });
+  EDS.toast({ tone: 'success', message: 'Pedido salvo.' });
 
   const done = EDS.loader.start({ title: 'Gerando relatório…' });
   fetch('/relatorio').finally(done);
@@ -38,7 +38,7 @@ const destroy = init(document.querySelector('#app')!);
 // Ao desmontar (Vue onUnmounted, Angular ngOnDestroy):
 destroy();
 
-toast({ variant: 'info', message: 'Sincronização concluída.' });`;
+toast({ tone: 'info', message: 'Sincronização concluída.' });`;
 
 const porComponente = `// Só o que usa (tree shaking): cada um devolve o seu destroy().
 import { initTabs, initModal, initCombobox } from '@efds-ui/behavior';
@@ -60,7 +60,7 @@ const blade = `{{-- resources/views/layouts/app.blade.php (Laravel) --}}
     <link rel="stylesheet" href="{{ asset('eds/core/index.css') }}" />
     <link rel="stylesheet" href="{{ asset('eds/themes/index.css') }}" />
     <script src="{{ asset('eds/behavior/eds-behavior.js') }}"
-      data-eds-loader="auto" data-eds-loader-title="Carregando…" defer></script>
+      data-eds-loader-mode="auto" data-eds-loader-title="Carregando…" defer></script>
   </head>
   <body>
     <main>
@@ -88,7 +88,7 @@ const thymeleaf = `<!-- src/main/resources/templates/layout.html (Spring Boot + 
     <link rel="stylesheet" th:href="@{/eds/core/index.css}" />
     <link rel="stylesheet" th:href="@{/eds/themes/index.css}" />
     <script th:src="@{/eds/behavior/eds-behavior.js}"
-      data-eds-loader="auto" data-eds-loader-title="Carregando…" defer></script>
+      data-eds-loader-mode="auto" data-eds-loader-title="Carregando…" defer></script>
   </head>
   <body>
     <main th:fragment="conteudo">
@@ -97,9 +97,9 @@ const thymeleaf = `<!-- src/main/resources/templates/layout.html (Spring Boot + 
   </body>
 </html>`;
 
-const loaderConfig = `<!-- data-eds-loader: auto (padrão) | manual | off -->
+const loaderConfig = `<!-- data-eds-loader-mode: auto (padrão) | manual | off -->
 <script src=".../eds-behavior.js" defer
-  data-eds-loader="auto"
+  data-eds-loader-mode="auto"
   data-eds-loader-title="Carregando…"
   data-eds-loader-text="Aguarde um instante."></script>`;
 
@@ -116,7 +116,7 @@ configure({
   locale: 'en-US',
   messages: {
     toastClose: 'Close notification',
-    comboNoResults: 'No results.',
+    comboboxResultsNone: 'No results.',
     uploadRetry: 'Try again',
     loaderTitle: 'Loading…',
     loaderText: 'Please wait.',
@@ -246,7 +246,7 @@ export default function Comportamento() {
               effect: 'Elemento que recebe o foco ao abrir o dialog.',
             },
             {
-              name: 'data-eds-dismiss',
+              name: 'data-eds-close',
               effect: (
                 <>
                   Botão dentro de <code>.eds-alert</code>: remove o aviso e move o foco.{' '}
@@ -362,7 +362,7 @@ export default function Comportamento() {
               ),
             },
             {
-              name: 'data-eds-confirm / -title / -variant / -ok',
+              name: 'data-eds-confirm / -title / -tone / -ok',
               effect: (
                 <>
                   Em <code>button</code>, <code>a</code> ou <code>form</code>: pergunta antes de
@@ -392,7 +392,7 @@ export default function Comportamento() {
               ),
             },
             {
-              name: 'data-eds-tree / data-eds-editable / data-eds-multiselect',
+              name: 'data-eds-tree / data-eds-editable / data-eds-multiple',
               effect: (
                 <>
                   No <code>.eds-tree</code>: árvore navegável; editável (renomear, adicionar,
@@ -404,7 +404,7 @@ export default function Comportamento() {
               ),
             },
             {
-              name: 'data-eds-loader',
+              name: 'data-eds-loader-mode (no script) e data-eds-loader (form, link, botão)',
               effect: (
                 <>
                   No script: modo do <a href={toHref('/componentes/page-loader')}>PageLoader</a>. Em
@@ -468,13 +468,13 @@ export default function Comportamento() {
           <code>eds:combobox-change</code>, <code>eds:date-change</code>,{' '}
           <code>eds:daterange-change</code>, <code>eds:upload-change</code>,{' '}
           <code>eds:upload-progress</code>, <code>eds:upload-complete</code>,{' '}
-          <code>eds:upload-error</code>, <code>eds:alert-dismiss</code>,{' '}
-          <code>eds:toast-close</code>, <code>eds:loader-show</code>, <code>eds:loader-hide</code>,{' '}
-          <code>eds:sidebar-collapse</code>, <code>eds:sortable-change</code>,{' '}
+          <code>eds:upload-error</code>, <code>eds:alert-close</code>, <code>eds:toast-close</code>,{' '}
+          <code>eds:loader-open</code>, <code>eds:loader-close</code>,{' '}
+          <code>eds:sidebar-toggle</code>, <code>eds:sortable-change</code>,{' '}
           <code>eds:tree-change</code>, <code>eds:tree-beforechange</code>,{' '}
           <code>eds:tree-select</code>, <code>eds:tree-activate</code>, <code>eds:tree-toggle</code>
           , <code>eds:table-beforeexport</code>, <code>eds:table-export</code>). Todos fazem bubble;{' '}
-          <code>eds:table-sort</code> (da Table), <code>eds:alert-dismiss</code>,{' '}
+          <code>eds:table-sort</code> (da Table), <code>eds:alert-close</code>,{' '}
           <code>eds:tree-beforechange</code> e <code>eds:table-beforeexport</code> são canceláveis.
         </p>
         <CodeBlock code={eventos} label="Código JavaScript: eventos" />

@@ -47,7 +47,7 @@ export default function GalleryPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Funciona sem JavaScript">
+        <Alert tone="info" title="Funciona sem JavaScript">
           <p>
             Sem o <a href="/comecar/comportamento">@efds-ui/behavior</a> o link abre a imagem grande
             numa página própria, o que já é uma boa experiência. Com a compilação completa (
@@ -88,9 +88,15 @@ export default function GalleryPage() {
               description: 'Proporção das miniaturas.',
             },
             {
+              name: 'index / defaultIndex',
+              type: 'number | null',
+              description:
+                'Índice da imagem aberta no visualizador (controlado ou inicial); null = fechado.',
+            },
+            {
               name: 'onIndexChange',
-              type: '(index: number) => void',
-              description: 'A imagem mostrada mudou (ou o visualizador abriu).',
+              type: '(index: number | null) => void',
+              description: 'A imagem mostrada mudou, o visualizador abriu ou fechou (null).',
             },
             {
               name: 'texts',

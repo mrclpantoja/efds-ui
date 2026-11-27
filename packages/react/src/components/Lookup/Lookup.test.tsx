@@ -32,7 +32,7 @@ describe('Lookup', () => {
     const ref = createRef<HTMLInputElement>();
     const { container } = render(
       <Field label="Cliente">
-        <Lookup ref={ref} search={search} buttonLabel="Buscar cliente" />
+        <Lookup ref={ref} search={search} texts={{ open: 'Buscar cliente' }} />
       </Field>,
     );
     expect(ref.current).toBe(input());
@@ -40,23 +40,23 @@ describe('Lookup', () => {
     expect(container.querySelector('.eds-lookup')).not.toBeNull();
     expect(screen.getByRole('button', { name: 'Buscar cliente' })).toBeInTheDocument();
     const out = container.querySelector('output.eds-lookup-description')!;
-    expect(out).toHaveAttribute('data-empty', 'true');
+    expect(out).toHaveAttribute('data-empty');
     expect(out).toHaveTextContent('—');
     // O travessão do estado vazio não entra na descrição do campo.
     expect(input().getAttribute('aria-describedby') ?? '').not.toContain(out.id);
   });
 
-  it('sair do campo resolve a descrição (pela busca com código exato) e avisa onChange', async () => {
+  it('sair do campo resolve a descrição (pela busca com código exato) e avisa onValueChange', async () => {
     const user = userEvent.setup();
-    const onChange = vi.fn();
-    render(<Lookup aria-label="Cliente" search={search} onChange={onChange} />);
+    const onValueChange = vi.fn();
+    render(<Lookup aria-label="Cliente" search={search} onValueChange={onValueChange} />);
     await user.type(input(), '11');
     await user.tab();
     await waitFor(() =>
       expect(document.querySelector('output')).toHaveTextContent('Boreal Serviços'),
     );
     expect(document.querySelector('output')).not.toHaveAttribute('data-empty');
-    expect(onChange).toHaveBeenCalledWith(
+    expect(onValueChange).toHaveBeenCalledWith(
       '11',
       expect.objectContaining({ description: 'Boreal Serviços' }),
     );
@@ -85,13 +85,13 @@ describe('Lookup', () => {
 
   it('o botão abre o modal com a tabela; a busca filtra; escolher devolve o código e o foco', async () => {
     const user = userEvent.setup();
-    const onChange = vi.fn();
+    const onValueChange = vi.fn();
     render(
       <Lookup
         aria-label="Cliente"
         search={search}
-        onChange={onChange}
-        buttonLabel="Buscar cliente"
+        onValueChange={onValueChange}
+        texts={{ open: 'Buscar cliente' }}
         columns={[
           { key: 'code', label: 'Código' },
           { key: 'description', label: 'Descrição' },
@@ -100,7 +100,7 @@ describe('Lookup', () => {
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Buscar cliente' }));
-    const dialog = await screen.findByRole('dialog', { name: 'Buscar cliente' });
+    const dialog = await screen.findByRole('dialog', { name: 'Buscar' });
     expect(within(dialog).getByRole('columnheader', { name: 'Cidade' })).toHaveClass(
       'eds-table-hide-narrow',
     );
@@ -115,7 +115,7 @@ describe('Lookup', () => {
     await user.click(
       within(dialog).getByRole('button', { name: 'Selecionar 12, Cedro Alimentos' }),
     );
-    expect(onChange).toHaveBeenCalledWith('12', expect.objectContaining({ code: '12' }));
+    expect(onValueChange).toHaveBeenCalledWith('12', expect.objectContaining({ code: '12' }));
     await waitFor(() => expect(input()).toHaveFocus());
     expect(input()).toHaveValue('12');
     expect(document.querySelector('output')).toHaveTextContent('Cedro Alimentos');
@@ -127,7 +127,7 @@ describe('Lookup', () => {
       .fn<(q: string) => Promise<LookupItem[]>>()
       .mockRejectedValueOnce(new Error('rede'))
       .mockResolvedValue(DATA.slice(0, 1));
-    render(<Lookup aria-label="Cliente" search={failing} buttonLabel="Buscar" />);
+    render(<Lookup aria-label="Cliente" search={failing} texts={{ open: 'Buscar' }} />);
     await user.click(screen.getByRole('button', { name: 'Buscar' }));
     const dialog = await screen.findByRole('dialog');
     const retry = await within(dialog).findByRole('button', { name: 'Tentar de novo' });
@@ -135,15 +135,17 @@ describe('Lookup', () => {
     await waitFor(() => expect(within(dialog).getAllByRole('row')).toHaveLength(2));
   });
 
-  it('controlado: o value de fora é descrito sem avisar onChange', async () => {
-    const onChange = vi.fn();
+  it('controlado: o value de fora é descrito sem avisar onValueChange', async () => {
+    const onValueChange = vi.fn();
     function Wrapper() {
       const [v] = useState('10');
-      return <Lookup aria-label="Cliente" search={search} value={v} onChange={onChange} />;
+      return (
+        <Lookup aria-label="Cliente" search={search} value={v} onValueChange={onValueChange} />
+      );
     }
     render(<Wrapper />);
     await waitFor(() => expect(document.querySelector('output')).toHaveTextContent('Aurora'));
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
   it('textos trocáveis', async () => {
@@ -165,8 +167,8 @@ describe('Lookup', () => {
 describe('Lookup: autocompletar', () => {
   it('digitar busca por código ou nome e as setas com Enter escolhem', async () => {
     const user = userEvent.setup();
-    const onChange = vi.fn();
-    render(<Lookup aria-label="Cliente" search={search} onChange={onChange} />);
+    const onValueChange = vi.fn();
+    render(<Lookup aria-label="Cliente" search={search} onValueChange={onValueChange} />);
     const field = input();
     expect(field).toHaveAttribute('aria-autocomplete', 'list');
     expect(field).toHaveAttribute('aria-expanded', 'false');
@@ -179,7 +181,7 @@ describe('Lookup: autocompletar', () => {
     await user.keyboard('{Enter}');
     expect(field.value).toBe('11');
     expect(document.querySelector('output')).toHaveTextContent('Boreal Serviços');
-    expect(onChange).toHaveBeenCalledWith('11', expect.objectContaining({ code: '11' }));
+    expect(onValueChange).toHaveBeenCalledWith('11', expect.objectContaining({ code: '11' }));
     expect(field).toHaveAttribute('aria-expanded', 'false');
   });
 

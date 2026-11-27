@@ -50,7 +50,7 @@ export default function Pagina() {
         }
       />
       <StatGrid>
-        <Stat label="Pedidos no mês" value="1.284" delta="12,4%" trend="up" tone="positive" />
+        <Stat label="Pedidos no mês" value="1.284" delta="12,4%" trend="up" tone="success" />
         <Stat label="Em atraso" value="37" delta="0%" trend="flat" tone="neutral" />
       </StatGrid>
       <PageToolbar>

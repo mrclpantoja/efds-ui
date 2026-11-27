@@ -237,7 +237,7 @@ export default function TableAvancadaPage() {
               é texto comum (o anúncio é o da região de status da tabela). Cada linha precisa de{' '}
               <code>data-eds-row-id</code>: é o que <code>eds:table-bulk-action</code> devolve em{' '}
               <code>ids</code>. Se a barra some com o foco dentro, o foco vai para o
-              &quot;selecionar todos&quot;. Em tabela remota (com <code>data-eds-total</code>),
+              &quot;selecionar todos&quot;. Em tabela remota (com <code>data-total</code>),
               &quot;Selecionar todos os N&quot; muda o alcance para <code>all</code> e emite{' '}
               <code>eds:table-select-all-results</code>; a seleção entre páginas é do app (o
               behavior não a guarda). Terminada a ação, chame <code>clearSelection()</code>.
@@ -276,7 +276,7 @@ export default function TableAvancadaPage() {
               effect: 'Nada é ordenado, filtrado nem paginado localmente. Padrão: navigate.',
             },
             {
-              name: 'table[data-eds-total]',
+              name: 'table[data-total]',
               effect: 'Total de resultados (anúncio, "selecionar todos").',
             },
             {
@@ -423,7 +423,7 @@ export default function TableAvancadaPage() {
             },
             {
               name: 'TableColumnFilter',
-              type: '{ type, value, onChange, options?, multiple?, label? }',
+              type: '{ type, value, onValueChange, options?, multiple?, label? }',
               description:
                 'text, select, number ou date; Aplicar e Limpar internos; devolve o foco ao botão.',
             },

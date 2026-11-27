@@ -181,6 +181,12 @@ export default function InputPage() {
               description: 'Casas decimais, símbolo e sinal de moeda e numero.',
             },
             {
+              name: 'texts',
+              type: 'Partial<InputTexts>',
+              description:
+                'Mensagens de validação: maskInvalid (maskValidate) e validate (validate). Sem elas, valem as padrões em pt-BR.',
+            },
+            {
               name: 'unmask',
               type: 'boolean',
               description: (
@@ -292,7 +298,7 @@ export default function InputPage() {
               effect: 'Borda de perigo. Acompanhe com uma mensagem .eds-error.',
             },
             {
-              name: '[data-valid="true"]',
+              name: '[data-valid]',
               effect: 'Borda de sucesso. Acompanhe com uma mensagem .eds-success.',
             },
             { name: '[readonly]', effect: 'Fundo sutil; o valor ainda é enviado e focável.' },

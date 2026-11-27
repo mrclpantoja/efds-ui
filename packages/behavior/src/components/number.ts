@@ -1,5 +1,5 @@
 import { format, getMessages } from '../core/config';
-import { emit } from '../core/dom';
+import { emit, flag } from '../core/dom';
 import { clampNumber, decimalsOf, stepNumber } from '../core/fields';
 import { createMask, type Mask } from '../core/mask';
 import { bindAll, type Behavior } from '../core/registry';
@@ -18,7 +18,7 @@ const numberAttr = (el: Element, name: string): number | undefined => {
 /**
  * NumberInput: `.eds-number[data-eds-number]` com um `input` de texto (`inputmode="decimal"`) e os
  * botões Diminuir/Aumentar (`data-eds-number-dec` / `-inc`, ou o primeiro e o último `button`).
- * Opções no `.eds-number` (ou no input): `data-eds-number-min`, `-max`, `-step` (1), `-decimals`
+ * Opções no `.eds-number` (ou no input): `data-eds-min`, `-max`, `-step` (1), `-decimals`
  * (padrão: as casas do passo) e `data-eds-number-unmask` (hidden com `1234.5`). Com casas decimais usa
  * a máscara `numero` (vírgula, milhar com ponto).
  *
@@ -40,9 +40,11 @@ export const numberBehavior: Behavior = {
       root.querySelector<HTMLButtonElement>('[data-eds-number-inc]') ??
       (buttons.length >= 2 ? buttons[buttons.length - 1] : undefined);
 
+    const attrOf = (name: string) =>
+      name === 'decimals' ? 'data-eds-number-decimals' : `data-eds-${name}`;
     const read = (name: string) =>
-      numberAttr(root, `data-eds-number-${name}`) ??
-      numberAttr(input, `data-eds-number-${name}`) ??
+      numberAttr(root, attrOf(name)) ??
+      numberAttr(input, attrOf(name)) ??
       (name === 'min' || name === 'max' || name === 'step' ? numberAttr(input, name) : undefined);
     const min = read('min');
     const max = read('max');
@@ -97,11 +99,11 @@ export const numberBehavior: Behavior = {
     // Valor limpo para o servidor (opcional).
     const name = input.getAttribute('name');
     let hidden: HTMLInputElement | null = null;
-    if (root.hasAttribute('data-eds-number-unmask') && name) {
+    if (flag(root, 'data-eds-number-unmask') && name) {
       hidden = document.createElement('input');
       hidden.type = 'hidden';
       hidden.name = name;
-      hidden.setAttribute('data-eds-number-raw', '');
+      hidden.setAttribute('data-number-raw', '');
       input.removeAttribute('name');
       input.after(hidden);
     }

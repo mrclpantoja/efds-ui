@@ -10,7 +10,7 @@ describe('Stat', () => {
         value="1.284"
         delta="12,4%"
         trend="up"
-        tone="positive"
+        tone="success"
         meta="vs. mês anterior"
       />,
     );
@@ -20,7 +20,7 @@ describe('Stat', () => {
     expect(root.querySelector('.eds-stat-value')).toHaveTextContent('1.284');
     const delta = root.querySelector('.eds-stat-delta') as HTMLElement;
     expect(delta).toHaveAttribute('data-trend', 'up');
-    expect(delta).toHaveAttribute('data-tone', 'positive');
+    expect(delta).toHaveClass('eds-stat-delta-success');
     expect(delta.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     expect(delta.querySelector('.eds-visually-hidden')).toHaveTextContent('Aumento de');
     expect(delta).toHaveTextContent('12,4% vs. mês anterior');
@@ -29,7 +29,7 @@ describe('Stat', () => {
 
   it('queda e sem variação usam o texto da direção; sem delta não há linha', () => {
     const { rerender, container } = render(
-      <Stat label="L" value="1" delta="3%" trend="down" tone="negative" />,
+      <Stat label="L" value="1" delta="3%" trend="down" tone="danger" />,
     );
     expect(container.querySelector('.eds-visually-hidden')).toHaveTextContent('Queda de');
     rerender(<Stat label="L" value="1" delta="0%" />);

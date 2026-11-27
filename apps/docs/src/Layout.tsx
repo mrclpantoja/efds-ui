@@ -61,7 +61,7 @@ function StabilityBadge({ stability }: { stability: NonNullable<DocRoute['stabil
   const stable = stability === 'stable';
   return (
     <Stack direction="row" gap={2} wrap>
-      <Badge variant={stable ? 'success' : 'warning'}>{stable ? 'Estável' : 'Experimental'}</Badge>
+      <Badge tone={stable ? 'success' : 'warning'}>{stable ? 'Estável' : 'Experimental'}</Badge>
       <span className="eds-text-small docs-muted">
         {stable
           ? 'A API segue o versionamento semântico. '

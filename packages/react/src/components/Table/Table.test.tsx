@@ -12,7 +12,7 @@ import {
   TableHeaderCell,
   TableRow,
   TableToolbar,
-  type TableSort,
+  type TableAriaSort,
 } from './Table';
 
 function Demo({ onSort }: { onSort?: (key: string) => void }) {
@@ -135,7 +135,7 @@ describe('Table', () => {
   it('ordenação controlada atualiza aria-sort', async () => {
     const user = userEvent.setup();
     function Controlled() {
-      const [sort, setSort] = useState<TableSort>('none');
+      const [sort, setSort] = useState<TableAriaSort>('none');
       return (
         <Table caption="t">
           <TableHead>

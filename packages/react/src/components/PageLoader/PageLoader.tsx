@@ -8,18 +8,36 @@ import {
 } from 'react';
 import { cx } from '../../utils/cx';
 import { mergeRefs } from '../../internal/refs-d';
+import { mergeTexts } from '../../utils/texts';
 import { Spinner } from '../Spinner';
+
+export interface PageLoaderDialogTexts {
+  /** Título que nomeia o diálogo. Padrão: "Carregando…". */
+  title: ReactNode;
+  /** Texto secundário. Padrão: "Aguarde um instante." */
+  text: ReactNode;
+}
+
+const defaultTexts: PageLoaderDialogTexts = {
+  title: 'Carregando…',
+  text: 'Aguarde um instante.',
+};
 
 export interface PageLoaderProps extends Omit<
   DialogHTMLAttributes<HTMLDialogElement>,
-  'open' | 'title' | 'aria-labelledby' | 'aria-describedby' | 'onCancel'
+  'open' | 'title' | 'aria-labelledby' | 'aria-describedby' | 'onCancel' | 'onClose'
 > {
   /** Visível ou não (`showModal()`/`close()`). A página inteira fica inerte enquanto aberto. */
   open: boolean;
-  /** Título que nomeia o diálogo. Padrão: "Carregando…". */
+  /** Título desta instância (vence `texts.title`). */
   title?: ReactNode;
-  /** Texto secundário. Padrão: "Aguarde um instante." */
-  text?: ReactNode;
+  /** Textos internos (padrões em pt-BR): `title` e `text`. */
+  texts?: Partial<PageLoaderDialogTexts>;
+  /**
+   * O navegador fechou o diálogo sem o código pedir (Esc duplo no Chrome). O PageLoader se reabre
+   * sozinho enquanto `open` for `true`; quem controla pode reagir.
+   */
+  onClose?: () => void;
   /** Conteúdo extra abaixo do texto (ex.: ações de saída). */
   children?: ReactNode;
 }
@@ -30,18 +48,11 @@ export interface PageLoaderProps extends Omit<
  * Para o fluxo automático (atraso, tempo mínimo, contagem de pendências) use `PageLoaderProvider`.
  */
 export const PageLoader = forwardRef<HTMLDialogElement, PageLoaderProps>(function PageLoader(
-  {
-    open,
-    title = 'Carregando…',
-    text = 'Aguarde um instante.',
-    className,
-    children,
-    onClose,
-    ...rest
-  },
+  { open, title, texts, className, children, onClose, ...rest },
   ref,
 ) {
   const id = useId();
+  const t = mergeTexts(defaultTexts, texts);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
   const openRef = useRef(open);
@@ -81,15 +92,15 @@ export const PageLoader = forwardRef<HTMLDialogElement, PageLoaderProps>(functio
         // Fechado pelo navegador (ex.: Esc duplo no Chrome) sem o código pedir: reabre.
         const dialog = event.currentTarget;
         if (openRef.current && !dialog.open) dialog.showModal();
-        onClose?.(event);
+        onClose?.();
       }}
     >
       <Spinner size="lg" decorative />
       <p className="eds-page-loader-title" id={`${id}-title`}>
-        {title}
+        {title ?? t.title}
       </p>
       <p className="eds-page-loader-text" id={`${id}-text`}>
-        {text}
+        {t.text}
       </p>
       {children}
     </dialog>

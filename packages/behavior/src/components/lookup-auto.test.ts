@@ -16,7 +16,7 @@ const markup = (attrs: string) => `
   <div class="eds-lookup" data-eds-lookup ${attrs}>
     <input class="eds-input eds-lookup-code" id="c" name="cliente" autocomplete="off" aria-describedby="c-err" />
     <button type="button" class="eds-button" aria-label="Buscar cliente">lupa</button>
-    <output class="eds-lookup-description" aria-live="polite" data-empty="true">—</output>
+    <output class="eds-lookup-description" aria-live="polite" data-empty>—</output>
   </div>
   <p class="eds-error" id="c-err" hidden></p>
 </form>`;
@@ -31,7 +31,17 @@ let restore: () => void;
 let destroy: (() => void) | undefined;
 
 function mount(attrs: string) {
-  document.body.innerHTML = markup(attrs);
+  // A lista local vem num <script type="application/json" data-eds-lookup-items> dentro do .eds-lookup.
+  const local = /data-eds-lookup-items='([^']*)'/.exec(attrs);
+  const rest = attrs.replace(/data-eds-lookup-items='[^']*'/, '');
+  document.body.innerHTML = markup(rest);
+  if (local) {
+    const script = document.createElement('script');
+    script.type = 'application/json';
+    script.setAttribute('data-eds-lookup-items', '');
+    script.textContent = local[1] ?? '';
+    document.querySelector('[data-eds-lookup]')?.prepend(script);
+  }
   destroy = initLookup(document);
 }
 
@@ -103,9 +113,9 @@ describe('Lookup: autocompletar por código ou nome', () => {
     await vi.waitFor(() => expect(status).toHaveTextContent('2 resultados disponíveis.'));
   });
 
-  it('data-eds-lookup-autocomplete="off" desliga a lista', () => {
+  it('data-eds-lookup-autocomplete="false" desliga a lista', () => {
     destroy?.();
-    mount(`data-eds-lookup-items='${items}' data-eds-lookup-autocomplete="off"`);
+    mount(`data-eds-lookup-items='${items}' data-eds-lookup-autocomplete="false"`);
     expect(input()).not.toHaveAttribute('role');
     expect(document.querySelector('.eds-combobox-popup')).toBeNull();
   });
@@ -165,7 +175,7 @@ describe('Lookup: Cadastrar novo', () => {
     expect(seen).toEqual(['99']);
     lookupController(root())!.clear();
     expect(input().value).toBe('');
-    expect(description()).toHaveAttribute('data-empty', 'true');
+    expect(description()).toHaveAttribute('data-empty');
   });
 });
 
@@ -177,7 +187,7 @@ describe('Lookup: fonte remota', () => {
       ),
     );
     vi.stubGlobal('fetch', fetchMock);
-    mount(`data-eds-lookup-source="/api/c?q="`);
+    mount(`data-eds-source="/api/c?q="`);
     const user = userEvent.setup();
     await user.type(input(), 'sete');
     await vi.waitFor(() => expect(options()).toHaveLength(1), { timeout: 2000 });

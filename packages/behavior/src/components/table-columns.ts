@@ -1,4 +1,4 @@
-import { describeBy, emit, uid } from '../core/dom';
+import { describeBy, emit, flag, uid } from '../core/dom';
 import { createDragEngine, type DragEngine } from '../core/drag';
 import { format, getMessages } from '../core/config';
 import { bindAll, type Behavior } from '../core/registry';
@@ -48,8 +48,8 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
   const headRow = (): HTMLTableRowElement | undefined =>
     table.tHead ? table.tHead.rows[table.tHead.rows.length - 1] : table.rows[0];
 
-  const wantsResize = () => table.hasAttribute('data-eds-table-resize');
-  const wantsReorder = () => table.hasAttribute('data-eds-table-reorder');
+  const wantsResize = () => flag(table, 'data-eds-table-resize');
+  const wantsReorder = () => flag(table, 'data-eds-table-reorder');
 
   // ---- Colunas ------------------------------------------------------------------------
   const isLocked = (th: HTMLTableCellElement): boolean =>
@@ -491,7 +491,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
   const toggle = (id: string, show: boolean): boolean => {
     if (!colById.has(id) || show !== isHidden(id)) return false;
     if (!show && visibleIds().length <= 1) {
-      hub.announce(getMessages().columnLastVisible);
+      hub.announce(getMessages().tableColumnLastVisible);
       return false;
     }
     state.hidden = show ? state.hidden.filter((x) => x !== id) : [...state.hidden, id];
@@ -499,7 +499,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
     if (!show) hub.fire('column-hidden', id);
     const m = getMessages();
     hub.announce(
-      format(show ? m.columnShown : m.columnHidden, {
+      format(show ? m.tableColumnShown : m.tableColumnHidden, {
         column: labelOf(id),
         visible: visibleIds().length,
         total: state.order.length,
@@ -515,7 +515,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
     state.widths = {};
     applyAll();
     clearPrefs();
-    hub.announce(getMessages().columnsRestored);
+    hub.announce(getMessages().tableColumnsRestored);
     changed('reset');
   };
 
@@ -535,14 +535,14 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
     move: (id, delta) => {
       if (!moveBy(id, delta, false)) return false;
       const { pos, total } = position(id);
-      hub.announce(format(getMessages().columnMoved, { column: labelOf(id), pos, total }));
+      hub.announce(format(getMessages().tableColumnMoved, { column: labelOf(id), pos, total }));
       changed('move');
       return true;
     },
     toggle,
     resize: (id, delta) => {
       const w = setWidth(id, currentWidth(id) + delta);
-      hub.announce(format(getMessages().columnResized, { column: labelOf(id), width: w }));
+      hub.announce(format(getMessages().tableColumnResized, { column: labelOf(id), width: w }));
       changed('resize');
       return w;
     },
@@ -567,7 +567,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
     const p = doc.createElement('p');
     p.id = uid('col-help');
     p.className = 'eds-visually-hidden';
-    p.textContent = getMessages().columnHandleHelp;
+    p.textContent = getMessages().tableColumnHandleHelp;
     (wrap ?? table).after(p);
     helpId = p.id;
     cleanups.push(() => p.remove());
@@ -606,7 +606,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
     handle.setAttribute('aria-pressed', 'false');
     handle.setAttribute(
       'aria-label',
-      format(getMessages().columnHandleLabel, { column: labelOf(col.id) }),
+      format(getMessages().tableColumnHandleLabel, { column: labelOf(col.id) }),
     );
     describeBy(handle, helpText(), true);
     if (wantsResize() && !box.querySelector('.eds-table-resize')) {
@@ -647,7 +647,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
         grabbed = { id, before: snapshot(), reasons: new Set() };
         suspended = true;
         handle.setAttribute('aria-pressed', 'true');
-        hub.announce(format(m.columnGrab, { column: label }));
+        hub.announce(format(m.tableColumnGrab, { column: label }));
       }
       return;
     }
@@ -660,7 +660,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
         const reasons = new Set(changeReasons);
         endGrab(handle);
         const { pos, total } = position(id);
-        hub.announce(format(m.columnDrop, { column: label, pos, total }));
+        hub.announce(format(m.tableColumnDrop, { column: label, pos, total }));
         changeReasons = reasons;
         flushReasons(reasons);
         return;
@@ -674,7 +674,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
         applyAll();
         changeReasons = new Set();
         endGrab(handle);
-        hub.announce(m.columnCancel);
+        hub.announce(m.tableColumnCancel);
         refocus();
         return;
       }
@@ -694,12 +694,12 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
           materialize();
           const w = setWidth(id, currentWidth(id) + dir * (big ? STEP_BIG : STEP));
           changeReasons.add('resize');
-          hub.announce(format(m.columnResized, { column: label, width: w }));
+          hub.announce(format(m.tableColumnResized, { column: label, width: w }));
         } else {
           if (!wantsReorder() || !moveBy(id, dir as 1 | -1, true)) return;
           changeReasons.add('move');
           const { pos, total } = position(id);
-          hub.announce(format(m.columnMoved, { column: label, pos, total }));
+          hub.announce(format(m.tableColumnMoved, { column: label, pos, total }));
         }
         refocus();
         return;
@@ -712,7 +712,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
         if (!moveEdge(id, edge)) return;
         changeReasons.add('move');
         const { pos, total } = position(id);
-        hub.announce(format(m.columnMoved, { column: label, pos, total }));
+        hub.announce(format(m.tableColumnMoved, { column: label, pos, total }));
         refocus();
         return;
       }
@@ -747,9 +747,9 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
   let engine: DragEngine | null = null;
   let drop: { id: string; side: 'before' | 'after' } | null = null;
   const clearMarks = () => {
-    for (const el of table.querySelectorAll('[data-eds-dragging]'))
-      el.removeAttribute('data-eds-dragging');
-    for (const el of table.querySelectorAll('[data-eds-drop]')) el.removeAttribute('data-eds-drop');
+    for (const el of table.querySelectorAll('[data-dragging]')) el.removeAttribute('data-dragging');
+    for (const el of table.querySelectorAll('[data-drop-target]'))
+      el.removeAttribute('data-drop-target');
     drop = null;
   };
   const columnCells = (th: HTMLTableCellElement): HTMLTableCellElement[] => {
@@ -770,9 +770,9 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
         hold: (event) => event.pointerType === 'touch',
         start: (session) => {
           const th = session.source as HTMLTableCellElement;
-          for (const cell of columnCells(th)) cell.setAttribute('data-eds-dragging', '');
+          for (const cell of columnCells(th)) cell.setAttribute('data-dragging', '');
           hub.announce(
-            format(getMessages().columnGrab, {
+            format(getMessages().tableColumnGrab, {
               column: labelOf(th.getAttribute('data-eds-col') ?? ''),
             }),
           );
@@ -787,15 +787,15 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
         },
         move: (session) => {
           const sourceId = (session.source as HTMLElement).getAttribute('data-eds-col') ?? '';
-          for (const el of table.querySelectorAll('[data-eds-drop]'))
-            el.removeAttribute('data-eds-drop');
+          for (const el of table.querySelectorAll('[data-drop-target]'))
+            el.removeAttribute('data-drop-target');
           drop = null;
           for (const c of readCols()) {
             if (c.id === sourceId || group(c.id) !== group(sourceId) || isHidden(c.id)) continue;
             const rect = c.th.getBoundingClientRect();
             if (session.x < rect.left || session.x > rect.right) continue;
             const before = session.x < rect.left + rect.width / 2 === (dirOf() === 1);
-            c.th.setAttribute('data-eds-drop', before ? 'before' : 'after');
+            c.th.setAttribute('data-drop-target', before ? 'before' : 'after');
             drop = { id: c.id, side: before ? 'before' : 'after' };
             break;
           }
@@ -806,12 +806,12 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
           clearMarks();
           if (!target || !moveNear(id, target.id, target.side)) return;
           const { pos, total } = position(id);
-          hub.announce(format(getMessages().columnDrop, { column: labelOf(id), pos, total }));
+          hub.announce(format(getMessages().tableColumnDrop, { column: labelOf(id), pos, total }));
           changed('move');
         },
         cancel: () => {
           clearMarks();
-          hub.announce(getMessages().columnCancel);
+          hub.announce(getMessages().tableColumnCancel);
         },
       },
       { threshold: 4 },
@@ -842,7 +842,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
         th,
         pointer: event.pointerId,
       };
-      th.setAttribute('data-eds-resizing', '');
+      th.setAttribute('data-resizing', '');
       try {
         edge.setPointerCapture(event.pointerId);
       } catch {
@@ -857,9 +857,9 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
       if (!drag || event.pointerId !== drag.pointer) return;
       const { id, th } = drag;
       drag = null;
-      th.removeAttribute('data-eds-resizing');
+      th.removeAttribute('data-resizing');
       hub.announce(
-        format(getMessages().columnResized, { column: labelOf(id), width: currentWidth(id) }),
+        format(getMessages().tableColumnResized, { column: labelOf(id), width: currentWidth(id) }),
       );
       changed('resize');
     };
@@ -1008,7 +1008,7 @@ export const columnsPanelBehavior: Behavior = {
       const active = doc.activeElement;
       const memo =
         active instanceof HTMLElement && list.contains(active)
-          ? `${active.closest('li')?.getAttribute('data-eds-col-id') ?? ''}|${active.getAttribute('data-eds-act') ?? 'check'}`
+          ? `${active.closest('li')?.getAttribute('data-eds-col-id') ?? ''}|${active.getAttribute('data-act') ?? 'check'}`
           : null;
       const ids = api.ids();
       const onlyOne = api.visibleCount() <= 1;
@@ -1024,7 +1024,7 @@ export const columnsPanelBehavior: Behavior = {
         box.className = 'eds-checkbox';
         box.checked = api.visible(id);
         if (box.checked && onlyOne) box.disabled = true;
-        box.setAttribute('data-eds-act', 'check');
+        box.setAttribute('data-act', 'check');
         lab.append(box, doc.createTextNode(` ${label}`));
         li.append(lab);
         const act = (name: string, text: string, d: string) => {
@@ -1032,15 +1032,15 @@ export const columnsPanelBehavior: Behavior = {
           b.type = 'button';
           b.className = 'eds-button eds-button-ghost eds-button-icon eds-button-sm';
           b.setAttribute('aria-label', format(text, { column: label }));
-          b.setAttribute('data-eds-act', name);
+          b.setAttribute('data-act', name);
           b.append(chevron(doc, d));
           li.append(b);
         };
-        act('before', m.columnMoveBefore, 'M15 6l-6 6 6 6');
-        act('after', m.columnMoveAfter, 'M9 6l6 6-6 6');
+        act('before', m.tableColumnMoveBefore, 'M15 6l-6 6 6 6');
+        act('after', m.tableColumnMoveAfter, 'M9 6l6 6-6 6');
         if (api.canResize()) {
-          act('narrow', m.columnNarrow, 'M5 12h14');
-          act('widen', m.columnWiden, 'M12 5v14M5 12h14');
+          act('narrow', m.tableColumnNarrow, 'M5 12h14');
+          act('widen', m.tableColumnWiden, 'M12 5v14M5 12h14');
         }
         return li;
       });
@@ -1050,7 +1050,7 @@ export const columnsPanelBehavior: Behavior = {
         const next = Array.from(list.querySelectorAll<HTMLElement>('li')).find(
           (li) => li.getAttribute('data-eds-col-id') === id,
         );
-        next?.querySelector<HTMLElement>(`[data-eds-act="${act}"]`)?.focus();
+        next?.querySelector<HTMLElement>(`[data-act="${act}"]`)?.focus();
       }
     };
     render();
@@ -1058,10 +1058,10 @@ export const columnsPanelBehavior: Behavior = {
     list.addEventListener(
       'click',
       (event) => {
-        const target = (event.target as Element).closest<HTMLElement>('button[data-eds-act]');
+        const target = (event.target as Element).closest<HTMLElement>('button[data-act]');
         const id = target?.closest('li')?.getAttribute('data-eds-col-id');
         if (!target || !id) return;
-        const act = target.getAttribute('data-eds-act');
+        const act = target.getAttribute('data-act');
         if (act === 'before') api.move(id, -1);
         else if (act === 'after') api.move(id, 1);
         else if (act === 'narrow') api.resize(id, -STEP);

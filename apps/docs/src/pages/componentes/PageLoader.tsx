@@ -14,7 +14,7 @@ import { toHref } from '../../router';
 const scriptTag = `<script
   src=".../@efds-ui/behavior/dist/eds-behavior.js"
   defer
-  data-eds-loader="auto"
+  data-eds-loader-mode="auto"
   data-eds-loader-title="Carregando…"
   data-eds-loader-text="Aguarde um instante."
 ></script>`;
@@ -100,7 +100,7 @@ export default function PageLoaderPage() {
       />
 
       <Section title="Exemplo">
-        <Alert variant="info" title="O site de documentação roda o loader em modo manual">
+        <Alert tone="info" title="O site de documentação roda o loader em modo manual">
           <p>
             O modo automático interceptaria toda navegação deste site, então ele está em{' '}
             <code>manual</code>: só <code>start</code> e <code>track</code> acionam o loader. O
@@ -140,7 +140,7 @@ export default function PageLoaderPage() {
         <p>O modo se escolhe na própria tag do script, no carregamento do pacote:</p>
         <CodeBlock code={scriptTag} label="Código HTML: configuração do loader no script" />
         <ClassTable
-          caption="Valores de data-eds-loader no script"
+          caption="Valores de data-eds-loader-mode no script"
           headers={['Valor', 'Efeito']}
           rows={[
             {
@@ -250,10 +250,17 @@ export default function PageLoaderPage() {
               ),
             },
             {
-              name: 'title / text',
-              type: 'ReactNode',
+              name: 'title / texts',
+              type: 'ReactNode / { title, text }',
               default: "'Carregando…' / 'Aguarde um instante.'",
-              description: 'Título (nomeia o diálogo) e texto secundário.',
+              description:
+                'Título (nomeia o diálogo; a prop vence texts.title) e textos internos: título e texto secundário.',
+            },
+            {
+              name: 'onClose',
+              type: '() => void',
+              description:
+                'O navegador fechou o diálogo sem o código pedir (Esc duplo). O PageLoader se reabre sozinho enquanto open for true.',
             },
           ]}
         />

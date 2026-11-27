@@ -32,7 +32,7 @@ export default function EsconderEstreita() {
             <TableCell>{c.nome}</TableCell>
             <TableCell className="eds-table-hide-narrow">{c.cidade}</TableCell>
             <TableCell className="eds-table-hide-narrow">
-              <Badge variant={c.situacao === 'Ativo' ? 'success' : 'warning'}>{c.situacao}</Badge>
+              <Badge tone={c.situacao === 'Ativo' ? 'success' : 'warning'}>{c.situacao}</Badge>
             </TableCell>
           </TableRow>
         ))}

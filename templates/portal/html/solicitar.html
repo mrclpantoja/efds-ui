@@ -101,7 +101,7 @@
         type="button"
         class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close"
         aria-label="Fechar aviso"
-        data-eds-banner-close
+        data-eds-close
       >
         <svg
           viewBox="0 0 24 24"
@@ -273,7 +273,7 @@
                       id="servico"
                       name="servico"
                       required
-                      data-eds-error="Escolha o serviço que você quer solicitar."
+                      data-eds-error-message="Escolha o serviço que você quer solicitar."
                     >
                       <option value="">Selecione</option>
                       <optgroup label="Tributos e taxas">
@@ -305,7 +305,7 @@
                       type="text"
                       required
                       autocomplete="name"
-                      data-eds-error="Informe o seu nome completo."
+                      data-eds-error-message="Informe o seu nome completo."
                       placeholder="Ex.: Maria Exemplo"
                     />
                   </div>
@@ -322,7 +322,7 @@
                         required
                         pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
                         data-eds-mask="cpf"
-                        data-eds-error="Informe o CPF completo, com 11 números."
+                        data-eds-error-message="Informe o CPF completo, com 11 números."
                         aria-describedby="cpf-ajuda"
                       />
                       <p class="eds-helper" id="cpf-ajuda">
@@ -346,7 +346,7 @@
                         type="email"
                         required
                         autocomplete="email"
-                        data-eds-error="Informe um e-mail válido."
+                        data-eds-error-message="Informe um e-mail válido."
                       />
                     </div>
                     <div class="eds-field eds-col-span-12 eds-col-span-sm-6">
@@ -495,7 +495,7 @@
                       class="eds-checkbox"
                       name="declaracao"
                       required
-                      data-eds-error="Marque a declaração para enviar."
+                      data-eds-error-message="Marque a declaração para enviar."
                     />
                     Declaro que as informações são verdadeiras.
                   </label>

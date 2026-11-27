@@ -22,6 +22,15 @@ export function emit<T>(el: Element, name: string, detail: T, cancelable = false
   return el.dispatchEvent(new CustomEvent(`eds:${name}`, { bubbles: true, cancelable, detail }));
 }
 
+/**
+ * Atributo booleano do autor (`data-eds-*`): a presença liga, `="false"` desliga. Ausente,
+ * vale `fallback` (use `true` nos recursos ligados por padrão). Único jeito de ler booleano no pacote.
+ */
+export function flag(el: Element, name: string, fallback = false): boolean {
+  const value = el.getAttribute(name);
+  return value === null ? fallback : value !== 'false';
+}
+
 export const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 

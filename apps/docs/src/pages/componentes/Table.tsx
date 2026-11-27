@@ -135,12 +135,14 @@ export default function TablePage() {
           react={{ Component: Ajustada, source: ajustadaSource }}
         />
         <Example
-          title="Primeira coluna fixa (eds-table-sticky-col)"
+          title="Primeira coluna fixa (eds-table-pin-start)"
           description={
             <>
               Role a tabela na horizontal: a primeira coluna fica fixa, com o fundo da linha (também
-              no hover e na linha selecionada) e uma borda de separação. Combina com{' '}
-              <code>.eds-table-sticky</code>. No React, passe a classe em <code>className</code>.
+              no hover e na linha selecionada) e uma borda de separação. Ponha{' '}
+              <code>.eds-table-pin-start</code> (e <code>.eds-table-pin-edge</code> na última fixa)
+              nas células da coluna. Combina com <code>.eds-table-sticky</code>. No React, passe as
+              classes em <code>className</code> das células.
             </>
           }
           html={colunaFixaHtml}
@@ -544,20 +546,21 @@ export default function TablePage() {
               ),
             },
             {
-              name: 'sort',
-              type: "'ascending' | 'descending' | 'none'",
+              name: 'sort (avançado)',
+              type: "TableAriaSort: 'ascending' | 'descending' | 'none'",
               description: (
                 <>
-                  Torna a coluna ordenável: <code>aria-sort</code> no <code>&lt;th&gt;</code> e um
-                  botão com o ícone de ordenação. Use <code>none</code> nas ordenáveis que não são a
-                  atual.
+                  Caminho manual: torna a coluna ordenável por conta própria: <code>aria-sort</code>{' '}
+                  no <code>&lt;th&gt;</code> e um botão com o ícone de ordenação. Use{' '}
+                  <code>none</code> nas ordenáveis que não são a atual.
                 </>
               ),
             },
             {
-              name: 'onSort',
+              name: 'onSort (avançado)',
               type: '() => void',
-              description: 'Chamado ao acionar o botão. O consumidor decide a próxima direção.',
+              description:
+                'Caminho manual: chamado ao acionar o botão; o consumidor decide a próxima direção. O normal é sortKey com <Table sort onSortChange>.',
             },
             {
               name: 'numeric',
@@ -676,9 +679,9 @@ export default function TablePage() {
                 'Na table: sem largura mínima. Para 2 ou 3 colunas dentro de um card (a tabela preenche em vez de rolar).',
             },
             {
-              name: '.eds-table-sticky-col',
+              name: '.eds-table-pin-start / .eds-table-pin-end / .eds-table-pin-edge',
               effect:
-                'Na table: a primeira coluna fica fixa na rolagem horizontal, com o fundo da linha (hover e selecionada) e borda de separação.',
+                'Em th e td: a coluna fica fixa na rolagem horizontal (início ou fim), com o fundo da linha (hover e selecionada); -edge marca a última fixa do grupo e leva a borda de separação.',
             },
             {
               name: '.eds-table-stack',

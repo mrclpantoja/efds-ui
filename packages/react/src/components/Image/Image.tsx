@@ -44,7 +44,7 @@ export interface ImageProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childr
   /** `cover` (padrão) preenche cortando; `contain` mostra inteira. */
   fit?: ImageFit;
   /** Recorte circular. */
-  circle?: boolean;
+  round?: boolean;
   /** `srcset` do `<img>`. */
   srcSet?: string;
   sizes?: string;
@@ -79,7 +79,7 @@ export const Image = forwardRef<HTMLDivElement, ImageProps>(function Image(
     alt,
     ratio,
     fit = 'cover',
-    circle = false,
+    round = false,
     srcSet,
     sizes,
     sources,
@@ -149,7 +149,7 @@ export const Image = forwardRef<HTMLDivElement, ImageProps>(function Image(
         'eds-image',
         ratio && `eds-image-ratio-${ratio}`,
         fit === 'contain' && 'eds-image-contain',
-        circle && 'eds-image-circle',
+        round && 'eds-image-round',
         className,
       )}
       data-state={state}

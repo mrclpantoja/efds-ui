@@ -1,7 +1,7 @@
 <!-- data-eds-validate aceita: cpf, cnpj (inclusive o alfanumérico de 2026), cpf-cnpj, cep, telefone,
      email, pis, titulo, placa e data. Aceitam o valor com ou sem máscara e recusam sequências repetidas
      (111.111.111-11). Campo vazio é válido: use required. Os valores de ajuda são fictícios, gerados por
-     algoritmo. Em data, min e max do campo definem a faixa; em telefone, data-eds-validate-tipo="fixo|celular".
+     algoritmo. Em data, min e max do campo definem a faixa; em telefone, data-eds-validate-phone-type="landline|mobile".
      Sem [data-eds-validate-form], o formulário ainda valida: basta ter um campo com data-eds-validate. -->
 <form class="eds-grid eds-grid-auto">
   <div class="eds-field">
@@ -25,7 +25,7 @@
   </div>
   <div class="eds-field">
     <label class="eds-label" for="vv-tel">Telefone (celular)</label>
-    <input class="eds-input" id="vv-tel" data-eds-validate="telefone" data-eds-validate-tipo="celular" autocomplete="off" aria-describedby="vv-tel-a" />
+    <input class="eds-input" id="vv-tel" data-eds-validate="telefone" data-eds-validate-phone-type="mobile" autocomplete="off" aria-describedby="vv-tel-a" />
     <p class="eds-helper" id="vv-tel-a">Válido: (53) 99912-3456</p>
   </div>
   <div class="eds-field">

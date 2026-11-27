@@ -16,7 +16,7 @@ export type {
   ButtonAsLinkProps,
   ButtonVariant,
   ButtonSize,
-  ButtonStatus,
+  ButtonResult,
   ButtonTexts,
 } from './components/Button';
 export { ButtonGroup } from './components/ButtonGroup';
@@ -28,13 +28,20 @@ export type { FieldProps } from './components/Field';
 export { Fieldset } from './components/Fieldset';
 export type { FieldsetProps } from './components/Fieldset';
 export { Input } from './components/Input';
-export type { InputMaskName, InputMaskOptions, InputProps, InputSize } from './components/Input';
+export type {
+  InputMaskName,
+  InputMaskOptions,
+  InputProps,
+  InputSize,
+  InputTexts,
+} from './components/Input';
 export { Textarea } from './components/Textarea';
 export type { TextareaProps, TextareaSize } from './components/Textarea';
 export { Select } from './components/Select';
 export type { SelectProps, SelectSize } from './components/Select';
 export { Combobox } from './components/Combobox';
 export type {
+  ComboboxFilter,
   ComboboxProps,
   ComboboxOption,
   ComboboxSize,
@@ -51,7 +58,12 @@ export type {
   FileUploadUploadOptions,
 } from './components/FileUpload';
 export { DatePicker } from './components/DatePicker';
-export type { DatePickerProps, DatePickerSize, DatePickerTexts } from './components/DatePicker';
+export type {
+  CalendarTexts,
+  DatePickerProps,
+  DatePickerSize,
+  DatePickerTexts,
+} from './components/DatePicker';
 export { DateRangePicker } from './components/DateRangePicker';
 export type {
   DateRangePickerProps,
@@ -70,14 +82,15 @@ export type { SwitchProps, SwitchSize } from './components/Switch';
 
 // Feedback
 export { Alert } from './components/Alert';
-export type { AlertProps, AlertTexts, AlertVariant } from './components/Alert';
+export type { AlertProps, AlertTexts, AlertTone } from './components/Alert';
 export { Badge } from './components/Badge';
-export type { BadgeProps, BadgeVariant, BadgeSize } from './components/Badge';
+export type { BadgeProps, BadgeTone, BadgeSize } from './components/Badge';
 export { Spinner } from './components/Spinner';
 export type { SpinnerProps, SpinnerSize } from './components/Spinner';
 export { PageLoader, PageLoaderProvider, usePageLoader } from './components/PageLoader';
 export type {
   PageLoaderProps,
+  PageLoaderDialogTexts,
   PageLoaderProviderProps,
   PageLoaderTexts,
   PageLoaderApi,
@@ -114,7 +127,11 @@ export type {
   SidebarItemAsButtonProps,
 } from './components/Sidebar';
 export { Breadcrumb, BreadcrumbItem } from './components/Breadcrumb';
-export type { BreadcrumbProps, BreadcrumbItemProps } from './components/Breadcrumb';
+export type {
+  BreadcrumbProps,
+  BreadcrumbItemProps,
+  BreadcrumbTexts,
+} from './components/Breadcrumb';
 export {
   Card,
   CardHeader,
@@ -168,7 +185,7 @@ export type {
   TableToolbarProps,
   TableFooterProps,
   TableLoadingRowsProps,
-  TableSort,
+  TableAriaSort,
   TableSortDirection,
   TableSortState,
   TableTexts,
@@ -185,6 +202,7 @@ export type {
   UseTableColumnsOptions,
   TableColumnsMenuProps,
   TableColumnsMenuTexts,
+  FilterValue,
   TableColumnFilterOption,
   TableColumnFilterProps,
   TableColumnFilterTexts,
@@ -202,22 +220,23 @@ export type { PaginationProps, PaginationTexts } from './components/Pagination';
 export { EmptyState } from './components/EmptyState';
 export type { EmptyStateProps } from './components/EmptyState';
 
-// Onda B
+// Accordion, Tooltip, Popover, Stepper, Wizard e página
 export { Accordion, AccordionItem } from './components/Accordion';
 export type { AccordionProps, AccordionItemProps } from './components/Accordion';
 export { Tooltip } from './components/Tooltip';
 export type { TooltipProps, TooltipPlacement } from './components/Tooltip';
 export { Popover } from './components/Popover';
-export type { PopoverProps, PopoverPlacement } from './components/Popover';
+export type { PopoverProps, PopoverPlacement, Placement } from './components/Popover';
 export { Stepper, useSectionProgress } from './components/Stepper';
 export type {
-  SectionProgress,
-  SectionProgressOptions,
+  UseSectionProgressResult,
+  UseSectionProgressOptions,
   SectionProgressSection,
   StepperProps,
   StepperStep,
   StepperTexts,
-  StepState,
+  StepperStepState,
+  StepperOrientation,
 } from './components/Stepper';
 export { OptionCard, OptionCardGroup } from './components/OptionCard';
 export type { OptionCardGroupProps, OptionCardProps } from './components/OptionCard';
@@ -235,7 +254,7 @@ export type {
   StatGridTexts,
 } from './components/Stat';
 export { FilterBar } from './components/FilterBar';
-export type { FilterBarProps, FilterBarTexts, ActiveFilter } from './components/FilterBar';
+export type { FilterBarProps, FilterBarTexts, FilterBarActiveFilter } from './components/FilterBar';
 export { Page, PageHeader, PageToolbar, PageBody, PageFooter } from './components/Page';
 export type {
   PageProps,
@@ -247,7 +266,7 @@ export type {
 
 // Overlays e interativos
 export { Modal } from './components/Modal';
-export type { ModalProps, ModalSize, ModalTexts } from './components/Modal';
+export type { ModalProps, ModalSize, ModalTexts, DialogShellTexts } from './components/Modal';
 export { Drawer } from './components/Drawer';
 export type { DrawerProps, DrawerPlacement, DrawerTexts } from './components/Drawer';
 export { Dropdown, DropdownItem, DropdownSeparator } from './components/Dropdown';
@@ -269,7 +288,10 @@ export type {
   DialogOptions,
   DialogProviderProps,
   DialogTexts,
-  DialogVariant,
+  DialogTone,
+  DialogAlert,
+  DialogConfirm,
+  DialogPrompt,
 } from './components/Dialog';
 export { Sortable, SortableGroup } from './components/Sortable';
 export type {
@@ -290,7 +312,7 @@ export type {
   ToastTexts,
   ToastOptions,
   ToastApi,
-  ToastVariant,
+  ToastTone,
 } from './components/Toast';
 
 // Exportação de tabelas (geradores do @efds-ui/behavior, sem o init)
@@ -314,17 +336,28 @@ export type {
 export { LocaleProvider, useLocale } from './components/Locale';
 export type { LocaleProviderProps } from './components/Locale';
 
-// Onda C: campos
+// Campos: InputGroup, senha, OTP, número, lookup
 export { InputGroup } from './components/InputGroup';
 export type { InputGroupProps, InputGroupSize } from './components/InputGroup';
 export { PasswordInput } from './components/PasswordInput';
-export type { PasswordInputProps, PasswordRule, PasswordTexts } from './components/PasswordInput';
+export type {
+  PasswordInputProps,
+  PasswordLevel,
+  PasswordRule,
+  PasswordInputTexts,
+} from './components/PasswordInput';
 export { OtpInput } from './components/OtpInput';
-export type { OtpInputProps, OtpTexts } from './components/OtpInput';
+export type { OtpInputProps, OtpInputTexts, OtpKind } from './components/OtpInput';
 export { NumberInput } from './components/NumberInput';
-export type { NumberInputProps, NumberInputTexts } from './components/NumberInput';
+export type { NumberInputProps, NumberInputSize, NumberInputTexts } from './components/NumberInput';
 export { Lookup } from './components/Lookup';
-export type { LookupColumn, LookupItem, LookupProps, LookupTexts } from './components/Lookup';
+export type {
+  LookupColumn,
+  LookupItem,
+  LookupProps,
+  LookupSize,
+  LookupTexts,
+} from './components/Lookup';
 // Validação de formulários
 export { ErrorSummary } from './components/ErrorSummary';
 export type {
@@ -335,7 +368,7 @@ export type {
 export { useFormValidation } from './components/FormValidation';
 export type {
   FormValidationError,
-  FormValidationProps,
+  FormValidationFormProps,
   UseFormValidationOptions,
   UseFormValidationResult,
 } from './components/FormValidation';
@@ -343,14 +376,14 @@ export {
   isCep,
   isCnpj,
   isCpf,
-  isCpfOuCnpj,
-  isDataValida,
+  isCpfCnpj,
+  isDate,
   isEmail,
-  isIntervaloDatas,
+  isDateRange,
   isPis,
-  isPlaca,
-  isTelefone,
-  isTituloEleitor,
+  isPlate,
+  isPhone,
+  isVoterId,
   validateBy,
 } from '@efds-ui/behavior/validate';
 export type { ValidationMessages, ValidatorName } from '@efds-ui/behavior/validate';
@@ -382,7 +415,7 @@ export type {
   RelativeFormatOptions,
 } from '@efds-ui/behavior/format';
 
-// Onda C: página e feedback
+// Página e feedback: Progress, erro, cópia, notificações, sessão
 export { Progress } from './components/Progress';
 export type { ProgressProps, ProgressTone, ProgressSize } from './components/Progress';
 export { ErrorState } from './components/ErrorState';
@@ -410,11 +443,11 @@ export { SessionTimeout, useSessionTimeout } from './components/SessionTimeout';
 export type {
   SessionTimeoutProps,
   SessionTimeoutTexts,
-  SessionTimeoutOptions,
-  SessionTimeoutState,
+  UseSessionTimeoutOptions,
+  UseSessionTimeoutResult,
 } from './components/SessionTimeout';
 export { useUnsavedChanges } from './components/UnsavedChanges';
-export type { UnsavedChangesOptions, UnsavedChangesTexts } from './components/UnsavedChanges';
+export type { UseUnsavedChangesOptions, UnsavedChangesTexts } from './components/UnsavedChanges';
 // Estado de envio de formulário
 export { useSubmit } from './components/Submit';
 export type {
@@ -424,7 +457,7 @@ export type {
   UseSubmitResult,
 } from './components/Submit';
 
-// Onda D
+// Avatar, Tag, Divider, busca, agenda, hora, banner
 export { Avatar, AvatarGroup } from './components/Avatar';
 export type {
   AvatarProps,
@@ -442,12 +475,12 @@ export type { DividerProps } from './components/Divider';
 export { SegmentedControl } from './components/SegmentedControl';
 export type {
   SegmentedControlProps,
-  SegmentedOption,
-  SegmentedSize,
+  SegmentedControlOption,
+  SegmentedControlSize,
 } from './components/SegmentedControl';
 export { DescriptionList } from './components/DescriptionList';
 export type {
-  DescriptionItem,
+  DescriptionListItem,
   DescriptionListProps,
   DescriptionListTexts,
 } from './components/DescriptionList';
@@ -477,6 +510,7 @@ export type { GalleryItem, GalleryProps, GalleryTexts } from './components/Galle
 export { ImageCropper, ImageCropperDialog, AvatarUpload } from './components/ImageCropper';
 export type {
   AvatarUploadProps,
+  AvatarUploadSize,
   AvatarUploadTexts,
   ImageCropperDialogProps,
   ImageCropperDialogTexts,

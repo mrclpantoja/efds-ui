@@ -514,21 +514,23 @@ export const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(functi
 });
 TableCell.displayName = 'TableCell';
 
-export type TableSort = 'ascending' | 'descending' | 'none';
+export type TableAriaSort = 'ascending' | 'descending' | 'none';
 
 export interface TableHeaderCellProps
   extends Omit<ThHTMLAttributes<HTMLTableCellElement>, 'aria-sort'>, ColumnProps {
   /**
-   * Torna a coluna ordenável: `aria-sort` no `<th>` e botão com o ícone de ordenação.
-   * Use `'none'` nas ordenáveis que não são a atual.
+   * Caminho manual (avançado): torna a coluna ordenável por conta própria, com `aria-sort` no
+   * `<th>` e o botão com o ícone de ordenação; o consumidor guarda o estado e devolve a próxima
+   * direção em `onSort`. Use `'none'` nas ordenáveis que não são a atual. O caminho normal é
+   * `sortKey` com `<Table sort onSortChange>`.
    */
-  sort?: TableSort;
+  sort?: TableAriaSort;
   /**
    * Chave desta coluna na ordenação controlada da `<Table sort onSortChange>`: `aria-sort` e o
    * botão vêm do estado da tabela, sem `sort` nem `onSort` à mão.
    */
   sortKey?: string;
-  /** Chamado ao acionar o botão de ordenação (o consumidor decide a próxima direção). */
+  /** Caminho manual (avançado): chamado ao acionar o botão de ordenação. */
   onSort?: () => void;
   /** Coluna do `useTableColumns`: `data-eds-col`, fixação, alça de ajuste e oculta se for o caso. */
   columnId?: string;
@@ -562,7 +564,7 @@ export const TableHeaderCell = forwardRef<HTMLTableCellElement, TableHeaderCellP
     const position = keyed ? table.sort.findIndex((c) => c.column === sortKey) : -1;
     const criterion = position >= 0 ? table?.sort[position] : undefined;
     // Só o critério primário leva `aria-sort`; o secundário é dito pelo texto oculto do botão.
-    const derived: TableSort | undefined = keyed
+    const derived: TableAriaSort | undefined = keyed
       ? position === 0
         ? criterion?.direction
         : position > 0
@@ -642,8 +644,8 @@ export const TableHeaderCell = forwardRef<HTMLTableCellElement, TableHeaderCellP
         scope={scope}
         aria-sort={sort}
         data-eds-col={columnId}
-        data-eds-sort-dir={criterion?.direction}
-        data-eds-sort-order={criterion ? position + 1 : undefined}
+        data-sort-dir={criterion?.direction}
+        data-sort-order={criterion ? position + 1 : undefined}
         hidden={traits.hidden || rest.hidden}
         className={cx(columnClass({ numeric, column }), traits.className, className) || undefined}
       >

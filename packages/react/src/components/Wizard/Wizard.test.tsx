@@ -65,7 +65,7 @@ describe('Wizard', () => {
     expect(document.querySelector('.eds-error')).toBeNull();
   });
 
-  it('usa data-eds-error como mensagem', async () => {
+  it('usa data-eds-error-message como mensagem', async () => {
     const user = userEvent.setup();
     render(
       <Wizard
@@ -73,7 +73,7 @@ describe('Wizard', () => {
         steps={[
           {
             title: 'Dados',
-            content: <input aria-label="Nome" required data-eds-error="Informe o nome." />,
+            content: <input aria-label="Nome" required data-eds-error-message="Informe o nome." />,
           },
           { title: 'Fim', content: <p>ok</p> },
         ]}
@@ -94,7 +94,7 @@ describe('Wizard', () => {
     expect(
       screen.getAllByRole('status').some((s) => s.textContent === 'Etapa 2 de 3: Endereço.'),
     ).toBe(true);
-    expect(items()[0]).toHaveAttribute('data-state', 'complete');
+    expect(items()[0]).toHaveAttribute('data-state', 'done');
     expect(items()[1]).toHaveAttribute('data-state', 'current');
     expect(items()[1]?.querySelector('.eds-stepper-summary')).toHaveTextContent('Etapa 2 de 3');
   });
@@ -165,5 +165,22 @@ describe('Wizard', () => {
   it('textos substituíveis', () => {
     render(<Wizard aria-label="E" steps={steps} texts={{ next: 'Next', back: 'Back' }} />);
     expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument();
+  });
+});
+
+describe('Wizard: etapa controlada', () => {
+  it('step manda; Avançar só avisa onStepChange', async () => {
+    const user = userEvent.setup();
+    const onStepChange = vi.fn();
+    const { rerender } = render(
+      <Wizard aria-label="E" steps={steps} step={0} onStepChange={onStepChange} />,
+    );
+    await user.type(screen.getByLabelText('Nome'), 'Fulana');
+    await user.click(screen.getByRole('button', { name: 'Avançar' }));
+    expect(onStepChange).toHaveBeenCalledWith(1, 0);
+    expect(items()[0]).toHaveAttribute('data-state', 'current');
+    rerender(<Wizard aria-label="E" steps={steps} step={1} onStepChange={onStepChange} />);
+    expect(items()[1]).toHaveAttribute('data-state', 'current');
+    expect(items()[0]).toHaveAttribute('data-state', 'done');
   });
 });

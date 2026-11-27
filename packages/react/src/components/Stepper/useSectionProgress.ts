@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { announceStatus } from '../../internal/status-region';
 import { isSectionComplete } from '../../internal/sections';
-import type { StepState } from './Stepper';
+import type { StepperStepState } from './Stepper';
 
 export interface SectionProgressSection {
   /** `id` do elemento da seção (o `href` do link é `#id`). */
@@ -10,16 +10,16 @@ export interface SectionProgressSection {
   label: string;
 }
 
-export interface SectionProgressOptions {
+export interface UseSectionProgressOptions {
   /** Texto do anúncio de seção concluída. Padrão: "Seção {label} concluída.". */
   sectionDone?: (label: string) => string;
 }
 
-export interface SectionProgress {
+export interface UseSectionProgressResult {
   /** Índice (a partir de 0) da seção que está sendo lida. */
   current: number;
   /** Estado de cada seção: `done`, `current` ou `upcoming`. Pronto para `steps[i].state`. */
-  states: StepState[];
+  states: StepperStepState[];
 }
 
 /** Linha de leitura: os 40% de cima da janela (igual ao behavior). */
@@ -33,8 +33,8 @@ const READING_LINE = 0.4;
  */
 export function useSectionProgress(
   sections: readonly SectionProgressSection[],
-  options: SectionProgressOptions = {},
-): SectionProgress {
+  options: UseSectionProgressOptions = {},
+): UseSectionProgressResult {
   const key = sections.map((s) => s.id).join('|');
   const [current, setCurrent] = useState(0);
   const [done, setDone] = useState<boolean[]>(() => sections.map(() => false));
@@ -137,7 +137,7 @@ export function useSectionProgress(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
-  const states = useMemo<StepState[]>(
+  const states = useMemo<StepperStepState[]>(
     () => sections.map((_, i) => (done[i] ? 'done' : i === current ? 'current' : 'upcoming')),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [key, done, current],

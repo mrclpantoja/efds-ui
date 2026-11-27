@@ -1,5 +1,6 @@
 import {
   cloneElement,
+  forwardRef,
   useEffect,
   useId,
   useRef,
@@ -7,9 +8,11 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { popoverBehavior, type Placement } from '@efds-ui/behavior/balloon';
+import { popoverBehavior, type Placement } from '@efds-ui/behavior/internal';
 import { cx } from '../../utils/cx';
+import { mergeRefs } from '../../internal/refs-d';
 
+export type { Placement };
 export type PopoverPlacement = Placement;
 
 type TriggerProps = {
@@ -25,6 +28,8 @@ interface PopoverBase extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'ch
   placement?: PopoverPlacement;
   /** Aberto (controlado). Use com `onOpenChange`. */
   open?: boolean;
+  /** Aberto ao montar (não controlado). */
+  defaultOpen?: boolean;
   /** Chamado ao abrir ou fechar, inclusive por Esc e clique fora. */
   onOpenChange?: (open: boolean) => void;
   /**
@@ -44,20 +49,25 @@ export type PopoverProps = PopoverBase &
  * `aria-expanded` e o foco de volta ao gatilho vêm do mesmo código do `@efds-ui/behavior`.
  * Conteúdo curto e opcional: nada essencial só aqui.
  */
-export function Popover({
-  trigger,
-  title,
-  placement = 'bottom',
-  open,
-  onOpenChange,
-  actions,
-  className,
-  children,
-  ...rest
-}: PopoverProps) {
+export const Popover = forwardRef<HTMLDivElement, PopoverProps>(function Popover(
+  {
+    trigger,
+    title,
+    placement = 'bottom',
+    open,
+    defaultOpen = false,
+    onOpenChange,
+    actions,
+    className,
+    children,
+    ...rest
+  },
+  forwardedRef,
+) {
   const id = useId();
   const titleId = `${id}-title`;
   const ref = useRef<HTMLDivElement>(null);
+  const initialOpen = useRef(defaultOpen);
   useEffect(() => {
     const el = ref.current;
     const button = el?.previousElementSibling;
@@ -69,11 +79,13 @@ export function Popover({
   }, [placement]);
   useEffect(() => {
     const el = ref.current;
-    if (!el || open === undefined || typeof el.showPopover !== 'function') return;
+    const wanted = open ?? initialOpen.current;
+    initialOpen.current = false;
+    if (!el || (open === undefined && !wanted) || typeof el.showPopover !== 'function') return;
     const shown = el.matches(':popover-open');
     try {
-      if (open && !shown) el.showPopover();
-      else if (!open && shown) el.hidePopover();
+      if (wanted && !shown) el.showPopover();
+      else if (!wanted && shown) el.hidePopover();
     } catch {
       /* já no estado pedido */
     }
@@ -88,7 +100,7 @@ export function Popover({
       <div
         role="dialog"
         {...rest}
-        ref={ref}
+        ref={mergeRefs(ref, forwardedRef)}
         id={id}
         popover="auto"
         className={cx('eds-popover', className)}
@@ -111,5 +123,5 @@ export function Popover({
       </div>
     </>
   );
-}
+});
 Popover.displayName = 'Popover';

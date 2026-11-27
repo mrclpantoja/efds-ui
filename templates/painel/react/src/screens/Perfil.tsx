@@ -31,7 +31,7 @@ export function Perfil(props: ShellBaseProps) {
     setErrosDados(erros);
     if (Object.keys(erros).length > 0) return focarPrimeiroErro(form);
     // Num sistema real, aqui vai o envio ao servidor.
-    toast.show({ variant: 'success', message: 'Dados pessoais salvos.' });
+    toast.show({ tone: 'success', message: 'Dados pessoais salvos.' });
   };
 
   const trocarSenha = (event: FormEvent<HTMLFormElement>) => {
@@ -45,7 +45,7 @@ export function Perfil(props: ShellBaseProps) {
     setErrosSenha(erros);
     if (Object.keys(erros).length > 0) return focarPrimeiroErro(form);
     form.reset();
-    toast.show({ variant: 'success', message: 'Senha alterada.' });
+    toast.show({ tone: 'success', message: 'Senha alterada.' });
   };
 
   return (

@@ -1,7 +1,7 @@
 /* Timeline / histórico: lista ordenada de eventos com marcador, data, título, texto e autor.
    Markup:
      <ol class="eds-timeline">
-       <li class="eds-timeline-item" data-tone="success">
+       <li class="eds-timeline-item eds-timeline-item-success">
          <span class="eds-timeline-marker" aria-hidden="true"><svg>…</svg></span>
          <div class="eds-timeline-content">
            <div class="eds-timeline-header">
@@ -20,7 +20,7 @@
          <ol class="eds-timeline">…</ol>
        </li>
      </ol>
-   - Tom por data-tone no item (neutral padrão | accent | info | success | warning | danger). O tom é
+   - Tom por classe no item: eds-timeline-item-{accent,info,success,warning,danger} (neutral padrão). O tom é
      reforço: o marcador leva ícone e o título diz o que houve. Marcador vazio vira um ponto.
    - Compacta: .eds-timeline-compact (marcador menor, menos respiro, texto de apoio em linha).
    - Horizontal: .eds-timeline-horizontal no <ol> (itens lado a lado, fio entre marcadores, rola no
@@ -74,31 +74,31 @@
       padding-block-end: 0;
     }
 
-    &[data-tone='accent'] {
+    &.eds-timeline-item-accent {
       --_tl-fg: var(--eds-color-action-primary);
       --_tl-bg: var(--eds-color-action-primary-subtle);
       --_tl-border: var(--eds-color-action-primary);
     }
 
-    &[data-tone='info'] {
+    &.eds-timeline-item-info {
       --_tl-fg: var(--eds-color-status-info-text);
       --_tl-bg: var(--eds-color-status-info-subtle);
       --_tl-border: var(--eds-color-status-info-text);
     }
 
-    &[data-tone='success'] {
+    &.eds-timeline-item-success {
       --_tl-fg: var(--eds-color-status-success-text);
       --_tl-bg: var(--eds-color-status-success-subtle);
       --_tl-border: var(--eds-color-status-success-text);
     }
 
-    &[data-tone='warning'] {
+    &.eds-timeline-item-warning {
       --_tl-fg: var(--eds-color-status-warning-text);
       --_tl-bg: var(--eds-color-status-warning-subtle);
       --_tl-border: var(--eds-color-status-warning-text);
     }
 
-    &[data-tone='danger'] {
+    &.eds-timeline-item-danger {
       --_tl-fg: var(--eds-color-status-danger-text);
       --_tl-bg: var(--eds-color-status-danger-subtle);
       --_tl-border: var(--eds-color-status-danger-text);

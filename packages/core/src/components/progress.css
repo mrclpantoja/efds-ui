@@ -10,7 +10,7 @@
    - O valor também aparece em texto (.eds-progress-value): a barra nunca é a única informação.
    - Indeterminado = sem atributo value (:indeterminate): faixa que corre; com reduced-motion vira
      listras fixas (não sugerem percentual). Anuncie o fim por Toast/status, não a cada passo.
-   - Tamanhos: .eds-progress-sm / padrão md. Tom: data-tone="success|warning|danger|info" (padrão =
+   - Tamanhos: .eds-progress-sm / padrão md. Tom: .eds-progress-{info,success,warning,danger} (padrão =
      cor de ação); o tom é só reforço, o texto/estado dizem o mesmo.
    - O trilho do indeterminado anima background-position (a única propriedade que o <progress> expõe). */
 @layer eds.components {
@@ -96,19 +96,19 @@
       }
     }
 
-    &[data-tone='info'] {
+    &.eds-progress-info {
       --_progress-fill: var(--eds-color-status-info-text);
     }
 
-    &[data-tone='success'] {
+    &.eds-progress-success {
       --_progress-fill: var(--eds-color-status-success-text);
     }
 
-    &[data-tone='warning'] {
+    &.eds-progress-warning {
       --_progress-fill: var(--eds-color-status-warning-text);
     }
 
-    &[data-tone='danger'] {
+    &.eds-progress-danger {
       --_progress-fill: var(--eds-color-status-danger-text);
     }
   }

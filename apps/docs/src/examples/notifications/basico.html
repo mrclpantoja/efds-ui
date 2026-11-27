@@ -1,4 +1,4 @@
-<!-- Behavior: o Popover usa [data-eds-popover] (onda B). O JS de notificações liga por [data-eds-notifications]
+<!-- Behavior: o Popover usa [data-eds-popover]. O JS de notificações liga por [data-eds-notifications]
      no painel: marcar uma como lida (clique no item) e "Marcar todas como lidas" ([data-eds-notifications-read-all])
      atualizam data-unread, a contagem (.eds-notifications-count e o aria-label do sino) e mostram
      .eds-notifications-empty quando não sobra nada. Eventos: eds:notifications-read (detail.id) e
@@ -14,7 +14,7 @@
     <button type="button" class="eds-button eds-button-ghost eds-button-sm" data-eds-notifications-read-all>Marcar todas como lidas</button>
   </div>
   <ul class="eds-notifications-list">
-    <li class="eds-notification" data-unread="true" data-id="n1">
+    <li class="eds-notification" data-unread data-id="n1">
       <a class="eds-notification-link" href="#/componentes/notifications">
         <span class="eds-notification-dot" aria-hidden="true"></span>
         <span class="eds-notification-body">
@@ -25,7 +25,7 @@
         </span>
       </a>
     </li>
-    <li class="eds-notification" data-unread="true" data-id="n2">
+    <li class="eds-notification" data-unread data-id="n2">
       <a class="eds-notification-link" href="#/componentes/notifications">
         <span class="eds-notification-dot" aria-hidden="true"></span>
         <span class="eds-notification-body">

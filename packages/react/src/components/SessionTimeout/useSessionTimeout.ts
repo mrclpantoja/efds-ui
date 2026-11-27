@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export interface SessionTimeoutOptions {
+export interface UseSessionTimeoutOptions {
   /** Segundos sem atividade até a sessão expirar. Padrão: 900 (15 min). */
   timeout?: number;
   /** Segundos de aviso antes de expirar. Padrão: 60. */
@@ -22,7 +22,7 @@ export interface SessionTimeoutOptions {
   enabled?: boolean;
 }
 
-export interface SessionTimeoutState {
+export interface UseSessionTimeoutResult {
   /** O aviso de expiração está aberto. */
   warning: boolean;
   /** Segundos restantes (só vale com `warning`). */
@@ -41,7 +41,7 @@ const ACTIVITY_EVENTS = ['pointerdown', 'keydown', 'wheel', 'touchstart', 'scrol
  * expiração são compartilhadas entre as abas pelo `localStorage`. Exige `extend()` explícito
  * durante o aviso (mexer o mouse não basta). Use `<SessionTimeout>` para o diálogo pronto.
  */
-export function useSessionTimeout(options: SessionTimeoutOptions = {}): SessionTimeoutState {
+export function useSessionTimeout(options: UseSessionTimeoutOptions = {}): UseSessionTimeoutResult {
   const { enabled = true } = options;
   const [state, setState] = useState({ warning: false, remaining: 0 });
   const latest = useRef(options);

@@ -10,11 +10,12 @@ import {
   type ReactNode,
 } from 'react';
 import { cx } from '../../utils/cx';
+import type { Tone } from '../../internal/tone';
 import { mergeTexts } from '../../utils/texts';
 import { Skeleton } from '../Skeleton';
 
 export type StatTrend = 'up' | 'down' | 'flat';
-export type StatTone = 'positive' | 'negative' | 'warning' | 'neutral';
+export type StatTone = Extract<Tone, 'neutral' | 'success' | 'warning' | 'danger'>;
 
 export interface StatTexts {
   /** Texto oculto antes da variação, por direção. */
@@ -41,9 +42,9 @@ export interface StatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
   value: ReactNode;
   /** Variação já formatada ("12,4%"). Sem ela, não há linha de variação. */
   delta?: ReactNode;
-  /** Direção da seta. Padrão: `flat`. Uma subida pode ser ruim: combine com `tone="negative"`. */
+  /** Direção da seta. Padrão: `flat`. Uma subida pode ser ruim: combine com `tone="danger"`. */
   trend?: StatTrend;
-  /** Leitura do resultado (cor): positivo, negativo, atenção ou neutro. Padrão: `neutral`. */
+  /** Leitura do resultado (cor): bom (`success`), atenção, ruim (`danger`) ou neutro. Padrão: `neutral`. */
   tone?: StatTone;
   /** Referência da variação ("vs. mês anterior"). */
   meta?: string;
@@ -108,7 +109,10 @@ export const Stat = forwardRef<HTMLDivElement, StatProps>(function Stat(
           <p className="eds-stat-label">{label}</p>
           <p className="eds-stat-value">{value}</p>
           {delta !== undefined && (
-            <p className="eds-stat-delta" data-trend={trend} data-tone={tone}>
+            <p
+              className={cx('eds-stat-delta', tone !== 'neutral' && `eds-stat-delta-${tone}`)}
+              data-trend={trend}
+            >
               <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
                 <path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" />
               </svg>

@@ -38,6 +38,8 @@ const defaultTexts: AvatarUploadTexts = {
   applied: 'Foto ajustada.',
 };
 
+export type AvatarUploadSize = AvatarSize;
+
 export interface AvatarUploadProps
   extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onChange'>, ImageCropperOutput {
   /** Nome da pessoa: iniciais, nome acessível e tom do Avatar. */
@@ -47,7 +49,7 @@ export interface AvatarUploadProps
   /** Foto atual (URL), mostrada até haver uma nova. */
   value?: string;
   /** Uma nova foto foi aplicada: o arquivo pronto e o recorte. */
-  onChange?: (file: File, crop: Crop) => void;
+  onValueChange?: (file: File, crop: Crop) => void;
   size?: AvatarSize;
   disabled?: boolean;
   texts?: Partial<AvatarUploadTexts>;
@@ -56,14 +58,14 @@ export interface AvatarUploadProps
 /**
  * Avatar + "Alterar foto": escolhe a imagem, abre o diálogo de corte e guarda o arquivo pronto no
  * input real (vai junto com o formulário). Tudo roda no navegador; nada é enviado sem o autor
- * ligar o `onChange` a um envio.
+ * ligar o `onValueChange` a um envio.
  */
 export const AvatarUpload = forwardRef<HTMLInputElement, AvatarUploadProps>(function AvatarUpload(
   {
     personName,
     name,
     value,
-    onChange,
+    onValueChange,
     size = 'lg',
     disabled,
     outputSize,
@@ -135,7 +137,7 @@ export const AvatarUpload = forwardRef<HTMLInputElement, AvatarUploadProps>(func
       {...rest}
       className={cx('eds-stack eds-stack-row eds-stack-align-center eds-gap-3', className)}
     >
-      <Avatar name={personName} src={preview ?? value} size={size} circle />
+      <Avatar name={personName} src={preview ?? value} size={size} round />
       <Button
         ref={buttonRef}
         variant="secondary"
@@ -178,7 +180,7 @@ export const AvatarUpload = forwardRef<HTMLInputElement, AvatarUploadProps>(func
           setPending(null);
           announce(t.applied);
           buttonRef.current?.focus();
-          onChange?.(file, crop);
+          onValueChange?.(file, crop);
         }}
       />
     </div>

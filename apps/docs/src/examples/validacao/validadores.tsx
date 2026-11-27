@@ -49,7 +49,7 @@ export default function Validadores() {
             name={campo.name}
             autoComplete="off"
             validate={campo.validate}
-            data-eds-validate-tipo={campo.name === 'tel' ? 'celular' : undefined}
+            data-eds-validate-phone-type={campo.name === 'tel' ? 'mobile' : undefined}
             placeholder={campo.name === 'data' ? 'dd/mm/aaaa' : undefined}
           />
         </Field>

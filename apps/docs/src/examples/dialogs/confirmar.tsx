@@ -12,7 +12,7 @@ export default function Confirmar() {
       { okText: 'Excluir' },
     );
     toast.show({
-      variant: ok ? 'success' : 'info',
+      tone: ok ? 'success' : 'info',
       message: ok ? 'Pedido PED-0001 excluído.' : 'Exclusão cancelada.',
     });
   };
@@ -20,7 +20,7 @@ export default function Confirmar() {
   const enviar = async () => {
     const ok = await dialog.confirm('Enviar a nota fiscal ao cliente?', 'Enviar', 'question');
     toast.show({
-      variant: ok ? 'success' : 'info',
+      tone: ok ? 'success' : 'info',
       message: ok ? 'Nota fiscal enviada.' : 'Envio cancelado.',
     });
   };

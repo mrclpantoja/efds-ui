@@ -39,7 +39,7 @@ describe('diálogos rápidos', () => {
       const done = alert('Pedido salvo com sucesso.', 'Pedido', 'success');
       const d = dlg()!;
       expect(d.classList.contains('eds-modal')).toBe(true);
-      expect(d.getAttribute('data-variant')).toBe('success');
+      expect(d.classList.contains('eds-alert-dialog-success')).toBe(true);
       expect(d.open).toBe(true);
       expect(d.querySelector('.eds-alert-dialog-icon svg')).not.toBeNull();
       expect(d.querySelector('.eds-alert-dialog-icon')!.getAttribute('aria-hidden')).toBe('true');
@@ -61,7 +61,7 @@ describe('diálogos rápidos', () => {
       expect(d.querySelector('.eds-alert-dialog-title')).toBeNull();
       expect(d.getAttribute('aria-labelledby')).toBe(d.querySelector('.eds-alert-dialog-text')!.id);
       expect(d.hasAttribute('aria-describedby')).toBe(false);
-      expect(d.getAttribute('data-variant')).toBe('info');
+      expect(d.className).toBe('eds-modal eds-alert-dialog');
       btn('OK').click();
       await done;
     });
@@ -73,7 +73,7 @@ describe('diálogos rápidos', () => {
       expect(await a).toBe(false);
       await flush();
       const b = confirm('Continuar?', 'Pergunta');
-      expect(dlg()!.getAttribute('data-variant')).toBe('question');
+      expect(dlg()!.className).toBe('eds-modal eds-alert-dialog');
       expect(dlg()!.querySelector('.eds-visually-hidden')).toBeNull();
       btn('Confirmar').click();
       await b;
@@ -85,7 +85,7 @@ describe('diálogos rápidos', () => {
       btn('Cancelar').click();
       await a;
       await flush();
-      const b = prompt('Nome', '', 't', { variant: 'warning' });
+      const b = prompt('Nome', '', 't', { tone: 'warning' });
       expect(dlg()!.getAttribute('role')).toBe('alertdialog');
       btn('Cancelar').click();
       await b;

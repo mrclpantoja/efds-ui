@@ -53,7 +53,7 @@ export default function BannerPage() {
         />
         <Example
           title="Dispensável"
-          description="O botão de fechar esconde o aviso. Em produção, o id fica no localStorage e o aviso não volta (data-eds-banner-remember=off no HTML, ou sem rememberId no React, desliga isso). Aqui a lembrança está desligada: recarregue para ver o aviso de novo."
+          description="O botão de fechar esconde o aviso. Em produção, o id fica no localStorage e o aviso não volta (data-eds-banner-remember=false no HTML, ou sem rememberId no React, desliga isso). Aqui a lembrança está desligada: recarregue para ver o aviso de novo."
           html={dispensavelHtml}
           react={{ Component: Dispensavel, source: dispensavelSource }}
         />
@@ -66,7 +66,7 @@ export default function BannerPage() {
       </Section>
 
       <Section title="No app shell">
-        <Alert variant="info" title="Empurra, não cobre">
+        <Alert tone="info" title="Empurra, não cobre">
           <p>
             O banner não é fixo: ocupa o seu lugar no fluxo (WCAG 2.4.11). Como primeiro filho de{' '}
             <code>.eds-app</code> ele ganha uma linha acima da sidebar e do cabeçalho; fechado (
@@ -77,12 +77,12 @@ export default function BannerPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Fechar e lembrar">
+        <Alert tone="info" title="Fechar e lembrar">
           <p>
             O aviso fixo não precisa de JS. Com <code>data-eds-banner=&quot;id&quot;</code> e um
-            botão <code>[data-eds-banner-close]</code> (ou <code>data-eds-dismissible</code>, que o
-            cria), o <a href="/comecar/comportamento">@efds-ui/behavior</a> esconde o banner, move o
-            foco ao próximo elemento focável e lembra o id em <code>localStorage</code> (só o valor{' '}
+            botão <code>[data-eds-close]</code> (ou <code>data-eds-dismissible</code>, que o cria),
+            o <a href="/comecar/comportamento">@efds-ui/behavior</a> esconde o banner, move o foco
+            ao próximo elemento focável e lembra o id em <code>localStorage</code> (só o valor{' '}
             <code>1</code>, na chave <code>eds:banner:id</code>). Evento:{' '}
             <code>eds:banner-close</code>.
           </p>

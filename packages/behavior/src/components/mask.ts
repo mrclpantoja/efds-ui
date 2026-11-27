@@ -1,5 +1,5 @@
 import { getMessages } from '../core/config';
-import { describeBy, emit, ensureId } from '../core/dom';
+import { describeBy, emit, ensureId, flag } from '../core/dom';
 import { createMask, type MaskOptions } from '../core/mask';
 import { bindAll, type Behavior } from '../core/registry';
 
@@ -32,8 +32,7 @@ export const maskBehavior: Behavior = {
     if (decimals !== null && decimals.trim() !== '') options.decimals = Number(decimals);
     const prefix = input.getAttribute('data-eds-mask-prefix');
     if (prefix !== null) options.prefix = prefix;
-    const negative = input.getAttribute('data-eds-mask-negative');
-    if (negative !== null && negative !== 'false') options.negative = true;
+    if (flag(input, 'data-eds-mask-negative')) options.negative = true;
     const mask = createMask(spec, options);
 
     const ac = new AbortController();
@@ -52,11 +51,11 @@ export const maskBehavior: Behavior = {
     const name = input.getAttribute('name');
     let hidden: HTMLInputElement | null = null;
     let observer: MutationObserver | null = null;
-    if (input.hasAttribute('data-eds-mask-unmask') && name) {
+    if (flag(input, 'data-eds-mask-unmask') && name) {
       hidden = document.createElement('input');
       hidden.type = 'hidden';
       hidden.name = name;
-      hidden.setAttribute('data-eds-mask-raw', '');
+      hidden.setAttribute('data-mask-raw', '');
       const form = input.getAttribute('form');
       if (form) hidden.setAttribute('form', form);
       hidden.disabled = input.disabled;
@@ -69,7 +68,7 @@ export const maskBehavior: Behavior = {
     }
 
     // Validação de faixa opcional (hora, competência, processo).
-    const rangeCheck = input.hasAttribute('data-eds-mask-validate') ? mask.validate : undefined;
+    const rangeCheck = flag(input, 'data-eds-mask-validate') ? mask.validate : undefined;
     let errorEl: HTMLElement | null = null;
     const clearError = () => {
       if (!errorEl) return;
@@ -98,7 +97,7 @@ export const maskBehavior: Behavior = {
         mask.name === 'hora'
           ? m.maskInvalidTime
           : mask.name === 'competencia'
-            ? m.maskInvalidCompetence
+            ? m.maskInvalidPeriod
             : m.maskInvalidProcess;
       const ok = rangeCheck(input.value);
       input.setCustomValidity(ok ? '' : message);

@@ -1,16 +1,12 @@
 import { forwardRef, useRef, type MouseEvent, type Ref } from 'react';
 import { Button, type ButtonAsButtonProps, type ButtonAsLinkProps } from '../Button';
-import { useDialog, type DialogVariant } from './Dialog';
+import { useDialog, type DialogOptions } from './Dialog';
 
 interface ConfirmOwnProps {
   /** Pergunta do diálogo de confirmação. Só quando o usuário confirma, a ação segue. */
   confirm: string;
-  /** Título do diálogo. */
-  confirmTitle?: string;
-  /** Tipo do diálogo. Padrão: `question`. */
-  confirmVariant?: DialogVariant;
-  /** Texto do botão de confirmação. Padrão: o do `DialogProvider`. */
-  confirmOkText?: string;
+  /** Opções do diálogo: `title`, `tone` (padrão `question`), `okText`, `cancelText`. */
+  confirmOptions?: DialogOptions;
 }
 
 export type ConfirmButtonProps =
@@ -23,10 +19,7 @@ export type ConfirmButtonProps =
  * Exige um `<DialogProvider>` acima.
  */
 export const ConfirmButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, ConfirmButtonProps>(
-  function ConfirmButton(
-    { confirm: text, confirmTitle, confirmVariant, confirmOkText, onClick, ...rest },
-    ref,
-  ) {
+  function ConfirmButton({ confirm: text, confirmOptions, onClick, ...rest }, ref) {
     const dialog = useDialog();
     const approved = useRef(false);
     const pending = useRef(false);
@@ -42,23 +35,16 @@ export const ConfirmButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, C
       if (pending.current) return;
       pending.current = true;
       const element = event.currentTarget;
-      void dialog
-        .confirm(
-          text,
-          confirmTitle,
-          confirmVariant,
-          confirmOkText ? { okText: confirmOkText } : undefined,
-        )
-        .then((ok) => {
-          pending.current = false;
-          if (!ok || !element.isConnected) return;
-          approved.current = true;
-          try {
-            element.click();
-          } finally {
-            approved.current = false;
-          }
-        });
+      void dialog.confirm(text, confirmOptions).then((ok) => {
+        pending.current = false;
+        if (!ok || !element.isConnected) return;
+        approved.current = true;
+        try {
+          element.click();
+        } finally {
+          approved.current = false;
+        }
+      });
     };
 
     const props = { ...rest, onClick: handleClick } as ButtonAsButtonProps;

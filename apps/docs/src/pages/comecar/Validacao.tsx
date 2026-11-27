@@ -89,7 +89,7 @@ export default function ValidacaoPage() {
             {
               name: 'telefone',
               effect:
-                'Fixo (8 dígitos) ou celular (9 dígitos, começa em 9), com DDD existente; aceita +55. data-eds-validate-tipo="fixo|celular" restringe.',
+                'Fixo (8 dígitos) ou celular (9 dígitos, começa em 9), com DDD existente; aceita +55. data-eds-validate-phone-type="landline|mobile" restringe.',
             },
             {
               name: 'email',
@@ -109,7 +109,7 @@ export default function ValidacaoPage() {
             },
           ]}
         />
-        <Alert variant="warning" title="O validador confere o formato, não a pessoa">
+        <Alert tone="warning" title="O validador confere o formato, não a pessoa">
           <p>
             Dígito verificador correto não prova que o documento existe ou é de quem preenche: a
             conferência de verdade é do servidor. Valide sempre também no servidor.
@@ -128,11 +128,11 @@ export default function ValidacaoPage() {
                 'No input, select ou textarea. O formulário passa a mostrar erro visível (novalidate por JS).',
             },
             {
-              name: 'data-eds-validate-message',
+              name: 'data-eds-error-message',
               effect: 'Texto de erro do validador neste campo (troca o padrão).',
             },
             {
-              name: 'data-eds-error',
+              name: 'data-eds-error-message',
               effect:
                 'Texto de erro das restrições nativas (required, minlength, pattern) neste campo.',
             },
@@ -160,13 +160,12 @@ export default function ValidacaoPage() {
         />
         <p>
           As funções puras também existem sem DOM, em <code>@efds-ui/behavior/validate</code>:{' '}
-          <code>isCpf</code>, <code>isCnpj</code>, <code>isCpfOuCnpj</code>, <code>isCep</code>,{' '}
-          <code>isTelefone</code>, <code>isEmail</code>, <code>isDataValida</code>,{' '}
-          <code>isIntervaloDatas</code>, <code>isPis</code>, <code>isTituloEleitor</code> e{' '}
-          <code>isPlaca</code>; elas aceitam o valor com ou sem máscara. No{' '}
-          <code>eds-behavior.js</code> as mesmas funções ficam em <code>EDS.isCpf</code> etc. A
-          validação por atributos só existe nele (completo): o <code>eds-behavior-core.js</code> não
-          a inclui, para manter-se pequeno.
+          <code>isCpf</code>, <code>isCnpj</code>, <code>isCpfCnpj</code>, <code>isCep</code>,{' '}
+          <code>isPhone</code>, <code>isEmail</code>, <code>isDate</code>, <code>isDateRange</code>,{' '}
+          <code>isPis</code>, <code>isVoterId</code> e <code>isPlate</code>; elas aceitam o valor
+          com ou sem máscara. No <code>eds-behavior.js</code> as mesmas funções ficam em{' '}
+          <code>EDS.isCpf</code> etc. A validação por atributos só existe nele (completo): o{' '}
+          <code>eds-behavior-core.js</code> não a inclui, para manter-se pequeno.
         </p>
       </Section>
 
@@ -181,9 +180,9 @@ export default function ValidacaoPage() {
                 'Validador brasileiro; vira a validade nativa do campo. Sem mostrar erro sozinho: use useFormValidation com Field error.',
             },
             {
-              name: 'validateMessage',
-              type: 'string',
-              description: 'Texto de erro do validador neste campo.',
+              name: 'texts',
+              type: '{ maskInvalid?, validate? }',
+              description: 'Mensagens: validate é o texto de erro do validador neste campo.',
             },
           ]}
         />

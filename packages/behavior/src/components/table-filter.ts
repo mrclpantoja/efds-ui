@@ -111,9 +111,10 @@ export const tableFilterBehavior: Behavior = {
         hub.query.page = 1;
         lastQuery = raw;
         hub.fire('sync', ['q']);
-        if (user && !hub.request('q')) emit(input, 'table-filter', { query: raw, count: 0 });
+        if (user && !hub.request('q')) emit(table, 'table-filter', { query: raw, count: 0 });
         return;
       }
+      hubFor(table).query.q = raw;
       register(table);
       const count = refreshRows(table);
       if (!user) return;
@@ -129,7 +130,7 @@ export const tableFilterBehavior: Behavior = {
             ? ''
             : ` ${checked === 1 ? m.tableFilterSelectedOne : format(m.tableFilterSelectedMany, { count: checked })}`;
         message =
-          (count === 1 ? m.tableFilterClearedOne : format(m.tableFilterCleared, { count })) +
+          (count === 1 ? m.tableFilterClearedOne : format(m.tableFilterClearedMany, { count })) +
           selection;
         announcer.say(message);
       } else if (raw !== '') {
@@ -142,8 +143,6 @@ export const tableFilterBehavior: Behavior = {
         );
       }
       lastQuery = raw;
-      hubFor(table).query.q = raw;
-      emit(input, 'table-filter', { query: raw, count });
     };
 
     // Texto das linhas mudou: descarta o cache e refiltra.

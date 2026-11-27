@@ -95,14 +95,14 @@ describe('paleta de comandos', () => {
     expect(input()).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('atalho configurável e "off" desliga', () => {
+  it('atalho configurável e "false" desliga', () => {
     setup('data-eds-command-shortcut="ctrl+shift+p"');
     key({ key: 'k', ctrlKey: true });
     expect(dialog().open).toBe(false);
     key({ key: 'p', ctrlKey: true, shiftKey: true });
     expect(dialog().open).toBe(true);
     destroy();
-    setup('data-eds-command-shortcut="off"');
+    setup('data-eds-command-shortcut="false"');
     key({ key: 'k', ctrlKey: true });
     expect(dialog().open).toBe(false);
   });
@@ -239,7 +239,7 @@ describe('paleta de comandos', () => {
     ).not.toThrow();
     destroy();
     spy.mockRestore();
-    setup('data-eds-command-recent="off"');
+    setup('data-eds-command-recent="false"');
     key({ key: 'k', ctrlKey: true });
     (document.querySelector('#cmd [data-value="novo"]') as HTMLElement).click();
     expect(localStorage.length).toBe(0);

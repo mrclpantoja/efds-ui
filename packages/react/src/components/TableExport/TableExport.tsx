@@ -1,13 +1,14 @@
 import { forwardRef, useRef, type ReactNode } from 'react';
 import {
   datedFileName,
-  format as fillTemplate,
+  formatMessage as fillTemplate,
   getMessages,
   type ExportData,
   type ExportFormat,
   type ExportOptions,
 } from '@efds-ui/behavior/export';
 import { useAnnouncer } from '../../internal/announcer';
+import { mergeTexts } from '../../utils/texts';
 import { DownloadGlyph } from '../../internal/glyphs-h';
 import { Button, type ButtonSize, type ButtonVariant } from '../Button';
 import { Dropdown, DropdownItem } from '../Dropdown';
@@ -132,20 +133,28 @@ export const TableExport = forwardRef<HTMLButtonElement, TableExportProps>(funct
   ref,
 ) {
   const { text: status, announce } = useAnnouncer();
+  const m = getMessages();
+  const t = mergeTexts<TableExportTexts>(
+    {
+      label: 'Exportar',
+      ...DEFAULT_LABELS,
+      done: m.exportDoneMany,
+      doneOne: m.exportDoneOne,
+      empty: m.exportEmpty,
+      failed: m.exportFailed,
+    },
+    texts,
+  );
   const contextLocale = useLocale();
   const locale = localeProp ?? contextLocale;
   // Sempre a versão mais recente das props, sem recriar os itens do menu.
   const latest = useRef({ data, getData, onBeforeExport, onExport });
   latest.current = { data, getData, onBeforeExport, onExport };
+  const latestTexts = useRef(t);
+  latestTexts.current = t;
 
   const run = async (fmt: ExportFormat) => {
-    const m = getMessages();
-    const words = {
-      done: texts?.done ?? m.exportDone,
-      doneOne: texts?.doneOne ?? m.exportDoneOne,
-      empty: texts?.empty ?? m.exportEmpty,
-      failed: texts?.failed ?? m.exportFailed,
-    };
+    const words = latestTexts.current;
     let source: ExportData | undefined;
     try {
       source = latest.current.getData ? latest.current.getData() : latest.current.data;
@@ -191,7 +200,7 @@ export const TableExport = forwardRef<HTMLButtonElement, TableExportProps>(funct
         trigger={
           <Button ref={ref} variant={variant} size={size} disabled={disabled} className={className}>
             <DownloadGlyph />
-            {texts?.label ?? 'Exportar'}
+            {t.label}
           </Button>
         }
       >
@@ -202,7 +211,7 @@ export const TableExport = forwardRef<HTMLButtonElement, TableExportProps>(funct
             onPointerEnter={() => preload(fmt)}
             onFocus={() => preload(fmt)}
           >
-            {texts?.[fmt] ?? DEFAULT_LABELS[fmt]}
+            {t[fmt]}
           </DropdownItem>
         ))}
       </Dropdown>

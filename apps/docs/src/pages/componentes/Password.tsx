@@ -74,7 +74,7 @@ export default function PasswordPage() {
                 'Qual regra o item representa (várias separadas por espaço). Sem data-rule, o item é reconhecido pelo texto (“maiúsculas”, “número”...).',
             },
             {
-              name: 'eds:password-strength',
+              name: 'eds:password-strength-change',
               effect: 'Evento no input, só quando o nível muda: detail { level, rules }.',
             },
           ]}
@@ -121,7 +121,7 @@ export default function PasswordPage() {
             },
             {
               name: 'texts',
-              type: 'Partial<PasswordTexts>',
+              type: 'Partial<PasswordInputTexts>',
               description:
                 'show, strength, strengthEmpty, announce, level1..level4, ruleMet, ruleUnmet e os rótulos das regras padrão.',
             },
@@ -155,7 +155,7 @@ export default function PasswordPage() {
             <code>&quot;current-password&quot;</code> ao entrar; não bloqueie colar.
           </li>
         </ul>
-        <Alert variant="warning" title="O medidor não é uma política">
+        <Alert tone="warning" title="O medidor não é uma política">
           <p>
             A heurística local (tamanho, tipos de caractere, repetição, sequência e palavras comuns)
             ajuda a pessoa a escolher melhor. Exigências reais (tamanho mínimo, lista de senhas

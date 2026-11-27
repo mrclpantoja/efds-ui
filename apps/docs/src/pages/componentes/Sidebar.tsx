@@ -141,8 +141,9 @@ export default function SidebarPage() {
               type: 'Partial<SidebarTexts>',
               description: (
                 <>
-                  Textos internos: <code>collapse</code> (&quot;Menu lateral&quot;), o rótulo fixo
-                  do botão de colapsar; não muda com o estado.
+                  Textos internos: <code>label</code> (&quot;Principal&quot;), o nome do landmark
+                  quando não há <code>aria-label</code>; <code>collapse</code> (&quot;Menu
+                  lateral&quot;), o rótulo fixo do botão de colapsar, que não muda com o estado.
                 </>
               ),
             },

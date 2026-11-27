@@ -202,8 +202,7 @@ export type FormatName =
   | 'cpf-cnpj'
   | 'phone'
   | 'cep'
-  | 'cpf-mask'
-  | 'mask-cpf';
+  | 'cpf-mask';
 
 export const FORMAT_NAMES: readonly FormatName[] = [
   'currency',
@@ -217,7 +216,6 @@ export const FORMAT_NAMES: readonly FormatName[] = [
   'phone',
   'cep',
   'cpf-mask',
-  'mask-cpf',
 ];
 
 export interface FormatByNameOptions extends CurrencyFormatOptions, DateFormatOptions {
@@ -248,7 +246,6 @@ export function formatBy(name: string, value: unknown, options: FormatByNameOpti
     case 'cep':
       return formatCep(value);
     case 'cpf-mask':
-    case 'mask-cpf':
       return maskCpf(value);
     default:
       return '';

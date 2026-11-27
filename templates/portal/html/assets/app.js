@@ -339,7 +339,7 @@
       record.events.forEach(function (event) {
         var item = document.createElement('li');
         item.className = 'eds-timeline-item';
-        if (event.tone) item.setAttribute('data-tone', event.tone);
+        if (event.tone) item.classList.add('eds-timeline-item-' + event.tone);
         var marker = document.createElement('span');
         marker.className = 'eds-timeline-marker';
         marker.setAttribute('aria-hidden', 'true');

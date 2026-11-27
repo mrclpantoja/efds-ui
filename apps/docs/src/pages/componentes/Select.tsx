@@ -113,7 +113,7 @@ export default function SelectPage() {
                 'Somente leitura: fundo suave como o Input readonly, seta atenuada, sem hover. Em HTML, o @efds-ui/behavior impede abrir a lista e mudar a escolha (o campo segue focável e vai no envio); sem o JS, só o visual muda.',
             },
             { name: '[aria-invalid="true"]', effect: 'Borda de perigo.' },
-            { name: '[data-valid="true"]', effect: 'Borda de sucesso.' },
+            { name: '[data-valid]', effect: 'Borda de sucesso.' },
             { name: ':disabled', effect: 'Fundo sutil, texto esmaecido.' },
           ]}
         />

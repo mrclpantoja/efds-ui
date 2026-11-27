@@ -59,7 +59,7 @@ export default function ImagePage() {
       <Section title="Exemplos">
         <Example
           title="Proporções, ajuste e círculo"
-          description="1x1, 4x3, 3x2, 16x9, 21x9, 3x4 e 4x5. Cover (padrão) preenche cortando; eds-image-contain mostra inteira; eds-image-circle recorta em círculo."
+          description="1x1, 4x3, 3x2, 16x9, 21x9, 3x4 e 4x5. Cover (padrão) preenche cortando; eds-image-contain mostra inteira; eds-image-round recorta em círculo."
           html={proporcoesHtml}
           react={{ Component: Proporcoes, source: proporcoesSource }}
         />
@@ -84,7 +84,7 @@ export default function ImagePage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="O estado de carregamento vem do JS (opcional)">
+        <Alert tone="info" title="O estado de carregamento vem do JS (opcional)">
           <p>
             Sem JavaScript a imagem aparece normalmente e o texto de reserva fica oculto. Com o{' '}
             <a href="/comecar/comportamento">@efds-ui/behavior</a> (inclusive a compilação core),
@@ -139,7 +139,7 @@ export default function ImagePage() {
               default: "'cover'",
               description: 'Preencher cortando ou mostrar inteira.',
             },
-            { name: 'circle', type: 'boolean', default: 'false', description: 'Recorte circular.' },
+            { name: 'round', type: 'boolean', default: 'false', description: 'Recorte circular.' },
             {
               name: 'sources',
               type: '{ srcSet, type?, media?, sizes? }[]',
@@ -188,7 +188,7 @@ export default function ImagePage() {
               effect: '1x1, 4x3, 3x2, 16x9, 21x9, 3x4 e 4x5.',
             },
             { name: '.eds-image-contain', effect: 'Mostra a imagem inteira em vez de cortar.' },
-            { name: '.eds-image-circle', effect: 'Recorte circular.' },
+            { name: '.eds-image-round', effect: 'Recorte circular.' },
             {
               name: '[data-state="loading|loaded|error"]',
               effect: 'Estado de carregamento; em error aparece o fallback.',

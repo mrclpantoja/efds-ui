@@ -80,7 +80,7 @@ export default function DateRangePickerPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
+        <Alert tone="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             O calendário, a máscara, a prévia e a validação são JavaScript: no HTML vêm do{' '}
             <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que liga o{' '}
@@ -155,7 +155,8 @@ export default function DateRangePickerPage() {
           <code>className</code> e o <code>ref</code> vai para o <strong>grupo</strong> (
           <code>role=&quot;group&quot;</code>). Dentro de um <code>Field</code>, o rótulo nomeia o
           grupo, o clique nele foca o campo inicial e o <code>id</code> vai para esse campo. É
-          controlado (<code>value</code> e <code>onChange</code>) ou não (<code>defaultValue</code>
+          controlado (<code>value</code> e <code>onValueChange</code>) ou não (
+          <code>defaultValue</code>
           ).
         </p>
         <PropsTable
@@ -173,7 +174,7 @@ export default function DateRangePickerPage() {
               description: 'Período em ISO (controlado) ou inicial.',
             },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(range: { start, end }) => void',
               description: 'Início ou fim mudou, inclusive ao limpar (null).',
             },

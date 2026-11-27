@@ -11,7 +11,7 @@ export default function Proporcoes() {
         ratio="4x3"
         fit="contain"
       />
-      <Image src="/img/retrato.svg" alt="Retrato fictício em círculo" ratio="1x1" circle />
+      <Image src="/img/retrato.svg" alt="Retrato fictício em círculo" ratio="1x1" round />
     </Stack>
   );
 }

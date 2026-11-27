@@ -33,7 +33,7 @@
           type="button"
           class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close"
           aria-label="Fechar aviso"
-          data-eds-banner-close
+          data-eds-close
         >
           <svg
             viewBox="0 0 24 24"
@@ -258,7 +258,7 @@
               </button>
             </div>
             <ul class="eds-notifications-list">
-              <li class="eds-notification" data-id="n1" data-unread="true">
+              <li class="eds-notification" data-id="n1" data-unread>
                 <a class="eds-notification-link" href="notificacoes.html">
                   <span class="eds-notification-dot" aria-hidden="true"></span>
                   <span class="eds-notification-body">
@@ -275,7 +275,7 @@
                   </span>
                 </a>
               </li>
-              <li class="eds-notification" data-id="n2" data-unread="true">
+              <li class="eds-notification" data-id="n2" data-unread>
                 <a class="eds-notification-link" href="notificacoes.html">
                   <span class="eds-notification-dot" aria-hidden="true"></span>
                   <span class="eds-notification-body">
@@ -288,7 +288,7 @@
                   </span>
                 </a>
               </li>
-              <li class="eds-notification" data-id="n3" data-unread="true">
+              <li class="eds-notification" data-id="n3" data-unread>
                 <a class="eds-notification-link" href="notificacoes.html">
                   <span class="eds-notification-dot" aria-hidden="true"></span>
                   <span class="eds-notification-body">
@@ -441,7 +441,7 @@
                 <div class="eds-card eds-stat">
                   <p class="eds-stat-label">Usuários ativos</p>
                   <p class="eds-stat-value">1.284</p>
-                  <p class="eds-stat-delta" data-trend="up" data-tone="positive">
+                  <p class="eds-stat-delta eds-stat-delta-success" data-trend="up">
                     <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
                       <path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" />
                     </svg>
@@ -452,7 +452,7 @@
                 <div class="eds-card eds-stat">
                   <p class="eds-stat-label">Chamados abertos</p>
                   <p class="eds-stat-value">37</p>
-                  <p class="eds-stat-delta" data-trend="down" data-tone="positive">
+                  <p class="eds-stat-delta eds-stat-delta-success" data-trend="down">
                     <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
                       <path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" />
                     </svg>
@@ -463,7 +463,7 @@
                 <div class="eds-card eds-stat">
                   <p class="eds-stat-label">Tempo médio de resposta</p>
                   <p class="eds-stat-value">2 h 14 min</p>
-                  <p class="eds-stat-delta" data-trend="up" data-tone="negative">
+                  <p class="eds-stat-delta eds-stat-delta-danger" data-trend="up">
                     <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
                       <path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" />
                     </svg>
@@ -474,7 +474,7 @@
                 <div class="eds-card eds-stat">
                   <p class="eds-stat-label">Satisfação</p>
                   <p class="eds-stat-value">92%</p>
-                  <p class="eds-stat-delta" data-trend="flat" data-tone="neutral">
+                  <p class="eds-stat-delta" data-trend="flat">
                     <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
                       <path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" />
                     </svg>
@@ -566,11 +566,10 @@
                       <span class="eds-progress-value">86%</span>
                     </div>
                     <progress
-                      class="eds-progress"
+                      class="eds-progress eds-progress-success"
                       id="meta-prazo"
                       value="86"
                       max="100"
-                      data-tone="success"
                     >
                       86%
                     </progress>
@@ -605,11 +604,10 @@
                       <span class="eds-progress-value">78%</span>
                     </div>
                     <progress
-                      class="eds-progress"
+                      class="eds-progress eds-progress-warning"
                       id="meta-armazenamento"
                       value="78"
                       max="100"
-                      data-tone="warning"
                     >
                       78%
                     </progress>
@@ -683,7 +681,7 @@
                 </header>
                 <div class="eds-card-body">
                   <ol class="eds-timeline" aria-labelledby="ini-atividades-t">
-                    <li class="eds-timeline-item" data-tone="success">
+                    <li class="eds-timeline-item eds-timeline-item-success">
                       <span class="eds-timeline-marker" aria-hidden="true"
                         ><svg
                           viewBox="0 0 24 24"
@@ -707,7 +705,7 @@
                         <p class="eds-timeline-actor">por Ana Exemplo</p>
                       </div>
                     </li>
-                    <li class="eds-timeline-item" data-tone="warning">
+                    <li class="eds-timeline-item eds-timeline-item-warning">
                       <span class="eds-timeline-marker" aria-hidden="true"
                         ><svg
                           viewBox="0 0 24 24"

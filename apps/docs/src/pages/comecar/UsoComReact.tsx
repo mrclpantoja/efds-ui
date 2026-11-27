@@ -31,7 +31,7 @@ const idioma = `import { Alert, LocaleProvider, TableExport } from '@efds-ui/rea
 </LocaleProvider>
 
 // Textos internos de cada componente: um único objeto parcial, sempre com o nome texts.
-<Alert variant="danger" onClose={fechar} texts={{ close: 'Dismiss', severity: 'Error:' }}>
+<Alert tone="danger" onDismiss={fechar} texts={{ close: 'Dismiss', severity: 'Error:' }}>
   ...
 </Alert>
 <TableExport data={dados} texts={{ label: 'Export', csv: 'CSV file' }} />`;

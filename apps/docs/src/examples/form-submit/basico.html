@@ -1,11 +1,11 @@
 <!-- Behavior: form[data-eds-submit="manual"] — o autor envia e avisa o resultado. No envio válido o form e o botão
      que enviou ganham aria-busy, os outros botões de envio ficam aria-disabled e novos envios são ignorados.
-     EDS.submitState(form).track(promessa) termina com sucesso (botão "Salvo" por 2 s, anúncio) ou falha
+     EDS.submit(form).track(promessa) termina com sucesso (botão "Salvo" por 2 s, anúncio) ou falha
      (botão "Não foi possível salvar", foco no botão). Textos: data-eds-submit-success-text / -error-text
      (no botão ou no form); duração: data-eds-submit-feedback (ms). Aqui o "servidor" é um setTimeout fictício.
      Dica: se o envio usar fetch, passe { edsLoader: false } para o PageLoader não somar o diálogo ao botão. -->
 <form class="eds-stack eds-gap-4" data-eds-submit="manual"
-  onsubmit="event.preventDefault(); EDS.submitState(this).track(new Promise((ok, falha) => setTimeout(() => (this.falhar.checked ? falha(new Error('simulada')) : ok()), 1500)))">
+  onsubmit="event.preventDefault(); EDS.submit(this).track(new Promise((ok, falha) => setTimeout(() => (this.falhar.checked ? falha(new Error('simulada')) : ok()), 1500)))">
   <div class="eds-field">
     <label class="eds-label" for="fs-nome" data-required>Nome do projeto</label>
     <input class="eds-input" id="fs-nome" name="nome" value="Projeto Aurora" required />

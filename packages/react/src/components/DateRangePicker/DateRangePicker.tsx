@@ -48,7 +48,9 @@ export interface DateRangePickerTexts extends Partial<CalendarTexts> {
   /** Nome do diálogo. Padrão: "Escolher período". */
   dialog?: string;
   invalid?: string;
-  /** Nome do botão quando há período (dd/mm/aaaa). Padrão: "Escolher período. Atual: {início} a {fim}". */
+  /** Palavra do sufixo do nome do botão quando há período. Padrão: "Atual". */
+  current?: string;
+  /** Nome do botão quando há período (dd/mm/aaaa). Padrão: "{toggle}. {current}: {início} a {fim}". */
   toggleWithValue?: (start: string, end: string) => string;
   /** Início sem fim. Padrão: "Informe também a data final.". */
   missingEnd?: string;
@@ -77,7 +79,7 @@ export interface DateRangePickerProps extends Omit<
   /** Período inicial (não controlado). */
   defaultValue?: DateRangeValue;
   /** Início ou fim mudou (também ao limpar: `null`). */
-  onChange?: (range: DateRangeValue) => void;
+  onValueChange?: (range: DateRangeValue) => void;
   min?: string;
   max?: string;
   isDateDisabled?: (date: Date) => boolean;
@@ -113,7 +115,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
     {
       value: valueProp,
       defaultValue,
-      onChange,
+      onValueChange,
       min = '',
       max = '',
       isDateDisabled,
@@ -156,7 +158,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
       toggle: 'Escolher período',
       dialog: 'Escolher período',
       toggleWithValue: (start: string, end: string) =>
-        `${textsProp?.toggle ?? 'Escolher período'}. Atual: ${start} a ${end}`,
+        `${textsProp?.toggle ?? 'Escolher período'}. ${textsProp?.current ?? 'Atual'}: ${start} a ${end}`,
       invalid: 'Data inválida. Use dd/mm/aaaa, com o ano em 4 dígitos (ex.: 15/03/2026).',
       missingEnd: 'Informe também a data final.',
       missingStart: 'Informe também a data inicial.',
@@ -183,7 +185,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
     const [range, setRange] = useControllable<DateRangeValue>(
       valueProp,
       defaultValue ?? EMPTY,
-      onChange,
+      onValueChange,
     );
     const startIso = parseIso(range.start) ? (range.start ?? '') : '';
     const endIso = parseIso(range.end) ? (range.end ?? '') : '';

@@ -2,13 +2,13 @@ import { describeBy, focusEl, uid } from '../core/dom';
 import { getMessages } from '../core/config';
 import { refCounted } from '../core/registry';
 
-export type DialogVariant = 'info' | 'success' | 'warning' | 'danger' | 'question';
+export type DialogTone = 'info' | 'success' | 'warning' | 'danger' | 'question';
 export type DialogInputType = 'text' | 'email' | 'number' | 'password' | 'textarea';
 
 /** Último argumento opcional de `alert`, `confirm` e `prompt`. */
 export interface DialogOptions {
   /** Padrão: `info` no alert e `question` no confirm e no prompt. */
-  variant?: DialogVariant;
+  tone?: DialogTone;
   /** Texto do botão principal. Padrão: "OK" (alert, prompt) ou "Confirmar" (confirm). */
   okText?: string;
   /** Texto do botão que cancela. Padrão: "Cancelar". */
@@ -29,7 +29,7 @@ interface Request {
   kind: Kind;
   text: string;
   title: string | undefined;
-  variant: DialogVariant;
+  tone: DialogTone;
   defaultValue: string;
   options: DialogOptions;
   resolve: (value: unknown) => void;
@@ -38,7 +38,7 @@ interface Request {
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 /** Traçados dos glifos (24x24, traço): check, ! (warning/danger), i e ?. */
-const GLYPHS: Record<DialogVariant, string[]> = {
+const GLYPHS: Record<DialogTone, string[]> = {
   success: ['M5 12.5l4.5 4.5L19 7.5'],
   warning: ['M12 6v7.5M12 17.5v.01'],
   danger: ['M12 6v7.5M12 17.5v.01'],
@@ -46,7 +46,7 @@ const GLYPHS: Record<DialogVariant, string[]> = {
   question: ['M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1.9-1.1 1.8M12 17.5v.01'],
 };
 
-function glyph(variant: DialogVariant): SVGSVGElement {
+function glyph(tone: DialogTone): SVGSVGElement {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
   svg.setAttribute('width', '1em');
@@ -58,7 +58,7 @@ function glyph(variant: DialogVariant): SVGSVGElement {
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
   svg.setAttribute('focusable', 'false');
-  for (const d of GLYPHS[variant]) {
+  for (const d of GLYPHS[tone]) {
     const path = document.createElementNS(SVG_NS, 'path');
     path.setAttribute('d', d);
     svg.append(path);
@@ -66,11 +66,11 @@ function glyph(variant: DialogVariant): SVGSVGElement {
   return svg;
 }
 
-function severityPrefix(variant: DialogVariant, kind: Request['kind']): string | null {
+function severityPrefix(tone: DialogTone, kind: Request['kind']): string | null {
   const m = getMessages();
   // Perguntar antes de excluir não é um erro: em confirm/prompt `danger` fala "Atenção:".
-  if (variant === 'danger' && kind !== 'alert') return m.severityWarning;
-  switch (variant) {
+  if (tone === 'danger' && kind !== 'alert') return m.severityWarning;
+  switch (tone) {
     case 'info':
       return m.severityInfo;
     case 'success':
@@ -110,7 +110,7 @@ function next(): void {
 // ---- Diálogo ---------------------------------------------------------------------------------
 
 function present(request: Request, done: () => void): void {
-  const { kind, text, title, variant, options } = request;
+  const { kind, text, title, tone, options } = request;
   const m = getMessages();
   const origin = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   const id = uid('ad');
@@ -121,19 +121,21 @@ function present(request: Request, done: () => void): void {
 
   const dialog = document.createElement('dialog');
   dialog.className = 'eds-modal eds-alert-dialog';
-  dialog.setAttribute('data-variant', variant);
+  if (tone === 'success' || tone === 'warning' || tone === 'danger') {
+    dialog.classList.add(`eds-alert-dialog-${tone}`);
+  }
   // O fechamento pelo fundo é daqui (o do Modal fecharia também o `danger`).
   dialog.setAttribute('data-eds-backdrop', 'static');
-  if (kind !== 'alert' && (variant === 'danger' || variant === 'warning')) {
+  if (kind !== 'alert' && (tone === 'danger' || tone === 'warning')) {
     dialog.setAttribute('role', 'alertdialog');
   }
 
   const icon = document.createElement('div');
   icon.className = 'eds-alert-dialog-icon';
   icon.setAttribute('aria-hidden', 'true');
-  icon.append(glyph(variant));
+  icon.append(glyph(tone));
 
-  const prefix = severityPrefix(variant, kind);
+  const prefix = severityPrefix(tone, kind);
   const withPrefix = (el: HTMLElement, content: string) => {
     if (prefix) {
       const hidden = document.createElement('span');
@@ -214,7 +216,7 @@ function present(request: Request, done: () => void): void {
   }
   const okDefault = kind === 'confirm' ? m.dialogConfirm : m.dialogOk;
   const okBtn = button(
-    variant === 'danger' ? 'eds-button-danger' : 'eds-button-primary',
+    tone === 'danger' ? 'eds-button-danger' : 'eds-button-primary',
     options.okText ?? okDefault,
   );
   actions.append(okBtn);
@@ -310,13 +312,13 @@ function present(request: Request, done: () => void): void {
   dialog.addEventListener('click', (event) => {
     const hit = downOnBackdrop && outside(event);
     downOnBackdrop = false;
-    if (hit && variant !== 'danger') settle(cancelValue);
+    if (hit && tone !== 'danger') settle(cancelValue);
   });
 
   // ---- Abrir e focar -------------------------------------------------------------------------
 
   const initial: HTMLElement =
-    input ?? (kind === 'confirm' && variant === 'danger' && cancelBtn ? cancelBtn : okBtn);
+    input ?? (kind === 'confirm' && tone === 'danger' && cancelBtn ? cancelBtn : okBtn);
   initial.setAttribute('autofocus', '');
   document.body.append(dialog);
   try {
@@ -334,7 +336,7 @@ function present(request: Request, done: () => void): void {
 export function alert(
   text: string,
   title?: string,
-  variant?: DialogVariant,
+  tone?: DialogTone,
   options?: DialogOptions,
 ): Promise<void> {
   return new Promise<void>((resolve) => {
@@ -342,7 +344,7 @@ export function alert(
       kind: 'alert',
       text,
       title,
-      variant: variant ?? options?.variant ?? 'info',
+      tone: tone ?? options?.tone ?? 'info',
       defaultValue: '',
       options: options ?? {},
       resolve: () => resolve(),
@@ -354,7 +356,7 @@ export function alert(
 export function confirm(
   text: string,
   title?: string,
-  variant?: DialogVariant,
+  tone?: DialogTone,
   options?: DialogOptions,
 ): Promise<boolean> {
   return new Promise<boolean>((resolve) => {
@@ -362,7 +364,7 @@ export function confirm(
       kind: 'confirm',
       text,
       title,
-      variant: variant ?? options?.variant ?? 'question',
+      tone: tone ?? options?.tone ?? 'question',
       defaultValue: '',
       options: options ?? {},
       resolve: (value) => resolve(value === true),
@@ -382,7 +384,7 @@ export function prompt(
       kind: 'prompt',
       text,
       title,
-      variant: options?.variant ?? 'question',
+      tone: options?.tone ?? 'question',
       defaultValue: defaultValue ?? '',
       options: options ?? {},
       resolve: (value) => resolve(typeof value === 'string' ? value : null),

@@ -76,7 +76,7 @@ describe('formatadores', () => {
   it('formatBy escolhe pelo nome', () => {
     expect(formatBy('cpf', '12345678900')).toBe('123.456.789-00');
     expect(formatBy('cpf-mask', '12345678900')).toBe('***.456.789-**');
-    expect(formatBy('mask-cpf', '12345678900')).toBe('***.456.789-**');
+    expect(formatBy('mask-cpf', '12345678900')).toBe('');
     expect(formatBy('desconhecido', 'x')).toBe('');
   });
 });

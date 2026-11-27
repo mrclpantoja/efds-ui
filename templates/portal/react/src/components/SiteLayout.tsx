@@ -96,7 +96,7 @@ function AccessibilityBar() {
                 { value: 'maior', label: 'Maior' },
               ]}
               value={prefs.size}
-              onChange={(value) => {
+              onValueChange={(value) => {
                 if (isTextSize(value)) prefs.setSize(value);
               }}
             />

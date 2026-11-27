@@ -6,7 +6,7 @@
        <svg class="eds-copy-icon-done" aria-hidden="true">…</svg>
        <span class="eds-copy-label">Copiar</span>
      </button>
-   - Estado "copiado": o JS põe data-copied="true" por ~2 s e troca o texto de .eds-copy-label por
+   - Estado "copiado": o JS põe data-copied por ~2 s e troca o texto de .eds-copy-label por
      "Copiado" (o texto é quem informa; a cor e o ícone reforçam). O anúncio é de um status à parte.
    - Sem os dois ícones o botão funciona: só o rótulo e a cor mudam.
    - Só ícone: use .eds-button-icon com aria-label e o rótulo em .eds-visually-hidden dentro de .eds-copy-label. */
@@ -16,7 +16,7 @@
       display: none;
     }
 
-    &[data-copied='true'] {
+    &[data-copied] {
       --_button-fg: var(--eds-color-status-success-text);
       --_button-border: var(--eds-color-status-success-text);
       --_button-border-hover: var(--eds-color-status-success-text);
@@ -44,7 +44,7 @@
   }
 
   @media (forced-colors: active) {
-    .eds-copy[data-copied='true'] {
+    .eds-copy[data-copied] {
       --_button-fg: ButtonText;
       --_button-border: Highlight;
       --_button-border-hover: Highlight;

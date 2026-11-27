@@ -38,7 +38,7 @@ export default function NotificationsPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Popover mais o behavior de leitura">
+        <Alert tone="info" title="Popover mais o behavior de leitura">
           <p>
             O painel é o <a href={toHref('/componentes/popover')}>Popover</a> (abrir, Esc, foco e
             posição). Com <code>data-eds-notifications</code> no painel, o{' '}
@@ -109,7 +109,7 @@ export default function NotificationsPage() {
             },
             {
               name: '.eds-notification[data-unread]',
-              effect: 'Item; data-unread="true" para não lido.',
+              effect: 'Item; data-unread para não lido.',
             },
             {
               name: '.eds-notification-link / -dot / -body / -status / -title / -text / -time',

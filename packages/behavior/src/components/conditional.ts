@@ -22,7 +22,7 @@ function valuesOf(scope: ParentNode, name: string): string[] {
   const out: string[] = [];
   for (const field of fields) {
     // Campo desligado por outra condição (oculto) não conta.
-    if (field.hasAttribute('data-eds-cond-off')) continue;
+    if (field.hasAttribute('data-cond-off')) continue;
     if (field instanceof HTMLInputElement) {
       if (field.type === 'checkbox' || field.type === 'radio') {
         if (field.checked) out.push(field.value || 'on');
@@ -71,7 +71,7 @@ function focusController(expression: string, scope: ParentNode): void {
   const name = expression.trim().replace(/^!/, '').split(/!=|=/)[0]?.trim();
   if (!name) return;
   const target = [...scope.querySelectorAll<HTMLElement>('[name]')].find(
-    (f) => f.getAttribute('name') === name && !f.hasAttribute('data-eds-cond-off') && !f.hidden,
+    (f) => f.getAttribute('name') === name && !f.hasAttribute('data-cond-off') && !f.hidden,
   );
   target?.focus();
 }
@@ -105,21 +105,21 @@ export const conditionalBehavior: Behavior = {
         // O foco que estava dentro do bloco que some vai ao campo que controla a condição.
         const lostFocus = !nextVisible && el.contains(el.ownerDocument.activeElement);
         el.hidden = !nextVisible;
-        if (nextVisible) el.removeAttribute('data-eds-cond-hidden');
-        else el.setAttribute('data-eds-cond-hidden', '');
+        if (nextVisible) el.removeAttribute('data-cond-hidden');
+        else el.setAttribute('data-cond-hidden', '');
         for (const control of controlsOf(el)) {
           if (!nextVisible) {
             if (!control.disabled) {
               control.disabled = true;
-              control.setAttribute('data-eds-cond-off', '');
+              control.setAttribute('data-cond-off', '');
             }
           } else if (
-            control.hasAttribute('data-eds-cond-off') &&
+            control.hasAttribute('data-cond-off') &&
             // Continua desligado se outro bloco condicional oculto (pai ou interno) o contém.
-            control.closest('[data-eds-cond-hidden]') === null
+            control.closest('[data-cond-hidden]') === null
           ) {
             control.disabled = false;
-            control.removeAttribute('data-eds-cond-off');
+            control.removeAttribute('data-cond-off');
           }
         }
         if (lostFocus && showIf !== null) focusController(showIf, scope);

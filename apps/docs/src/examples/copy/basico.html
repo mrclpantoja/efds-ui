@@ -1,6 +1,6 @@
 <!-- Behavior: [data-eds-copy="#alvo"] (copia o texto/valor do elemento) ou [data-eds-copy-text="..."] (texto fixo).
-     Clipboard API com fallback execCommand. Ao copiar: data-copied="true" por ~2 s, o texto de
-     .eds-copy-label vira "Copiado" e um status à parte anuncia. Evento: eds:copy (detail.text). -->
+     Clipboard API com fallback execCommand. Ao copiar: data-copied por ~2 s, o texto de
+     .eds-copy-label vira "Copiado" e um status à parte anuncia. Evento: eds:copy-success (detail.text). -->
 <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3 eds-stack-align-start">
   <code class="eds-text-mono" id="copy-chave">CHAVE-EXEMPLO-0001</code>
   <button type="button" class="eds-button eds-button-secondary eds-button-sm eds-copy" data-eds-copy="#copy-chave">

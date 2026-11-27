@@ -35,6 +35,6 @@ export function useControlAttrs(own: ControlOwn, { useId = true }: { useId?: boo
     'aria-describedby': describedBy,
     'aria-invalid': invalid ? (true as const) : own.ariaInvalid,
     required: own.required ?? ctx.required,
-    'data-valid': valid ? ('true' as const) : undefined,
+    'data-valid': valid ? ('' as const) : undefined,
   };
 }

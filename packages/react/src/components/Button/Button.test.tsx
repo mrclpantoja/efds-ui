@@ -157,12 +157,12 @@ describe('Button', () => {
   });
 });
 
-describe('Button status', () => {
+describe('Button result', () => {
   it('troca o conteúdo pelo texto do status e põe data-state', () => {
-    const { rerender } = render(<Button status="success">Salvar</Button>);
+    const { rerender } = render(<Button result="success">Salvar</Button>);
     expect(screen.getByRole('button', { name: 'Salvo' })).toHaveAttribute('data-state', 'success');
     rerender(
-      <Button status="error" texts={{ error: 'Falhou' }}>
+      <Button result="error" texts={{ error: 'Falhou' }}>
         Salvar
       </Button>,
     );
@@ -171,16 +171,16 @@ describe('Button status', () => {
     expect(screen.getByRole('button', { name: 'Salvar' })).not.toHaveAttribute('data-state');
   });
 
-  it('loading vence o status; só ícone troca o nome acessível', () => {
+  it('loading vence o result; só ícone troca o nome acessível', () => {
     const { rerender } = render(
-      <Button loading status="success">
+      <Button loading result="success">
         Salvar
       </Button>,
     );
     const busy = screen.getByRole('button', { name: 'Salvar' });
     expect(busy).toHaveAttribute('aria-busy', 'true');
     expect(busy).not.toHaveAttribute('data-state');
-    rerender(<Button iconOnly aria-label="Salvar" status="success" />);
+    rerender(<Button iconOnly aria-label="Salvar" result="success" />);
     expect(screen.getByRole('button', { name: 'Salvo' })).toHaveAttribute('data-state', 'success');
   });
 });

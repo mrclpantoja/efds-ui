@@ -77,7 +77,7 @@ describe('filtro da table', () => {
 
   it('não anuncia a cada tecla: só depois do debounce, e emite eds:table-filter', async () => {
     const handler = vi.fn();
-    input().addEventListener('eds:table-filter', handler);
+    document.querySelector('table')!.addEventListener('eds:table-filter', handler);
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     await user.click(input());
     await user.type(input(), 'cli');

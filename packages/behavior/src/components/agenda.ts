@@ -139,9 +139,7 @@ export const agendaBehavior: Behavior = {
       return n >= 1 ? n : DEFAULT_MAX_EVENTS;
     };
 
-    const initial = /^(\d{4})-(\d{2})$/.exec(
-      root.getAttribute('data-eds-agenda-month') ?? root.getAttribute('data-eds-month') ?? '',
-    );
+    const initial = /^(\d{4})-(\d{2})$/.exec(root.getAttribute('data-eds-agenda-month') ?? '');
     const start = initial ? makeDate(Number(initial[1]), Number(initial[2]) - 1, 1) : null;
     let view: { y: number; m: number } = start
       ? { y: start.y, m: start.m }
@@ -255,7 +253,8 @@ export const agendaBehavior: Behavior = {
         : make('button', 'eds-agenda-event');
       if (control instanceof HTMLAnchorElement && event.href) control.href = event.href;
       if (control instanceof HTMLButtonElement) control.type = 'button';
-      if (event.tone) control.setAttribute('data-tone', event.tone);
+      if (event.tone && event.tone !== 'accent')
+        control.classList.add(`eds-agenda-event-${event.tone}`);
       if (event.date !== day) control.setAttribute('data-continues', '');
       if (event.id !== undefined) control.setAttribute('data-id', event.id);
       control.setAttribute('data-date', event.date);

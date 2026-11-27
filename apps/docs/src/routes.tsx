@@ -76,7 +76,7 @@ import TablePage from './pages/componentes/Table';
 import TextareaPage from './pages/componentes/Textarea';
 import ToastPage from './pages/componentes/Toast';
 import TreePage from './pages/componentes/Tree';
-// Onda C: campos
+// Campos, feedback e comportamentos de página
 import ProgressPage from './pages/componentes/Progress';
 import ErrorStatePage from './pages/componentes/ErrorState';
 import ErrorSummaryPage from './pages/componentes/ErrorSummary';
@@ -96,7 +96,7 @@ import OptionCardPage from './pages/componentes/OptionCard';
 import IconDiscPage from './pages/componentes/IconDisc';
 import OtpPage from './pages/componentes/Otp';
 import PasswordPage from './pages/componentes/Password';
-// Onda D
+// Avatar, busca, agenda, imagem e avisos
 import AgendaPage from './pages/componentes/Agenda';
 import AvatarPage from './pages/componentes/Avatar';
 import BannerPage from './pages/componentes/Banner';
@@ -560,7 +560,7 @@ const allRoutes: readonly DocRoute[] = [
     section: 'componentes',
     page: ConditionalPage,
   },
-  // Onda D
+  // Avatar, tag, busca, agenda, imagem e avisos
   { path: '/componentes/avatar', title: 'Avatar', section: 'componentes', page: AvatarPage },
   { path: '/componentes/tag', title: 'Tag', section: 'componentes', page: TagPage },
   { path: '/componentes/divider', title: 'Divider', section: 'componentes', page: DividerPage },

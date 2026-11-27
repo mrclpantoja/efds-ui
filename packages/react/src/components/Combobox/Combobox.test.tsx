@@ -94,14 +94,14 @@ describe('Combobox', () => {
     expect(input).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('Enter seleciona a opção destacada e dispara onChange', async () => {
-    const onChange = vi.fn();
-    const { user, input } = setup({ onChange });
+  it('Enter seleciona a opção destacada e dispara onValueChange', async () => {
+    const onValueChange = vi.fn();
+    const { user, input } = setup({ onValueChange });
     await user.click(input);
     await user.keyboard('{ArrowDown}{ArrowDown}{Enter}');
     expect(input).toHaveValue('São Paulo');
     expect(input).toHaveAttribute('aria-expanded', 'false');
-    expect(onChange).toHaveBeenCalledWith('sao', cidades[1]);
+    expect(onValueChange).toHaveBeenCalledWith('sao', cidades[1]);
   });
 
   it('Enter fechado envia o formulário', async () => {
@@ -133,8 +133,8 @@ describe('Combobox', () => {
   });
 
   it('Esc fecha; fechado, limpa o texto e o valor', async () => {
-    const onChange = vi.fn();
-    const { user, input } = setup({ onChange, defaultValue: 'poa' });
+    const onValueChange = vi.fn();
+    const { user, input } = setup({ onValueChange, defaultValue: 'poa' });
     expect(input).toHaveValue('Porto Alegre');
     await user.click(input);
     await user.keyboard('{ArrowDown}');
@@ -143,16 +143,16 @@ describe('Combobox', () => {
     expect(input).toHaveValue('Porto Alegre');
     await user.keyboard('{Escape}');
     expect(input).toHaveValue('');
-    expect(onChange).toHaveBeenLastCalledWith('', null);
+    expect(onValueChange).toHaveBeenLastCalledWith('', null);
   });
 
   it('Tab fecha sem selecionar', async () => {
-    const onChange = vi.fn();
-    const { user, input } = setup({ onChange });
+    const onValueChange = vi.fn();
+    const { user, input } = setup({ onValueChange });
     await user.type(input, 'po');
     await user.keyboard('{ArrowDown}{Tab}');
     expect(input).toHaveAttribute('aria-expanded', 'false');
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
   it('clique na opção seleciona e mantém o foco no campo', async () => {
@@ -165,12 +165,12 @@ describe('Combobox', () => {
   });
 
   it('opção desabilitada não seleciona', async () => {
-    const onChange = vi.fn();
-    const { user, input } = setup({ onChange });
+    const onValueChange = vi.fn();
+    const { user, input } = setup({ onValueChange });
     await user.click(input);
     await user.keyboard('{ArrowDown}');
     await user.click(screen.getByText('Salvador'));
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
   it('marca a opção atual com data-current e reabre com todas as opções', async () => {
@@ -184,10 +184,10 @@ describe('Combobox', () => {
   });
 
   it('editar o texto limpa o valor escolhido', async () => {
-    const onChange = vi.fn();
-    const { user, input } = setup({ onChange, defaultValue: 'poa' });
+    const onValueChange = vi.fn();
+    const { user, input } = setup({ onValueChange, defaultValue: 'poa' });
     await user.type(input, 'x');
-    expect(onChange).toHaveBeenCalledWith('', null);
+    expect(onValueChange).toHaveBeenCalledWith('', null);
   });
 
   it('name gera o input hidden com o valor', async () => {
@@ -205,7 +205,7 @@ describe('Combobox', () => {
       const [v, setV] = useState('poa');
       return (
         <>
-          <Combobox aria-label="Cidade" options={cidades} value={v} onChange={setV} />
+          <Combobox aria-label="Cidade" options={cidades} value={v} onValueChange={setV} />
           <button onClick={() => setV('bsb')}>Brasília</button>
         </>
       );
@@ -355,7 +355,7 @@ describe('Combobox', () => {
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input).toBeDisabled();
     rerender(<Combobox aria-label="Cidade" options={cidades} valid />);
-    expect(screen.getByRole('combobox')).toHaveAttribute('data-valid', 'true');
+    expect(screen.getByRole('combobox')).toHaveAttribute('data-valid');
   });
 });
 
@@ -481,17 +481,22 @@ describe('Combobox: auditoria de UX', () => {
   });
 
   it('ignora setas e Enter enquanto loading', async () => {
-    const onChange = vi.fn();
-    const { user, input } = setup({ loading: true, onChange });
+    const onValueChange = vi.fn();
+    const { user, input } = setup({ loading: true, onValueChange });
     await user.click(input);
     await user.keyboard('{ArrowDown}{Enter}');
     expect(input).not.toHaveAttribute('aria-activedescendant');
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
-  it('selectedLabel mostra o rótulo de um valor cuja opção não foi carregada', () => {
+  it('selectedOption mostra o rótulo de um valor cuja opção não foi carregada', () => {
     render(
-      <Combobox aria-label="Cidade" options={[]} value="x1" selectedLabel="Fulana Fictícia" />,
+      <Combobox
+        aria-label="Cidade"
+        options={[]}
+        value="x1"
+        selectedOption={{ value: 'x1', label: 'Fulana Fictícia' }}
+      />,
     );
     expect(screen.getByRole('combobox')).toHaveValue('Fulana Fictícia');
   });

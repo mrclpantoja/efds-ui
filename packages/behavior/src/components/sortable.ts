@@ -1,6 +1,6 @@
 import { format, getMessages } from '../core/config';
 import { createDragEngine, scrollParents, type DragSession } from '../core/drag';
-import { emit, uid } from '../core/dom';
+import { emit, flag, uid } from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer } from '../core/status';
 
@@ -30,11 +30,6 @@ interface Grab {
 
 /** Só um item pode estar "pego" por teclado de cada vez, em qualquer contêiner do grupo. */
 let grab: Grab | null = null;
-
-const flag = (el: Element, name: string): boolean => {
-  const value = el.getAttribute(name);
-  return value !== null && value !== 'false';
-};
 
 const itemsOf = (container: HTMLElement): HTMLElement[] =>
   Array.from(container.children).filter((c): c is HTMLElement => c.matches(ITEM));

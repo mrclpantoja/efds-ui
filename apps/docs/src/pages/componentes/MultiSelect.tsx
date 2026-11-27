@@ -75,7 +75,7 @@ export default function MultiSelectPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
+        <Alert tone="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             O teclado, o filtro, as etiquetas e os valores enviados são JavaScript: no HTML vêm do{' '}
             <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a>, que liga o{' '}
@@ -149,7 +149,7 @@ export default function MultiSelectPage() {
           <code>type</code>, <code>role</code> e <code>list</code>), repassa <code>ref</code> (para
           o campo de texto) e mescla <code>className</code>. Dentro de um <code>Field</code>,{' '}
           <code>id</code>, rótulo e descrições vêm dele. É controlado (<code>value</code> e{' '}
-          <code>onChange</code>) ou não (<code>defaultValue</code>).
+          <code>onValueChange</code>) ou não (<code>defaultValue</code>).
         </p>
         <PropsTable
           caption="Props de MultiSelect"
@@ -166,7 +166,7 @@ export default function MultiSelectPage() {
               description: 'Valores escolhidos (controlado) ou iniciais, na ordem de escolha.',
             },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(values: string[], options: ComboboxOption[]) => void',
               description: 'Escolha ou remoção: os valores e as opções, na ordem de escolha.',
             },

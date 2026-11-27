@@ -1,7 +1,7 @@
 <!-- Behavior: data-eds-validate="cpf|cnpj|cpf-cnpj|cep|telefone|email|pis|titulo|placa|data" no campo.
      O formulário ganha novalidate por JS e o erro vira um p.eds-error visível, ligado por aria-describedby
      (sem balão nativo): ao sair do campo, ao enviar e, depois do primeiro erro, ao digitar até sumir.
-     required, minlength e pattern nativos valem do mesmo jeito; data-eds-validate-message troca o texto.
+     required, minlength e pattern nativos valem do mesmo jeito; data-eds-error-message troca o texto.
      O resumo [data-eds-error-summary] dentro do form recebe a lista e o foco ao recusar o envio; cada
      link leva o foco ao campo. Evento no form: eds:form-invalid (detail.fields). Sem JS o navegador
      ainda valida required/pattern. Dados fictícios. -->
@@ -24,7 +24,7 @@
     <div class="eds-field">
       <label class="eds-label" for="val-email" data-required>E-mail institucional</label>
       <input class="eds-input" id="val-email" name="email" type="email" required autocomplete="off"
-        data-eds-validate="email" data-eds-validate-message="Use o e-mail institucional, como nome@orgao.gov.br." />
+        data-eds-validate="email" data-eds-error-message="Use o e-mail institucional, como nome@orgao.gov.br." />
     </div>
     <div class="eds-field">
       <label class="eds-label" for="val-tel">Telefone</label>

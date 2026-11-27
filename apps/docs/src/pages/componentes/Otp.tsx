@@ -107,7 +107,7 @@ export default function OtpPage() {
               description: 'Só dígitos ou letras e dígitos.',
             },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(value: string) => void',
               description: 'A cada alteração (código pode estar incompleto).',
             },
@@ -124,7 +124,7 @@ export default function OtpPage() {
             },
             {
               name: 'texts',
-              type: 'Partial<OtpTexts>',
+              type: 'Partial<OtpInputTexts>',
               description: 'cell(n, total) e cellChar(n, total).',
             },
           ]}
@@ -151,7 +151,7 @@ export default function OtpPage() {
             (cor nunca sozinha).
           </li>
         </ul>
-        <Alert variant="info" title="Tempo e reenvio">
+        <Alert tone="info" title="Tempo e reenvio">
           <p>
             Ofereça “Reenviar código” e diga em texto quando o código expira (WCAG 2.2.1). Validar o
             código é sempre do servidor.

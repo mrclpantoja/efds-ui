@@ -2,10 +2,10 @@
      e o botão age. O onsubmit abaixo apenas simula o servidor deste exemplo. -->
 <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
   <form class="eds-stack eds-gap-3"
-    onsubmit="event.preventDefault(); EDS.toast({ variant: 'success', message: 'Pedido PED-0001 excluído.' })"
+    onsubmit="event.preventDefault(); EDS.toast({ tone: 'success', message: 'Pedido PED-0001 excluído.' })"
     data-eds-confirm="Excluir o pedido PED-0001?"
     data-eds-confirm-title="Excluir pedido"
-    data-eds-confirm-variant="danger"
+    data-eds-confirm-tone="danger"
     data-eds-confirm-ok="Excluir">
     <button type="submit" class="eds-button eds-button-danger">Excluir pedido (form)</button>
   </form>

@@ -61,6 +61,12 @@ export default function BreadcrumbPage() {
               default: "'Trilha'",
               description: 'Nome do landmark. Troque quando houver mais de uma trilha na página.',
             },
+            {
+              name: 'texts',
+              type: 'Partial<BreadcrumbTexts>',
+              description:
+                'Textos internos: label ("Trilha"), o nome do landmark quando não há aria-label.',
+            },
           ]}
         />
         <PropsTable

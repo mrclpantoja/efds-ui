@@ -74,10 +74,10 @@ export default function DescriptionListPage() {
             },
             { name: 'columns', type: '1 | 2 | 3', default: '1', description: 'Máximo de colunas.' },
             {
-              name: 'horizontal',
-              type: 'boolean',
-              default: 'false',
-              description: 'Rótulo ao lado do valor.',
+              name: 'orientation',
+              type: "'vertical' | 'horizontal'",
+              default: "'vertical'",
+              description: 'horizontal põe o rótulo ao lado do valor.',
             },
             {
               name: 'divided',

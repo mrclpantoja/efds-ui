@@ -1,18 +1,30 @@
 import { forwardRef, type AnchorHTMLAttributes, type HTMLAttributes } from 'react';
 import { cx } from '../../utils/cx';
+import { mergeTexts } from '../../utils/texts';
+
+export interface BreadcrumbTexts {
+  /** Nome do landmark `<nav>` (o `aria-label` da instância vence). Padrão: "Trilha". */
+  label: string;
+}
 
 export interface BreadcrumbProps extends HTMLAttributes<HTMLElement> {
-  /** Nome do landmark. Padrão: "Trilha". */
-  'aria-label'?: string;
+  /** Textos internos (padrões em pt-BR). */
+  texts?: Partial<BreadcrumbTexts>;
 }
 
 /** Trilha de localização: `nav > ol`. Filhos: `<BreadcrumbItem>`. */
 export const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(function Breadcrumb(
-  { className, children, 'aria-label': ariaLabel = 'Trilha', ...rest },
+  { className, children, texts, 'aria-label': ariaLabel, ...rest },
   ref,
 ) {
+  const t = mergeTexts<BreadcrumbTexts>({ label: 'Trilha' }, texts);
   return (
-    <nav {...rest} ref={ref} aria-label={ariaLabel} className={cx('eds-breadcrumb', className)}>
+    <nav
+      {...rest}
+      ref={ref}
+      aria-label={ariaLabel ?? t.label}
+      className={cx('eds-breadcrumb', className)}
+    >
       <ol className="eds-breadcrumb-list">{children}</ol>
     </nav>
   );

@@ -789,7 +789,7 @@ export function FormsDemo() {
               id="f-cod"
               className="eds-input"
               defaultValue="PRJ-0042"
-              data-valid="true"
+              data-valid
               aria-describedby="f-cod-s"
             />
             <p className="eds-success" id="f-cod-s">
@@ -1173,7 +1173,7 @@ export function FormsDemo() {
               className="eds-input"
               type="date"
               defaultValue="2026-03-15"
-              data-valid="true"
+              data-valid
             />
           </div>
           <div className="eds-field">
@@ -1344,7 +1344,7 @@ export function FormsDemo() {
             <label className="eds-label" htmlFor="x-sel-ok">
               Unidade (sucesso)
             </label>
-            <select id="x-sel-ok" className="eds-select" data-valid="true" defaultValue="1">
+            <select id="x-sel-ok" className="eds-select" data-valid defaultValue="1">
               <option value="1">Unidade Central</option>
             </select>
           </div>

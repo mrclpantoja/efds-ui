@@ -14,7 +14,7 @@ export default function Basico() {
         description="Acompanhe os pedidos recebidos e o andamento de cada um."
         meta={
           <>
-            <Badge variant="success">Operação normal</Badge>
+            <Badge tone="success">Operação normal</Badge>
             <span className="eds-text-small">Atualizado às 14:32</span>
           </>
         }

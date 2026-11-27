@@ -58,15 +58,15 @@ export default function CopyPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Behavior @efds-ui/behavior">
+        <Alert tone="info" title="Behavior @efds-ui/behavior">
           <p>
             <code>data-eds-copy=&quot;#alvo&quot;</code> copia o valor (campo) ou o texto do
             elemento; <code>data-eds-copy-text=&quot;...&quot;</code> copia um texto fixo. O texto
             de <code>.eds-copy-label</code> (ou o <code>aria-label</code>, em botão só de ícone)
             vira &quot;Copiado&quot; por 2 s com <code>data-copied=&quot;true&quot;</code>. Eventos:{' '}
-            <code>eds:copy</code> (<code>detail.text</code>) e <code>eds:copy-fail</code>. A caixa
-            de segredo reaproveita o <code>data-eds-password-toggle</code> do campo de senha para
-            mostrar e ocultar.
+            <code>eds:copy-success</code> (<code>detail.text</code>) e <code>eds:copy-error</code>.
+            A caixa de segredo reaproveita o <code>data-eds-password-toggle</code> do campo de senha
+            para mostrar e ocultar.
           </p>
         </Alert>
       </Section>

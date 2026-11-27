@@ -23,8 +23,8 @@ export default defineConfig({
         replacement: fromSource('../../../packages/behavior/src/export-entry.ts'),
       },
       {
-        find: '@efds-ui/behavior/balloon',
-        replacement: fromSource('../../../packages/behavior/src/balloon-entry.ts'),
+        find: '@efds-ui/behavior/internal',
+        replacement: fromSource('../../../packages/behavior/src/internal-entry.ts'),
       },
       {
         find: '@efds-ui/behavior/image',

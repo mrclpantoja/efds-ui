@@ -39,7 +39,7 @@ export default function PopoverPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Nativo, com o behavior para posição e foco">
+        <Alert tone="info" title="Nativo, com o behavior para posição e foco">
           <p>
             O botão usa <code>popovertarget</code> e o painel <code>popover</code> (modo{' '}
             <code>auto</code>). Com <code>data-eds-popover</code> no botão, o{' '}
@@ -86,8 +86,8 @@ export default function PopoverPage() {
               description: 'Lado preferido; vira quando não cabe.',
             },
             {
-              name: 'open / onOpenChange',
-              type: 'boolean / (open: boolean) => void',
+              name: 'open / defaultOpen / onOpenChange',
+              type: 'boolean / boolean / (open: boolean) => void',
               description:
                 'Abertura controlada por código (showPopover/hidePopover). onOpenChange avisa também Esc e clique fora.',
             },

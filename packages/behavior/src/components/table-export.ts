@@ -1,5 +1,5 @@
 import { format, getMessages } from '../core/config';
-import { emit, hidePopover } from '../core/dom';
+import { emit, flag, hidePopover } from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer, type Announcer } from '../core/status';
 import { statusRegion } from '../core/table-hub';
@@ -177,8 +177,8 @@ export const tableExportBehavior: Behavior = {
         const { data, scope } = collectTable(
           table,
           scopeAttr && SCOPES.includes(scopeAttr) ? scopeAttr : 'auto',
-          trigger.hasAttribute('data-eds-export-hidden-columns') ||
-            table.hasAttribute('data-eds-export-hidden-columns'),
+          flag(trigger, 'data-eds-export-hidden-columns') ||
+            flag(table, 'data-eds-export-hidden-columns'),
         );
         if (data.rows.length === 0) {
           announcer.say(m.exportEmpty);
@@ -208,7 +208,7 @@ export const tableExportBehavior: Behavior = {
         announcer.say(
           count === 1
             ? format(m.exportDoneOne, { name: filename })
-            : format(m.exportDone, { name: filename, count }),
+            : format(m.exportDoneMany, { name: filename, count }),
         );
       },
       { signal: ac.signal },

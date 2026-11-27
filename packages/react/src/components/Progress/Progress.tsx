@@ -1,7 +1,8 @@
 import { forwardRef, useId, type ProgressHTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
+import type { Tone } from '../../internal/tone';
 
-export type ProgressTone = 'info' | 'success' | 'warning' | 'danger';
+export type ProgressTone = Extract<Tone, 'accent' | 'info' | 'success' | 'warning' | 'danger'>;
 export type ProgressSize = 'sm' | 'md';
 
 interface ProgressBase extends Omit<ProgressHTMLAttributes<HTMLProgressElement>, 'value' | 'max'> {
@@ -10,7 +11,7 @@ interface ProgressBase extends Omit<ProgressHTMLAttributes<HTMLProgressElement>,
   /** Valor máximo. Padrão: 100. */
   max?: number;
   size?: ProgressSize;
-  /** Tom semântico; o padrão é a cor de ação. */
+  /** Tom semântico. Padrão: `accent` (a cor de ação). */
   tone?: ProgressTone;
   /**
    * Texto do valor ao lado do rótulo. Padrão: a porcentagem (determinada) ou nada
@@ -28,7 +29,18 @@ export type ProgressProps = ProgressBase &
  * informa). Atualize `value` para andar; sem `value` a animação respeita `prefers-reduced-motion`.
  */
 export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(function Progress(
-  { value, max = 100, size = 'md', tone, valueText, label, className, id, children, ...rest },
+  {
+    value,
+    max = 100,
+    size = 'md',
+    tone = 'accent',
+    valueText,
+    label,
+    className,
+    id,
+    children,
+    ...rest
+  },
   ref,
 ) {
   const autoId = useId();
@@ -44,10 +56,14 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(function 
       {...rest}
       ref={ref}
       id={barId}
-      className={cx('eds-progress', size === 'sm' && 'eds-progress-sm', className)}
+      className={cx(
+        'eds-progress',
+        size === 'sm' && 'eds-progress-sm',
+        tone !== 'accent' && `eds-progress-${tone}`,
+        className,
+      )}
       value={determinate ? value : undefined}
       max={determinate ? safeMax : undefined}
-      data-tone={tone}
       aria-valuetext={typeof valueText === 'string' ? valueText : undefined}
     >
       {children ?? (determinate ? `${percent}%` : undefined)}

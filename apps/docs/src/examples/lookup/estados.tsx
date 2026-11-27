@@ -9,10 +9,10 @@ export default function Estados() {
   return (
     <Grid auto>
       <Field label="Produto (resolvido)">
-        <Lookup search={buscar} defaultValue="P-0042" buttonLabel="Buscar produto" />
+        <Lookup search={buscar} defaultValue="P-0042" texts={{ open: 'Buscar produto' }} />
       </Field>
       <Field label="Produto (inexistente)">
-        <Lookup search={buscar} defaultValue="P-9999" buttonLabel="Buscar produto" />
+        <Lookup search={buscar} defaultValue="P-9999" texts={{ open: 'Buscar produto' }} />
       </Field>
     </Grid>
   );

@@ -15,9 +15,7 @@ export default function Fila() {
     <Stack direction="row" wrap gap={3}>
       <Button
         onClick={() =>
-          messages.forEach((message) =>
-            toast.show({ variant: 'success', title: 'Sucesso:', message }),
-          )
+          messages.forEach((message) => toast.show({ tone: 'success', title: 'Sucesso:', message }))
         }
       >
         Disparar 8 de uma vez

@@ -22,8 +22,8 @@
    Variações:
    - .eds-table-fit (na table): sem largura mínima; para 2–3 colunas dentro de um card (a tabela
      preenche o contêiner em vez de rolar).
-   - .eds-table-sticky-col (na table): a primeira coluna fica fixa ao rolar na horizontal, com o
-     fundo da linha (hover e selecionada incluídos) e uma borda de separação.
+   - .eds-table-pin-start / -end / -edge (em th e td): colunas fixas ao rolar na horizontal, com o
+     fundo da linha (hover e selecionada incluídos) e uma borda de separação na última do grupo.
    - .eds-table-stack (no .eds-table-wrap): em contêiner abaixo de 40rem cada linha vira um bloco
      (cartão leve) e cada <td data-label="Rótulo"> mostra o rótulo antes do valor; o <thead> fica só
      para leitor de tela. Ver a nota de acessibilidade junto da regra.
@@ -282,10 +282,10 @@
     stroke-linejoin: round;
   }
 
-  /* Ordenação múltipla: o th secundário não leva aria-sort, só data-eds-sort-dir; os dois casos
+  /* Ordenação múltipla: o th secundário não leva aria-sort, só data-sort-dir; os dois casos
      pintam igual. O número da prioridade (.eds-table-sort-order) acompanha o chevron: a ordem
      nunca depende só de cor. */
-  .eds-table th:is([aria-sort='ascending'], [aria-sort='descending'], [data-eds-sort-dir]) {
+  .eds-table th:is([aria-sort='ascending'], [aria-sort='descending'], [data-sort-dir]) {
     color: var(--eds-color-text-primary);
 
     & .eds-table-sort > svg {
@@ -293,8 +293,8 @@
     }
   }
 
-  .eds-table th:is([aria-sort='ascending'], [data-eds-sort-dir='ascending']) .eds-table-sort-down,
-  .eds-table th:is([aria-sort='descending'], [data-eds-sort-dir='descending']) .eds-table-sort-up {
+  .eds-table th:is([aria-sort='ascending'], [data-sort-dir='ascending']) .eds-table-sort-down,
+  .eds-table th:is([aria-sort='descending'], [data-sort-dir='descending']) .eds-table-sort-up {
     display: none;
   }
 
@@ -441,20 +441,12 @@
     --_table-min-inline-size: 0;
   }
 
-  /* Colunas fixas. .eds-table-sticky-col fixa a primeira; .eds-table-pin-start / -end (em th e td)
+  /* Colunas fixas. .eds-table-pin-start / -end (em th e td)
      fixam qualquer coluna nas bordas, e .eds-table-pin-edge marca a última do grupo do início ou a
      primeira do grupo do fim (leva a borda de separação). O deslocamento --_pin-inset é do JS (soma
      das larguras das fixas anteriores); sem ele, 0. O fundo da célula é opaco (senão o conteúdo que
      rola aparece por baixo) e acompanha o estado da linha por --_sticky-bg. Canto do cabeçalho:
      acima das células fixas e do cabeçalho fixo. */
-  .eds-table-sticky-col :is(th, td):first-child:not(.eds-table-empty) {
-    position: sticky;
-    inset-inline-start: 0;
-    z-index: var(--eds-z-raised);
-    border-inline-end: var(--eds-border-width) solid var(--eds-color-border-default);
-    background: var(--_sticky-bg, var(--eds-color-bg-surface));
-  }
-
   .eds-table :is(th, td):is(.eds-table-pin-start, .eds-table-pin-end):not(.eds-table-empty) {
     position: sticky;
     z-index: var(--eds-z-raised);
@@ -477,7 +469,6 @@
     border-inline-start: var(--eds-border-width) solid var(--eds-color-border-default);
   }
 
-  .eds-table-sticky-col thead th:first-child,
   .eds-table thead :is(th, td):is(.eds-table-pin-start, .eds-table-pin-end) {
     --_sticky-bg: var(--eds-color-bg-subtle);
 
@@ -491,8 +482,7 @@
     scroll-padding-inline: var(--_pin-start-size, 0) var(--_pin-end-size, 0);
   }
 
-  .eds-table-wrap[data-pin-disabled]
-    :is(.eds-table-pin-start, .eds-table-pin-end, .eds-table-sticky-col :is(th, td):first-child) {
+  .eds-table-wrap[data-pin-disabled] :is(.eds-table-pin-start, .eds-table-pin-end) {
     inset-inline: auto;
     border-inline: 0;
   }

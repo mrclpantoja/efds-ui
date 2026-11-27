@@ -28,7 +28,7 @@ export default function Basico() {
             type="submit"
             name="acao"
             value="rascunho"
-            aria-disabled={submit.busy || undefined}
+            aria-disabled={submit.loading || undefined}
           >
             Salvar rascunho
           </Button>

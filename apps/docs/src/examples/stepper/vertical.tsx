@@ -6,7 +6,7 @@ export default function Vertical() {
   return (
     <Stepper
       aria-label="Andamento da solicitação"
-      vertical
+      orientation="vertical"
       current={current}
       onStepClick={setCurrent}
       steps={[

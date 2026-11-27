@@ -6,7 +6,7 @@ export default function Basico() {
   return (
     <>
       <Field label="Período do relatório">
-        <DateRangePicker nameStart="inicio" nameEnd="fim" onChange={setRange} />
+        <DateRangePicker nameStart="inicio" nameEnd="fim" onValueChange={setRange} />
       </Field>
       <p className="eds-text-small">
         Valores enviados: {range.start ?? 'nenhum'} e {range.end ?? 'nenhum'}

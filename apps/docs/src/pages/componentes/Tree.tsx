@@ -22,7 +22,14 @@ const jsonHtml = `<!-- O servidor responde [{ "id": "n1", "label": "Diretoria Fi
   data-eds-source="/api/estrutura.json"
   data-eds-children-url="/api/estrutura/{id}/filhos"
   data-eds-name="estrutura"
-  aria-label="Estrutura organizacional"></div>`;
+  aria-label="Estrutura organizacional"></div>
+
+<!-- Dados locais, sem rede: o mesmo JSON dentro do contêiner. data-eds-source é sempre uma URL. -->
+<div class="eds-tree" data-eds-tree aria-label="Estrutura organizacional">
+  <script type="application/json" data-eds-tree-items>
+    [{ "id": "n1", "label": "Diretoria Fictícia", "children": [{ "id": "n3", "label": "Filial Teste" }] }]
+  </script>
+</div>`;
 
 const jsonResposta = `[
   { "id": "n1", "label": "Diretoria Fictícia", "children": [
@@ -57,7 +64,7 @@ const reactEventos = `<Tree
   items={itens}                                  // controlado; ou defaultItems
   onChange={(proximos, mudanca) => setItens(proximos)}
   onBeforeChange={(mudanca, proximos) => (podeMudar(mudanca) ? undefined : false)}   // false cancela
-  onSelect={(ids) => console.log(ids)}
+  onSelectedChange={(ids) => console.log(ids)}
   onActivate={(no) => abrir(no.id)}
   loadChildren={(no) => fetchFilhos(no.id)}      // nós com hasChildren: true
 />`;
@@ -100,8 +107,8 @@ export default function TreePage() {
               <code>li[role=&quot;treeitem&quot;]</code>, <code>.eds-tree-row</code> e, para os
               filhos, <code>ul[role=&quot;group&quot;]</code>. O JS numera <code>aria-level</code>,{' '}
               <code>aria-setsize</code> e <code>aria-posinset</code> e liga o teclado. Com{' '}
-              <code>data-eds-multiselect</code>, Ctrl e Shift escolhem vários nós (Shift+setas
-              estende a seleção). Digitar uma letra vai ao próximo nó que começa com ela.
+              <code>data-eds-multiple</code>, Ctrl e Shift escolhem vários nós (Shift+setas estende
+              a seleção). Digitar uma letra vai ao próximo nó que começa com ela.
             </>
           }
           html={estaticaHtml}
@@ -140,9 +147,11 @@ export default function TreePage() {
         <div className="docs-example">
           <h3 className="eds-text-h4">HTML: árvore de um JSON (data-eds-source)</h3>
           <p className="docs-muted">
-            Com <code>data-eds-source</code>, o contêiner nasce vazio e o JS monta a árvore da
-            resposta. Este exemplo não roda aqui (não há servidor na documentação): é o markup que
-            você usaria com o seu.
+            Com <code>data-eds-source</code> (uma URL), o contêiner nasce vazio e o JS monta a
+            árvore da resposta; com dados locais, use um{' '}
+            <code>&lt;script type=&quot;application/json&quot; data-eds-tree-items&gt;</code> dentro
+            dele. Este exemplo não roda aqui (não há servidor na documentação): é o markup que você
+            usaria com o seu.
           </p>
           <CodeBlock code={jsonHtml} label="Código HTML: árvore carregada de um JSON" />
           <CodeBlock code={jsonResposta} label="Código JSON: resposta do servidor" />
@@ -209,7 +218,7 @@ export default function TreePage() {
               description: 'Seleção múltipla: Ctrl/Shift + clique e Shift + setas.',
             },
             {
-              name: 'selected / defaultSelected / onSelect',
+              name: 'selected / defaultSelected / onSelectedChange',
               type: 'string[] · (ids: string[]) => void',
               description: 'Ids selecionados, controlado ou não.',
             },
@@ -270,7 +279,7 @@ export default function TreePage() {
             },
             { name: 'data-eds-editable', effect: 'Liga a edição (o botão "⋯" é criado pelo JS).' },
             {
-              name: 'data-eds-multiselect',
+              name: 'data-eds-multiple',
               effect: 'Seleção múltipla; põe aria-multiselectable na lista.',
             },
             {
@@ -284,7 +293,7 @@ export default function TreePage() {
             },
             {
               name: 'data-eds-children-url="URL/{id}"',
-              effect: 'Endereço dos filhos de um nó com hasChildren (ou data-eds-lazy no li).',
+              effect: 'Endereço dos filhos de um nó com hasChildren (ou data-lazy no li).',
             },
             {
               name: 'eds:tree-change',
@@ -354,7 +363,7 @@ export default function TreePage() {
               effect: 'O chevron vira um anel girando enquanto os filhos carregam.',
             },
             {
-              name: '[data-drop="before | inside | after"]',
+              name: '[data-drop-target="before | inside | after"]',
               effect:
                 'Na linha: indicador de soltar (linha de 2px antes e depois; contorno para "dentro").',
             },
@@ -375,8 +384,8 @@ export default function TreePage() {
         <ul className="docs-list">
           <li>
             <strong>Referência prática:</strong> até cerca de 2.000 nós no DOM, com a navegação por
-            teclado instantânea. Acima disso, use <code>data-eds-lazy</code> para carregar os filhos
-            sob demanda e manter os ramos fechados.
+            teclado instantânea. Acima disso, use <code>data-lazy</code> para carregar os filhos sob
+            demanda e manter os ramos fechados.
           </li>
           <li>
             A renumeração (<code>aria-level</code>, <code>aria-posinset</code>) acontece uma vez por

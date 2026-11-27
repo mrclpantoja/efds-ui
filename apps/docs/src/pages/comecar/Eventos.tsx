@@ -41,7 +41,7 @@ const eventos: Record<string, readonly Evento[]> = {
     { name: 'eds:dropdown-close', on: '.eds-dropdown', detail: '{}.' },
     { name: 'eds:popover-open', on: '.eds-popover', detail: '{ trigger }: o botão que o abriu.' },
     { name: 'eds:popover-close', on: '.eds-popover', detail: '{ trigger }.' },
-    { name: 'eds:sidebar-collapse', on: '.eds-sidebar', detail: '{ collapsed: boolean }.' },
+    { name: 'eds:sidebar-toggle', on: '.eds-sidebar', detail: '{ collapsed: boolean }.' },
     {
       name: 'eds:wizard-beforechange',
       on: 'form[data-eds-wizard]',
@@ -62,15 +62,35 @@ const eventos: Record<string, readonly Evento[]> = {
   ],
   Feedback: [
     {
-      name: 'eds:alert-dismiss',
+      name: 'eds:alert-close',
       on: '.eds-alert',
       cancelable: true,
       detail: '{ alert }: cancele para manter o alerta.',
     },
     { name: 'eds:toast-close', on: 'toast', detail: '{ id }.' },
-    { name: 'eds:loader-show', on: 'PageLoader', detail: '{}.' },
     {
-      name: 'eds:loader-hide',
+      name: 'eds:copy-success',
+      on: '[data-eds-copy]',
+      detail: '{ text }: o texto foi copiado.',
+    },
+    {
+      name: 'eds:copy-error',
+      on: '[data-eds-copy]',
+      detail: '{ text }: o navegador recusou a cópia.',
+    },
+    {
+      name: 'eds:notifications-read',
+      on: '.eds-popover (lista de notificações)',
+      detail: '{ id, unread }: uma notificação foi lida; unread é quantas restam.',
+    },
+    {
+      name: 'eds:notifications-read-all',
+      on: '.eds-popover (lista de notificações)',
+      detail: '{ unread }: todas marcadas como lidas.',
+    },
+    { name: 'eds:loader-open', on: 'PageLoader', detail: '{}.' },
+    {
+      name: 'eds:loader-close',
       on: 'PageLoader',
       detail: '{ reason }: por que fechou (fim do carregamento, usuário, etc.).',
     },
@@ -150,10 +170,10 @@ const eventos: Record<string, readonly Evento[]> = {
     },
     {
       name: 'eds:table-filter',
-      on: 'input[data-eds-table-filter]',
-      detail: '{ query, count }: texto digitado e linhas que restaram.',
+      on: 'table',
+      detail:
+        '{ query, count }: a busca (ou outro filtro local) mudou as linhas visíveis; query é o texto da busca e count, quantas linhas restaram.',
     },
-    { name: 'eds:table-filtered', on: 'table', detail: 'Sem detalhe: as linhas visíveis mudaram.' },
     {
       name: 'eds:table-beforeexport',
       on: 'table',
@@ -196,6 +216,79 @@ const eventos: Record<string, readonly Evento[]> = {
     { name: 'eds:upload-progress', on: '.eds-file-upload', detail: '{ file, percent }.' },
     { name: 'eds:upload-complete', on: '.eds-file-upload', detail: '{ file, response }.' },
     { name: 'eds:upload-error', on: '.eds-file-upload', detail: '{ file, message }.' },
+    {
+      name: 'eds:lookup-change',
+      on: '.eds-lookup',
+      detail: '{ code, description, item }: item é o objeto original da lista (ou null).',
+    },
+    {
+      name: 'eds:lookup-create',
+      on: '.eds-lookup',
+      cancelable: true,
+      detail:
+        '{ text }: a opção "Cadastrar novo" foi escolhida; cancele para tratar o cadastro e devolva o resultado por EDS.lookup(el).setValue.',
+    },
+    {
+      name: 'eds:cep-lookup',
+      on: 'input[data-eds-cep]',
+      detail: "{ cep, status: 'found' | 'notfound' | 'error', data }: resultado da consulta.",
+    },
+    {
+      name: 'eds:number-change',
+      on: '.eds-number',
+      detail: '{ value: number | null, text }.',
+    },
+    { name: 'eds:otp-change', on: '.eds-otp', detail: '{ value }: o código digitado até agora.' },
+    {
+      name: 'eds:otp-complete',
+      on: '.eds-otp',
+      detail: '{ value }: todas as células preenchidas.',
+    },
+    {
+      name: 'eds:password-strength-change',
+      on: 'input[data-eds-password]',
+      detail: '{ level, rules }: só quando o nível muda (0 a 4).',
+    },
+    {
+      name: 'eds:conditional-change',
+      on: '[data-eds-show-if]',
+      detail: '{ visible }: o campo condicional apareceu ou sumiu.',
+    },
+  ],
+  'Formulários e página': [
+    {
+      name: 'eds:form-submit',
+      on: 'form[data-eds-submit]',
+      cancelable: true,
+      detail: '{ submitter, mode, data }: cancele para tratar o envio por conta própria.',
+    },
+    {
+      name: 'eds:form-success',
+      on: 'form[data-eds-submit]',
+      detail: '{ text, response?, status?, value? }: o envio terminou bem.',
+    },
+    {
+      name: 'eds:form-error',
+      on: 'form[data-eds-submit]',
+      detail: '{ text, response?, status?, error? }: o envio falhou.',
+    },
+    {
+      name: 'eds:dirty-change',
+      on: 'form[data-eds-dirty-guard]',
+      detail: '{ dirty }: o formulário passou a ter (ou deixou de ter) alterações não salvas.',
+    },
+    {
+      name: 'eds:stepper-section-change',
+      on: '[data-eds-stepper-sections]',
+      detail: '{ id, index, label }: a seção lida mudou.',
+    },
+    {
+      name: 'eds:theme-change',
+      on: 'input[data-eds-theme-color]',
+      detail: '{ result }: o tema gerado a partir da cor (com os contrastes calculados).',
+    },
+    { name: 'eds:session-extend', on: 'html', detail: '{}: o usuário continuou conectado.' },
+    { name: 'eds:session-expire', on: 'html', detail: '{}: a sessão por inatividade acabou.' },
   ],
   'Listas e árvores': [
     {
@@ -220,7 +313,7 @@ const eventos: Record<string, readonly Evento[]> = {
       detail: '{ action, node, parent, index, id, label, tree }: tree é o JSON da árvore.',
     },
   ],
-  'Onda D: busca, agenda, horário e aviso': [
+  'Busca, agenda, horário e aviso': [
     {
       name: 'eds:command-select',
       on: 'dialog[data-eds-command]',
@@ -327,7 +420,7 @@ export default function EventosPage() {
         </Section>
       ))}
 
-      <Alert variant="info" title="Eventos nativos continuam valendo">
+      <Alert tone="info" title="Eventos nativos continuam valendo">
         <p>
           Os componentes não substituem os eventos do navegador: <code>input</code>,{' '}
           <code>change</code>, <code>submit</code>, <code>toggle</code> e <code>close</code> seguem

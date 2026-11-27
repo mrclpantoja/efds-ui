@@ -135,7 +135,7 @@ export default function MascaraPage() {
             literal apaga o dígito anterior; o cursor é preservado.
           </li>
         </ul>
-        <Alert variant="warning" title="LGPD">
+        <Alert tone="warning" title="LGPD">
           <p>
             CPF, CNPJ, telefone e endereço são dados pessoais. Documentação, testes e logs usam só
             valores fictícios; mascare ou anonimize o que for exibido ou registrado.

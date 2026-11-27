@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { initFormSubmit, resetSubmitConfig, submitState } from './form-submit';
+import { initFormSubmit, resetSubmitConfig, submit } from './form-submit';
 
 const html = (attrs = 'data-eds-submit') => `
 <form id="f" ${attrs} action="/salvar" ${attrs.includes('method=') ? '' : 'method="post"'}>
@@ -88,7 +88,7 @@ describe('estado de envio (HTML)', () => {
   it('ignora method=dialog e target diferente de _self', () => {
     start();
     send($('f'), $('ok'));
-    submitState($('f') as HTMLFormElement).reset();
+    submit($('f'))!.reset();
     $('f').setAttribute('target', '_blank');
     send($('f'), $('ok'));
     expect($('f')).not.toHaveAttribute('aria-busy');
@@ -118,29 +118,26 @@ describe('estado de envio (HTML)', () => {
   describe('manual', () => {
     it('cancela o envio nativo e conclui com success(): texto, data-state, anúncio e volta em 2 s', () => {
       start('data-eds-submit="manual"');
-      const reset = vi.fn();
-      $('f').addEventListener('eds:dirty-reset', reset);
       const onSuccess = vi.fn();
       $('f').addEventListener('eds:form-success', onSuccess);
       const event = send($('f'), $('ok'));
       expect(event.defaultPrevented).toBe(true);
       expect($('ok')).toHaveAttribute('aria-busy', 'true');
 
-      submitState($('f') as HTMLFormElement).success();
+      submit($('f'))!.success();
       expect($('ok')).not.toHaveAttribute('aria-busy');
       expect($('ok')).toHaveAttribute('data-state', 'success');
       expect($('ok')).toHaveTextContent('Salvo');
       expect($('ico')).toBeNull();
       expect($('f')).not.toHaveAttribute('aria-busy');
       expect($('outro')).not.toHaveAttribute('aria-disabled');
-      expect(reset).toHaveBeenCalledTimes(1);
       expect(onSuccess).toHaveBeenCalledTimes(1);
 
       vi.advanceTimersByTime(2000);
       expect($('ok')).not.toHaveAttribute('data-state');
       expect($('ok')).toHaveTextContent('Salvar');
       expect($('ico')).not.toBeNull();
-      expect(submitState($('f') as HTMLFormElement).state).toBe('idle');
+      expect(submit($('f'))!.state).toBe('idle');
     });
 
     it('error(): texto próprio, foco no botão e anúncio; textos por atributo e duração configurável', () => {
@@ -150,7 +147,7 @@ describe('estado de envio (HTML)', () => {
       const onError = vi.fn();
       $('f').addEventListener('eds:form-error', onError);
       send($('f'), $('ok'));
-      submitState($('f') as HTMLFormElement).error();
+      submit($('f'))!.error();
       expect($('ok')).toHaveAttribute('data-state', 'error');
       expect($('ok')).toHaveTextContent('Falhou');
       expect(document.activeElement).toBe($('ok'));
@@ -167,14 +164,14 @@ describe('estado de envio (HTML)', () => {
       summary.setAttribute('data-eds-error-summary', '');
       $('f').append(summary);
       send($('f'), $('ok'));
-      submitState($('f') as HTMLFormElement).error('Corrija os campos');
+      submit($('f'))!.error('Corrija os campos');
       expect(document.activeElement).toBe(summary);
       expect($('ok')).toHaveTextContent('Corrija os campos');
     });
 
     it('track() conclui pela promessa; reset() invalida o resultado atrasado', async () => {
       start('data-eds-submit="manual"');
-      const ctl = submitState($('f') as HTMLFormElement);
+      const ctl = submit($('f'))!;
       let resolve!: () => void;
       const done = ctl.track(new Promise<void>((r) => (resolve = r)));
       expect(ctl.state).toBe('busy');
@@ -201,7 +198,7 @@ describe('estado de envio (HTML)', () => {
       expect(status()).toBe('');
       vi.advanceTimersByTime(1000);
       expect(status()).toBe('Enviando…');
-      submitState($('f') as HTMLFormElement).success();
+      submit($('f'))!.success();
       vi.advanceTimersByTime(0);
       expect(status()).toContain('Salvo');
     });

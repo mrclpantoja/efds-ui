@@ -45,7 +45,7 @@ describe('NotificationBell', () => {
     expect(panel).toHaveAttribute('aria-label', 'Notificações');
     const items = panel.querySelectorAll('.eds-notification');
     expect(items).toHaveLength(3);
-    expect(items[0]).toHaveAttribute('data-unread', 'true');
+    expect(items[0]).toHaveAttribute('data-unread');
     expect(items[0]).toHaveAttribute('data-id', 'n1');
     expect(items[2]).not.toHaveAttribute('data-unread');
     expect(items[0]!.querySelector('a.eds-notification-link')).toHaveAttribute('href', '#a');

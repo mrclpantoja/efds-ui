@@ -259,9 +259,9 @@ export function formControllerOf(form: HTMLFormElement): FormController {
 /**
  * Validação declarativa: `data-eds-validate="cpf|cnpj|cpf-cnpj|cep|telefone|email|pis|titulo|placa|data"`
  * no campo. O valor inválido vira `setCustomValidity` (então `checkValidity`, o Wizard e o envio o
- * enxergam) com o texto padrão pt-BR (`configure({ messages })`) ou o de `data-eds-validate-message`.
+ * enxergam) com o texto padrão pt-BR (`configure({ messages })`) ou o de `data-eds-error-message`.
  * Campo vazio é válido: use `required`. `data` lê `min` e `max` do campo; `telefone` aceita
- * `data-eds-validate-tipo="fixo|celular"`.
+ * `data-eds-validate-phone-type="landline|mobile"`.
  *
  * O formulário do campo passa a mostrar o erro visível (`p.eds-error` ligado por `aria-describedby`,
  * `aria-invalid`) em vez do balão nativo (`novalidate` por JS; sem JS o navegador ainda valida

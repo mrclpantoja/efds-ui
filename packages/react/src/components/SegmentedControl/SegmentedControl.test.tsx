@@ -25,18 +25,18 @@ describe('SegmentedControl', () => {
   });
 
   it('não controlado: clique e setas trocam e avisam', async () => {
-    const onChange = vi.fn();
+    const onValueChange = vi.fn();
     const user = userEvent.setup();
     render(
       <SegmentedControl
         legend="Período"
         options={options}
         defaultValue="dia"
-        onChange={onChange}
+        onValueChange={onValueChange}
       />,
     );
     await user.click(screen.getByRole('radio', { name: 'Semana' }));
-    expect(onChange).toHaveBeenCalledWith('semana');
+    expect(onValueChange).toHaveBeenCalledWith('semana');
     expect(screen.getByRole('radio', { name: 'Semana' })).toBeChecked();
     await user.keyboard('{ArrowLeft}');
     expect(screen.getByRole('radio', { name: 'Dia' })).toBeChecked();
@@ -45,7 +45,7 @@ describe('SegmentedControl', () => {
   it('controlado', async () => {
     function Harness() {
       const [v, setV] = useState('dia');
-      return <SegmentedControl legend="P" options={options} value={v} onChange={setV} />;
+      return <SegmentedControl legend="P" options={options} value={v} onValueChange={setV} />;
     }
     render(<Harness />);
     await userEvent.setup().click(screen.getByRole('radio', { name: 'Semana' }));

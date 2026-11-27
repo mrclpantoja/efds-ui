@@ -31,7 +31,7 @@
     }
 
     /* Hover escurece a borda para text-muted (decisão registrada: mais contraste que border-strong). */
-    &:hover:not(:disabled, [readonly], [aria-invalid='true'], [data-valid='true']) {
+    &:hover:not(:disabled, [readonly], [aria-invalid='true'], [data-valid]) {
       --_textarea-border: var(--eds-color-text-muted);
     }
 
@@ -46,7 +46,7 @@
       --_textarea-bg: var(--eds-color-bg-subtle);
     }
 
-    &[data-valid='true'] {
+    &[data-valid] {
       --_textarea-border: var(--eds-color-status-success-text);
     }
 

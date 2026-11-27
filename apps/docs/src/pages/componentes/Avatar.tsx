@@ -49,7 +49,7 @@ export default function AvatarPage() {
         />
         <Example
           title="Tamanhos"
-          description="32, 40 (padrão) e 48 px. A forma segue o tema (data-shape); circle força o círculo."
+          description="32, 40 (padrão) e 48 px. A forma segue o tema (data-shape); round força o círculo."
           html={tamanhosHtml}
           react={{ Component: Tamanhos, source: tamanhosSource }}
         />
@@ -74,7 +74,7 @@ export default function AvatarPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Tom pelo nome, sem escrever a classe">
+        <Alert tone="info" title="Tom pelo nome, sem escrever a classe">
           <p>
             No HTML você pode escrever <code>eds-avatar-tone-1</code> a <code>6</code> à mão. Com o{' '}
             <a href="/comecar/comportamento">@efds-ui/behavior</a>, um <code>.eds-avatar</code> sem
@@ -120,7 +120,7 @@ export default function AvatarPage() {
               description: 'Força o tom; sem isso vem do nome.',
             },
             {
-              name: 'circle',
+              name: 'round',
               type: 'boolean',
               default: 'false',
               description: 'Círculo em vez da forma do tema.',
@@ -164,7 +164,7 @@ export default function AvatarPage() {
           rows={[
             { name: '.eds-avatar', effect: 'O avatar (40 px). Sem tom: cinza suave.' },
             { name: '.eds-avatar-sm / -lg', effect: '32 e 48 px.' },
-            { name: '.eds-avatar-circle', effect: 'Força o círculo.' },
+            { name: '.eds-avatar-round', effect: 'Força o círculo.' },
             {
               name: '.eds-avatar-tone-1 … 6',
               effect: 'Tons: ação, sucesso, atenção, perigo, informação, neutro sólido.',

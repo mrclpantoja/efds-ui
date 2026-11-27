@@ -12,7 +12,7 @@ export default function Dinamico() {
       </div>
       {/* Aviso inserido depois da carga da página: precisa de role para ser anunciado. */}
       {saved ? (
-        <Alert variant="success" role="status">
+        <Alert tone="success" role="status">
           <p>Cliente salvo.</p>
         </Alert>
       ) : null}

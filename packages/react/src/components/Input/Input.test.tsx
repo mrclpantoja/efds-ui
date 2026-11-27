@@ -21,7 +21,7 @@ describe('Input', () => {
     const { rerender } = render(<Input aria-label="A" invalid />);
     expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
     rerender(<Input aria-label="A" valid />);
-    expect(screen.getByRole('textbox')).toHaveAttribute('data-valid', 'true');
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-valid');
     expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-invalid');
   });
 

@@ -25,13 +25,13 @@ export default function Cadastrar() {
         <Lookup
           search={buscar}
           value={codigo}
-          onChange={(code) => setCodigo(code)}
-          buttonLabel="Buscar cliente"
+          onValueChange={(code) => setCodigo(code)}
+          texts={{ open: 'Buscar cliente' }}
           onCreate={(texto) => setNovo(texto)}
         />
       </Field>
       {novo !== null && (
-        <Alert variant="info" title="Cadastro de cliente">
+        <Alert tone="info" title="Cadastro de cliente">
           <p>Aqui abriria o seu cadastro, já com o texto digitado.</p>
           <Button
             size="sm"

@@ -104,8 +104,8 @@ describe('ordenação múltipla', () => {
     await user.keyboard('{/Shift}');
     expect(th('cliente').getAttribute('aria-sort')).toBe('ascending');
     expect(th('total').hasAttribute('aria-sort')).toBe(false);
-    expect(th('total').getAttribute('data-eds-sort-order')).toBe('2');
-    expect(th('total').getAttribute('data-eds-sort-dir')).toBe('ascending');
+    expect(th('total').getAttribute('data-sort-order')).toBe('2');
+    expect(th('total').getAttribute('data-sort-dir')).toBe('ascending');
     expect(th('situacao').getAttribute('aria-sort')).toBe('none');
     expect(sortButton('total').querySelector('.eds-table-sort-order')?.textContent).toBe('2');
     expect(sortButton('total').querySelector('.eds-table-sort-text')?.textContent).toContain(
@@ -125,12 +125,12 @@ describe('ordenação múltipla', () => {
     await user.click(sortButton('cliente'));
     sortButton('total').focus();
     await user.keyboard('{Shift>}{Enter}{/Shift}');
-    expect(th('total').getAttribute('data-eds-sort-dir')).toBe('ascending');
+    expect(th('total').getAttribute('data-sort-dir')).toBe('ascending');
     await user.keyboard('{Shift>}{Enter}{/Shift}');
-    expect(th('total').getAttribute('data-eds-sort-dir')).toBe('descending');
+    expect(th('total').getAttribute('data-sort-dir')).toBe('descending');
     expect(names().slice(1, 3)).toEqual(['Beta|R$ 100,00', 'Beta|R$ 50,00']);
     await user.keyboard('{Shift>}{Enter}{/Shift}');
-    expect(th('total').hasAttribute('data-eds-sort-dir')).toBe(false);
+    expect(th('total').hasAttribute('data-sort-dir')).toBe(false);
     expect(th('total').getAttribute('aria-sort')).toBe('none');
     expect(status()).toBe('Ordenação por Total removida.');
   });
@@ -199,7 +199,7 @@ describe('filtro por coluna', () => {
     const btn = th('cliente').querySelector('.eds-table-filter-btn') as HTMLElement;
     expect(btn.hasAttribute('data-active')).toBe(true);
     expect(btn.getAttribute('aria-label')).toBe('Filtrar cliente, filtro ativo');
-    expect(th('cliente').hasAttribute('data-eds-filtered')).toBe(true);
+    expect(th('cliente').hasAttribute('data-filtered')).toBe(true);
     expect(status()).toBe('Cliente filtrada. 2 resultados.');
     expect(document.activeElement).toBe(btn);
   });
@@ -267,7 +267,7 @@ describe('filtro por coluna', () => {
 
 describe('lote', () => {
   beforeEach(() => {
-    build('data-eds-total="248"');
+    build('data-total="248"');
     start();
   });
   const bar = () => document.querySelector('[data-eds-table-bulk]') as HTMLElement;
@@ -338,7 +338,7 @@ describe('lote', () => {
 
 describe('tabela remota', () => {
   beforeEach(() => {
-    build('data-eds-table-remote="event" data-eds-total="248" data-eds-size="25"');
+    build('data-eds-table-remote="event" data-total="248" data-eds-size="25"');
     start();
   });
 
@@ -363,11 +363,11 @@ describe('tabela remota', () => {
     expect(T().hasAttribute('inert')).toBe(true);
     release();
     await vi.waitFor(() => expect(T().hasAttribute('aria-busy')).toBe(false));
-    expect(T().getAttribute('data-eds-total')).toBe('100');
+    expect(T().getAttribute('data-total')).toBe('100');
     expect(status()).toBe('100 resultados. Página 1 de 4.');
   });
 
-  it('erro mantém os dados, marca data-eds-error e anuncia', async () => {
+  it('erro mantém os dados, marca data-state="error" e anuncia', async () => {
     const user = userEvent.setup();
     const errors = vi.fn();
     T().addEventListener('eds:table-error', (e) => errors((e as CustomEvent).detail.error));
@@ -376,7 +376,7 @@ describe('tabela remota', () => {
     );
     const before = names();
     await user.click(sortButton('total'));
-    await vi.waitFor(() => expect(T().hasAttribute('data-eds-error')).toBe(true));
+    await vi.waitFor(() => expect(T().getAttribute('data-state')).toBe('error'));
     expect(names()).toEqual(before);
     expect(T().hasAttribute('aria-busy')).toBe(false);
     expect(status()).toContain('Os dados anteriores foram mantidos');
@@ -394,10 +394,10 @@ describe('tabela remota', () => {
     await user.click(sortButton('total'));
     await user.click(sortButton('cliente'));
     resolvers[1]?.({ total: 7 });
-    await vi.waitFor(() => expect(T().getAttribute('data-eds-total')).toBe('7'));
+    await vi.waitFor(() => expect(T().getAttribute('data-total')).toBe('7'));
     resolvers[0]?.({ total: 999 });
     await Promise.resolve();
-    expect(T().getAttribute('data-eds-total')).toBe('7');
+    expect(T().getAttribute('data-total')).toBe('7');
   });
 
   it('cancelar o evento deixa a consulta com o app; setState reflete o estado', async () => {

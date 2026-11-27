@@ -24,7 +24,7 @@ export default function Basico() {
       <Lookup
         name="cliente"
         search={buscar}
-        buttonLabel="Buscar cliente"
+        texts={{ open: 'Buscar cliente' }}
         columns={[
           { key: 'code', label: 'Código' },
           { key: 'description', label: 'Descrição' },

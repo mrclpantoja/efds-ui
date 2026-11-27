@@ -120,7 +120,7 @@ export default function Templates() {
       </Section>
 
       <Section title="Download">
-        <Alert variant="info" title="Em breve">
+        <Alert tone="info" title="Em breve">
           O download dos templates gratuitos estará disponível aqui. Eles são livres, sob licença
           MIT, e <strong>não precisam de chave de licença</strong> para funcionar: baixe, abra e
           use. Enquanto isso, as demonstrações acima funcionam normalmente, e o código está no

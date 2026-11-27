@@ -10,16 +10,28 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
+import { cx } from '../../utils/cx';
 import { Button } from '../Button';
 import { Input } from '../Input';
 import { Textarea } from '../Textarea';
 import { CheckGlyph } from '../../internal/glyphs';
 import { ExclamationGlyph, InfoGlyph, QuestionGlyph } from '../../internal/glyphs-dialog';
+import type { Tone } from '../../internal/tone';
 
-export type DialogVariant = 'info' | 'success' | 'warning' | 'danger' | 'question';
+/**
+ * Tom do diálogo rápido. `question` não é severidade: usa o visual do `info` com o glifo de
+ * pergunta (padrão do confirm e do prompt).
+ */
+export type DialogTone = Extract<Tone, 'info' | 'success' | 'warning' | 'danger'> | 'question';
 export type DialogInputType = 'text' | 'email' | 'number' | 'password' | 'textarea';
 
 export interface DialogOptions {
+  /** Título, em destaque acima do texto. Na forma posicional, o argumento `title` tem prioridade. */
+  title?: string;
+  /** Tom (ícone e cor). Padrão: `info` no alert e `question` no confirm e no prompt. */
+  tone?: DialogTone;
+  /** Prompt: valor inicial do campo. Na forma posicional, o argumento `defaultValue` tem prioridade. */
+  defaultValue?: string;
   /** Texto do botão de confirmação. Padrão: `texts.ok` (alert/prompt) ou `texts.confirm` (confirm). */
   okText?: string;
   /** Texto do botão de cancelar. Padrão: `texts.cancel`. */
@@ -28,36 +40,43 @@ export interface DialogOptions {
   placeholder?: string;
   /** Prompt: exige valor (não vazio). */
   required?: boolean;
-  /** Prompt: tipo do diálogo (ícone e cor). Padrão: `question`. */
-  variant?: DialogVariant;
   /** Prompt: tipo do campo. Padrão: `text`. */
   inputType?: DialogInputType;
   /** Prompt: devolve a mensagem de erro, ou `''` quando o valor é válido. */
   validate?: (value: string) => string;
 }
 
-export interface DialogApi {
-  /** Aviso com um botão. Resolve (`undefined`) ao fechar. Padrão de `variant`: `info`. */
-  alert: (
-    text: string,
-    title?: string,
-    variant?: DialogVariant,
-    options?: DialogOptions,
-  ) => Promise<void>;
-  /** Pergunta. `true` ao confirmar; `false` em Cancelar, Esc ou fundo. Padrão: `question`. */
-  confirm: (
-    text: string,
-    title?: string,
-    variant?: DialogVariant,
-    options?: DialogOptions,
-  ) => Promise<boolean>;
-  /** Pede um texto. Devolve o valor, ou `null` ao cancelar. */
-  prompt: (
+/** Aviso com um botão. Resolve (`undefined`) ao fechar. Padrão de `tone`: `info`. */
+export interface DialogAlert {
+  (text: string, title?: string, tone?: DialogTone, options?: DialogOptions): Promise<void>;
+  (text: string, options?: DialogOptions): Promise<void>;
+}
+
+/** Pergunta. `true` ao confirmar; `false` em Cancelar, Esc ou fundo. Padrão de `tone`: `question`. */
+export interface DialogConfirm {
+  (text: string, title?: string, tone?: DialogTone, options?: DialogOptions): Promise<boolean>;
+  (text: string, options?: DialogOptions): Promise<boolean>;
+}
+
+/** Pede um texto. Devolve o valor, ou `null` ao cancelar. */
+export interface DialogPrompt {
+  (
     text: string,
     defaultValue?: string,
     title?: string,
     options?: DialogOptions,
-  ) => Promise<string | null>;
+  ): Promise<string | null>;
+  (text: string, options?: DialogOptions): Promise<string | null>;
+}
+
+/**
+ * Cada função tem duas formas: a posicional curta (estilo SweetAlert2) e `(texto, opções)`, com
+ * `title`, `tone` e (no prompt) `defaultValue` dentro de `DialogOptions`.
+ */
+export interface DialogApi {
+  alert: DialogAlert;
+  confirm: DialogConfirm;
+  prompt: DialogPrompt;
 }
 
 export interface DialogTexts {
@@ -67,7 +86,7 @@ export interface DialogTexts {
   /** Mensagem do prompt `required` vazio. */
   required: string;
   /** Prefixo oculto de severidade (leitores de tela), como no Alert. `question`: nenhum. */
-  severity: Record<DialogVariant, string>;
+  severity: Record<DialogTone, string>;
 }
 
 export interface DialogProviderProps {
@@ -95,10 +114,20 @@ interface Request {
   kind: 'alert' | 'confirm' | 'prompt';
   text: string;
   title?: string;
-  variant: DialogVariant;
+  tone: DialogTone;
   defaultValue: string;
   options: DialogOptions;
   resolve: (value: never) => void;
+}
+
+/** Separa o título e as opções das duas formas de chamada de alert e confirm. */
+function split(
+  second: string | DialogOptions | undefined,
+  options: DialogOptions | undefined,
+): { title: string | undefined; opts: DialogOptions } {
+  if (typeof second === 'object' && second !== null) return { title: second.title, opts: second };
+  const opts = options ?? {};
+  return { title: second ?? opts.title, opts };
 }
 
 const cancelValue = (request: Request): undefined | boolean | null =>
@@ -133,7 +162,7 @@ interface QuickDialogProps {
 }
 
 function QuickDialog({ request, texts, onDone }: QuickDialogProps) {
-  const { kind, variant, options } = request;
+  const { kind, tone, options } = request;
   const uid = useId();
   const titleId = `${uid}-t`;
   const textId = `${uid}-d`;
@@ -167,12 +196,12 @@ function QuickDialog({ request, texts, onDone }: QuickDialogProps) {
     if (kind === 'prompt') {
       fieldRef.current?.focus();
       fieldRef.current?.select();
-    } else if (kind === 'confirm' && variant === 'danger') {
+    } else if (kind === 'confirm' && tone === 'danger') {
       cancelRef.current?.focus();
     } else {
       okRef.current?.focus();
     }
-  }, [kind, variant]);
+  }, [kind, tone]);
 
   // Esc (cancel nativo) e fechamento nativo sem pedido do código (2º Esc) cancelam.
   useEffect(() => {
@@ -194,7 +223,7 @@ function QuickDialog({ request, texts, onDone }: QuickDialogProps) {
   // Fundo: pointerdown e click no próprio <dialog>. `danger` não fecha pelo fundo.
   useEffect(() => {
     const dialog = dialogRef.current;
-    if (!dialog || variant === 'danger') return;
+    if (!dialog || tone === 'danger') return;
     let down = false;
     const onDown = (event: Event) => {
       down = event.target === dialog;
@@ -209,7 +238,7 @@ function QuickDialog({ request, texts, onDone }: QuickDialogProps) {
       dialog.removeEventListener('pointerdown', onDown);
       dialog.removeEventListener('click', onClick);
     };
-  }, [variant, cancel]);
+  }, [tone, cancel]);
 
   const submit = () => {
     if (kind === 'alert') return finish(undefined);
@@ -244,11 +273,11 @@ function QuickDialog({ request, texts, onDone }: QuickDialogProps) {
 
   const hasTitle = request.title != null && request.title !== '';
   // Perguntar antes de excluir não é um erro: em confirm/prompt `danger` fala "Atenção:".
-  const severity = texts.severity[variant === 'danger' && kind !== 'alert' ? 'warning' : variant];
+  const severity = texts.severity[tone === 'danger' && kind !== 'alert' ? 'warning' : tone];
   const hidden = severity ? <span className="eds-visually-hidden">{severity} </span> : null;
-  const VariantGlyph = glyphs[variant];
-  const alertRole = kind !== 'alert' && (variant === 'danger' || variant === 'warning');
-  const okVariant = variant === 'danger' ? 'danger' : 'primary';
+  const ToneGlyph = glyphs[tone];
+  const alertRole = kind !== 'alert' && (tone === 'danger' || tone === 'warning');
+  const okVariant = tone === 'danger' ? 'danger' : 'primary';
   const okLabel = options.okText ?? (kind === 'confirm' ? texts.confirm : texts.ok);
   const cancelLabel = options.cancelText ?? texts.cancel;
   const fieldProps = {
@@ -266,15 +295,18 @@ function QuickDialog({ request, texts, onDone }: QuickDialogProps) {
   return (
     <dialog
       ref={dialogRef}
-      className="eds-modal eds-alert-dialog"
-      data-variant={variant}
+      className={cx(
+        'eds-modal eds-alert-dialog',
+        (tone === 'success' || tone === 'warning' || tone === 'danger') &&
+          `eds-alert-dialog-${tone}`,
+      )}
       role={alertRole ? 'alertdialog' : undefined}
       aria-labelledby={hasTitle ? titleId : textId}
       aria-describedby={hasTitle ? textId : undefined}
       onKeyDown={onKeyDown}
     >
       <div className="eds-alert-dialog-icon" aria-hidden="true">
-        <VariantGlyph />
+        <ToneGlyph />
       </div>
       {hasTitle ? (
         <h2 className="eds-alert-dialog-title" id={titleId}>
@@ -347,21 +379,60 @@ export function DialogProvider({ texts, children }: DialogProviderProps) {
       new Promise<T>((resolve) =>
         start({ ...fields, id: ++nextId.current, resolve: resolve as (value: never) => void }),
       );
-    return {
-      alert: (text, title, variant = 'info', options = {}) =>
-        enqueue<void>({ kind: 'alert', text, title, variant, defaultValue: '', options }),
-      confirm: (text, title, variant = 'question', options = {}) =>
-        enqueue<boolean>({ kind: 'confirm', text, title, variant, defaultValue: '', options }),
-      prompt: (text, defaultValue = '', title, options = {}) =>
-        enqueue<string | null>({
-          kind: 'prompt',
-          text,
-          title,
-          variant: options.variant ?? 'question',
-          defaultValue,
-          options,
-        }),
+    const alert: DialogAlert = (
+      text: string,
+      second?: string | DialogOptions,
+      tone?: DialogTone,
+      options?: DialogOptions,
+    ) => {
+      const { title, opts } = split(second, options);
+      return enqueue<void>({
+        kind: 'alert',
+        text,
+        title,
+        tone: tone ?? opts.tone ?? 'info',
+        defaultValue: '',
+        options: opts,
+      });
     };
+    const confirm: DialogConfirm = (
+      text: string,
+      second?: string | DialogOptions,
+      tone?: DialogTone,
+      options?: DialogOptions,
+    ) => {
+      const { title, opts } = split(second, options);
+      return enqueue<boolean>({
+        kind: 'confirm',
+        text,
+        title,
+        tone: tone ?? opts.tone ?? 'question',
+        defaultValue: '',
+        options: opts,
+      });
+    };
+    const prompt: DialogPrompt = (
+      text: string,
+      second?: string | DialogOptions,
+      third?: string,
+      options?: DialogOptions,
+    ) => {
+      const positional = typeof second !== 'object' || second === null;
+      const opts = (positional ? options : second) ?? {};
+      const title = positional ? (third ?? opts.title) : opts.title;
+      const defaultValue = positional
+        ? (second ?? opts.defaultValue ?? '')
+        : (opts.defaultValue ?? '');
+      return enqueue<string | null>({
+        kind: 'prompt',
+        text,
+        title,
+        tone: opts.tone ?? 'question',
+        defaultValue,
+        options: opts,
+      });
+    };
+    return { alert, confirm, prompt };
   }, [start]);
 
   const onDone = useCallback((value: unknown) => {
@@ -398,3 +469,4 @@ export function DialogProvider({ texts, children }: DialogProviderProps) {
     </DialogContext.Provider>
   );
 }
+DialogProvider.displayName = 'DialogProvider';

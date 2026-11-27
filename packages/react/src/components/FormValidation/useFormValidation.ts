@@ -14,10 +14,9 @@ import {
   isFormControl,
   representativeOf,
   validatableControls,
-  validationMessages,
   type FormControl,
-  type ValidationMessages,
-} from '@efds-ui/behavior/validate';
+} from '@efds-ui/behavior/internal';
+import { validationMessages, type ValidationMessages } from '@efds-ui/behavior/validate';
 import { mergeTexts } from '../../utils/texts';
 import type { ErrorSummaryItem } from '../ErrorSummary';
 
@@ -36,7 +35,7 @@ export interface UseFormValidationOptions {
   texts?: Partial<ValidationMessages>;
 }
 
-export interface FormValidationProps {
+export interface FormValidationFormProps {
   /** Desliga o balão nativo: o erro é visível, junto do campo. */
   noValidate: true;
   ref: RefObject<HTMLFormElement | null>;
@@ -50,7 +49,7 @@ export interface FormValidationProps {
 
 export interface UseFormValidationResult {
   /** Espalhe no `<form>`: `<form {...formProps}>`. */
-  formProps: FormValidationProps;
+  formProps: FormValidationFormProps;
   /** Erro de um campo pelo `name` (ou `id`): passe para `error` do `Field`. `undefined` se não há. */
   errorOf: (name: string) => string | undefined;
   /** Para `<ErrorSummary {...summaryProps} />`. */

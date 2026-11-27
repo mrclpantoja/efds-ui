@@ -15,7 +15,7 @@ import {
   type ReactNode,
   type Ref,
 } from 'react';
-import { followScrollTop } from '@efds-ui/behavior/balloon';
+import { followScrollTop } from '@efds-ui/behavior/internal';
 import { flushSync } from 'react-dom';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
@@ -27,6 +27,8 @@ import { AppShellContext, SidebarSlotContext, useShellState } from '../AppShell/
 const SidebarContext = createContext<{ onNavigate: () => void } | null>(null);
 
 export interface SidebarTexts {
+  /** Nome do landmark `<nav>` (o `aria-label` da instância vence). Padrão: "Principal". */
+  label: string;
   /** Rótulo fixo do botão de colapsar (não muda com o estado). */
   collapse: string;
   /** Nome do botão de fechar do off-canvas (mobile). */
@@ -48,7 +50,7 @@ export interface SidebarProps extends Omit<HTMLAttributes<HTMLElement>, 'childre
   collapsed?: boolean;
   defaultCollapsed?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
-  /** Textos internos (padrões em pt-BR): `collapse` ("Menu lateral") e `close` ("Fechar menu"). */
+  /** Textos internos (padrões em pt-BR): `label`, `collapse` ("Menu lateral") e `close` ("Fechar menu"). */
   texts?: Partial<SidebarTexts>;
   /** Ícone do botão de colapsar. */
   collapseIcon?: ReactNode;
@@ -71,7 +73,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
     texts,
     collapseIcon,
     className,
-    'aria-label': ariaLabel = 'Principal',
+    'aria-label': ariaLabel,
     ...rest
   },
   ref,
@@ -142,7 +144,10 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
   const navId = ownId ?? shell.navId;
   const hasHeader = brandIcon !== undefined || brandLabel !== undefined;
   const hasFooter = footer !== undefined || collapsible;
-  const t = mergeTexts({ collapse: 'Menu lateral', close: 'Fechar menu' }, texts);
+  const t = mergeTexts<SidebarTexts>(
+    { label: 'Principal', collapse: 'Menu lateral', close: 'Fechar menu' },
+    texts,
+  );
   // Só aparece no off-canvas aberto (CSS); o navegador fecha o popover sem JS.
   const closeButton = (
     <button
@@ -163,7 +168,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
         ref={mergeRefs(navRef, ref)}
         id={navId}
         popover="auto"
-        aria-label={ariaLabel}
+        aria-label={ariaLabel ?? t.label}
         data-collapsed={isCollapsed || undefined}
         className={cx('eds-sidebar', className)}
       >

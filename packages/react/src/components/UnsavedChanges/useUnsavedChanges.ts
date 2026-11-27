@@ -18,7 +18,7 @@ const defaultTexts: UnsavedChangesTexts = {
   stay: 'Continuar editando',
 };
 
-export interface UnsavedChangesOptions {
+export interface UseUnsavedChangesOptions {
   /** Texto da pergunta (atalho de `texts.message`). */
   message?: string;
   /**
@@ -57,7 +57,7 @@ function isInternalNavigation(a: HTMLAnchorElement, event: MouseEvent): boolean 
  * refeito se o usuário confirmar). Navegações por código (`navigate()`) e o botão Voltar não
  * passam por aqui: confirme-as no seu roteador.
  */
-export function useUnsavedChanges(dirty: boolean, options: UnsavedChangesOptions = {}): void {
+export function useUnsavedChanges(dirty: boolean, options: UseUnsavedChangesOptions = {}): void {
   const { message, confirmLinks = true, texts } = options;
   const dialog = useOptionalDialog();
   const t = mergeTexts(defaultTexts, { ...texts, ...(message ? { message } : {}) });

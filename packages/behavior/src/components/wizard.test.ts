@@ -81,11 +81,11 @@ describe('wizard', () => {
     expect(document.querySelector('#p1 .eds-error')).toBeNull();
   });
 
-  it('usa data-eds-error como mensagem e reaproveita o p.eds-error do .eds-field', async () => {
+  it('usa data-eds-error-message como mensagem e reaproveita o p.eds-error do .eds-field', async () => {
     destroy();
     document.body.innerHTML = html.replace(
       '<label for="nome">Nome</label><input id="nome" name="nome" required />',
-      '<div class="eds-field"><label for="nome">Nome</label><input id="nome" name="nome" required data-eds-error="Informe o nome." aria-describedby="aj" /><p class="eds-error" id="e1" hidden></p></div>',
+      '<div class="eds-field"><label for="nome">Nome</label><input id="nome" name="nome" required data-eds-error-message="Informe o nome." aria-describedby="aj" /><p class="eds-error" id="e1" hidden></p></div>',
     );
     destroy = initWizard(document);
     const user = userEvent.setup();
@@ -109,7 +109,7 @@ describe('wizard', () => {
     expect(document.activeElement).toBe($('h2'));
     expect($('h2')).toHaveAttribute('tabindex', '-1');
     expect(document.querySelector('[role="status"]')).toHaveTextContent('Etapa 2 de 3: Endereço.');
-    expect(state(0)).toBe('complete');
+    expect(state(0)).toBe('done');
     expect(state(1)).toBe('current');
     const items = document.querySelectorAll('.eds-stepper-item');
     expect(items[1]).toHaveAttribute('aria-current', 'step');
@@ -159,7 +159,7 @@ describe('wizard', () => {
     await user.click($('next'));
     expect(state(2)).toBe('current');
     const button = document.querySelector<HTMLButtonElement>(
-      '.eds-stepper-item[data-state="complete"] button.eds-stepper-label',
+      '.eds-stepper-item[data-state="done"] button.eds-stepper-label',
     );
     expect(button).not.toBeNull();
     await user.click(button as HTMLElement);
@@ -200,13 +200,13 @@ describe('wizard', () => {
     // Ao sair dele, o painel segue como erro até ficar válido.
     await user.type($('nome'), 'Maria');
     await user.click($('next'));
-    expect(state(0)).toBe('complete');
+    expect(state(0)).toBe('done');
   });
 
   it('inicia na etapa indicada pelo stepper do servidor', () => {
     destroy();
     document.body.innerHTML = html
-      .replace('data-state="current" aria-current="step"', 'data-state="complete"')
+      .replace('data-state="current" aria-current="step"', 'data-state="done"')
       .replace(/data-state="upcoming"/, 'data-state="current" aria-current="step"');
     destroy = initWizard(document);
     expect($('p1')).toHaveAttribute('hidden');

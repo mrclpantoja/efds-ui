@@ -1,4 +1,4 @@
-export { ImageCropper, defaultImageCropperTexts } from './ImageCropper';
+export { ImageCropper } from './ImageCropper';
 export type {
   ImageCropperHandle,
   ImageCropperOutput,
@@ -9,4 +9,4 @@ export type {
 export { ImageCropperDialog } from './ImageCropperDialog';
 export type { ImageCropperDialogProps, ImageCropperDialogTexts } from './ImageCropperDialog';
 export { AvatarUpload } from './AvatarUpload';
-export type { AvatarUploadProps, AvatarUploadTexts } from './AvatarUpload';
+export type { AvatarUploadProps, AvatarUploadSize, AvatarUploadTexts } from './AvatarUpload';

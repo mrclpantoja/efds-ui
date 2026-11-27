@@ -2,7 +2,7 @@
  * Diálogos rápidos (alert, confirm, prompt): especialização do .eds-modal, gerada pelo JS
  * (EDS.alert / EDS.confirm / EDS.prompt) ou escrita à mão. Importar depois de modal.css.
  *
- *   <dialog class="eds-modal eds-alert-dialog" data-variant="info|success|warning|danger|question"
+ *   <dialog class="eds-modal eds-alert-dialog [eds-alert-dialog-success|-warning|-danger]"
  *     aria-labelledby="t" aria-describedby="d">
  *     <div class="eds-alert-dialog-icon" aria-hidden="true"><svg viewBox="0 0 24 24">…</svg></div>
  *     <h2 class="eds-alert-dialog-title" id="t">Título</h2>
@@ -14,6 +14,7 @@
  *     </div>
  *   </dialog>
  *
+ * Tom: classe modificadora (padrão info; o tipo "question" usa o visual do info, só muda o glifo).
  * Glifo do ícone: desenhe com traços (o CSS aplica fill:none; stroke:currentColor; 2px),
  * viewBox 24. O glifo difere por tipo (check, !, i, ?): a cor nunca é o único sinal.
  * Sem título, o texto é o nome do diálogo. Em contêiner estreito (conteúdo < 21rem) as ações
@@ -53,17 +54,17 @@
     }
   }
 
-  .eds-alert-dialog[data-variant='success'] {
+  .eds-alert-dialog-success {
     --_alert-dialog-bg: var(--eds-color-status-success-subtle);
     --_alert-dialog-fg: var(--eds-color-status-success-text);
   }
 
-  .eds-alert-dialog[data-variant='warning'] {
+  .eds-alert-dialog-warning {
     --_alert-dialog-bg: var(--eds-color-status-warning-subtle);
     --_alert-dialog-fg: var(--eds-color-status-warning-text);
   }
 
-  .eds-alert-dialog[data-variant='danger'] {
+  .eds-alert-dialog-danger {
     --_alert-dialog-bg: var(--eds-color-status-danger-subtle);
     --_alert-dialog-fg: var(--eds-color-status-danger-text);
   }

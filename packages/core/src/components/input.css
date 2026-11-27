@@ -1,4 +1,4 @@
-/* Input de texto. Estados por atributo: :disabled, [readonly], [aria-invalid="true"], [data-valid="true"]. */
+/* Input de texto. Estados por atributo: :disabled, [readonly], [aria-invalid="true"], [data-valid]. */
 @layer eds.components {
   .eds-input {
     --_input-height: var(--eds-control-height-md);
@@ -29,7 +29,7 @@
     }
 
     /* Hover escurece a borda para text-muted (decisão registrada: mais contraste que border-strong). */
-    &:hover:not(:disabled, [readonly], [aria-invalid='true'], [data-valid='true']) {
+    &:hover:not(:disabled, [readonly], [aria-invalid='true'], [data-valid]) {
       --_input-border: var(--eds-color-text-muted);
     }
 
@@ -45,7 +45,7 @@
       --_input-bg: var(--eds-color-bg-subtle);
     }
 
-    &[data-valid='true'] {
+    &[data-valid] {
       --_input-border: var(--eds-color-status-success-text);
     }
 

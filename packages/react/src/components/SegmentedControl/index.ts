@@ -1,2 +1,6 @@
 export { SegmentedControl } from './SegmentedControl';
-export type { SegmentedControlProps, SegmentedOption, SegmentedSize } from './SegmentedControl';
+export type {
+  SegmentedControlProps,
+  SegmentedControlOption,
+  SegmentedControlSize,
+} from './SegmentedControl';

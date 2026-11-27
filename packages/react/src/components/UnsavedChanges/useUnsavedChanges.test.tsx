@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { installDialogPolyfill } from '../../test-utils/dom-polyfills';
 import { DialogProvider } from '../Dialog';
-import { useUnsavedChanges, type UnsavedChangesOptions } from './useUnsavedChanges';
+import { useUnsavedChanges, type UseUnsavedChangesOptions } from './useUnsavedChanges';
 
 let restore: () => void;
 beforeEach(() => {
@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 afterEach(() => restore());
 
-function Page({ dirty, options }: { dirty: boolean; options?: UnsavedChangesOptions }) {
+function Page({ dirty, options }: { dirty: boolean; options?: UseUnsavedChangesOptions }) {
   useUnsavedChanges(dirty, options);
   return <a href="/outra-pagina">Outra página</a>;
 }

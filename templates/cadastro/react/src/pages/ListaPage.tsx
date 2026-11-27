@@ -189,7 +189,7 @@ export function ListaPage() {
     setSelecionados((prev) => new Set([...prev].filter((id) => !ids.includes(id))));
     setAviso(`${plural(ids.length, 'fornecedor excluído', 'fornecedores excluídos')}.`);
     show({
-      variant: 'success',
+      tone: 'success',
       message: um
         ? `Fornecedor ${alvos[0]?.razao} excluído (simulação).`
         : `${ids.length} fornecedores excluídos (simulação).`,
@@ -476,9 +476,7 @@ export function ListaPage() {
                     {f.cidadeNome}/{f.uf}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={situacoes[f.situacao].badge}>
-                      {situacoes[f.situacao].label}
-                    </Badge>
+                    <Badge tone={situacoes[f.situacao].badge}>{situacoes[f.situacao].label}</Badge>
                   </TableCell>
                   <TableCell numeric>{moeda.format(f.limite)}</TableCell>
                   <TableCell column="actions">

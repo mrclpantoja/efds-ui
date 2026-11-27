@@ -6,10 +6,10 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-  type BadgeVariant,
+  type BadgeTone,
 } from '@efds-ui/react';
 
-const faturas: { codigo: string; cliente: string; situacao: string; variant: BadgeVariant }[] = [
+const faturas: { codigo: string; cliente: string; situacao: string; variant: BadgeTone }[] = [
   { codigo: 'FAT-0001', cliente: 'Cliente Exemplo A', situacao: 'Pago', variant: 'success' },
   { codigo: 'FAT-0002', cliente: 'Cliente Exemplo B', situacao: 'Pendente', variant: 'warning' },
   { codigo: 'FAT-0003', cliente: 'Cliente Exemplo C', situacao: 'Atrasado', variant: 'danger' },
@@ -31,7 +31,7 @@ export default function EmTabela() {
             <TableCell>{f.codigo}</TableCell>
             <TableCell>{f.cliente}</TableCell>
             <TableCell>
-              <Badge variant={f.variant}>{f.situacao}</Badge>
+              <Badge tone={f.variant}>{f.situacao}</Badge>
             </TableCell>
           </TableRow>
         ))}

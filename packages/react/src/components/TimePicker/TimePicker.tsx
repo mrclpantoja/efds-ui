@@ -83,7 +83,7 @@ export interface TimePickerProps extends Omit<
   /** Horário inicial (não controlado). */
   defaultValue?: string;
   /** Mudança do horário: `HH:MM` quando completo e permitido, senão `''`. */
-  onChange?: (value: string) => void;
+  onValueChange?: (value: string) => void;
   /** Intervalo da lista, em minutos (1 a 720). Padrão: `30`. A digitação aceita qualquer minuto. */
   step?: number;
   /** Menor horário permitido (`HH:MM`). Padrão: `00:00`. */
@@ -96,7 +96,7 @@ export interface TimePickerProps extends Omit<
   size?: TimePickerSize;
   /** Erro: `aria-invalid="true"`. Dentro de um Field com `error` já é automático. */
   invalid?: boolean;
-  /** Sucesso: `data-valid="true"`. */
+  /** Sucesso: `data-valid`. */
   valid?: boolean;
   /** Textos internos substituíveis (i18n). */
   texts?: Partial<TimePickerTexts>;
@@ -112,7 +112,7 @@ export const TimePicker = forwardRef<HTMLInputElement, TimePickerProps>(function
   {
     value: valueProp,
     defaultValue,
-    onChange,
+    onValueChange,
     step: stepProp = DEFAULT_STEP,
     min,
     max,
@@ -166,7 +166,7 @@ export const TimePicker = forwardRef<HTMLInputElement, TimePickerProps>(function
     return list;
   }, [minMinutes, maxMinutes, step]);
 
-  const [value, setValue] = useControllable<string>(valueProp, defaultValue ?? '', onChange);
+  const [value, setValue] = useControllable<string>(valueProp, defaultValue ?? '', onValueChange);
   const [text, setText] = useState(value);
   const lastValue = useRef(value);
   const caret = useRef<number | null>(null);

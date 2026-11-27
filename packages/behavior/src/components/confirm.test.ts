@@ -29,7 +29,7 @@ describe('confirmação declarativa (data-eds-confirm)', () => {
 
   it('botão comum: pergunta e só então dispara o clique para os outros ouvintes', async () => {
     document.body.innerHTML =
-      '<main><button id="b" type="button" data-eds-confirm="Excluir o pedido PED-0001?" data-eds-confirm-title="Excluir" data-eds-confirm-variant="danger" data-eds-confirm-ok="Excluir">Excluir</button></main>';
+      '<main><button id="b" type="button" data-eds-confirm="Excluir o pedido PED-0001?" data-eds-confirm-title="Excluir" data-eds-confirm-tone="danger" data-eds-confirm-ok="Excluir">Excluir</button></main>';
     destroy = init(document);
     const handler = vi.fn();
     document.getElementById('b')!.addEventListener('click', handler);
@@ -37,7 +37,7 @@ describe('confirmação declarativa (data-eds-confirm)', () => {
     await flush();
     expect(handler).not.toHaveBeenCalled();
     const d = dlg()!;
-    expect(d.getAttribute('data-variant')).toBe('danger');
+    expect(d.classList.contains('eds-alert-dialog-danger')).toBe(true);
     expect(d.querySelector('.eds-alert-dialog-title')!.textContent).toContain('Excluir');
     expect(d.querySelector('.eds-alert-dialog-text')!.textContent).toBe(
       'Excluir o pedido PED-0001?',

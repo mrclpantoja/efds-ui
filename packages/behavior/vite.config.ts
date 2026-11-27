@@ -9,7 +9,7 @@ export default defineConfig({
         index: 'src/index.ts',
         'export-entry': 'src/export-entry.ts',
         'mask-entry': 'src/mask-entry.ts',
-        'balloon-entry': 'src/balloon-entry.ts',
+        'internal-entry': 'src/internal-entry.ts',
         'theme-entry': 'src/theme-entry.ts',
         'fields-entry': 'src/fields-entry.ts',
         'validate-entry': 'src/validate-entry.ts',

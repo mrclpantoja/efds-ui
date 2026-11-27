@@ -7,13 +7,12 @@ export default function Acao() {
     <Button
       onClick={() =>
         toast.show({
-          variant: 'info',
+          tone: 'info',
           message: 'Pedido PED-0001 excluído.',
           duration: 8000,
           action: {
             label: 'Desfazer',
-            onClick: () =>
-              toast.show({ variant: 'success', message: 'Pedido PED-0001 restaurado.' }),
+            onClick: () => toast.show({ tone: 'success', message: 'Pedido PED-0001 restaurado.' }),
           },
         })
       }

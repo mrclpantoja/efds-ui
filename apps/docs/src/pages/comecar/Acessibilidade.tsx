@@ -153,7 +153,7 @@ export default function AcessibilidadePage() {
         </ul>
       </Section>
 
-      <Alert variant="info" title="Encontrou uma barreira?">
+      <Alert tone="info" title="Encontrou uma barreira?">
         <p>
           Acessibilidade é requisito, não recurso opcional: uma barreira em um componente é um bug.
           Veja também <a href={toHref('/comecar/eventos')}>Referência de eventos</a> e{' '}

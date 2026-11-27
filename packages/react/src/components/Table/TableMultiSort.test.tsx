@@ -48,7 +48,7 @@ describe('ordenação múltipla', () => {
     expect(sorted().map((c) => c.column)).toEqual(['cliente', 'total']);
     expect(th('Cliente')).toHaveAttribute('aria-sort', 'ascending');
     expect(th('Total')).not.toHaveAttribute('aria-sort');
-    expect(th('Total')).toHaveAttribute('data-eds-sort-order', '2');
+    expect(th('Total')).toHaveAttribute('data-sort-order', '2');
     expect(th('Total').querySelector('.eds-table-sort-order')).toHaveTextContent('2');
     expect(th('Total')).toHaveTextContent(', critério 2, crescente');
     expect(th('Data')).toHaveAttribute('aria-sort', 'none');

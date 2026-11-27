@@ -29,7 +29,7 @@ describe('PageLoader', () => {
   it('abre com showModal, nomeia pelo título e bloqueia Esc', () => {
     render(
       <main>
-        <PageLoader open title="Buscando processo…" text="Aguarde." />
+        <PageLoader open title="Buscando processo…" texts={{ text: 'Aguarde.' }} />
       </main>,
     );
     const d = dialog();

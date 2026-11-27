@@ -187,7 +187,7 @@ export function Protocolo({ params }: { params: URLSearchParams }) {
                     >
                       Protocolo <span>{result.record.number}</span>
                     </h2>
-                    <Badge variant={result.record.status[0]}>{result.record.status[1]}</Badge>
+                    <Badge tone={result.record.status[0]}>{result.record.status[1]}</Badge>
                   </Stack>
                   <DescriptionList
                     columns={2}
@@ -205,7 +205,7 @@ export function Protocolo({ params }: { params: URLSearchParams }) {
               ) : null}
               {result.kind === 'notfound' ? (
                 <Alert
-                  variant="warning"
+                  tone="warning"
                   title={
                     <span id="resultado-titulo" tabIndex={-1} ref={resultTitle}>
                       Protocolo não encontrado

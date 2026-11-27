@@ -34,7 +34,7 @@ describe('Input: máscaras hora, competência e processo', () => {
         aria-label="Competência"
         mask="competencia"
         maskValidate
-        maskInvalidMessage="Mês errado"
+        texts={{ maskInvalid: 'Mês errado' }}
       />,
     );
     const input = screen.getByLabelText('Competência') as HTMLInputElement;

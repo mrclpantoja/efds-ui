@@ -52,7 +52,7 @@ export default function UsoComHtml() {
       </Section>
 
       <Section title="O que o CSS não faz">
-        <Alert variant="info" title="Comportamento vem do @efds-ui/behavior">
+        <Alert tone="info" title="Comportamento vem do @efds-ui/behavior">
           <p>
             Alguns componentes dependem de JavaScript para o teclado e o foco: Tabs (setas e roving
             tabindex), Toast (fila e temporizador), abrir Modal e Drawer, ordenação e seleção da

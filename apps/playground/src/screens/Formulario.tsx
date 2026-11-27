@@ -190,7 +190,7 @@ export function Formulario() {
       {resumo.length > 0 ? (
         <Alert
           ref={summaryRef}
-          variant="danger"
+          tone="danger"
           tabIndex={-1}
           role="group"
           aria-labelledby="cli-resumo-t"
@@ -219,7 +219,7 @@ export function Formulario() {
       {salvo ? (
         <Alert
           ref={successRef}
-          variant="success"
+          tone="success"
           tabIndex={-1}
           role="group"
           aria-labelledby="cli-ok-t"

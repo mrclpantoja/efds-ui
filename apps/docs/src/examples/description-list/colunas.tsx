@@ -7,7 +7,7 @@ export default function Colunas() {
       items={[
         { label: 'Número', value: 'PED-0001' },
         { label: 'Cliente', value: 'Cliente Exemplo A' },
-        { label: 'Situação', value: <Badge variant="success">Pago</Badge> },
+        { label: 'Situação', value: <Badge tone="success">Pago</Badge> },
         { label: 'Emissão', value: '12/03/2026' },
         { label: 'Vencimento', value: '12/04/2026' },
         { label: 'Valor', value: 'R$ 1.250,00' },

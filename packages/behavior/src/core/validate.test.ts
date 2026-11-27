@@ -3,15 +3,15 @@ import {
   isCep,
   isCnpj,
   isCpf,
-  isCpfOuCnpj,
-  isDataValida,
+  isCpfCnpj,
+  isDate,
   isEmail,
-  isIntervaloDatas,
+  isDateRange,
   isPis,
-  isPlaca,
-  isTelefone,
-  isTituloEleitor,
-  parseData,
+  isPlate,
+  isPhone,
+  isVoterId,
+  parseDateParts,
   validateBy,
 } from './validate';
 
@@ -131,13 +131,13 @@ describe('isCnpj', () => {
   });
 });
 
-describe('isCpfOuCnpj', () => {
+describe('isCpfCnpj', () => {
   it('escolhe pelo tamanho', () => {
-    expect(isCpfOuCnpj(genCpf().replace(/^(\d)\1+$/, '52998224725'))).toBe(true);
-    expect(isCpfOuCnpj('11.222.333/0001-81')).toBe(true);
-    expect(isCpfOuCnpj('11.222.333/0001-80')).toBe(false);
-    expect(isCpfOuCnpj('5299822472')).toBe(false);
-    expect(isCpfOuCnpj('')).toBe(false);
+    expect(isCpfCnpj(genCpf().replace(/^(\d)\1+$/, '52998224725'))).toBe(true);
+    expect(isCpfCnpj('11.222.333/0001-81')).toBe(true);
+    expect(isCpfCnpj('11.222.333/0001-80')).toBe(false);
+    expect(isCpfCnpj('5299822472')).toBe(false);
+    expect(isCpfCnpj('')).toBe(false);
   });
 });
 
@@ -153,35 +153,35 @@ describe('isCep', () => {
   });
 });
 
-describe('isTelefone', () => {
+describe('isPhone', () => {
   it('aceita fixo e celular com DDD, em vários formatos', () => {
-    expect(isTelefone('(53) 3222-1234')).toBe(true);
-    expect(isTelefone('5332221234')).toBe(true);
-    expect(isTelefone('(53) 99912-3456')).toBe(true);
-    expect(isTelefone('53 9 9912 3456')).toBe(true);
-    expect(isTelefone('+55 53 99912-3456')).toBe(true);
-    expect(isTelefone('+55 (11) 4002-8922')).toBe(true);
+    expect(isPhone('(53) 3222-1234')).toBe(true);
+    expect(isPhone('5332221234')).toBe(true);
+    expect(isPhone('(53) 99912-3456')).toBe(true);
+    expect(isPhone('53 9 9912 3456')).toBe(true);
+    expect(isPhone('+55 53 99912-3456')).toBe(true);
+    expect(isPhone('+55 (11) 4002-8922')).toBe(true);
   });
 
   it('filtra por tipo', () => {
-    expect(isTelefone('(53) 3222-1234', { tipo: 'fixo' })).toBe(true);
-    expect(isTelefone('(53) 3222-1234', { tipo: 'celular' })).toBe(false);
-    expect(isTelefone('(53) 99912-3456', { tipo: 'celular' })).toBe(true);
-    expect(isTelefone('(53) 99912-3456', { tipo: 'fixo' })).toBe(false);
+    expect(isPhone('(53) 3222-1234', { type: 'landline' })).toBe(true);
+    expect(isPhone('(53) 3222-1234', { type: 'mobile' })).toBe(false);
+    expect(isPhone('(53) 99912-3456', { type: 'mobile' })).toBe(true);
+    expect(isPhone('(53) 99912-3456', { type: 'landline' })).toBe(false);
   });
 
   it('recusa DDD inexistente, falta de DDD, números iguais, tamanho e país errado', () => {
-    expect(isTelefone('(10) 3222-1234')).toBe(false);
-    expect(isTelefone('(20) 99912-3456')).toBe(false);
-    expect(isTelefone('3222-1234')).toBe(false);
-    expect(isTelefone('999123456')).toBe(false);
-    expect(isTelefone('(53) 99999-9999')).toBe(false);
-    expect(isTelefone('(53) 3333-3333')).toBe(false);
-    expect(isTelefone('(53) 8222-1234')).toBe(false);
-    expect(isTelefone('(53) 3222-123')).toBe(false);
-    expect(isTelefone('+1 53 99912-3456')).toBe(false);
-    expect(isTelefone('(53) 3222-12ab')).toBe(false);
-    expect(isTelefone('')).toBe(false);
+    expect(isPhone('(10) 3222-1234')).toBe(false);
+    expect(isPhone('(20) 99912-3456')).toBe(false);
+    expect(isPhone('3222-1234')).toBe(false);
+    expect(isPhone('999123456')).toBe(false);
+    expect(isPhone('(53) 99999-9999')).toBe(false);
+    expect(isPhone('(53) 3333-3333')).toBe(false);
+    expect(isPhone('(53) 8222-1234')).toBe(false);
+    expect(isPhone('(53) 3222-123')).toBe(false);
+    expect(isPhone('+1 53 99912-3456')).toBe(false);
+    expect(isPhone('(53) 3222-12ab')).toBe(false);
+    expect(isPhone('')).toBe(false);
   });
 });
 
@@ -225,42 +225,42 @@ describe('isEmail', () => {
 
 describe('datas', () => {
   it('lê dd/mm/aaaa e ISO', () => {
-    expect(parseData('26/11/2026')).toEqual({ year: 2026, month: 11, day: 26 });
-    expect(parseData('2026-11-26')).toEqual({ year: 2026, month: 11, day: 26 });
-    expect(parseData('26-11-2026')).toBeNull();
-    expect(parseData('26/11/26')).toBeNull();
+    expect(parseDateParts('26/11/2026')).toEqual({ year: 2026, month: 11, day: 26 });
+    expect(parseDateParts('2026-11-26')).toEqual({ year: 2026, month: 11, day: 26 });
+    expect(parseDateParts('26-11-2026')).toBeNull();
+    expect(parseDateParts('26/11/26')).toBeNull();
   });
 
   it('confere o calendário (bissexto, 30/31 dias, mês 13)', () => {
-    expect(isDataValida('29/02/2028')).toBe(true);
-    expect(isDataValida('29/02/2027')).toBe(false);
-    expect(isDataValida('29/02/2100')).toBe(false);
-    expect(isDataValida('29/02/2000')).toBe(true);
-    expect(isDataValida('31/04/2026')).toBe(false);
-    expect(isDataValida('31/12/2026')).toBe(true);
-    expect(isDataValida('00/01/2026')).toBe(false);
-    expect(isDataValida('15/13/2026')).toBe(false);
-    expect(isDataValida('2026-02-30')).toBe(false);
-    expect(isDataValida('2028-02-29')).toBe(true);
-    expect(isDataValida('01/01/0999')).toBe(false);
-    expect(isDataValida('')).toBe(false);
+    expect(isDate('29/02/2028')).toBe(true);
+    expect(isDate('29/02/2027')).toBe(false);
+    expect(isDate('29/02/2100')).toBe(false);
+    expect(isDate('29/02/2000')).toBe(true);
+    expect(isDate('31/04/2026')).toBe(false);
+    expect(isDate('31/12/2026')).toBe(true);
+    expect(isDate('00/01/2026')).toBe(false);
+    expect(isDate('15/13/2026')).toBe(false);
+    expect(isDate('2026-02-30')).toBe(false);
+    expect(isDate('2028-02-29')).toBe(true);
+    expect(isDate('01/01/0999')).toBe(false);
+    expect(isDate('')).toBe(false);
   });
 
   it('faixa min/max, com os limites inclusos e formatos misturados', () => {
     const o = { min: '01/01/2026', max: '2026-12-31' };
-    expect(isDataValida('01/01/2026', o)).toBe(true);
-    expect(isDataValida('31/12/2026', o)).toBe(true);
-    expect(isDataValida('31/12/2025', o)).toBe(false);
-    expect(isDataValida('01/01/2027', o)).toBe(false);
-    expect(isDataValida('15/06/2026', { min: '01/01/2026' })).toBe(true);
-    expect(isDataValida('15/06/2026', { max: '01/01/2026' })).toBe(false);
+    expect(isDate('01/01/2026', o)).toBe(true);
+    expect(isDate('31/12/2026', o)).toBe(true);
+    expect(isDate('31/12/2025', o)).toBe(false);
+    expect(isDate('01/01/2027', o)).toBe(false);
+    expect(isDate('15/06/2026', { min: '01/01/2026' })).toBe(true);
+    expect(isDate('15/06/2026', { max: '01/01/2026' })).toBe(false);
   });
 
   it('intervalo: início não pode passar do fim', () => {
-    expect(isIntervaloDatas('01/01/2026', '31/01/2026')).toBe(true);
-    expect(isIntervaloDatas('01/01/2026', '01/01/2026')).toBe(true);
-    expect(isIntervaloDatas('2026-02-01', '31/01/2026')).toBe(false);
-    expect(isIntervaloDatas('31/02/2026', '01/03/2026')).toBe(false);
+    expect(isDateRange('01/01/2026', '31/01/2026')).toBe(true);
+    expect(isDateRange('01/01/2026', '01/01/2026')).toBe(true);
+    expect(isDateRange('2026-02-01', '31/01/2026')).toBe(false);
+    expect(isDateRange('31/02/2026', '01/03/2026')).toBe(false);
   });
 });
 
@@ -302,14 +302,14 @@ function genTitulo(uf: number): string {
   return [...seq, ...ufd, dv1, dv2].join('');
 }
 
-describe('isTituloEleitor', () => {
+describe('isVoterId', () => {
   it('aceita títulos gerados de todas as UFs (01 a 28)', () => {
     for (let uf = 1; uf <= 28; uf += 1) {
       for (let i = 0; i < 5; i += 1) {
         const t = genTitulo(uf);
         if (/^(\d)\1+$/.test(t)) continue;
-        expect(isTituloEleitor(t), t).toBe(true);
-        expect(isTituloEleitor(`${t.slice(0, 4)} ${t.slice(4, 8)} ${t.slice(8)}`)).toBe(true);
+        expect(isVoterId(t), t).toBe(true);
+        expect(isVoterId(`${t.slice(0, 4)} ${t.slice(4, 8)} ${t.slice(8)}`)).toBe(true);
       }
     }
   });
@@ -317,20 +317,20 @@ describe('isTituloEleitor', () => {
   it('recusa verificador errado, UF fora de 01-28, repetidos e tamanho', () => {
     for (let i = 0; i < 30; i += 1) {
       const t = genTitulo(1 + (i % 28));
-      expect(isTituloEleitor(breakLast(t))).toBe(false);
+      expect(isVoterId(breakLast(t))).toBe(false);
     }
     const base = genTitulo(5);
-    expect(isTituloEleitor(`${base.slice(0, 8)}00${base.slice(10)}`)).toBe(false);
-    expect(isTituloEleitor(`${base.slice(0, 8)}29${base.slice(10)}`)).toBe(false);
-    expect(isTituloEleitor('111111111111')).toBe(false);
-    expect(isTituloEleitor('12345678')).toBe(false);
+    expect(isVoterId(`${base.slice(0, 8)}00${base.slice(10)}`)).toBe(false);
+    expect(isVoterId(`${base.slice(0, 8)}29${base.slice(10)}`)).toBe(false);
+    expect(isVoterId('111111111111')).toBe(false);
+    expect(isVoterId('12345678')).toBe(false);
   });
 });
 
-describe('isPlaca', () => {
+describe('isPlate', () => {
   it('aceita o padrão antigo e o Mercosul, em qualquer caixa', () => {
     for (const ok of ['ABC-1234', 'abc1234', 'ABC 1234', 'ABC1D23', 'abc1d23', 'BRA2E19']) {
-      expect(isPlaca(ok), ok).toBe(true);
+      expect(isPlate(ok), ok).toBe(true);
     }
   });
 
@@ -345,7 +345,7 @@ describe('isPlaca', () => {
       'ABC1DD3',
       'ÁBC1234',
     ]) {
-      expect(isPlaca(bad), bad).toBe(false);
+      expect(isPlate(bad), bad).toBe(false);
     }
   });
 });
@@ -373,6 +373,6 @@ describe('validateBy', () => {
     expect(validateBy('cpf', '529.982.247-25')).toBe(true);
     expect(validateBy('cpf', '529.982.247-24')).toBe(false);
     expect(validateBy('data', '15/06/2026', { max: '01/01/2026' })).toBe(false);
-    expect(validateBy('telefone', '(53) 3222-1234', { tipo: 'celular' })).toBe(false);
+    expect(validateBy('telefone', '(53) 3222-1234', { type: 'mobile' })).toBe(false);
   });
 });

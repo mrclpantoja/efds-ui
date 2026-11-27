@@ -3,13 +3,14 @@ import { cx } from '../../utils/cx';
 import { focusSectionTitle } from '../../internal/sections';
 import { mergeTexts } from '../../utils/texts';
 
-/** `done` e sinônimo visual de `complete` (usado pelo indicador de seções). */
-export type StepState = 'complete' | 'done' | 'current' | 'upcoming' | 'error';
+export type StepperStepState = 'done' | 'current' | 'upcoming' | 'error';
+
+export type StepperOrientation = 'horizontal' | 'vertical';
 
 export interface StepperStep {
   label: string;
   /** Sobrescreve o estado derivado de `current` (ex.: `error`). */
-  state?: StepState;
+  state?: StepperStepState;
   /**
    * Indicador de seções: o rótulo vira um link para a âncora (`#secao`) e o clique leva o foco ao
    * título dela. Com `href` em alguma etapa, o `Stepper` passa ao modo indicador.
@@ -44,7 +45,8 @@ export interface StepperProps extends Omit<OlHTMLAttributes<HTMLOListElement>, '
    * indicador de seções, é a seção lida e os estados vêm de `state` (ver `useSectionProgress`).
    */
   current: number;
-  vertical?: boolean;
+  /** Padrão: `horizontal`. */
+  orientation?: StepperOrientation;
   /**
    * Torna as etapas concluídas clicáveis (voltar): o rótulo vira `<button>`. Recebe o índice
    * da etapa escolhida.
@@ -53,14 +55,14 @@ export interface StepperProps extends Omit<OlHTMLAttributes<HTMLOListElement>, '
   texts?: Partial<StepperTexts>;
 }
 
-export const stepStates = (steps: readonly StepperStep[], current: number): StepState[] =>
+export const stepStates = (steps: readonly StepperStep[], current: number): StepperStepState[] =>
   steps.map(
-    (step, i) => step.state ?? (i < current ? 'complete' : i === current ? 'current' : 'upcoming'),
+    (step, i) => step.state ?? (i < current ? 'done' : i === current ? 'current' : 'upcoming'),
   );
 
 /** Indicador de etapas (`<ol>`). Estado por `data-state` e `aria-current`; nunca só por cor. */
 export const Stepper = forwardRef<HTMLOListElement, StepperProps>(function Stepper(
-  { steps, current, vertical = false, onStepClick, texts, className, ...rest },
+  { steps, current, orientation = 'horizontal', onStepClick, texts, className, ...rest },
   ref,
 ) {
   const t = mergeTexts(defaultStepperTexts, texts);
@@ -70,17 +72,12 @@ export const Stepper = forwardRef<HTMLOListElement, StepperProps>(function Stepp
     <ol
       {...rest}
       ref={ref}
-      className={cx('eds-stepper', vertical && 'eds-stepper-vertical', className)}
+      className={cx('eds-stepper', orientation === 'vertical' && 'eds-stepper-vertical', className)}
     >
       {steps.map((step, i) => {
         const state = states[i] ?? 'upcoming';
         const isCurrent = i === current;
-        const hidden =
-          state === 'complete' || state === 'done'
-            ? t.complete
-            : state === 'error'
-              ? t.error
-              : null;
+        const hidden = state === 'done' ? t.complete : state === 'error' ? t.error : null;
         const suffix = hidden ? <span className="eds-visually-hidden">{hidden}</span> : null;
         if (indicator) {
           return (
@@ -122,7 +119,7 @@ export const Stepper = forwardRef<HTMLOListElement, StepperProps>(function Stepp
             aria-current={isCurrent ? 'step' : undefined}
           >
             <span className="eds-stepper-marker" aria-hidden="true" />
-            {onStepClick && state === 'complete' && !isCurrent ? (
+            {onStepClick && state === 'done' && !isCurrent ? (
               <button type="button" className="eds-stepper-label" onClick={() => onStepClick(i)}>
                 {step.label}
                 {suffix}

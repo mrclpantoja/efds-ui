@@ -38,7 +38,7 @@ export default function ModalPage() {
       />
 
       <Section title="Exemplos">
-        <Alert variant="info" title="HTML: precisa do @efds-ui/behavior">
+        <Alert tone="info" title="HTML: precisa do @efds-ui/behavior">
           <p>
             No HTML, o diálogo só é modal quando aberto com <code>showModal()</code>. O pacote{' '}
             <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> faz isso por atributos:{' '}

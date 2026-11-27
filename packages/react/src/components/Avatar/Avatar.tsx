@@ -36,7 +36,7 @@ export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'chil
   /** Situação (online, ocupado, ausente, offline): vai também no nome acessível. */
   status?: AvatarStatus;
   /** Círculo, em vez da forma do tema (`data-shape`). */
-  circle?: boolean;
+  round?: boolean;
   /** Força um dos 6 tons; sem isso o tom vem do nome. */
   tone?: AvatarTone;
   /**
@@ -60,7 +60,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
     size,
     status,
     tone,
-    circle = false,
+    round = false,
     decorative = false,
     texts,
     className,
@@ -80,7 +80,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
       className={cx(
         'eds-avatar',
         effective !== 'md' && `eds-avatar-${effective}`,
-        circle && 'eds-avatar-circle',
+        round && 'eds-avatar-round',
         `eds-avatar-tone-${tone ?? avatarTone(name)}`,
         className,
       )}

@@ -1,6 +1,6 @@
 /** Textos do editor (pt-BR por padrão). Sem efeitos colaterais: só estado de módulo. */
 
-export interface EditorMessages {
+export interface EditorTexts {
   /** Nome do conteúdo quando o textarea não tem rótulo. */
   contentLabel: string;
   toolbarLabel: string;
@@ -64,7 +64,7 @@ export interface EditorMessages {
   required: string;
 }
 
-export const defaultMessages: EditorMessages = {
+export const defaultMessages: EditorTexts = {
   contentLabel: 'Conteúdo',
   toolbarLabel: 'Formatação',
   groupHistory: 'Desfazer',
@@ -124,10 +124,10 @@ export const defaultMessages: EditorMessages = {
   required: 'Preencha o conteúdo.',
 };
 
-let current: EditorMessages = { ...defaultMessages };
+let current: EditorTexts = { ...defaultMessages };
 
 /** Troca textos de forma global (vale para os editores criados depois). */
-export function configure(options: { messages?: Partial<EditorMessages> }): void {
+export function configure(options: { messages?: Partial<EditorTexts> }): void {
   if (options.messages) current = { ...current, ...definedOnly(options.messages) };
 }
 
@@ -135,13 +135,13 @@ export function resetMessages(): void {
   current = { ...defaultMessages };
 }
 
-export function getMessages(extra?: Partial<EditorMessages>): EditorMessages {
+export function getMessages(extra?: Partial<EditorTexts>): EditorTexts {
   return extra ? { ...current, ...definedOnly(extra) } : current;
 }
 
-function definedOnly(messages: Partial<EditorMessages>): Partial<EditorMessages> {
-  const out: Partial<EditorMessages> = {};
-  for (const key of Object.keys(messages) as (keyof EditorMessages)[]) {
+function definedOnly(messages: Partial<EditorTexts>): Partial<EditorTexts> {
+  const out: Partial<EditorTexts> = {};
+  for (const key of Object.keys(messages) as (keyof EditorTexts)[]) {
     const value = messages[key];
     if (typeof value === 'string') out[key] = value;
   }

@@ -124,3 +124,32 @@ describe('Gallery', () => {
     expect(dialog()?.querySelector('.eds-lightbox-counter')).toHaveTextContent('2/3');
   });
 });
+
+describe('Gallery: índice controlado', () => {
+  it('index abre o visualizador na imagem pedida; null fecha; onIndexChange(null) ao fechar', async () => {
+    const user = userEvent.setup();
+    const onIndexChange = vi.fn();
+    const { rerender } = render(
+      <Gallery label="Fotos da obra" items={items} index={null} onIndexChange={onIndexChange} />,
+    );
+    expect(dialog()).toBeNull();
+    rerender(
+      <Gallery label="Fotos da obra" items={items} index={1} onIndexChange={onIndexChange} />,
+    );
+    expect(dialog()).not.toBeNull();
+    expect(dialog()?.textContent).toContain('2 de 3');
+    await user.click(screen.getByRole('button', { name: 'Fechar' }));
+    expect(onIndexChange).toHaveBeenLastCalledWith(null);
+    // controlado: quem manda é a prop
+    expect(dialog()).not.toBeNull();
+    rerender(
+      <Gallery label="Fotos da obra" items={items} index={null} onIndexChange={onIndexChange} />,
+    );
+    expect(dialog()).toBeNull();
+  });
+
+  it('defaultIndex abre ao montar', () => {
+    render(<Gallery label="Fotos da obra" items={items} defaultIndex={2} />);
+    expect(dialog()?.textContent).toContain('3 de 3');
+  });
+});

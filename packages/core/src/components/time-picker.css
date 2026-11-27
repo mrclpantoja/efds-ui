@@ -2,7 +2,7 @@
    Sem JS, para escolher o horário use o campo nativo: <input type="time" class="eds-input"> (estilizado
    em input.css, com o mesmo tamanho, foco e estados do Input).
    Markup:
-     <div class="eds-timepicker" data-eds-timepicker data-eds-time-step="15" data-eds-min="08:00" data-eds-max="18:00">
+     <div class="eds-timepicker" data-eds-timepicker data-eds-step="15" data-eds-min="08:00" data-eds-max="18:00">
        <input class="eds-input eds-timepicker-input" type="text" data-eds-mask="hora" inputmode="numeric"
          maxlength="5" placeholder="hh:mm" role="combobox" aria-haspopup="listbox" aria-expanded="false"
          aria-controls="hora-lista" autocomplete="off" />

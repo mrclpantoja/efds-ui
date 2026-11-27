@@ -274,7 +274,7 @@ function ListagemTela() {
     alvo?.focus();
     const first = pending[0];
     show({
-      variant: 'success',
+      tone: 'success',
       title: pending.length === 1 ? 'Cliente excluído.' : `${pending.length} clientes excluídos.`,
       message:
         pending.length === 1 && first
@@ -323,7 +323,7 @@ function ListagemTela() {
 
   const exportar = (n: number) =>
     show({
-      variant: 'info',
+      tone: 'info',
       title: 'Exportação simulada.',
       message: `${plural(n, 'cliente', 'clientes')} no arquivo.`,
     });
@@ -374,7 +374,9 @@ function ListagemTela() {
                 label: situacoes[s].label,
               }))}
               value={draft.situacoes}
-              onChange={(values) => setDraft((d) => ({ ...d, situacoes: values as Situacao[] }))}
+              onValueChange={(values) =>
+                setDraft((d) => ({ ...d, situacoes: values as Situacao[] }))
+              }
             />
           </Field>
           <Field label="Segmento">
@@ -491,9 +493,7 @@ function ListagemTela() {
                   <TableCell>{c.id}</TableCell>
                   <TableHeaderCell scope="row">{c.nome}</TableHeaderCell>
                   <TableCell>
-                    <Badge variant={situacoes[c.situacao].badge}>
-                      {situacoes[c.situacao].label}
-                    </Badge>
+                    <Badge tone={situacoes[c.situacao].badge}>{situacoes[c.situacao].label}</Badge>
                   </TableCell>
                   <TableCell numeric>{moeda.format(c.total)}</TableCell>
                   <TableCell>{c.segmento}</TableCell>
@@ -503,7 +503,7 @@ function ListagemTela() {
                       cliente={c}
                       onDuplicate={(cliente) =>
                         show({
-                          variant: 'info',
+                          tone: 'info',
                           title: 'Cópia criada.',
                           message: `Rascunho de ${cliente.nome} (simulação).`,
                         })

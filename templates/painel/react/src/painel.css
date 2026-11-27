@@ -50,14 +50,14 @@
   text-align: center;
 }
 
-.pn-inbox:has(input[value='nao-lidas']:checked) .eds-notification:not([data-unread='true']),
-.pn-inbox:has(input[value='lidas']:checked) .eds-notification[data-unread='true'] {
+.pn-inbox:has(input[value='nao-lidas']:checked) .eds-notification:not([data-unread]),
+.pn-inbox:has(input[value='lidas']:checked) .eds-notification[data-unread] {
   display: none;
 }
 
-.pn-inbox:has(input[value='nao-lidas']:checked):not(:has(.eds-notification[data-unread='true']))
+.pn-inbox:has(input[value='nao-lidas']:checked):not(:has(.eds-notification[data-unread]))
   .pn-inbox-none,
-.pn-inbox:has(input[value='lidas']:checked):not(:has(.eds-notification:not([data-unread='true'])))
+.pn-inbox:has(input[value='lidas']:checked):not(:has(.eds-notification:not([data-unread])))
   .pn-inbox-none {
   display: block;
 }

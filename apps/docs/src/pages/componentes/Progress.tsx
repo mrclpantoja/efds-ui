@@ -39,7 +39,7 @@ export default function ProgressPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Só CSS">
+        <Alert tone="info" title="Só CSS">
           <p>
             Não há JavaScript no componente: atualize <code>value</code> (e o texto do valor) pelo
             seu código. Para o envio de arquivos, o FileUpload já mostra o andamento de cada
@@ -88,8 +88,8 @@ export default function ProgressPage() {
             { name: '.eds-progress', effect: 'O <progress> nativo estilizado.' },
             { name: '.eds-progress-sm', effect: 'Barra mais fina.' },
             {
-              name: '[data-tone]',
-              effect: 'info, success, warning ou danger: cor do preenchimento.',
+              name: '.eds-progress-info / -success / -warning / -danger',
+              effect: 'Tom: cor do preenchimento.',
             },
             {
               name: '.eds-progress-field',

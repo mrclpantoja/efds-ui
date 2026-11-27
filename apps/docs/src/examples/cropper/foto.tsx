@@ -9,7 +9,7 @@ export default function Foto() {
         personName="Ana Exemplo"
         name="foto"
         outputSize={256}
-        onChange={(file) => setInfo(`${file.name}: ${Math.round(file.size / 1024)} KB`)}
+        onValueChange={(file) => setInfo(`${file.name}: ${Math.round(file.size / 1024)} KB`)}
       />
       <p className="eds-helper" role="status">
         {info}

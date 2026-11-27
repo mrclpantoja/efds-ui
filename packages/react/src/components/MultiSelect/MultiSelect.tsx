@@ -52,7 +52,7 @@ export interface MultiSelectProps extends Omit<
   /** Valores iniciais (não controlado). */
   defaultValue?: string[];
   /** Escolha ou remoção: recebe os valores e as opções correspondentes (na ordem de escolha). */
-  onChange?: (values: string[], options: ComboboxOption[]) => void;
+  onValueChange?: (values: string[], options: ComboboxOption[]) => void;
   /** Texto digitado mudou: use para buscar opções no servidor (combine com `loading`). */
   onInputChange?: (text: string) => void;
   /** Filtro local ("contém", sem acento/caixa). `false` se o consumidor já filtra. Padrão: `true`. */
@@ -79,7 +79,7 @@ export interface MultiSelectProps extends Omit<
   size?: MultiSelectSize;
   /** Erro: `aria-invalid="true"`. Dentro de um Field com `error` já é automático. */
   invalid?: boolean;
-  /** Sucesso: `data-valid="true"`. */
+  /** Sucesso: `data-valid`. */
   valid?: boolean;
   /** Textos internos (padrões em pt-BR). */
   texts?: Partial<MultiSelectTexts>;
@@ -135,7 +135,7 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
     options,
     value: valueProp,
     defaultValue,
-    onChange,
+    onValueChange,
     onInputChange,
     filter = true,
     loading = false,
@@ -237,7 +237,7 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
 
   const commit = (next: string[]) => {
     setValues(next);
-    onChange?.(next, next.map(optionOf));
+    onValueChange?.(next, next.map(optionOf));
   };
 
   const clearText = () => {
@@ -499,7 +499,7 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
               role="option"
               aria-selected={values.includes(option.value)}
               aria-disabled={isBlocked(option) || undefined}
-              data-eds-max={!option.disabled && isBlocked(option) ? '' : undefined}
+              data-max={!option.disabled && isBlocked(option) ? '' : undefined}
               data-value={option.value}
               data-active={i === activeIndex ? '' : undefined}
               onPointerDown={(event) => event.preventDefault()}

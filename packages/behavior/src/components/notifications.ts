@@ -6,17 +6,17 @@ import { announce } from './status-region';
 const ITEM = '.eds-notification';
 const MAX_BADGE = 99;
 
-/** Quantas notificações não lidas (`data-unread="true"`). */
+/** Quantas notificações não lidas (`data-unread`). */
 function unreadOf(panel: HTMLElement): HTMLElement[] {
-  return [...panel.querySelectorAll<HTMLElement>(ITEM)].filter(
-    (item) => item.getAttribute('data-unread') === 'true',
+  return [...panel.querySelectorAll<HTMLElement>(ITEM)].filter((item) =>
+    item.hasAttribute('data-unread'),
   );
 }
 
 /**
  * Notificações (sino): o painel é um `popover` (reuso do Popover: abrir, Esc, foco e posição) com
  * `data-eds-notifications`. O behavior liga o estado de leitura:
- * - clicar no link ou botão de um `.eds-notification[data-unread="true"]` o marca como lido
+ * - clicar no link ou botão de um `.eds-notification[data-unread]` o marca como lido
  *   (tira `data-unread`);
  * - `[data-eds-notifications-read-all]` marca todos;
  * - o botão que abre (`[popovertarget]`) ganha o nome "Notificações, N não lidas" e o
@@ -93,7 +93,7 @@ export const notificationsBehavior: Behavior = {
         return;
       }
       const item = event.target.closest<HTMLElement>(ITEM);
-      if (!item || !panel.contains(item) || item.getAttribute('data-unread') !== 'true') return;
+      if (!item || !panel.contains(item) || !item.hasAttribute('data-unread')) return;
       // Só o link ou botão do item conta (não o espaço em volta).
       if (!event.target.closest('a, button')) return;
       markRead(item);

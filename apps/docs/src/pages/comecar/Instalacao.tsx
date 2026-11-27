@@ -65,7 +65,7 @@ export default function Instalacao() {
           caminho.
         </p>
         <CodeBlock code={cdnSnippet} label="Código HTML: CSS e comportamento pelo CDN" />
-        <Alert variant="warning" title="CDN externo e LGPD">
+        <Alert tone="warning" title="CDN externo e LGPD">
           <p>
             Carregar do CDN envia o IP de quem acessa ao provedor do CDN. Em sistemas de órgão
             público ou com dados pessoais, prefira servir os arquivos do seu próprio servidor:
@@ -90,7 +90,7 @@ export default function Instalacao() {
       </Section>
 
       <Section title="Carregar a fonte Inter">
-        <Alert variant="info" title="A fonte é do consumidor">
+        <Alert tone="info" title="A fonte é do consumidor">
           <p>
             O core define <code>Inter</code> como família padrão, mas não carrega a fonte. Se ela
             não for carregada, o navegador usa a fonte de reserva do sistema.

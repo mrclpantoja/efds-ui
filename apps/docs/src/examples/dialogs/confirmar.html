@@ -1,7 +1,7 @@
 <!-- confirm devolve uma Promise<boolean>: true ao confirmar; false em Cancelar, Esc ou fundo. -->
 <div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3">
   <button type="button" class="eds-button eds-button-danger"
-    onclick="EDS.confirm('Excluir o pedido PED-0001? Esta ação não pode ser desfeita.', 'Excluir pedido', 'danger', { okText: 'Excluir' }).then(function (ok) { EDS.toast({ variant: ok ? 'success' : 'info', message: ok ? 'Pedido PED-0001 excluído.' : 'Exclusão cancelada.' }); })">Excluir pedido</button>
+    onclick="EDS.confirm('Excluir o pedido PED-0001? Esta ação não pode ser desfeita.', 'Excluir pedido', 'danger', { okText: 'Excluir' }).then(function (ok) { EDS.toast({ tone: ok ? 'success' : 'info', message: ok ? 'Pedido PED-0001 excluído.' : 'Exclusão cancelada.' }); })">Excluir pedido</button>
   <button type="button" class="eds-button eds-button-secondary"
-    onclick="EDS.confirm('Enviar a nota fiscal ao cliente?', 'Enviar', 'question').then(function (ok) { EDS.toast({ variant: ok ? 'success' : 'info', message: ok ? 'Nota fiscal enviada.' : 'Envio cancelado.' }); })">Enviar nota fiscal</button>
+    onclick="EDS.confirm('Enviar a nota fiscal ao cliente?', 'Enviar', 'question').then(function (ok) { EDS.toast({ tone: ok ? 'success' : 'info', message: ok ? 'Nota fiscal enviada.' : 'Envio cancelado.' }); })">Enviar nota fiscal</button>
 </div>

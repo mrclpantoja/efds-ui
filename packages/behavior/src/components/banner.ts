@@ -1,4 +1,4 @@
-import { closeIcon, emit, FOCUSABLE } from '../core/dom';
+import { closeIcon, emit, FOCUSABLE, flag } from '../core/dom';
 import { format, getMessages } from '../core/config';
 import { bindAll, type Behavior } from '../core/registry';
 
@@ -27,10 +27,10 @@ function focusNext(el: HTMLElement): void {
 }
 
 /**
- * Banner de sistema (`.eds-banner[data-eds-banner]`). Com botão `[data-eds-banner-close]` (ou
+ * Banner de sistema (`.eds-banner[data-eds-banner]`). Com botão `[data-eds-close]` (ou
  * `data-eds-dismissible`, que o cria) o banner fecha com `hidden`; o fechamento é lembrado por id
  * (o valor de `data-eds-banner`; `localStorage`, só `1`) e some nas próximas páginas. Desligue a
- * lembrança com `data-eds-banner-remember="off"` (some só até recarregar). Evento
+ * lembrança com `data-eds-banner-remember="false"` (some só até recarregar). Evento
  * `eds:banner-close` (`detail { id }`).
  */
 export const bannerBehavior: Behavior = {
@@ -38,20 +38,18 @@ export const bannerBehavior: Behavior = {
   selector: '[data-eds-banner]',
   bind(banner) {
     const id = (banner.getAttribute('data-eds-banner') ?? '').trim();
-    const remember =
-      id !== '' &&
-      !['off', 'false'].includes(banner.getAttribute('data-eds-banner-remember') ?? '');
+    const remember = id !== '' && flag(banner, 'data-eds-banner-remember', true);
     const key = `${KEY_PREFIX}${id}`;
     if (remember && dismissedBefore(key)) banner.hidden = true;
 
-    let close = banner.querySelector<HTMLButtonElement>('[data-eds-banner-close]');
+    let close = banner.querySelector<HTMLButtonElement>('[data-eds-close]');
     let created = false;
-    if (!close && banner.hasAttribute('data-eds-dismissible')) {
+    if (!close && flag(banner, 'data-eds-dismissible')) {
       close = banner.ownerDocument.createElement('button');
       close.type = 'button';
       close.className =
         'eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close';
-      close.setAttribute('data-eds-banner-close', '');
+      close.setAttribute('data-eds-close', '');
       close.setAttribute('aria-label', format(getMessages().bannerClose, {}));
       close.append(closeIcon());
       banner.append(close);

@@ -1,8 +1,12 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { mergeTexts } from '../../utils/texts';
 import { cx } from '../../utils/cx';
+import type { Tone } from '../../internal/tone';
 
-export type TagTone = 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger';
+export type TagTone = Extract<
+  Tone,
+  'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger'
+>;
 
 export interface TagTexts {
   /** Nome do botão de remover (recebe o texto da tag). Padrão: "Remover {texto}". */
@@ -43,8 +47,7 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
     <span
       {...rest}
       ref={ref}
-      className={cx('eds-tag', className)}
-      data-tone={tone === 'neutral' ? undefined : tone}
+      className={cx('eds-tag', tone !== 'neutral' && `eds-tag-${tone}`, className)}
     >
       {children}
       {onRemove ? (

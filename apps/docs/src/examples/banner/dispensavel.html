@@ -1,13 +1,13 @@
-<!-- Behavior: [data-eds-banner="id"] (o id identifica o aviso) com [data-eds-banner-close]. Ao fechar, o JS põe [hidden]
-     no banner e lembra o id no localStorage (não volta a abrir); data-eds-banner-remember="off" desliga a memória.
+<!-- Behavior: [data-eds-banner="id"] (o id identifica o aviso) com [data-eds-close]. Ao fechar, o JS põe [hidden]
+     no banner e lembra o id no localStorage (não volta a abrir); data-eds-banner-remember="false" desliga a memória.
      Evento: eds:banner-close (detail.id). O aviso empurra o conteúdo, não o cobre.
-     Aqui data-eds-banner-remember="off" evita que a documentação esconda o exemplo para sempre; em produção, tire-o. -->
-<div class="eds-banner eds-banner-warning" role="region" aria-label="Manutenção programada" data-eds-banner="manutencao-0412" data-eds-banner-remember="off">
+     Aqui data-eds-banner-remember="false" evita que a documentação esconda o exemplo para sempre; em produção, tire-o. -->
+<div class="eds-banner eds-banner-warning" role="region" aria-label="Manutenção programada" data-eds-banner="manutencao-0412" data-eds-banner-remember="false">
   <p class="eds-banner-text"><strong>Manutenção programada.</strong> O sistema ficará indisponível no sábado, das 22h às 23h.</p>
   <div class="eds-banner-actions">
     <a class="eds-button eds-button-secondary eds-button-sm" href="#/componentes/banner">Saiba mais</a>
   </div>
-  <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close" aria-label="Fechar aviso" data-eds-banner-close>
+  <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close" aria-label="Fechar aviso" data-eds-close>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
   </button>
 </div>

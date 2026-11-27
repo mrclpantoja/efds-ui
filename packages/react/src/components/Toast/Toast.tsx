@@ -15,19 +15,21 @@ import { createPortal } from 'react-dom';
 import { cx } from '../../utils/cx';
 import { Button } from '../Button';
 import { CloseGlyph } from '../../internal/glyphs';
+import type { Tone } from '../../internal/tone';
+import { mergeTexts } from '../../utils/texts';
 
-export type ToastVariant = 'info' | 'success' | 'warning' | 'danger';
+export type ToastTone = Extract<Tone, 'info' | 'success' | 'warning' | 'danger'>;
 
 export interface ToastOptions {
   /** Padrão: `info`. `danger` e `warning` não fecham sozinhos; `danger` é anunciado como `alert`. */
-  variant?: ToastVariant;
+  tone?: ToastTone;
   /**
    * Rótulo em destaque que diz a severidade (ex.: "Erro:"): a cor nunca é o único canal.
    * Sem `title`, a severidade vai num prefixo oculto (ver `texts.severity` do `ToastProvider`).
    */
   title?: string;
   message: string;
-  /** Tempo até fechar sozinho, em ms. `0` mantém até fechar. Padrão: pela variante e pelo tamanho do texto. */
+  /** Tempo até fechar sozinho, em ms. `0` mantém até fechar. Padrão: pelo tom e pelo tamanho do texto. */
   duration?: number;
   /** Botão de ação (ex.: Desfazer): fecha o toast e executa `onClick`. */
   action?: { label: string; onClick: () => void };
@@ -35,7 +37,7 @@ export interface ToastOptions {
   onClose?: () => void;
 }
 
-const severityDefault: Record<ToastVariant, string> = {
+const severityDefault: Record<ToastTone, string> = {
   info: 'Informação:',
   success: 'Sucesso:',
   warning: 'Atenção:',
@@ -64,7 +66,7 @@ export function useToast(): ToastApi {
 
 interface ToastEntry extends ToastOptions {
   id: number;
-  variant: ToastVariant;
+  tone: ToastTone;
   closing: boolean;
 }
 
@@ -72,9 +74,9 @@ interface ToastEntry extends ToastOptions {
 const EXIT_MS = 300;
 
 /** info/success: máx(5 s, ~1 s a cada 10 palavras); warning/danger ficam até serem fechados. */
-function autoCloseMs(variant: ToastVariant, text: string, duration?: number): number | null {
+function autoCloseMs(tone: ToastTone, text: string, duration?: number): number | null {
   if (duration !== undefined) return duration > 0 ? duration : null;
-  if (variant === 'warning' || variant === 'danger') return null;
+  if (tone === 'warning' || tone === 'danger') return null;
   const words = text.split(/\s+/).filter(Boolean).length;
   return Math.max(5000, words * 100);
 }
@@ -130,7 +132,7 @@ function ToastItem({
   register,
   onDismiss,
 }: ToastItemProps) {
-  const { id, variant, title, message, closing, action } = toast;
+  const { id, tone, title, message, closing, action } = toast;
 
   // Tempo restante vive no provider: sobrevive à remontagem da região (abrir/fechar modal).
   useEffect(() => {
@@ -156,8 +158,8 @@ function ToastItem({
   return (
     <div
       ref={(el) => register(id, el)}
-      className={cx('eds-toast', `eds-toast-${variant}`)}
-      role={variant === 'danger' ? 'alert' : undefined}
+      className={cx('eds-toast', `eds-toast-${tone}`)}
+      role={tone === 'danger' ? 'alert' : undefined}
       data-closing={closing || undefined}
       onKeyDown={handleKeyDown}
     >
@@ -202,14 +204,14 @@ export interface ToastTexts {
   close: string;
   /**
    * Prefixo oculto (só leitores de tela) que diz a severidade quando o toast não tem `title`,
-   * por variante. Padrão: "Informação:", "Sucesso:", "Atenção:", "Erro:".
+   * por tom. Padrão: "Informação:", "Sucesso:", "Atenção:", "Erro:".
    */
-  severity: Partial<Record<ToastVariant, string>>;
+  severity: Partial<Record<ToastTone, string>>;
 }
 
 export interface ToastProviderProps {
   children?: ReactNode;
-  /** Textos internos (padrões em pt-BR): `close` ("Fechar notificação") e `severity` por variante. */
+  /** Textos internos (padrões em pt-BR): `close` ("Fechar notificação") e `severity` por tom. */
   texts?: Partial<ToastTexts>;
   /** Toasts visíveis ao mesmo tempo; os demais esperam na fila. Padrão: 3. */
   maxVisible?: number;
@@ -220,6 +222,10 @@ export interface ToastProviderProps {
  * `dialog:modal` aberto, a região vai (portal) para dentro dele; fora disso fica na página.
  */
 export function ToastProvider({ children, texts, maxVisible = 3 }: ToastProviderProps) {
+  const t = mergeTexts<ToastTexts>(
+    { close: 'Fechar notificação', severity: severityDefault },
+    texts,
+  );
   const [toasts, setToasts] = useState<ToastEntry[]>([]);
   const nextId = useRef(1);
   const elements = useRef(new Map<number, HTMLElement>());
@@ -281,16 +287,16 @@ export function ToastProvider({ children, texts, maxVisible = 3 }: ToastProvider
   const show = useCallback((options: ToastOptions) => {
     const id = nextId.current++;
     count.current += 1;
-    const variant = options.variant ?? 'info';
+    const tone = options.tone ?? 'info';
     if (options.onClose) closers.current.set(id, options.onClose);
     const active = document.activeElement;
     origins.current.set(
       id,
       active instanceof HTMLElement && active !== document.body ? active : null,
     );
-    const ms = autoCloseMs(variant, `${options.title ?? ''} ${options.message}`, options.duration);
+    const ms = autoCloseMs(tone, `${options.title ?? ''} ${options.message}`, options.duration);
     if (ms !== null) remaining.current.set(id, ms);
-    setToasts((list) => [...list, { ...options, id, variant, closing: false }]);
+    setToasts((list) => [...list, { ...options, id, tone, closing: false }]);
     return id;
   }, []);
 
@@ -338,8 +344,8 @@ export function ToastProvider({ children, texts, maxVisible = 3 }: ToastProvider
       key={toast.id}
       toast={toast}
       paused={hover || focusWithin}
-      closeText={texts?.close ?? 'Fechar notificação'}
-      severityText={texts?.severity?.[toast.variant] ?? severityDefault[toast.variant]}
+      closeText={t.close}
+      severityText={t.severity[toast.tone] ?? severityDefault[toast.tone]}
       remaining={remaining}
       register={register}
       onDismiss={dismiss}
@@ -353,3 +359,4 @@ export function ToastProvider({ children, texts, maxVisible = 3 }: ToastProvider
     </ToastContext.Provider>
   );
 }
+ToastProvider.displayName = 'ToastProvider';

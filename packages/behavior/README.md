@@ -48,17 +48,17 @@ Em produção, prefira servir os mesmos arquivos do seu servidor (`pnpm add @efd
 
 Liga tudo sozinho quando o DOM está pronto e expõe `window.EDS`. Opções na própria tag:
 
-| Atributo                              | Efeito                                                                |
-| ------------------------------------- | --------------------------------------------------------------------- |
-| `data-eds-manual`                     | Não liga sozinho: chame `EDS.init()`.                                 |
-| `data-eds-loader="auto\|manual\|off"` | PageLoader. `auto` (padrão), `manual` (só `start`/`track`), `off`.    |
-| `data-eds-loader-title`, `-text`      | Textos padrão do loader.                                              |
-| `data-eds-loader-slow-after`          | Ms até oferecer "Fechar" / "Continuar aguardando" (padrão 20000).     |
-| `data-eds-loader-trigger="all\|user"` | `all` (padrão): todo fetch/XHR; `user`: só os iniciados pelo usuário. |
-| `data-eds-native-alert`               | `window.alert` passa a abrir o `EDS.alert` (não bloqueia).            |
+| Atributo                                   | Efeito                                                                |
+| ------------------------------------------ | --------------------------------------------------------------------- |
+| `data-eds-manual`                          | Não liga sozinho: chame `EDS.init()`.                                 |
+| `data-eds-loader-mode="auto\|manual\|off"` | PageLoader. `auto` (padrão), `manual` (só `start`/`track`), `off`.    |
+| `data-eds-loader-title`, `-text`           | Textos padrão do loader.                                              |
+| `data-eds-loader-slow-after`               | Ms até oferecer "Fechar" / "Continuar aguardando" (padrão 20000).     |
+| `data-eds-loader-trigger="all\|user"`      | `all` (padrão): todo fetch/XHR; `user`: só os iniciados pelo usuário. |
+| `data-eds-native-alert`                    | `window.alert` passa a abrir o `EDS.alert` (não bloqueia).            |
 
 ```js
-EDS.toast({ variant: 'success', message: 'Pedido salvo.' });
+EDS.toast({ tone: 'success', message: 'Pedido salvo.' });
 const done = EDS.loader.start({ title: 'Gerando relatório…' });
 fetch('/relatorio').finally(done);
 ```
@@ -73,7 +73,7 @@ if (await EDS.confirm('Excluir o pedido PED-0001?', 'Excluir', 'danger')) {
 const nome = await EDS.prompt('Nome do arquivo', 'relatorio', 'Salvar como'); // string | null
 ```
 
-Assinaturas: `alert(texto, título?, tipo?, opções?)`, `confirm(texto, título?, tipo?, opções?)`, `prompt(texto, valorPadrão?, título?, opções?)`. `tipo`: `info` (padrão do alert), `success`, `warning`, `danger`, `question` (padrão do confirm e do prompt). `opções`: `okText`, `cancelText`, `placeholder`, `required`, `inputType` (`text`, `email`, `number`, `password`, `textarea`), `validate(valor)` (devolve a mensagem de erro ou `''`) e `variant` (tipo do prompt). Chamadas simultâneas entram numa fila: um diálogo por vez. Enter confirma, Esc e o clique no fundo cancelam (`danger` não fecha no fundo). O texto vai como texto, nunca como HTML. Textos dos botões em `configure({ messages })`: `dialogOk`, `dialogCancel`, `dialogConfirm`, `dialogRequired`.
+Assinaturas: `alert(texto, título?, tipo?, opções?)`, `confirm(texto, título?, tipo?, opções?)`, `prompt(texto, valorPadrão?, título?, opções?)`. `tipo`: `info` (padrão do alert), `success`, `warning`, `danger`, `question` (padrão do confirm e do prompt). `opções`: `okText`, `cancelText`, `placeholder`, `required`, `inputType` (`text`, `email`, `number`, `password`, `textarea`), `validate(valor)` (devolve a mensagem de erro ou `''`) e `tone` (tom do diálogo; vale o tipo posicional quando houver). Chamadas simultâneas entram numa fila: um diálogo por vez. Enter confirma, Esc e o clique no fundo cancelam (`danger` não fecha no fundo). O texto vai como texto, nunca como HTML. Textos dos botões em `configure({ messages })`: `dialogOk`, `dialogCancel`, `dialogConfirm`, `dialogRequired`.
 
 `window.alert` só é trocado se você pedir (`data-eds-native-alert` na tag ou `init(document, { nativeAlert: true })`; com `data-eds-manual`, use a opção do `init`). Atenção: o `alert` do navegador **bloqueia** e o do efDS.ui não: o código depois do `alert(...)` roda sem esperar o usuário fechar. `confirm` e `prompt` nativos nunca são trocados (são síncronos): use `await EDS.confirm(...)`.
 
@@ -87,14 +87,14 @@ Sem JavaScript seu: `data-eds-confirm` em `button`, `a` ou `form` pergunta antes
   action="/pedidos/1/excluir"
   data-eds-confirm="Excluir o pedido PED-0001?"
   data-eds-confirm-title="Excluir pedido"
-  data-eds-confirm-variant="danger"
+  data-eds-confirm-tone="danger"
   data-eds-confirm-ok="Excluir"
 >
   <button type="submit" class="eds-button eds-button-danger">Excluir</button>
 </form>
 ```
 
-Opcionais: `data-eds-confirm-title`, `data-eds-confirm-variant` (`info | success | warning | danger | question`) e `data-eds-confirm-ok`.
+Opcionais: `data-eds-confirm-title`, `data-eds-confirm-tone` (`info | success | warning | danger | question`) e `data-eds-confirm-ok`.
 
 ## Arrastar e soltar (Sortable)
 
@@ -221,7 +221,7 @@ Referência completa (atributos, eventos, opções, configuração do loader): [
 
 ## O que cada componente espera
 
-O markup é o contrato do core (`.eds-*`); o pacote detecta por classes e ARIA. Só acrescenta `data-eds-*` onde o markup não basta: `data-eds-open`, `data-eds-close`, `data-eds-backdrop="static"`, `data-eds-dismiss`, `data-eds-select-all`/`-row`, `data-eds-table-filter`, `data-eds-filter-columns`, `data-eds-filter-ignore`, `data-eds-sidebar-collapse`, `data-eds-source`, `data-eds-min-chars`, `data-eds-free-text`, `data-eds-multiple`, `data-eds-name`, `data-eds-max-selected`, `data-eds-upload`, `data-eds-max-size`, `data-eds-max-files`, `data-eds-upload-url`, `data-eds-upload-field`, `data-eds-confirm` (e `-title`, `-variant`, `-ok`), `data-eds-sortable`, `data-eds-group`, `data-eds-orientation`, `data-eds-editable`, `data-eds-multiselect`, `data-eds-tree`, `data-eds-children-url`, `data-eds-native-alert`, `data-eds-loader`, `data-eds-mask` (e `-unmask`, `-decimals`, `-prefix`, `-negative`).
+O markup é o contrato do core (`.eds-*`); o pacote detecta por classes e ARIA. Só acrescenta `data-eds-*` onde o markup não basta: `data-eds-open`, `data-eds-close`, `data-eds-backdrop="static"`, `data-eds-close`, `data-eds-select-all`/`-row`, `data-eds-table-filter`, `data-eds-filter-columns`, `data-eds-filter-ignore`, `data-eds-sidebar-collapse`, `data-eds-source`, `data-eds-min-chars`, `data-eds-free-text`, `data-eds-multiple`, `data-eds-name`, `data-eds-max-selected`, `data-eds-upload`, `data-eds-max-size`, `data-eds-max-files`, `data-eds-upload-url`, `data-eds-upload-field`, `data-eds-confirm` (e `-title`, `-tone`, `-ok`), `data-eds-sortable`, `data-eds-group`, `data-eds-orientation`, `data-eds-editable`, `data-eds-multiple`, `data-eds-tree`, `data-eds-children-url`, `data-eds-native-alert`, `data-eds-loader`, `data-eds-mask` (e `-unmask`, `-decimals`, `-prefix`, `-negative`).
 
 ## Scripts
 

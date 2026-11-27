@@ -58,13 +58,13 @@ const sortHeaders = (table: HTMLTableElement): HTMLTableCellElement[] =>
     th.querySelector('.eds-table-sort'),
   );
 
-/** Ordenação lida do markup (`data-eds-sort-order`/`-dir` ou o `aria-sort` do primário). */
+/** Ordenação lida do markup (`data-sort-order`/`-dir` ou o `aria-sort` do primário). */
 function readSort(table: HTMLTableElement): SortCriterion[] {
   const out: { order: number; criterion: SortCriterion }[] = [];
   for (const th of sortHeaders(table)) {
-    const dir = th.getAttribute('data-eds-sort-dir') ?? th.getAttribute('aria-sort');
+    const dir = th.getAttribute('data-sort-dir') ?? th.getAttribute('aria-sort');
     if (dir !== 'ascending' && dir !== 'descending') continue;
-    const order = Number(th.getAttribute('data-eds-sort-order')) || 1;
+    const order = Number(th.getAttribute('data-sort-order')) || 1;
     out.push({ order, criterion: { key: keyOf(th), direction: dir } });
   }
   return out.sort((a, b) => a.order - b.order).map((o) => o.criterion);
@@ -77,12 +77,12 @@ function describeSort(table: HTMLTableElement, sort: SortCriterion[]): string {
     column: columnLabel(
       headerOf(table, c.key) ?? sortHeaders(table).find((h) => keyOf(h) === c.key),
     ),
-    direction: c.direction === 'ascending' ? m.sortAscending : m.sortDescending,
+    direction: c.direction === 'ascending' ? m.tableSortAscending : m.tableSortDescending,
   }));
   if (named.length === 1)
-    return format(m.sortedBy, named[0] as { column: string; direction: string });
-  const criteria = named.map((n) => `${n.column}, ${n.direction}`).join(`, ${m.sortThen} `);
-  return format(m.sortedByMany, { criteria });
+    return format(m.tableSortedBy, named[0] as { column: string; direction: string });
+  const criteria = named.map((n) => `${n.column}, ${n.direction}`).join(`, ${m.tableSortThen} `);
+  return format(m.tableSortedByMany, { criteria });
 }
 
 /** Grava `aria-sort`, `data-eds-sort-*`, o número da prioridade e o texto oculto dos secundários. */
@@ -97,15 +97,15 @@ function applySortMarkup(table: HTMLTableElement, sort: SortCriterion[]): void {
     button?.querySelector(':scope > .eds-table-sort-text')?.remove();
     if (index < 0) {
       th.setAttribute('aria-sort', 'none');
-      th.removeAttribute('data-eds-sort-dir');
-      th.removeAttribute('data-eds-sort-order');
+      th.removeAttribute('data-sort-dir');
+      th.removeAttribute('data-sort-order');
       continue;
     }
     const criterion = sort[index] as SortCriterion;
     if (index === 0) th.setAttribute('aria-sort', criterion.direction);
     else th.removeAttribute('aria-sort');
-    th.setAttribute('data-eds-sort-dir', criterion.direction);
-    th.setAttribute('data-eds-sort-order', String(index + 1));
+    th.setAttribute('data-sort-dir', criterion.direction);
+    th.setAttribute('data-sort-order', String(index + 1));
     if (button && sort.length > 1) {
       const badge = doc.createElement('span');
       badge.className = 'eds-table-sort-order';
@@ -115,9 +115,10 @@ function applySortMarkup(table: HTMLTableElement, sort: SortCriterion[]): void {
       if (index > 0) {
         const text = doc.createElement('span');
         text.className = 'eds-visually-hidden eds-table-sort-text';
-        text.textContent = format(m.sortOrderLabel, {
+        text.textContent = format(m.tableSortOrderLabel, {
           order: index + 1,
-          direction: criterion.direction === 'ascending' ? m.sortAscending : m.sortDescending,
+          direction:
+            criterion.direction === 'ascending' ? m.tableSortAscending : m.tableSortDescending,
         });
         button.append(text);
       }
@@ -165,7 +166,7 @@ export const tableBehavior: Behavior = {
         hint = table.ownerDocument.createElement('p');
         hint.id = uid('sort-hint');
         hint.className = 'eds-visually-hidden';
-        hint.textContent = messages().sortHint;
+        hint.textContent = messages().tableSortHint;
         (wrap ?? table).after(hint);
       }
       for (const th of sortHeaders(table)) {
@@ -225,7 +226,7 @@ export const tableBehavior: Behavior = {
       if (multi && additive) {
         if (at < 0) {
           if (current.length >= sortMax()) {
-            announce(format(m.sortMaxReached, { max: sortMax() }));
+            announce(format(m.tableSortMaxReached, { max: sortMax() }));
             return;
           }
           next = [...current, { key, direction: 'ascending' }];
@@ -261,7 +262,9 @@ export const tableBehavior: Behavior = {
       commitSort(next, true);
       if (isRemote(table)) return;
       announce(
-        reason === 'remove' ? format(m.sortRemoved, { column: label }) : describeSort(table, next),
+        reason === 'remove'
+          ? format(m.tableSortRemoved, { column: label })
+          : describeSort(table, next),
       );
     };
 
@@ -278,7 +281,7 @@ export const tableBehavior: Behavior = {
       };
       if (!emit(table, 'table-sort', detail, true)) return;
       commitSort([], true);
-      announce(messages().sortCleared);
+      announce(messages().tableSortCleared);
     };
     const stopClear = hub.on('sort-clear', clearSort);
 
@@ -357,19 +360,19 @@ export const tableBehavior: Behavior = {
       if (total !== count) {
         announce(
           count === 0
-            ? format(m.selectedInSearchNone, { total })
+            ? format(m.tableSelectedInSearchNone, { total })
             : count === 1
-              ? format(m.selectedInSearchOne, { total })
-              : format(m.selectedInSearchMany, { count, total }),
+              ? format(m.tableSelectedInSearchOne, { total })
+              : format(m.tableSelectedInSearchMany, { count, total }),
         );
         return;
       }
       announce(
         count === 0
-          ? m.selectedNone
+          ? m.tableSelectedNone
           : count === 1
-            ? m.selectedOne
-            : format(m.selectedMany, { count }),
+            ? m.tableSelectedOne
+            : format(m.tableSelectedMany, { count }),
       );
     };
 
@@ -427,7 +430,7 @@ export const tableBehavior: Behavior = {
       { signal },
     );
     // O filtro mudou as linhas visíveis: o cabeçalho reflete as visíveis.
-    table.addEventListener('eds:table-filtered', () => void syncAll(), { signal });
+    table.addEventListener('eds:table-filter', () => void syncAll(), { signal });
     syncAll();
 
     // ---- Controlador -------------------------------------------------------------------
@@ -446,7 +449,7 @@ export const tableBehavior: Behavior = {
         true,
       );
       announce(
-        format(messages().sortRemoved, {
+        format(messages().tableSortRemoved, {
           column: columnLabel(headerOf(table, String(id))) || String(id),
         }),
       );

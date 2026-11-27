@@ -18,7 +18,7 @@ describe('Stepper', () => {
     expect(list).toHaveClass('eds-stepper');
     const items = Array.from(list.querySelectorAll('.eds-stepper-item'));
     expect(items.map((i) => i.getAttribute('data-state'))).toEqual([
-      'complete',
+      'done',
       'current',
       'upcoming',
       'upcoming',
@@ -35,7 +35,7 @@ describe('Stepper', () => {
     render(
       <Stepper
         aria-label="Andamento"
-        vertical
+        orientation="vertical"
         current={2}
         steps={[{ label: 'A' }, { label: 'Docs', state: 'error' }, { label: 'B' }]}
       />,

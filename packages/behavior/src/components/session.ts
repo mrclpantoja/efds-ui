@@ -100,9 +100,12 @@ export function session(options: SessionOptions = {}): SessionHandle {
   const spoken = (seconds: number): string => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
-    const minutes = m > 0 ? text(m === 1 ? 'sessionMinute' : 'sessionMinutes', { count: m }) : '';
+    const minutes =
+      m > 0 ? text(m === 1 ? 'sessionMinuteOne' : 'sessionMinuteMany', { count: m }) : '';
     const secs =
-      s > 0 || m === 0 ? text(s === 1 ? 'sessionSecond' : 'sessionSeconds', { count: s }) : '';
+      s > 0 || m === 0
+        ? text(s === 1 ? 'sessionSecondOne' : 'sessionSecondMany', { count: s })
+        : '';
     return [minutes, secs].filter(Boolean).join(text('sessionAnd'));
   };
   const clock = (seconds: number): string =>
@@ -195,9 +198,8 @@ export function session(options: SessionOptions = {}): SessionHandle {
     origin = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const id = `eds-session-${nonce}`;
     const el = document.createElement('dialog');
-    el.className = 'eds-modal eds-alert-dialog';
+    el.className = 'eds-modal eds-alert-dialog eds-alert-dialog-warning';
     el.setAttribute('role', 'alertdialog');
-    el.setAttribute('data-variant', 'warning');
     el.setAttribute('data-eds-backdrop', 'static');
     el.setAttribute('aria-labelledby', `${id}-t`);
     el.setAttribute('aria-describedby', `${id}-d`);

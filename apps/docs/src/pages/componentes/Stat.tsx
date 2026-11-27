@@ -32,7 +32,7 @@ export default function StatPage() {
       <Section title="Exemplos">
         <Example
           title="Indicador"
-          description="A seta (data-trend) mostra a direção; a cor (data-tone) mostra se é bom ou ruim. São eixos separados: inadimplência subindo é up + negative. A direção também vai em texto oculto (“Aumento de”)."
+          description="A seta (data-trend) mostra a direção; a cor (tom, classe eds-stat-delta-success, -danger ou -warning) mostra se é bom ou ruim. São eixos separados: inadimplência subindo é up + negative. A direção também vai em texto oculto (“Aumento de”)."
           html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
         />
@@ -68,7 +68,7 @@ export default function StatPage() {
             },
             {
               name: 'tone',
-              type: "'positive' | 'negative' | 'warning' | 'neutral'",
+              type: "'success' | 'danger' | 'warning' | 'neutral'",
               default: "'neutral'",
               description: 'Leitura do resultado (cor de status em texto).',
             },
@@ -112,7 +112,7 @@ export default function StatPage() {
               effect: 'Direção da seta (o svg é desenhado para cima e o CSS gira).',
             },
             {
-              name: '[data-tone="positive|negative|warning|neutral"]',
+              name: '.eds-stat-delta-success / -danger / -warning',
               effect: 'Cor do texto de status.',
             },
             { name: '.eds-stat-meta', effect: 'Referência da variação, em tom secundário.' },

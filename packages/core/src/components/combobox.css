@@ -291,7 +291,7 @@
           .eds-combobox-input[readonly],
           .eds-combobox-input[aria-readonly='true'],
           .eds-combobox-input[aria-invalid='true'],
-          .eds-combobox-input[data-valid='true']
+          .eds-combobox-input[data-valid]
         )
       ) {
       --_control-border: var(--eds-color-text-muted);
@@ -308,7 +308,7 @@
       outline-offset: 0;
     }
 
-    &:has(.eds-combobox-input[data-valid='true']) {
+    &:has(.eds-combobox-input[data-valid]) {
       --_control-border: var(--eds-color-status-success-text);
     }
 

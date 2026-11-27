@@ -28,7 +28,7 @@ export default function CepPage() {
         ]}
       />
 
-      <Alert variant="warning" title="Sem URL, nada é consultado">
+      <Alert tone="warning" title="Sem URL, nada é consultado">
         <p>
           O padrão de <code>cepUrl</code> é vazio. Configure o serviço com{' '}
           <code>configure({'{ cepUrl: "https://viacep.com.br/ws/{cep}/json/" }'})</code>, com{' '}
@@ -73,7 +73,7 @@ export default function CepPage() {
               effect: 'Serviço padrão de todos os campos. Vazio por padrão: sem chamada externa.',
             },
             {
-              name: 'eds:cep-result',
+              name: 'eds:cep-lookup',
               effect: 'detail { cep, status: "found" | "notfound" | "error", data? }.',
             },
           ]}

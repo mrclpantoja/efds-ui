@@ -55,7 +55,7 @@ export default function TimelinePage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Só CSS">
+        <Alert tone="info" title="Só CSS">
           <p>
             Não há JavaScript. A ordem (recente primeiro ou o inverso) é a do seu HTML. Use{' '}
             <code>&lt;time datetime&gt;</code> para a data legível por máquina. Marcador sem filho
@@ -129,8 +129,8 @@ export default function TimelinePage() {
               effect: 'done, current ou upcoming: visto, anel ou tracejado (também na vertical).',
             },
             {
-              name: '.eds-timeline-item[data-tone]',
-              effect: 'Evento; tom accent, info, success, warning ou danger.',
+              name: '.eds-timeline-item-accent / -info / -success / -warning / -danger',
+              effect: 'Tom do evento (neutral é o padrão).',
             },
             { name: '.eds-timeline-marker', effect: 'Ponto ou ícone (aria-hidden).' },
             {

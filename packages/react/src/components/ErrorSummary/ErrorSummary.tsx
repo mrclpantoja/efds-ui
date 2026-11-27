@@ -9,7 +9,8 @@ import {
   type MouseEvent,
   type ReactNode,
 } from 'react';
-import { composeErrorText, summaryTitle, validationMessages } from '@efds-ui/behavior/validate';
+import { composeErrorText, summaryTitle } from '@efds-ui/behavior/internal';
+import { validationMessages } from '@efds-ui/behavior/validate';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { mergeRefs } from '../../internal/refs-d';

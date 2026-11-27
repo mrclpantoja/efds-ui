@@ -3,14 +3,14 @@
      o evento cancelável eds:lookup-create traz detail.text; o app abre o seu cadastro e devolve o resultado:
        el.addEventListener('eds:lookup-create', (e) => { abrirCadastro(e.detail.text) });
        EDS.lookup(el).setValue({ code: '15', description: 'Fornecedor novo' });
-     Digite "zzz" para ver a opção. data-eds-lookup-autocomplete="off" desliga a lista. -->
+     Digite "zzz" para ver a opção. data-eds-lookup-autocomplete="false" desliga a lista. -->
 <div class="eds-field">
   <label class="eds-label" for="lk-new">Cliente</label>
-  <div class="eds-lookup" data-eds-lookup data-eds-lookup-source="/api/clientes?q=" data-eds-lookup-create="Cadastrar novo…">
+  <div class="eds-lookup" data-eds-lookup data-eds-source="/api/clientes?q=" data-eds-lookup-create="Cadastrar novo…">
     <input class="eds-input eds-lookup-code" id="lk-new" name="cliente" autocomplete="off" />
     <button type="button" class="eds-button eds-button-secondary eds-button-icon" aria-label="Buscar cliente">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" /></svg>
     </button>
-    <output class="eds-lookup-description" for="lk-new" aria-live="polite" data-empty="true">—</output>
+    <output class="eds-lookup-description" for="lk-new" aria-live="polite" data-empty>—</output>
   </div>
 </div>

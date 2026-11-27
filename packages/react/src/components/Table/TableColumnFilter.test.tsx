@@ -21,7 +21,7 @@ function Demo(
                 type="number"
                 label="Total"
                 value={value}
-                onChange={(v) => {
+                onValueChange={(v) => {
                   setValue(v);
                   props.onApply?.(v);
                 }}

@@ -96,7 +96,7 @@ export default function FormatadoresPage() {
       </Section>
 
       <Section title="Cuidados">
-        <Alert variant="warning" title="LGPD">
+        <Alert tone="warning" title="LGPD">
           <p>
             Mostre CPF e telefone só quando necessário e prefira <code>maskCpf</code> em listas e
             relatórios. Documentação, testes e logs usam valores fictícios.

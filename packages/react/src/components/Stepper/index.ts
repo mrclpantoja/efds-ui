@@ -1,8 +1,14 @@
 export { Stepper } from './Stepper';
-export type { StepperProps, StepperStep, StepperTexts, StepState } from './Stepper';
+export type {
+  StepperProps,
+  StepperStep,
+  StepperTexts,
+  StepperStepState,
+  StepperOrientation,
+} from './Stepper';
 export { useSectionProgress } from './useSectionProgress';
 export type {
-  SectionProgress,
-  SectionProgressOptions,
+  UseSectionProgressResult,
+  UseSectionProgressOptions,
   SectionProgressSection,
 } from './useSectionProgress';

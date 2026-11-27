@@ -11,7 +11,7 @@ export default defineConfig({
   server: { host: '127.0.0.1' },
   resolve: {
     alias: [
-      // Mais específicos primeiro: o alias de prefixo pegaria '@efds-ui/behavior/export', '/mask', '/fields' e '/format'.
+      // Mais específicos primeiro: o alias de prefixo pegaria '@efds-ui/behavior/export', '/internal', '/mask', '/fields' e '/format'.
       {
         find: /^@efds-ui\/behavior\/export\/(csv|json|xlsx|pdf)$/,
         replacement: fromSource('../../packages/behavior/src/export/formats/$1.ts'),
@@ -21,8 +21,8 @@ export default defineConfig({
         replacement: fromSource('../../packages/behavior/src/export-entry.ts'),
       },
       {
-        find: '@efds-ui/behavior/balloon',
-        replacement: fromSource('../../packages/behavior/src/balloon-entry.ts'),
+        find: '@efds-ui/behavior/internal',
+        replacement: fromSource('../../packages/behavior/src/internal-entry.ts'),
       },
       {
         find: '@efds-ui/behavior/image',

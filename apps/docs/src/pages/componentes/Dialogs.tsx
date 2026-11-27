@@ -67,7 +67,7 @@ irParaListagem();      // ATENÇÃO: roda já, sem esperar o usuário fechar o a
 await EDS.alert('Pedido salvo.');
 irParaListagem();`;
 
-const markup = `<dialog class="eds-modal eds-alert-dialog" data-variant="danger" role="alertdialog"
+const markup = `<dialog class="eds-modal eds-alert-dialog eds-alert-dialog-danger" role="alertdialog"
   aria-labelledby="ad-t" aria-describedby="ad-d">
   <div class="eds-alert-dialog-icon" aria-hidden="true">
     <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"
@@ -180,8 +180,8 @@ export default function DialogsPage() {
               Para quem usa só HTML: <code>data-eds-confirm</code> em <code>button</code>,{' '}
               <code>a</code> ou <code>form</code> pergunta antes de agir, sem uma linha de
               JavaScript. Opcionais: <code>data-eds-confirm-title</code>,{' '}
-              <code>data-eds-confirm-variant</code> e <code>data-eds-confirm-ok</code>. Em React,
-              use <code>useDialog().confirm()</code> no próprio handler.
+              <code>data-eds-confirm-tone</code> e <code>data-eds-confirm-ok</code>. Em React, use{' '}
+              <code>useDialog().confirm()</code> no próprio handler.
             </>
           }
           html={declarativoHtml}
@@ -238,7 +238,7 @@ export default function DialogsPage() {
             },
             {
               name: 'texts',
-              type: 'Partial<{ ok, cancel, confirm, required }> & { severity?: Partial<Record<DialogVariant, string>> }',
+              type: 'Partial<{ ok, cancel, confirm, required }> & { severity?: Partial<Record<DialogTone, string>> }',
               default:
                 "{ ok: 'OK', cancel: 'Cancelar', confirm: 'Confirmar', required: 'Preencha este campo.' }",
               description: (
@@ -269,10 +269,10 @@ export default function DialogsPage() {
                 'A pergunta. Só se o usuário confirmar, a ação segue: o botão de envio envia o formulário, o link navega e o onClick roda.',
             },
             {
-              name: 'confirmTitle / confirmVariant / confirmOkText',
-              type: "string / 'info' | 'success' | 'warning' | 'danger' | 'question' / string",
-              default: "— / 'question' / 'Confirmar'",
-              description: 'Título, tipo e texto do botão principal do diálogo.',
+              name: 'confirmOptions',
+              type: 'DialogOptions',
+              description:
+                'Opções do diálogo: title, tone (padrão question), okText (padrão do DialogProvider), cancelText.',
             },
           ]}
         />
@@ -281,14 +281,15 @@ export default function DialogsPage() {
           rows={[
             {
               name: 'alert',
-              type: '(text, title?, variant?, options?) => Promise<void>',
-              default: "variant: 'info'",
-              description: 'Aviso com um botão. Resolve ao fechar.',
+              type: '(text, title?, tone?, options?) => Promise<void>  |  (text, options?) => Promise<void>',
+              default: "tone: 'info'",
+              description:
+                'Aviso com um botão. Resolve ao fechar. A forma (texto, opções) leva title e tone dentro de DialogOptions.',
             },
             {
               name: 'confirm',
-              type: '(text, title?, variant?, options?) => Promise<boolean>',
-              default: "variant: 'question'",
+              type: '(text, title?, tone?, options?) => Promise<boolean>  |  (text, options?) => Promise<boolean>',
+              default: "tone: 'question'",
               description: (
                 <>
                   <code>true</code> ao confirmar; <code>false</code> em Cancelar, Esc ou fundo.
@@ -297,8 +298,9 @@ export default function DialogsPage() {
             },
             {
               name: 'prompt',
-              type: '(text, defaultValue?, title?, options?) => Promise<string | null>',
-              description: 'O texto digitado, ou null ao cancelar.',
+              type: '(text, defaultValue?, title?, options?) => Promise<string | null>  |  (text, options?) => Promise<string | null>',
+              description:
+                'O texto digitado, ou null ao cancelar. Na forma (texto, opções), defaultValue, title e tone vão em DialogOptions.',
             },
           ]}
         />
@@ -306,10 +308,21 @@ export default function DialogsPage() {
           caption="DialogOptions (último argumento)"
           rows={[
             {
-              name: 'variant',
+              name: 'tone',
               type: "'info' | 'success' | 'warning' | 'danger' | 'question'",
-              default: "'question'",
-              description: 'Só no prompt (nos outros o tipo é o 3º argumento): ícone e cor.',
+              default: "'info' (alert) · 'question' (confirm, prompt)",
+              description:
+                'Ícone e cor. O 3º argumento posicional do alert e do confirm tem prioridade.',
+            },
+            {
+              name: 'title',
+              type: 'string',
+              description: 'Título. O argumento posicional tem prioridade.',
+            },
+            {
+              name: 'defaultValue',
+              type: 'string',
+              description: 'Prompt: valor inicial do campo. O argumento posicional tem prioridade.',
             },
             {
               name: 'okText',
@@ -372,7 +385,7 @@ export default function DialogsPage() {
               ),
             },
             {
-              name: 'data-eds-confirm-title / -variant / -ok',
+              name: 'data-eds-confirm-title / -tone / -ok',
               effect: (
                 <>
                   Título, tipo (<code>info</code>, <code>success</code>, <code>warning</code>,{' '}
@@ -412,7 +425,7 @@ export default function DialogsPage() {
                 'Com .eds-modal: caixa centralizada de cerca de 26rem (100% menos margens a 320px), conteúdo centralizado; aparece e some sem animação (o diálogo é criado e destruído a cada chamada, e chamadas em sequência não se sobrepõem).',
             },
             {
-              name: '.eds-alert-dialog[data-variant="info | success | warning | danger | question"]',
+              name: '.eds-alert-dialog-success / -warning / -danger',
               effect: 'Cor do círculo do ícone e do glifo, sempre pelos tokens de status.',
             },
             {

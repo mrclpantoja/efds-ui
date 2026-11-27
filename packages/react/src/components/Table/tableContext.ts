@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { format, getMessages } from '@efds-ui/behavior/export';
+import { formatMessage as format, getMessages } from '@efds-ui/behavior/export';
 import type { TableColumnsController } from './useTableColumns';
 
 export type TableSortDirection = 'ascending' | 'descending';
@@ -37,7 +37,7 @@ export interface TableTexts {
 
 const directionText = (direction: TableSortDirection) => {
   const m = getMessages();
-  return direction === 'ascending' ? m.sortAscending : m.sortDescending;
+  return direction === 'ascending' ? m.tableSortAscending : m.tableSortDescending;
 };
 
 export const defaultTableTexts: TableTexts = {
@@ -45,32 +45,33 @@ export const defaultTableTexts: TableTexts = {
     return getMessages().tableLoading;
   },
   sortedBy: (column, direction) =>
-    format(getMessages().sortedBy, { column, direction: directionText(direction) }),
+    format(getMessages().tableSortedBy, { column, direction: directionText(direction) }),
   sortedByMany: (criteria) => {
     const m = getMessages();
-    return format(m.sortedByMany, {
+    return format(m.tableSortedByMany, {
       criteria: criteria
         .map((c) => `${c.column}, ${directionText(c.direction)}`)
-        .join(`, ${m.sortThen} `),
+        .join(`, ${m.tableSortThen} `),
     });
   },
-  sortRemoved: (column) => format(getMessages().sortRemoved, { column }),
+  sortRemoved: (column) => format(getMessages().tableSortRemoved, { column }),
   get sortHint() {
-    return getMessages().sortHint;
+    return getMessages().tableSortHint;
   },
-  sortMaxReached: (max) => format(getMessages().sortMaxReached, { max }),
+  sortMaxReached: (max) => format(getMessages().tableSortMaxReached, { max }),
   sortOrderLabel: (order, direction) =>
-    format(getMessages().sortOrderLabel, { order, direction: directionText(direction) }),
-  columnHandleLabel: (column) => format(getMessages().columnHandleLabel, { column }),
+    format(getMessages().tableSortOrderLabel, { order, direction: directionText(direction) }),
+  columnHandleLabel: (column) => format(getMessages().tableColumnHandleLabel, { column }),
   get columnHandleHelp() {
-    return getMessages().columnHandleHelp;
+    return getMessages().tableColumnHandleHelp;
   },
-  columnGrab: (column) => format(getMessages().columnGrab, { column }),
-  columnMoved: (column, pos, total) => format(getMessages().columnMoved, { column, pos, total }),
-  columnResized: (column, width) => format(getMessages().columnResized, { column, width }),
-  columnDrop: (column, pos, total) => format(getMessages().columnDrop, { column, pos, total }),
+  columnGrab: (column) => format(getMessages().tableColumnGrab, { column }),
+  columnMoved: (column, pos, total) =>
+    format(getMessages().tableColumnMoved, { column, pos, total }),
+  columnResized: (column, width) => format(getMessages().tableColumnResized, { column, width }),
+  columnDrop: (column, pos, total) => format(getMessages().tableColumnDrop, { column, pos, total }),
   get columnCancel() {
-    return getMessages().columnCancel;
+    return getMessages().tableColumnCancel;
   },
 };
 

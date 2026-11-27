@@ -21,9 +21,9 @@ const markup = (extra = '') => `
       <span class="eds-password-strength-text">Força: fraca</span>
     </div>
     <ul class="eds-password-rules" id="s1-req">
-      <li data-rule="length" data-met="false">Ao menos 8 caracteres</li>
-      <li data-met="false"><span class="eds-visually-hidden">Pendente: </span>Letras maiúsculas e minúsculas</li>
-      <li data-met="false">Um número</li>
+      <li data-rule="length">Ao menos 8 caracteres</li>
+      <li><span class="eds-visually-hidden">Pendente: </span>Letras maiúsculas e minúsculas</li>
+      <li>Um número</li>
     </ul>
   </div>
   <button type="submit">Enviar</button>
@@ -114,21 +114,21 @@ describe('senha: força e regras', () => {
     await user.type(input(), 'abc');
     expect(meter()).toHaveAttribute('data-level', '1');
     expect(meter().querySelector('.eds-password-strength-text')).toHaveTextContent('Força: fraca');
-    expect(rules().map((r) => r.getAttribute('data-met'))).toEqual(['false', 'false', 'false']);
+    expect(rules().map((r) => r.hasAttribute('data-met'))).toEqual([false, false, false]);
     input().value = '';
     await user.type(input(), 'Cavalo-Azul-77!');
     expect(meter()).toHaveAttribute('data-level', '4');
     expect(meter().querySelector('.eds-password-strength-text')).toHaveTextContent('Força: forte');
     // A regra sem data-rule é reconhecida pelo texto.
-    expect(rules().map((r) => r.getAttribute('data-met'))).toEqual(['true', 'true', 'true']);
+    expect(rules().map((r) => r.hasAttribute('data-met'))).toEqual([true, true, true]);
     // O estado também vai em texto (cor nunca sozinha).
     expect(rules()[0]).toHaveTextContent('Atendida: Ao menos 8 caracteres');
   });
 
-  it('emite eds:password-strength só quando o nível muda', async () => {
+  it('emite eds:password-strength-change só quando o nível muda', async () => {
     mount('data-eds-password-strength');
     const seen: number[] = [];
-    input().addEventListener('eds:password-strength', (e) =>
+    input().addEventListener('eds:password-strength-change', (e) =>
       seen.push((e as CustomEvent<{ level: number }>).detail.level),
     );
     await userEvent.type(input(), 'ab');

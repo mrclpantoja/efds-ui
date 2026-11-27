@@ -67,9 +67,8 @@ describe('Agenda', () => {
     expect(cell('2026-11-18').querySelector('.eds-agenda-event')).not.toHaveAttribute(
       'data-continues',
     );
-    expect(cell('2026-11-18').querySelector('.eds-agenda-event')).toHaveAttribute(
-      'data-tone',
-      'info',
+    expect(cell('2026-11-18').querySelector('.eds-agenda-event')).toHaveClass(
+      'eds-agenda-event-info',
     );
     expect(cell('2026-11-21').textContent).not.toContain('Congresso');
   });

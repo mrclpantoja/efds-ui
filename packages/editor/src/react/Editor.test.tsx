@@ -2,9 +2,9 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { createRef, useState } from 'react';
 import { TextSelection } from 'prosemirror-state';
 import { describe, expect, it, vi } from 'vitest';
-import { Editor, type EditorRef } from './index';
+import { Editor, type EditorHandle } from './index';
 
-const selectAll = (ref: React.RefObject<EditorRef | null>) => {
+const selectAll = (ref: React.RefObject<EditorHandle | null>) => {
   const view = ref.current!.view!;
   view.dispatch(
     view.state.tr.setSelection(
@@ -25,21 +25,23 @@ describe('<Editor>', () => {
     expect(document.querySelector('label.eds-label')).toHaveTextContent('Descrição');
   });
 
-  it('não controlado: onChange recebe o HTML e o ref expõe a API', async () => {
-    const onChange = vi.fn();
-    const ref = createRef<EditorRef>();
-    render(<Editor ref={ref} label="Texto" defaultValue="<p>a</p>" onChange={onChange} />);
+  it('não controlado: onValueChange recebe o HTML e o ref expõe a API', async () => {
+    const onValueChange = vi.fn();
+    const ref = createRef<EditorHandle>();
+    render(
+      <Editor ref={ref} label="Texto" defaultValue="<p>a</p>" onValueChange={onValueChange} />,
+    );
     expect(ref.current?.getHTML()).toBe('<p>a</p>');
     selectAll(ref);
     fireEvent.click(screen.getByRole('button', { name: 'Negrito' }));
-    await waitFor(() => expect(onChange).toHaveBeenCalledWith('<p><strong>a</strong></p>'));
+    await waitFor(() => expect(onValueChange).toHaveBeenCalledWith('<p><strong>a</strong></p>'));
     act(() => ref.current?.setHTML('<h2>novo</h2>'));
     expect(ref.current?.getHTML()).toBe('<h2>novo</h2>');
     expect(ref.current?.view).not.toBeNull();
   });
 
-  it('controlado: valor novo de fora entra no editor sem disparar onChange', async () => {
-    const onChange = vi.fn();
+  it('controlado: valor novo de fora entra no editor sem disparar onValueChange', async () => {
+    const onValueChange = vi.fn();
     function Harness() {
       const [value, setValue] = useState('<p>um</p>');
       return (
@@ -47,8 +49,8 @@ describe('<Editor>', () => {
           <Editor
             label="Texto"
             value={value}
-            onChange={(html) => {
-              onChange(html);
+            onValueChange={(html) => {
+              onValueChange(html);
               setValue(html);
             }}
           />
@@ -64,11 +66,11 @@ describe('<Editor>', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Trocar' }));
     await waitFor(() => expect(box).toHaveTextContent('dois'));
     await new Promise((r) => setTimeout(r, 250));
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
   it('com name, um input hidden leva o HTML no formulário', async () => {
-    const ref = createRef<EditorRef>();
+    const ref = createRef<EditorHandle>();
     render(
       <form data-testid="f">
         <Editor ref={ref} label="Texto" name="conteudo" defaultValue="<p>a</p>" />
@@ -83,12 +85,12 @@ describe('<Editor>', () => {
   });
 
   it('o hidden acompanha o texto mesmo depois de o React renderizar de novo (modo controlado)', async () => {
-    const ref = createRef<EditorRef>();
+    const ref = createRef<EditorHandle>();
     function Harness() {
       const [value, setValue] = useState('<p>a</p>');
       return (
         <form data-testid="f">
-          <Editor ref={ref} label="Texto" name="conteudo" value={value} onChange={setValue} />
+          <Editor ref={ref} label="Texto" name="conteudo" value={value} onValueChange={setValue} />
           <output>{value}</output>
         </form>
       );
@@ -127,7 +129,7 @@ describe('<Editor>', () => {
   });
 
   it('required: aria-required, bloqueia o envio vazio com erro visível e some ao digitar', async () => {
-    const ref = createRef<EditorRef>();
+    const ref = createRef<EditorHandle>();
     render(
       <form data-testid="f">
         <Editor ref={ref} label="Texto" name="conteudo" required aria-describedby="ajuda" />

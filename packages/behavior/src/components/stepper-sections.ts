@@ -101,13 +101,12 @@ export const stepperSectionsBehavior: Behavior = {
 
     const paint = () => {
       // Resumo do contêiner estreito: só no item atual.
-      for (const old of root.querySelectorAll('.eds-stepper-summary[data-eds-generated]'))
-        old.remove();
+      for (const old of root.querySelectorAll('.eds-stepper-summary[data-generated]')) old.remove();
       const cur = sections[current];
       if (cur && !cur.item.querySelector('.eds-stepper-summary')) {
         const summary = doc.createElement('span');
         summary.className = 'eds-stepper-summary';
-        summary.setAttribute('data-eds-generated', '');
+        summary.setAttribute('data-generated', '');
         summary.textContent = format(getMessages().stepperSectionSummary, {
           current: current + 1,
           total: sections.length,
@@ -225,7 +224,7 @@ export const stepperSectionsBehavior: Behavior = {
       if (frame && typeof cancelAnimationFrame === 'function') cancelAnimationFrame(frame);
       for (const s of sections) {
         s.suffix?.remove();
-        s.item.querySelector('.eds-stepper-summary[data-eds-generated]')?.remove();
+        s.item.querySelector('.eds-stepper-summary[data-generated]')?.remove();
         s.link.removeAttribute('aria-current');
         s.item.removeAttribute('data-state');
       }

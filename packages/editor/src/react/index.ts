@@ -1,2 +1,2 @@
-export { Editor, type EditorProps, type EditorRef } from './Editor';
-export type { EditorMessages } from '../messages';
+export { Editor, type EditorProps, type EditorHandle } from './Editor';
+export type { EditorTexts } from '../messages';

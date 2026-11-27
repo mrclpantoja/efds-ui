@@ -24,7 +24,7 @@ export default function Fetch() {
           <Button type="submit" variant="primary" {...submit.buttonProps}>
             Enviar
           </Button>
-          <Button type="submit" formMethod="post" aria-disabled={submit.busy || undefined}>
+          <Button type="submit" formMethod="post" aria-disabled={submit.loading || undefined}>
             Enviar e falhar
           </Button>
         </Stack>

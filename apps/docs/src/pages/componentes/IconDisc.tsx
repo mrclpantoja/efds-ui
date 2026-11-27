@@ -37,11 +37,11 @@ export default function IconDiscPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Só CSS">
+        <Alert tone="info" title="Só CSS">
           <p>
             Um <code>span.eds-icon-disc</code> com o{' '}
-            <code>&lt;svg aria-hidden=&quot;true&quot;&gt;</code> dentro. O tom vem de{' '}
-            <code>data-tone</code>.
+            <code>&lt;svg aria-hidden=&quot;true&quot;&gt;</code> dentro. O tom vem de uma classe (
+            <code>eds-icon-disc-success</code>).
           </p>
         </Alert>
       </Section>
@@ -60,7 +60,8 @@ export default function IconDiscPage() {
               name: 'tone',
               type: "'accent' | 'neutral' | 'info' | 'success' | 'warning' | 'danger'",
               default: "'accent'",
-              description: 'Tom (data-tone).',
+              description:
+                'Tom (classe eds-icon-disc-{tom}; accent é o padrão e não emite classe).',
             },
             { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Tamanho.' },
             { name: 'round', type: 'boolean', default: 'false', description: 'Disco circular.' },
@@ -72,7 +73,11 @@ export default function IconDiscPage() {
         <ClassTable
           caption="Classes do disco de ícone"
           rows={[
-            { name: '.eds-icon-disc', effect: 'O disco; tom por data-tone.' },
+            { name: '.eds-icon-disc', effect: 'O disco.' },
+            {
+              name: '.eds-icon-disc-neutral / -info / -success / -warning / -danger',
+              effect: 'Tom do disco (accent é o padrão).',
+            },
             { name: '.eds-icon-disc-sm / -lg', effect: 'Tamanhos.' },
             { name: '.eds-icon-disc-round', effect: 'Circular.' },
           ]}

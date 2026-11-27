@@ -3,7 +3,7 @@ import { Button } from '@efds-ui/react';
 /** Estado "copiado" estático, só para ver o visual: o CopyButton aplica `data-copied` por 2 s. */
 export default function Copiado() {
   return (
-    <Button size="sm" className="eds-copy" data-copied="true">
+    <Button size="sm" className="eds-copy" data-copied>
       <svg
         className="eds-copy-icon-idle"
         viewBox="0 0 24 24"

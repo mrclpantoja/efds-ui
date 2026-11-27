@@ -1,5 +1,5 @@
 <!-- Um rótulo longo quebra em duas linhas e os números continuam na mesma linha (o valor fica ancorado na base). .eds-stat-grid responde à largura do contêiner (1, 2 e 4 colunas). Cada indicador é um .eds-card.eds-stat.
-     Uma subida pode ser ruim (inadimplência): data-trend="up" com data-tone="negative".
+     Uma subida pode ser ruim (inadimplência): data-trend="up" com eds-stat-delta-danger.
      O último card mostra o estado carregando (aria-busy + Skeleton, mesmas dimensões do valor).
      O anúncio é um só, no fim da grade (role="status"), não um por card. Aqui o texto é fixo porque o
      exemplo é estático; numa página real a região existe vazia desde o início e o seu JS escreve
@@ -9,7 +9,7 @@
   <div class="eds-card eds-stat">
     <p class="eds-stat-label">Pedidos no mês</p>
     <p class="eds-stat-value">1.284</p>
-    <p class="eds-stat-delta" data-trend="up" data-tone="positive">
+    <p class="eds-stat-delta eds-stat-delta-success" data-trend="up">
       <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" /></svg>
       <span class="eds-visually-hidden">Aumento de</span> 12,4%
       <span class="eds-stat-meta">vs. mês anterior</span>
@@ -18,7 +18,7 @@
   <div class="eds-card eds-stat">
     <p class="eds-stat-label">Faturamento</p>
     <p class="eds-stat-value">R$ 86.410,00</p>
-    <p class="eds-stat-delta" data-trend="down" data-tone="negative">
+    <p class="eds-stat-delta eds-stat-delta-danger" data-trend="down">
       <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" /></svg>
       <span class="eds-visually-hidden">Queda de</span> 3,1%
       <span class="eds-stat-meta">vs. mês anterior</span>
@@ -27,7 +27,7 @@
   <div class="eds-card eds-stat">
     <p class="eds-stat-label">Inadimplência acumulada nos últimos 12 meses</p>
     <p class="eds-stat-value">4,8%</p>
-    <p class="eds-stat-delta" data-trend="up" data-tone="negative">
+    <p class="eds-stat-delta eds-stat-delta-danger" data-trend="up">
       <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" /></svg>
       <span class="eds-visually-hidden">Aumento de</span> 0,6 ponto
       <span class="eds-stat-meta">vs. mês anterior</span>

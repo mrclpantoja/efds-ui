@@ -8,7 +8,7 @@ export default function Disparar() {
       <Button
         onClick={() =>
           toast.show({
-            variant: 'info',
+            tone: 'info',
             title: 'Informação:',
             message: 'A conciliação roda todos os dias às 02h.',
           })
@@ -19,7 +19,7 @@ export default function Disparar() {
       <Button
         onClick={() =>
           toast.show({
-            variant: 'success',
+            tone: 'success',
             title: 'Sucesso:',
             message: 'O contrato foi assinado e arquivado.',
           })
@@ -30,7 +30,7 @@ export default function Disparar() {
       <Button
         onClick={() =>
           toast.show({
-            variant: 'warning',
+            tone: 'warning',
             title: 'Atenção:',
             message: 'O certificado digital vence em 7 dias.',
           })
@@ -41,7 +41,7 @@ export default function Disparar() {
       <Button
         onClick={() =>
           toast.show({
-            variant: 'danger',
+            tone: 'danger',
             title: 'Erro:',
             message: 'Não foi possível enviar a nota fiscal.',
           })

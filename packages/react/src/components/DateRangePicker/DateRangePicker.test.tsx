@@ -84,13 +84,13 @@ describe('DateRangePicker: markup e API', () => {
 });
 
 describe('DateRangePicker: escolha de período', () => {
-  it('1º Enter = início, 2º = fim; fecha, atualiza campos, hidden e onChange', async () => {
-    const onChange = vi.fn();
+  it('1º Enter = início, 2º = fim; fecha, atualiza campos, hidden e onValueChange', async () => {
+    const onValueChange = vi.fn();
     const { user, start, end, toggle, status, container } = setup({
       defaultValue: { start: '2026-03-01', end: null },
       nameStart: 'i',
       nameEnd: 'f',
-      onChange,
+      onValueChange,
     });
     await user.click(toggle);
     expect(focusedDate()).toBe('2026-03-01');
@@ -99,13 +99,13 @@ describe('DateRangePicker: escolha de período', () => {
     await waitFor(() =>
       expect(status).toHaveTextContent('Início: 03/03/2026. Escolha a data final.'),
     );
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onValueChange).not.toHaveBeenCalled();
     await user.keyboard('{ArrowDown}{ArrowDown}{Enter}'); // 17/03
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
     expect(toggle).toHaveFocus();
     expect(start).toHaveValue('03/03/2026');
     expect(end).toHaveValue('17/03/2026');
-    expect(onChange).toHaveBeenCalledWith({ start: '2026-03-03', end: '2026-03-17' });
+    expect(onValueChange).toHaveBeenCalledWith({ start: '2026-03-03', end: '2026-03-17' });
     expect(container.querySelector('input[name="i"]')).toHaveValue('2026-03-03');
     expect(container.querySelector('input[name="f"]')).toHaveValue('2026-03-17');
     await waitFor(() => expect(status).toHaveTextContent('Período: 03/03/2026 a 17/03/2026.'));
@@ -205,12 +205,12 @@ describe('DateRangePicker: escolha de período', () => {
 
 describe('DateRangePicker: campos de texto', () => {
   it('máscara e valor nos dois campos', async () => {
-    const onChange = vi.fn();
-    const { user, start, end } = setup({ onChange });
+    const onValueChange = vi.fn();
+    const { user, start, end } = setup({ onValueChange });
     await user.type(start, '03032026');
     await user.type(end, '15032026');
     expect(start).toHaveValue('03/03/2026');
-    expect(onChange).toHaveBeenLastCalledWith({ start: '2026-03-03', end: '2026-03-15' });
+    expect(onValueChange).toHaveBeenLastCalledWith({ start: '2026-03-03', end: '2026-03-15' });
   });
 
   it('final antes da inicial: mensagem no campo final', async () => {
@@ -262,7 +262,7 @@ describe('DateRangePicker: controlado', () => {
       const [v, setV] = useState<DateRangeValue>({ start: '2026-03-03', end: '2026-03-05' });
       return (
         <>
-          <DateRangePicker aria-label="Período" value={v} onChange={setV} />
+          <DateRangePicker aria-label="Período" value={v} onValueChange={setV} />
           <button type="button" onClick={() => setV({ start: null, end: null })}>
             limpar
           </button>

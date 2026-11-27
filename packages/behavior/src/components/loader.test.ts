@@ -149,10 +149,10 @@ describe('page loader', () => {
       done();
     });
 
-    it('eds:loader-show e eds:loader-hide', async () => {
+    it('eds:loader-open e eds:loader-close', async () => {
       const events: string[] = [];
-      document.addEventListener('eds:loader-show', () => events.push('show'));
-      document.addEventListener('eds:loader-hide', () => events.push('hide'));
+      document.addEventListener('eds:loader-open', () => events.push('show'));
+      document.addEventListener('eds:loader-close', () => events.push('hide'));
       const done = loader.start();
       await vi.advanceTimersByTimeAsync(300);
       done();

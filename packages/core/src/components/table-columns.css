@@ -5,9 +5,9 @@
    - Alça: um tab stop por coluna; "pega" com aria-pressed="true". Aparece em hover e foco do th, e sempre em
      toque. Sem ícone filho, o CSS desenha o pegador (seis pontos); com <svg>, usa o do autor.
    - Borda de redimensionar: decorativa (aria-hidden), alvo do ponteiro; a alternativa de teclado é a alça e o
-     painel "Colunas". O JS marca th[data-eds-resizing] durante o arrasto.
-   - Reordenar por arrasto: th[data-eds-dragging] (e as células da coluna) = origem;
-     th[data-eds-drop="before|after"] = destino (a marca vale para o lado lógico, vira no RTL).
+     painel "Colunas". O JS marca th[data-resizing] durante o arrasto.
+   - Reordenar por arrasto: th[data-dragging] (e as células da coluna) = origem;
+     th[data-drop-target="before|after"] = destino (a marca vale para o lado lógico, vira no RTL).
    - .eds-table-fixed (na table): table-layout fixo; as larguras vêm de <col> e a soma delas, de
      --_table-inline-size (ou inline-size direto). O texto que não cabe é cortado com reticências;
      .eds-table-wrap-text na célula devolve a quebra.
@@ -128,7 +128,7 @@
     }
   }
 
-  .eds-table th:is(:hover, :focus-within, [data-eds-resizing]) .eds-table-resize::after,
+  .eds-table th:is(:hover, :focus-within, [data-resizing]) .eds-table-resize::after,
   .eds-table .eds-table-resize:hover::after {
     opacity: 1;
   }
@@ -139,31 +139,31 @@
       opacity: 1;
     }
 
-    .eds-table th[data-eds-resizing] .eds-table-resize::after {
+    .eds-table th[data-resizing] .eds-table-resize::after {
       border-inline-end-color: var(--eds-color-action-primary);
     }
   }
 
   /* Reordenar por arrasto: origem esmaecida em cor de ação suave; destino com marca de inserção. */
-  .eds-table :is(th, td)[data-eds-dragging] {
+  .eds-table :is(th, td)[data-dragging] {
     --_sticky-bg: var(--eds-color-action-primary-subtle);
 
     background: var(--_sticky-bg);
   }
 
-  .eds-table th[data-eds-drop] {
+  .eds-table th[data-drop-target] {
     --_drop-dir: 1;
 
     &:dir(rtl) {
       --_drop-dir: -1;
     }
 
-    &[data-eds-drop='before'] {
+    &[data-drop-target='before'] {
       box-shadow: inset calc(var(--eds-border-width-strong) * var(--_drop-dir)) 0 0
         var(--eds-color-action-primary);
     }
 
-    &[data-eds-drop='after'] {
+    &[data-drop-target='after'] {
       box-shadow: inset calc(var(--eds-border-width-strong) * var(--_drop-dir) * -1) 0 0
         var(--eds-color-action-primary);
     }
@@ -218,8 +218,8 @@
       color: HighlightText;
     }
 
-    .eds-table th[data-eds-drop],
-    .eds-table :is(th, td)[data-eds-dragging] {
+    .eds-table th[data-drop-target],
+    .eds-table :is(th, td)[data-dragging] {
       outline: var(--eds-border-width-strong) dashed Highlight;
       outline-offset: calc(var(--eds-border-width-strong) * -1);
     }

@@ -24,7 +24,7 @@ import {
   Stack,
   Textarea,
   Wizard,
-  type DescriptionItem,
+  type DescriptionListItem,
 } from '@efds-ui/react';
 import { categories, serviceBySlug, services } from '../data';
 import { usePageTitle } from '../components/usePageTitle';
@@ -92,7 +92,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
     };
   };
 
-  const reviewItems: DescriptionItem[] = [
+  const reviewItems: DescriptionListItem[] = [
     { label: 'Serviço', value: review.servico },
     { label: 'Nome', value: review.nome },
     { label: 'CPF', value: review.cpf },
@@ -135,7 +135,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
             {protocol ? (
               <Stack as="section" gap={4} aria-labelledby="confirmacao-t">
                 <Alert
-                  variant="success"
+                  tone="success"
                   title={
                     <span id="confirmacao-t" tabIndex={-1} ref={confirmationTitle}>
                       Solicitação enviada
@@ -164,7 +164,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
               </Stack>
             ) : (
               <>
-                <Alert variant="info" title="Demonstração">
+                <Alert tone="info" title="Demonstração">
                   Este site é fictício. Nenhum dado sai do seu navegador; use dados inventados.
                 </Alert>
                 <Wizard
@@ -184,7 +184,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                             <Select
                               name="servico"
                               defaultValue={initialService}
-                              data-eds-error="Escolha o serviço que você quer solicitar."
+                              data-eds-error-message="Escolha o serviço que você quer solicitar."
                             >
                               <option value="">Selecione</option>
                               {categories.map((category) => (
@@ -205,7 +205,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                               name="nome"
                               autoComplete="name"
                               placeholder="Ex.: Maria Exemplo"
-                              data-eds-error="Informe o seu nome completo."
+                              data-eds-error-message="Informe o seu nome completo."
                             />
                           </Field>
                           <Grid>
@@ -221,7 +221,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                                   inputMode="numeric"
                                   autoComplete="off"
                                   pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
-                                  data-eds-error="Informe o CPF completo, com 11 números."
+                                  data-eds-error-message="Informe o CPF completo, com 11 números."
                                 />
                               </Field>
                             </GridItem>
@@ -240,7 +240,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                                   name="email"
                                   type="email"
                                   autoComplete="email"
-                                  data-eds-error="Informe um e-mail válido."
+                                  data-eds-error-message="Informe um e-mail válido."
                                 />
                               </Field>
                             </GridItem>
@@ -287,7 +287,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                               maxSize={5 * 1024 * 1024}
                               maxFiles={5}
                               hint="PDF, JPG ou PNG, até 5 MB cada (máximo de 5)"
-                              onChange={(list) => {
+                              onValueChange={(list) => {
                                 files.current = list;
                               }}
                             />
@@ -307,7 +307,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                           <Checkbox
                             name="declaracao"
                             required
-                            data-eds-error="Marque a declaração para enviar."
+                            data-eds-error-message="Marque a declaração para enviar."
                           >
                             Declaro que as informações são verdadeiras.
                           </Checkbox>

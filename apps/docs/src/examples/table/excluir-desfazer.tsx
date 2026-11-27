@@ -33,7 +33,7 @@ export default function ExcluirDesfazer() {
   const excluir = (pedido: Pedido, indice: number) => {
     setLinhas((atual) => atual.filter((p) => p.codigo !== pedido.codigo));
     toast.show({
-      variant: 'info',
+      tone: 'info',
       message: `Pedido ${pedido.codigo} excluído.`,
       duration: 8000,
       action: {

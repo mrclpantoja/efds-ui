@@ -3,7 +3,7 @@ import { EditorView } from 'prosemirror-view';
 import { applyLink, findLink, removeLink } from './commands';
 import { docToHtml, htmlToDoc, isDocEmpty } from './html';
 import { createLinkDialog, type LinkDialog } from './link-dialog';
-import { getMessages, type EditorMessages } from './messages';
+import { getMessages, type EditorTexts } from './messages';
 import { prepareClipboardHtml } from './paste';
 import { createPlugins } from './plugins';
 import { basicSchema } from './schema';
@@ -35,7 +35,7 @@ export interface EditorCoreOptions extends EditorDynamicOptions {
   /** Nome acessível quando não há rótulo. */
   ariaLabel?: string;
   /** Textos (parcial; o resto vem de `configure`/pt-BR). */
-  messages?: Partial<EditorMessages>;
+  messages?: Partial<EditorTexts>;
   /** Pausa antes de avisar mudança e gravar no campo, em ms (padrão 150). */
   debounce?: number;
   /** Mudança do HTML (com debounce). */

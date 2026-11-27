@@ -10,6 +10,8 @@ import {
   type ReactNode,
 } from 'react';
 import { checkPassword, type PasswordLevel, type PasswordRuleId } from '@efds-ui/behavior/fields';
+
+export type { PasswordLevel };
 import { useAnnouncer } from '../../internal/announcer';
 import { EyeGlyph, EyeOffGlyph } from '../../internal/glyphs-c1';
 import { mergeRefs } from '../../internal/refs-d';
@@ -25,7 +27,7 @@ export interface PasswordRule {
 }
 
 /** Textos internos do PasswordInput (padrões em pt-BR). */
-export interface PasswordTexts {
+export interface PasswordInputTexts {
   /** Nome do botão (fixo; o estado vai em `aria-pressed`). */
   show: string;
   strength: (level: string) => string;
@@ -44,7 +46,7 @@ export interface PasswordTexts {
   ruleSymbol: string;
 }
 
-const defaultTexts: PasswordTexts = {
+const defaultTexts: PasswordInputTexts = {
   show: 'Mostrar senha',
   strength: (level) => `Força: ${level}`,
   strengthEmpty: 'Força: não avaliada',
@@ -63,7 +65,7 @@ const defaultTexts: PasswordTexts = {
 
 export interface PasswordInputProps extends Omit<
   InputProps,
-  'type' | 'mask' | 'maskOptions' | 'unmask' | 'onValueChange'
+  'type' | 'mask' | 'maskOptions' | 'unmask' | 'onValueChange' | 'texts'
 > {
   /** Mostra a barra e o texto da força (0 a 4), calculados no navegador (a senha não sai dele). */
   strength?: boolean;
@@ -73,7 +75,7 @@ export interface PasswordInputProps extends Omit<
   minLength?: number;
   /** Chamado quando o nível de força muda. */
   onStrengthChange?: (level: PasswordLevel) => void;
-  texts?: Partial<PasswordTexts>;
+  texts?: Partial<PasswordInputTexts>;
 }
 
 /** O anúncio da força espera a pessoa parar de digitar (e sai ao sair do campo). */
@@ -241,7 +243,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
                 typeof rule.id === 'string' ? [rule.id] : rule.id;
               const met = ids.every((id) => check.rules[id]);
               return (
-                <li key={index} data-met={met}>
+                <li key={index} data-met={met ? '' : undefined}>
                   <span className="eds-visually-hidden">{met ? t.ruleMet : t.ruleUnmet}</span>
                   {rule.label}
                 </li>

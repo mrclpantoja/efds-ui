@@ -1,4 +1,4 @@
-import { useId, useMemo, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, useMemo, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
 import { FieldContext } from '../../internal/field-context';
 
@@ -9,7 +9,7 @@ export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childr
   helper?: ReactNode;
   /** Mensagem de erro: o controle recebe `aria-invalid="true"` e a descrição. */
   error?: ReactNode;
-  /** Mensagem de sucesso: o controle recebe `data-valid="true"`. Ignorada se houver `error`. */
+  /** Mensagem de sucesso: o controle recebe `data-valid`. Ignorada se houver `error`. */
   success?: ReactNode;
   /** `required` real no controle + asterisco no rótulo (`data-required`). */
   required?: boolean;
@@ -26,17 +26,10 @@ export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childr
  * Rótulo + controle + ajuda/erro. Liga `htmlFor`/`id` e `aria-describedby`, e propaga
  * `aria-invalid` e `required` ao Input/Textarea/Select filho. Para grupos use Fieldset/RadioGroup.
  */
-export function Field({
-  label,
-  helper,
-  error,
-  success,
-  required,
-  controlId,
-  className,
-  children,
-  ...rest
-}: FieldProps) {
+export const Field = forwardRef<HTMLDivElement, FieldProps>(function Field(
+  { label, helper, error, success, required, controlId, className, children, ...rest },
+  ref,
+) {
   const generated = useId();
   const id = controlId ?? generated;
   const labelId = `${id}-label`;
@@ -60,7 +53,7 @@ export function Field({
   );
 
   return (
-    <div {...rest} className={cx('eds-field', className)}>
+    <div {...rest} ref={ref} className={cx('eds-field', className)}>
       <label className="eds-label" id={labelId} htmlFor={id} data-required={required || undefined}>
         {label}
       </label>
@@ -82,5 +75,5 @@ export function Field({
       )}
     </div>
   );
-}
+});
 Field.displayName = 'Field';

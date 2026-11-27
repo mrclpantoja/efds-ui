@@ -66,7 +66,7 @@ for (const camada of camadas) {
       await page.keyboard.press('Shift+Enter');
       await expect(th(/^Total/).locator('.eds-table-sort-order')).toHaveText('3');
       await page.keyboard.press('Shift+Enter');
-      await expect(th(/^Total/)).toHaveAttribute('data-eds-sort-dir', 'descending');
+      await expect(th(/^Total/)).toHaveAttribute('data-sort-dir', 'descending');
       await page.keyboard.press('Shift+Enter');
       await expect(bloco.locator('.eds-table-sort-order')).toHaveCount(2);
       await expect(botao(/^Total/)).toBeFocused();

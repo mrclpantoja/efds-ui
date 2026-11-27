@@ -18,9 +18,9 @@ export default function Fechavel() {
     <Stack gap={3}>
       {open ? (
         <Alert
-          variant="info"
+          tone="info"
           title="Novidade"
-          onClose={() => {
+          onDismiss={() => {
             moveFocus.current = true;
             setOpen(false);
           }}

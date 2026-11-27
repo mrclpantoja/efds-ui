@@ -56,13 +56,13 @@ describe('MultiSelect', () => {
   });
 
   it('Enter alterna a opção, mantém a lista aberta e limpa o texto', async () => {
-    const onChange = vi.fn();
-    const { user, input, opt, hidden } = setup({ onChange, name: 'c[]' });
+    const onValueChange = vi.fn();
+    const { user, input, opt, hidden } = setup({ onValueChange, name: 'c[]' });
     await user.type(input, 'pel');
     await user.keyboard('{ArrowDown}{Enter}');
     expect(input).toHaveValue('');
     expect(input).toHaveAttribute('aria-expanded', 'true');
-    expect(onChange).toHaveBeenLastCalledWith(['pel'], [cidades[1]]);
+    expect(onValueChange).toHaveBeenLastCalledWith(['pel'], [cidades[1]]);
     expect(opt('Pelotas')).toHaveAttribute('aria-selected', 'true');
     expect(hidden()).toEqual(['pel']);
     // segunda escolha, na ordem de escolha
@@ -87,13 +87,13 @@ describe('MultiSelect', () => {
   });
 
   it('clique alterna e a lista continua aberta; desabilitada é ignorada', async () => {
-    const onChange = vi.fn();
-    const { user, input, opt } = setup({ onChange });
+    const onValueChange = vi.fn();
+    const { user, input, opt } = setup({ onValueChange });
     await user.click(input);
     await user.click(opt('São Paulo'));
     await user.click(opt('Salvador'));
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(['sao'], [cidades[2]]);
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange).toHaveBeenCalledWith(['sao'], [cidades[2]]);
     expect(input).toHaveAttribute('aria-expanded', 'true');
   });
 
@@ -114,14 +114,14 @@ describe('MultiSelect', () => {
   });
 
   it('remover pela etiqueta leva o foco ao próximo botão, senão ao input', async () => {
-    const onChange = vi.fn();
+    const onValueChange = vi.fn();
     const { user, input, hidden } = setup({
       defaultValue: ['poa', 'pel', 'sao'],
       name: 'c[]',
-      onChange,
+      onValueChange,
     });
     await user.click(screen.getByRole('button', { name: 'Remover Pelotas' }));
-    expect(onChange).toHaveBeenLastCalledWith(['poa', 'sao'], [cidades[0], cidades[2]]);
+    expect(onValueChange).toHaveBeenLastCalledWith(['poa', 'sao'], [cidades[0], cidades[2]]);
     expect(screen.getByRole('button', { name: 'Remover São Paulo' })).toHaveFocus();
     await user.click(screen.getByRole('button', { name: 'Remover São Paulo' }));
     expect(input).toHaveFocus();
@@ -168,7 +168,13 @@ describe('MultiSelect', () => {
     function Host() {
       const [v, setV] = useState<string[]>(['poa']);
       return (
-        <MultiSelect aria-label="Cidades" options={cidades} value={v} onChange={setV} name="c[]" />
+        <MultiSelect
+          aria-label="Cidades"
+          options={cidades}
+          value={v}
+          onValueChange={setV}
+          name="c[]"
+        />
       );
     }
     const user = userEvent.setup();
@@ -202,8 +208,8 @@ describe('MultiSelect', () => {
     expect(status()).toHaveTextContent(
       'Pelotas: selecionado. 2 itens selecionados. Limite de 2 itens atingido.',
     );
-    expect(opt('São Paulo')).toHaveAttribute('data-eds-max');
-    expect(opt('Salvador')).not.toHaveAttribute('data-eds-max');
+    expect(opt('São Paulo')).toHaveAttribute('data-max');
+    expect(opt('Salvador')).not.toHaveAttribute('data-max');
     await user.click(opt('São Paulo'));
     expect(screen.getAllByRole('button', { name: /^Remover/ })).toHaveLength(2);
     await waitFor(() => expect(status()).toHaveTextContent('Limite de 2 itens atingido.'));

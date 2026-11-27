@@ -52,7 +52,7 @@ describe('alterações não salvas', () => {
     expect(beforeUnload()).toBe(false);
     await userEvent.setup().type($('nome'), 'x');
     expect(beforeUnload()).toBe(true);
-    expect($('f')).toHaveAttribute('data-dirty', 'true');
+    expect($('f')).toHaveAttribute('data-dirty');
     expect(onChange).toHaveBeenCalledTimes(1);
     expect((onChange.mock.calls[0]?.[0] as CustomEvent).detail).toEqual({ dirty: true });
   });
@@ -151,10 +151,10 @@ describe('alterações não salvas', () => {
     expect(beforeUnload()).toBe(false);
   });
 
-  it('eds:dirty-reset e markClean tornam o estado atual o inicial', async () => {
+  it('markClean torna o estado atual o inicial', async () => {
     const user = userEvent.setup();
     await user.type($('nome'), 'x');
-    $('f').dispatchEvent(new CustomEvent('eds:dirty-reset'));
+    markClean($('f') as unknown as HTMLFormElement);
     expect(beforeUnload()).toBe(false);
     await user.type($('nome'), 'y');
     expect(beforeUnload()).toBe(true);
@@ -193,7 +193,7 @@ describe('alterações não salvas com valores normalizados por outros comportam
     expect(form.dataset.dirty).toBeUndefined();
     other.value = 'b';
     other.dispatchEvent(new Event('input', { bubbles: true }));
-    expect(form.dataset.dirty).toBe('true');
+    expect(form.dataset.dirty).toBe('');
     stop();
     document.body.innerHTML = '';
   });

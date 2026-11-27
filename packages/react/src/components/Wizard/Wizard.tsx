@@ -12,7 +12,7 @@ import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { useAnnouncer } from '../../internal/announcer';
 import { controlsOf, createFieldErrors, type FieldControl } from '../../internal/field-errors';
-import { Stepper, type StepperTexts, type StepState } from '../Stepper';
+import { Stepper, type StepperTexts, type StepperStepState } from '../Stepper';
 
 export interface WizardStep {
   /** Título da etapa: rótulo no Stepper, título do painel e anúncio. */
@@ -45,7 +45,12 @@ export interface WizardProps extends Omit<
   /** Nome do indicador de etapas. */
   'aria-label': string;
   steps: readonly WizardStep[];
-  /** Etapa inicial (índice a partir de 0). */
+  /**
+   * Etapa atual (controlada, índice a partir de 0). Use com `onStepChange`, que avisa a etapa
+   * escolhida (avançar, voltar ou clicar numa concluída): quem controla decide se `step` muda.
+   */
+  step?: number;
+  /** Etapa inicial (não controlada, índice a partir de 0). */
   defaultStep?: number;
   /**
    * Validação extra de uma etapa, depois da validação nativa dos campos (`required`, `pattern`...).
@@ -63,13 +68,14 @@ export interface WizardProps extends Omit<
 /**
  * Formulário em etapas: Stepper + painéis `hidden` + Voltar/Avançar/Concluir. Avançar valida os
  * campos do painel (cada inválido ganha `aria-invalid` e um `p.eds-error` ligado por
- * `aria-describedby`, com a mensagem nativa ou o `data-eds-error` do campo; o foco vai ao primeiro), move o foco ao título da nova etapa e
+ * `aria-describedby`, com a mensagem nativa ou o `data-eds-error-message` do campo; o foco vai ao primeiro), move o foco ao título da nova etapa e
  * anuncia "Etapa 2 de 4: Endereço.". Enter avança; o envio final valida todos os painéis.
  */
 export const Wizard = forwardRef<HTMLFormElement, WizardProps>(function Wizard(
   {
     'aria-label': ariaLabel,
     steps,
+    step: stepProp,
     defaultStep = 0,
     validate,
     onBeforeStepChange,
@@ -85,8 +91,9 @@ export const Wizard = forwardRef<HTMLFormElement, WizardProps>(function Wizard(
   const baseId = useId();
   const total = steps.length;
   const last = total - 1;
-  const start = Math.min(Math.max(defaultStep, 0), last);
-  const [current, setCurrent] = useState(start);
+  const start = Math.min(Math.max(stepProp ?? defaultStep, 0), last);
+  const [internal, setCurrent] = useState(start);
+  const current = stepProp === undefined ? internal : Math.min(Math.max(stepProp, 0), last);
   const [completed, setCompleted] = useState<ReadonlySet<number>>(
     () => new Set(Array.from({ length: start }, (_, i) => i)),
   );
@@ -170,14 +177,8 @@ export const Wizard = forwardRef<HTMLFormElement, WizardProps>(function Wizard(
     }
   };
 
-  const states: StepState[] = steps.map((_, i) =>
-    i === current
-      ? 'current'
-      : errored.has(i)
-        ? 'error'
-        : completed.has(i)
-          ? 'complete'
-          : 'upcoming',
+  const states: StepperStepState[] = steps.map((_, i) =>
+    i === current ? 'current' : errored.has(i) ? 'error' : completed.has(i) ? 'done' : 'upcoming',
   );
 
   return (

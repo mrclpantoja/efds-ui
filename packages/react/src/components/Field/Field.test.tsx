@@ -94,7 +94,7 @@ describe('Field', () => {
         <Input />
       </Field>,
     );
-    expect(screen.getByLabelText('Código')).toHaveAttribute('data-valid', 'true');
+    expect(screen.getByLabelText('Código')).toHaveAttribute('data-valid');
     expect(screen.getByText('Código disponível.')).toHaveClass('eds-success');
     rerender(
       <Field label="Código" success="Código disponível." error="Já existe.">

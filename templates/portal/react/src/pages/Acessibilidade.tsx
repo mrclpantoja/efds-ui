@@ -70,7 +70,7 @@ export function Acessibilidade() {
                 Encontrou uma barreira? Fale conosco
               </h2>
               <DescriptionList
-                horizontal
+                orientation="horizontal"
                 divided
                 items={[
                   { label: 'Telefone', value: org.phone },

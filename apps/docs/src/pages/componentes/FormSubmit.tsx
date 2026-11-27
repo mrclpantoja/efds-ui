@@ -47,7 +47,7 @@ export default function FormSubmitPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Behavior @efds-ui/behavior">
+        <Alert tone="info" title="Behavior @efds-ui/behavior">
           <p>
             Ponha <code>data-eds-submit</code> no <code>&lt;form&gt;</code>. Há três modos:
           </p>
@@ -61,7 +61,7 @@ export default function FormSubmitPage() {
             <li>
               <strong>Manual</strong> (<code>data-eds-submit=&quot;manual&quot;</code>): o behavior
               cancela o envio nativo e entra em &quot;enviando&quot;; você envia como quiser e
-              conclui com <code>EDS.submitState(form).success()</code> ou <code>.error()</code> (ou
+              conclui com <code>EDS.submit(form).success()</code> ou <code>.error()</code> (ou
               <code> .track(promessa)</code>).
             </li>
             <li>
@@ -78,11 +78,11 @@ export default function FormSubmitPage() {
             confirmação (<code>data-eds-confirm</code>) e do Wizard acontecem antes. O evento{' '}
             <code>eds:form-submit</code> (cancelável) sai logo antes; cancelá-lo impede o envio. Em
             fetch, <code>detail.data</code> é o <code>FormData</code> e aceita campos extras (token
-            CSRF). Depois do sucesso o behavior dispara <code>eds:dirty-reset</code>: o aviso de
+            CSRF). Depois do sucesso o behavior chama <code>markClean(form)</code>: o aviso de
             alterações não salvas some.
           </p>
         </Alert>
-        <Alert variant="warning" title="Convivência com o PageLoader">
+        <Alert tone="warning" title="Convivência com o PageLoader">
           <p>
             O botão em <code>aria-busy</code> é o sinal do envio; o PageLoader bloqueante em cima
             seria um sinal duplo. Por isso, em formulários com <code>data-eds-submit</code>: o envio
@@ -96,9 +96,9 @@ export default function FormSubmitPage() {
             dentro do handler do <code>useSubmit</code> com <code>PageLoaderProvider auto</code>.
           </p>
         </Alert>
-        <Alert variant="info" title="API de script">
+        <Alert tone="info" title="API de script">
           <p>
-            <code>EDS.submitState(form)</code> devolve <code>state</code>(
+            <code>EDS.submit(form)</code> devolve <code>state</code>(
             <code>idle | busy | success | error</code>), <code>start(submitter?)</code>,{' '}
             <code>success(texto?)</code>, <code>error(texto?)</code>, <code>reset()</code> e{' '}
             <code>track(promessa)</code>. Eventos: <code>eds:form-submit</code>,{' '}
@@ -156,15 +156,16 @@ export default function FormSubmitPage() {
               description: 'Estado.',
             },
             {
-              name: 'busy',
+              name: 'loading',
               type: 'boolean',
-              description: 'Use em aria-disabled nos outros botões de envio.',
+              description:
+                'Atalho de state === busy: use em aria-disabled nos outros botões de envio.',
             },
             { name: 'error', type: 'unknown', description: 'O que o último envio lançou.' },
             { name: 'reset', type: '() => void', description: 'Volta ao normal na hora.' },
             {
               name: 'buttonProps',
-              type: '{ loading, status, texts }',
+              type: '{ loading, result, texts }',
               description: (
                 <>
                   Espalhe no <code>Button</code> que envia.
@@ -177,16 +178,16 @@ export default function FormSubmitPage() {
           caption="Props novas do Button"
           rows={[
             {
-              name: 'status',
+              name: 'result',
               type: "'success' | 'error'",
               description:
-                'Troca o conteúdo pelo texto do status e põe data-state. Ignorado com loading.',
+                'Troca o conteúdo pelo texto do resultado e põe data-state. Ignorado com loading.',
             },
             {
               name: 'texts',
               type: '{ success, error }',
               default: '“Salvo” / “Não foi possível salvar”',
-              description: 'Textos do status.',
+              description: 'Textos do result.',
             },
           ]}
         />

@@ -2,9 +2,11 @@
  * Coordenador de visibilidade das linhas de uma tabela. Cada fonte de filtro (busca geral, filtros
  * por coluna) registra um predicado `(linha) => boolean` (verdadeiro = fica visível); o coordenador
  * junta todos com E lógico, grava `row.hidden`, trata a linha de "vazio" e dispara
- * `eds:table-filtered` uma única vez. Quem muda a fonte anuncia o resultado.
+ * `eds:table-filter` (na tabela, `detail { query, count }`) uma única vez. Quem muda a fonte anuncia o resultado.
  */
 import { format, getMessages } from './config';
+import { emit } from './dom';
+import { hubFor } from './table-hub';
 
 export type RowPredicate = (row: HTMLTableRowElement) => boolean;
 
@@ -100,7 +102,7 @@ export function refreshRows(table: HTMLTableElement): number {
   } else if (rows.length > 0) {
     for (const row of allRows(table)) if (isEmptyRow(row)) row.hidden = true;
   }
-  table.dispatchEvent(new CustomEvent('eds:table-filtered', { bubbles: true }));
+  emit(table, 'table-filter', { query: hubFor(table).query.q, count });
   return count;
 }
 

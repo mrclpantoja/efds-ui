@@ -56,9 +56,9 @@ export default function TimePickerPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="@efds-ui/behavior">
+        <Alert tone="info" title="@efds-ui/behavior">
           <p>
-            <code>data-eds-timepicker</code> na raiz, com <code>data-eds-time-step</code> (minutos,
+            <code>data-eds-timepicker</code> na raiz, com <code>data-eds-step</code> (minutos,
             padrão 30), <code>data-eds-min</code> e <code>data-eds-max</code> (<code>HH:MM</code>).
             O JS gera a lista a partir desses atributos e aplica a máscara <code>hh:mm</code> no
             campo (o TimePicker já a traz, também na compilação sem a máscara de entrada; um{' '}
@@ -82,7 +82,7 @@ export default function TimePickerPage() {
               description: 'Horário controlado ou inicial.',
             },
             {
-              name: 'onChange',
+              name: 'onValueChange',
               type: '(value: string) => void',
               description: 'HH:MM com horário completo e permitido, senão vazio.',
             },

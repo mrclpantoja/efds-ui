@@ -1,7 +1,7 @@
 export { useFormValidation } from './useFormValidation';
 export type {
   FormValidationError,
-  FormValidationProps,
+  FormValidationFormProps,
   UseFormValidationOptions,
   UseFormValidationResult,
 } from './useFormValidation';

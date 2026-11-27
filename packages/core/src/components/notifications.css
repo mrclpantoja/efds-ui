@@ -11,7 +11,7 @@
          <button type="button" class="eds-button eds-button-ghost eds-button-sm">Marcar todas como lidas</button>
        </div>
        <ul class="eds-notifications-list">
-         <li class="eds-notification" data-unread="true">
+         <li class="eds-notification" data-unread>
            <a class="eds-notification-link" href="#">
              <span class="eds-notification-dot" aria-hidden="true"></span>
              <span class="eds-notification-body">
@@ -89,7 +89,7 @@
       border-block-end: 0;
     }
 
-    &[data-unread='true'] {
+    &[data-unread] {
       background: var(--eds-color-action-primary-subtle);
     }
   }
@@ -130,7 +130,7 @@
     background: transparent;
   }
 
-  .eds-notification[data-unread='true'] .eds-notification-dot {
+  .eds-notification[data-unread] .eds-notification-dot {
     background: var(--eds-color-action-primary);
   }
 
@@ -149,7 +149,7 @@
     font-weight: var(--eds-font-weight-semibold);
   }
 
-  .eds-notification:not([data-unread='true']) .eds-notification-status {
+  .eds-notification:not([data-unread]) .eds-notification-status {
     display: none;
   }
 
@@ -160,7 +160,7 @@
     font-weight: var(--eds-font-weight-regular);
   }
 
-  .eds-notification[data-unread='true'] .eds-notification-title {
+  .eds-notification[data-unread] .eds-notification-title {
     font-weight: var(--eds-font-weight-semibold);
   }
 
@@ -192,11 +192,11 @@
       border: var(--eds-border-width) solid CanvasText;
     }
 
-    .eds-notification[data-unread='true'] {
+    .eds-notification[data-unread] {
       border-inline-start: var(--eds-border-width-strong) solid Highlight;
     }
 
-    .eds-notification[data-unread='true'] .eds-notification-dot {
+    .eds-notification[data-unread] .eds-notification-dot {
       background: CanvasText;
     }
   }

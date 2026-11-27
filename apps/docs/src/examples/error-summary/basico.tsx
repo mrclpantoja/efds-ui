@@ -45,7 +45,7 @@ export default function Basico() {
         </Button>
       </div>
       {enviado && (
-        <Alert variant="success" title="Mensagem válida">
+        <Alert tone="success" title="Mensagem válida">
           Nada foi enviado (fictício).
         </Alert>
       )}

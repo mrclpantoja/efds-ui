@@ -44,7 +44,7 @@ describe('DialogProvider / useDialog', () => {
     await waitFor(() => expect(dialog()).toHaveAttribute('open'));
     const d = dialog()!;
     expect(d).toHaveClass('eds-modal', 'eds-alert-dialog');
-    expect(d).toHaveAttribute('data-variant', 'success');
+    expect(d).toHaveClass('eds-alert-dialog-success');
     expect(d).not.toHaveAttribute('role');
     expect(d.querySelector('.eds-alert-dialog-icon')).toHaveAttribute('aria-hidden', 'true');
     const title = d.querySelector('.eds-alert-dialog-title')!;
@@ -77,7 +77,8 @@ describe('DialogProvider / useDialog', () => {
     setup();
     let p = api.confirm('Salvar?', 'Salvar');
     await waitFor(() => expect(dialog()).toHaveAttribute('open'));
-    expect(dialog()).toHaveAttribute('data-variant', 'question');
+    expect(dialog()).toHaveClass('eds-alert-dialog');
+    expect(dialog()).not.toHaveClass('eds-alert-dialog-danger');
     expect(dialog()).not.toHaveAttribute('role');
     await waitFor(() => expect(screen.getByRole('button', { name: 'Confirmar' })).toHaveFocus());
     await user.keyboard('{Enter}');
@@ -313,10 +314,10 @@ describe('prompt com variant', () => {
   it('options.variant define ícone/cor e prefixo; danger vira alertdialog e não fecha pelo fundo', async () => {
     const user = userEvent.setup();
     setup();
-    const p = api.prompt('Digite EXCLUIR', '', 'Confirmar exclusão', { variant: 'danger' });
+    const p = api.prompt('Digite EXCLUIR', '', 'Confirmar exclusão', { tone: 'danger' });
     await waitFor(() => expect(dialog()).toHaveAttribute('open'));
     const d = dialog()!;
-    expect(d).toHaveAttribute('data-variant', 'danger');
+    expect(d).toHaveClass('eds-alert-dialog-danger');
     expect(d).toHaveAttribute('role', 'alertdialog');
     expect(d.querySelector('.eds-alert-dialog-title')).toHaveTextContent(
       'Atenção: Confirmar exclusão',
@@ -355,6 +356,7 @@ describe('prompt com variant', () => {
     setup();
     void api.prompt('Nome');
     await waitFor(() => expect(dialog()).toHaveAttribute('open'));
-    expect(dialog()).toHaveAttribute('data-variant', 'question');
+    expect(dialog()).toHaveClass('eds-alert-dialog');
+    expect(dialog()).not.toHaveClass('eds-alert-dialog-danger');
   });
 });

@@ -3,7 +3,7 @@
      <input id="anexo" class="eds-file" type="file" name="comprovante" accept=".pdf" />
    O botão nativo (::file-selector-button) fica colado ao início, com a aparência do Button
    secondary (altura do campo); o nome do arquivo escolhido fica em text-secondary.
-   Estados por atributo: :focus-visible, :disabled, [aria-invalid="true"], [data-valid="true"].
+   Estados por atributo: :focus-visible, :disabled, [aria-invalid="true"], [data-valid].
    Tamanhos: .eds-file-sm / .eds-file-lg. */
 @layer eds.components {
   .eds-file {
@@ -67,7 +67,7 @@
     }
 
     /* Hover escurece a borda para text-muted, como o Input. */
-    &:hover:not(:disabled, [aria-invalid='true'], [data-valid='true']) {
+    &:hover:not(:disabled, [aria-invalid='true'], [data-valid]) {
       --_file-border: var(--eds-color-text-muted);
     }
 
@@ -79,7 +79,7 @@
       outline-offset: 0;
     }
 
-    &[data-valid='true'] {
+    &[data-valid] {
       --_file-border: var(--eds-color-status-success-text);
     }
 

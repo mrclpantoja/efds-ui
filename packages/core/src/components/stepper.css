@@ -1,7 +1,7 @@
 /* Stepper: indicador de etapas de um processo (cadastro, assistente/wizard).
    Markup:
      <ol class="eds-stepper [eds-stepper-vertical]" aria-label="Etapas do cadastro">
-       <li class="eds-stepper-item" data-state="complete">
+       <li class="eds-stepper-item" data-state="done">
          <span class="eds-stepper-marker" aria-hidden="true"></span>
          <span class="eds-stepper-label">Dados<span class="eds-visually-hidden"> (concluída)</span></span>
        </li>
@@ -13,11 +13,10 @@
        <li class="eds-stepper-item" data-state="upcoming">…</li>
        <li class="eds-stepper-item" data-state="error">…</li>
      </ol>
-   - Estado: data-state="complete|current|upcoming|error" (+ aria-current="step" na atual).
-     Nunca só por cor: número (upcoming/current), check (complete) e "!" (error) vêm do marcador,
+   - Estado: data-state="done|current|upcoming|error" (+ aria-current="step" na atual).
+     Nunca só por cor: número (upcoming/current), check (done) e "!" (error) vêm do marcador,
      gerados por CSS (contador). Um <svg> dentro do marcador substitui o glifo gerado.
      O estado dito em voz (concluída, com erro) vai em texto .eds-visually-hidden no rótulo.
-   - "done" é sinônimo de "complete" (mesmo visual).
    - Etapa concluída clicável (voltar): o rótulo é um <button> ou <a> com .eds-stepper-label.
    - Indicador de seções da página: o rótulo leva um <a class="eds-stepper-link" href="#secao"> (rola até
      a seção). O JS marca aria-current="step" no link da seção visível e o item assume o estado atual
@@ -81,7 +80,6 @@
       --_step-label-weight: var(--eds-font-weight-semibold);
     }
 
-    &[data-state='complete'],
     &[data-state='done'] {
       --_step-marker-bg: var(--eds-color-action-primary-subtle);
       --_step-marker-fg: var(--eds-color-action-primary);
@@ -130,8 +128,7 @@
   }
 
   /* Concluída: check desenhado com bordas (herda a cor do marcador). */
-  :is(.eds-stepper-item[data-state='complete'], .eds-stepper-item[data-state='done'])
-    > .eds-stepper-marker:not(:has(> svg))::before {
+  .eds-stepper-item[data-state='done'] > .eds-stepper-marker:not(:has(> svg))::before {
     content: '' / '';
     inline-size: 0.3125rem;
     block-size: 0.625rem;
@@ -313,7 +310,6 @@
         --_step-marker-border: Highlight;
       }
 
-      &[data-state='complete'],
       &[data-state='done'] {
         --_step-marker-border: Highlight;
         --_step-marker-fg: Highlight;

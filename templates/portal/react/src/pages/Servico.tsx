@@ -64,7 +64,7 @@ export function Servico({ slug }: { slug: string }) {
           meta={
             <>
               <Tag>{categoryName(service.cat)}</Tag>
-              <Badge variant="info">{service.canal}</Badge>
+              <Badge tone="info">{service.canal}</Badge>
             </>
           }
           actions={
@@ -106,7 +106,7 @@ export function Servico({ slug }: { slug: string }) {
                   </h2>
                   <Stepper
                     aria-label="Etapas do serviço"
-                    vertical
+                    orientation="vertical"
                     current={-1}
                     steps={service.steps.map((label) => ({ label }))}
                   />

@@ -2,11 +2,11 @@ import { closeIcon, emit, FOCUSABLE, safeMatches } from '../core/dom';
 import { getMessages } from '../core/config';
 import { refCounted } from '../core/registry';
 
-export type ToastVariant = 'info' | 'success' | 'warning' | 'danger';
+export type ToastTone = 'info' | 'success' | 'warning' | 'danger';
 
 export interface ToastOptions {
   /** Padrão: `info`. `danger` e `warning` não fecham sozinhos; `danger` é anunciado como `alert`. */
-  variant?: ToastVariant;
+  tone?: ToastTone;
   /** Rótulo em destaque que diz a severidade (ex.: "Erro:"). Sem ele, a severidade vai oculta. */
   title?: string;
   message: string;
@@ -28,7 +28,7 @@ const MOVE_QUIET_MS = 60;
 
 interface Entry {
   id: number;
-  options: ToastOptions & { variant: ToastVariant };
+  options: ToastOptions & { tone: ToastTone };
   el: HTMLElement | null;
   origin: HTMLElement | null;
   /** Tempo que falta (ms) ou `null` se não fecha sozinho. */
@@ -49,8 +49,8 @@ let readyTimer: ReturnType<typeof setTimeout> | null = null;
 /** A região mudou de lugar com toasts dentro: fica muda (`aria-live="off"`) por um instante. */
 let moveTimer: ReturnType<typeof setTimeout> | null = null;
 
-function autoCloseMs(variant: ToastVariant, text: string): number | null {
-  if (variant === 'warning' || variant === 'danger') return null;
+function autoCloseMs(tone: ToastTone, text: string): number | null {
+  if (tone === 'warning' || tone === 'danger') return null;
   const words = text.split(/\s+/).filter(Boolean).length;
   return Math.max(5000, words * 100);
 }
@@ -68,7 +68,7 @@ const paused = () => hover || focusWithin;
 function startTimer(entry: Entry) {
   if (entry.remaining === null || entry.timer || entry.closing || paused()) return;
   entry.startedAt = Date.now();
-  entry.timer = setTimeout(() => dismiss(entry.id), entry.remaining);
+  entry.timer = setTimeout(() => closeToast(entry.id), entry.remaining);
 }
 
 function stopTimer(entry: Entry) {
@@ -131,18 +131,18 @@ function place(host: HTMLElement): void {
 }
 
 function buildToast(entry: Entry): HTMLElement {
-  const { variant, title, message } = entry.options;
+  const { tone, title, message } = entry.options;
   const m = getMessages();
   const severity = {
     info: m.severityInfo,
     success: m.severitySuccess,
     warning: m.severityWarning,
     danger: m.severityDanger,
-  }[variant];
+  }[tone];
 
   const el = document.createElement('div');
-  el.className = `eds-toast eds-toast-${variant}`;
-  if (variant === 'danger') el.setAttribute('role', 'alert');
+  el.className = `eds-toast eds-toast-${tone}`;
+  if (tone === 'danger') el.setAttribute('role', 'alert');
 
   const content = document.createElement('div');
   content.className = 'eds-toast-content';
@@ -164,14 +164,14 @@ function buildToast(entry: Entry): HTMLElement {
   close.className = 'eds-button eds-button-ghost eds-button-icon eds-button-sm eds-toast-close';
   close.setAttribute('aria-label', m.toastClose);
   close.append(closeIcon());
-  close.addEventListener('click', () => dismiss(entry.id));
+  close.addEventListener('click', () => closeToast(entry.id));
 
   // Esc fecha só o toast, não o dialog que o contém.
   el.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
     event.preventDefault();
     event.stopPropagation();
-    dismiss(entry.id);
+    closeToast(entry.id);
   });
 
   const { action } = entry.options;
@@ -181,7 +181,7 @@ function buildToast(entry: Entry): HTMLElement {
     act.className = 'eds-button eds-button-ghost eds-button-sm eds-toast-action';
     act.textContent = action.label;
     act.addEventListener('click', () => {
-      dismiss(entry.id);
+      closeToast(entry.id);
       action.onClick();
     });
     el.append(content, act, close);
@@ -221,22 +221,22 @@ function watchHost() {
 /**
  * Mostra uma notificação. A região `aria-live` é criada vazia na primeira chamada e o toast só
  * entra um instante depois (uma live region que nasce preenchida não é anunciada).
- * Devolve o id (use com `toast.dismiss`).
+ * Devolve o id (use com `toast.close`).
  */
 export function toast(options: ToastOptions): number {
-  const variant = options.variant ?? 'info';
+  const tone = options.tone ?? 'info';
   const id = nextId++;
   const active = document.activeElement;
   const duration = options.duration;
   const remaining =
     duration === undefined
-      ? autoCloseMs(variant, `${options.title ?? ''} ${options.message}`)
+      ? autoCloseMs(tone, `${options.title ?? ''} ${options.message}`)
       : duration > 0
         ? duration
         : null;
   entries.push({
     id,
-    options: { ...options, variant },
+    options: { ...options, tone },
     el: null,
     origin: active instanceof HTMLElement && active !== document.body ? active : null,
     remaining,
@@ -260,7 +260,7 @@ export function toast(options: ToastOptions): number {
 }
 
 /** Fecha um toast (devolve o foco a quem o disparou, se o foco estava nele). */
-function dismiss(id: number): void {
+function closeToast(id: number): void {
   const entry = entries.find((e) => e.id === id);
   if (!entry || entry.closing) return;
   entry.closing = true;
@@ -296,10 +296,10 @@ function dismiss(id: number): void {
   }, EXIT_MS);
 }
 
-toast.dismiss = dismiss;
+toast.close = closeToast;
 
 /** Fecha todos os toasts, visíveis ou na fila, sem animação. */
-toast.dismissAll = function dismissAll(): void {
+toast.closeAll = function closeAll(): void {
   for (const entry of entries) {
     stopTimer(entry);
     entry.el?.remove();
@@ -308,7 +308,7 @@ toast.dismissAll = function dismissAll(): void {
 };
 
 function teardown() {
-  toast.dismissAll();
+  toast.closeAll();
   if (readyTimer) clearTimeout(readyTimer);
   readyTimer = null;
   if (moveTimer) clearTimeout(moveTimer);

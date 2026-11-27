@@ -57,8 +57,7 @@ function QuickDialog({
     <div className="id-stage">
       <dialog
         open
-        className="eds-modal eds-alert-dialog"
-        data-variant={variant}
+        className={`eds-modal eds-alert-dialog${variant === 'info' || variant === 'question' ? '' : ` eds-alert-dialog-${variant}`}`}
         role={cancel && alertish ? 'alertdialog' : undefined}
         aria-labelledby={title ? `${id}-t` : `${id}-d`}
         aria-describedby={title ? `${id}-d` : undefined}
@@ -431,7 +430,7 @@ function TNodeView(n: TNode) {
     >
       <div
         className="eds-tree-row"
-        data-drop={n.drop && n.drop !== 'invalid' ? n.drop : undefined}
+        data-drop-target={n.drop && n.drop !== 'invalid' ? n.drop : undefined}
         data-drop-invalid={n.drop === 'invalid' ? '' : undefined}
       >
         <span className="eds-tree-toggle" aria-hidden="true" />
@@ -559,7 +558,7 @@ function TreeDemos() {
             </Tree>
           </div>
         </Frame>
-        <Frame caption="Indicadores de soltar: antes, dentro, depois e proibido (data-drop / data-drop-invalid)">
+        <Frame caption="Indicadores de soltar: antes, dentro, depois e proibido (data-drop-target / data-drop-invalid)">
           <Tree label="Arrastando" editable>
             <TNodeView
               id="d1"

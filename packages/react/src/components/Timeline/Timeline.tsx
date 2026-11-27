@@ -1,8 +1,12 @@
 import { createElement, forwardRef, type OlHTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
+import type { Tone } from '../../internal/tone';
 
-export type TimelineTone = 'accent' | 'info' | 'success' | 'warning' | 'danger';
+export type TimelineTone = Extract<
+  Tone,
+  'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger'
+>;
 /** Andamento do item (linha do tempo de etapas): concluído, em curso ou por vir. */
 export type TimelineState = 'done' | 'current' | 'upcoming';
 
@@ -73,7 +77,14 @@ export type TimelineProps =
 
 function renderItem(item: TimelineItem) {
   return (
-    <li key={item.id} className="eds-timeline-item" data-tone={item.tone} data-state={item.state}>
+    <li
+      key={item.id}
+      className={cx(
+        'eds-timeline-item',
+        item.tone && item.tone !== 'neutral' && `eds-timeline-item-${item.tone}`,
+      )}
+      data-state={item.state}
+    >
       <span className="eds-timeline-marker" aria-hidden="true">
         {item.icon}
       </span>

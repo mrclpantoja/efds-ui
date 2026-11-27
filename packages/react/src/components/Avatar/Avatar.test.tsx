@@ -15,10 +15,10 @@ describe('Avatar', () => {
   });
 
   it('é uma imagem nomeada, com iniciais, tom e tamanho', () => {
-    render(<Avatar name="Ana Souza" size="lg" circle />);
+    render(<Avatar name="Ana Souza" size="lg" round />);
     const el = screen.getByRole('img', { name: 'Ana Souza' });
     expect(el).toHaveTextContent('AS');
-    expect(el).toHaveClass('eds-avatar', 'eds-avatar-lg', 'eds-avatar-circle', 'eds-avatar-tone-6');
+    expect(el).toHaveClass('eds-avatar', 'eds-avatar-lg', 'eds-avatar-round', 'eds-avatar-tone-6');
   });
 
   it('tom forçado, foto decorativa e status no nome', () => {

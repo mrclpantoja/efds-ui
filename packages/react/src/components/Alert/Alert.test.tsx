@@ -14,9 +14,9 @@ describe('Alert', () => {
     expect(screen.getByText('Texto')).toHaveClass('eds-alert-content');
   });
 
-  it.each(['info', 'success', 'warning', 'danger'] as const)('aplica a variante %s', (v) => {
+  it.each(['info', 'success', 'warning', 'danger'] as const)('aplica o tom %s', (v) => {
     render(
-      <Alert variant={v} data-testid="a">
+      <Alert tone={v} data-testid="a">
         x
       </Alert>,
     );
@@ -47,18 +47,18 @@ describe('Alert', () => {
     expect(alert).toHaveClass('eds-alert', 'extra');
   });
 
-  it('fechável: botão com nome acessível chama onClose', async () => {
-    const onClose = vi.fn();
-    render(<Alert onClose={onClose}>x</Alert>);
+  it('fechável: botão com nome acessível chama onDismiss', async () => {
+    const onDismiss = vi.fn();
+    render(<Alert onDismiss={onDismiss}>x</Alert>);
     const close = screen.getByRole('button', { name: 'Fechar aviso' });
     expect(close).toHaveClass('eds-alert-close', 'eds-button-icon');
     await userEvent.click(close);
-    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 
   it('texts.close substitui o texto do botão', () => {
     render(
-      <Alert onClose={() => {}} texts={{ close: 'Dismiss' }}>
+      <Alert onDismiss={() => {}} texts={{ close: 'Dismiss' }}>
         x
       </Alert>,
     );
@@ -70,7 +70,7 @@ describe('Alert', () => {
       const [open, setOpen] = useState(true);
       return open ? (
         <Alert
-          onClose={() => {
+          onDismiss={() => {
             setOpen(false);
             queueMicrotask(() => document.getElementById('prox')?.focus());
           }}
@@ -90,23 +90,23 @@ describe('Alert', () => {
 
   it('severidade em texto oculto por variante, trocável e desligável', () => {
     const { rerender, container } = render(
-      <Alert variant="danger" title="Falha ao salvar">
+      <Alert tone="danger" title="Falha ao salvar">
         corpo
       </Alert>,
     );
     const hidden = () => container.querySelector('.eds-visually-hidden');
     expect(hidden()).toHaveTextContent('Erro:');
     expect(container.querySelector('.eds-alert-title')).toHaveTextContent('Erro: Falha ao salvar');
-    rerender(<Alert variant="warning">sem título</Alert>);
+    rerender(<Alert tone="warning">sem título</Alert>);
     expect(hidden()).toHaveTextContent('Atenção:');
     rerender(
-      <Alert variant="success" texts={{ severity: 'Done:' }}>
+      <Alert tone="success" texts={{ severity: 'Done:' }}>
         x
       </Alert>,
     );
     expect(hidden()).toHaveTextContent('Done:');
     rerender(
-      <Alert variant="info" texts={{ severity: false }}>
+      <Alert tone="info" texts={{ severity: false }}>
         x
       </Alert>,
     );

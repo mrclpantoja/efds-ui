@@ -27,7 +27,7 @@ describe('Timeline', () => {
     expect(list).toHaveClass('eds-timeline');
     const first = within(list).getAllByRole('listitem')[0]!;
     expect(first).toHaveClass('eds-timeline-item');
-    expect(first).toHaveAttribute('data-tone', 'success');
+    expect(first).toHaveClass('eds-timeline-item-success');
     expect(first.querySelector('.eds-timeline-marker')).toHaveAttribute('aria-hidden', 'true');
     expect(screen.getByTestId('ok').parentElement).toHaveClass('eds-timeline-marker');
     expect(first.querySelector('time')).toHaveAttribute('datetime', '2026-11-20T10:30');

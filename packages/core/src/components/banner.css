@@ -6,7 +6,7 @@
        <p class="eds-banner-text"><strong>Manutenção programada.</strong> O sistema ficará indisponível no sábado, das 22h às 23h.</p>
        <div class="eds-banner-actions"><a class="eds-button eds-button-secondary eds-button-sm" href="…">Saiba mais</a></div>
        <button type="button" class="eds-button eds-button-ghost eds-button-icon eds-button-sm eds-banner-close"
-         aria-label="Fechar aviso" data-eds-banner-close>…svg…</button>                  (opcional)
+         aria-label="Fechar aviso" data-eds-close>…svg…</button>                  (opcional)
      </div>
    - Tons: .eds-banner-info (padrão), -success, -warning, -danger, -neutral. O ícone é decorativo
      (máscara em ::before); o texto deve dizer a natureza ("Manutenção", "Ambiente de homologação").
@@ -16,7 +16,7 @@
      (WCAG 2.4.11). No app shell, como primeiro filho de .eds-app, ocupa uma linha acima da sidebar
      e do cabeçalho (a grade ganha a área "banner"); fechado ([hidden]) devolve o espaço.
    - O botão fechar só existe se o aviso puder ser dispensado; o JS lembra o id (data-eds-banner)
-     no localStorage, e data-eds-banner-remember="off" desliga isso. */
+     no localStorage, e data-eds-banner-remember="false" desliga isso. */
 @layer eds.components {
   .eds-banner {
     --_banner-bg: var(--eds-color-status-info-subtle);

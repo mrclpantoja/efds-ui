@@ -442,7 +442,12 @@
       desenharPaginacao(paginas);
       atualizarLote();
       // O cabeçalho "selecionar todos" reflete as linhas desta página.
-      table.dispatchEvent(new window.CustomEvent('eds:table-filtered', { bubbles: true }));
+      table.dispatchEvent(
+        new window.CustomEvent('eds:table-filter', {
+          bubbles: true,
+          detail: { query: '', count: linhasDaPagina.length },
+        }),
+      );
     }
 
     // ---- ordenação: o behavior pergunta (cancelável) e quem ordena é este código, sobre todos os dados
@@ -508,7 +513,7 @@
         desenhar();
         anunciar(plural(ids.length, 'fornecedor excluído', 'fornecedores excluídos') + '.');
         avisar({
-          variant: 'success',
+          tone: 'success',
           message: um
             ? 'Fornecedor ' + alvo.razao + ' excluído (simulação).'
             : ids.length + ' fornecedores excluídos (simulação).',
@@ -679,9 +684,9 @@
     $('#linha-tempo').innerHTML = f.historico
       .map(function (h) {
         return (
-          '<li class="eds-timeline-item"' +
-          (h.tom ? ' data-tone="' + h.tom + '"' : '') +
-          '>' +
+          '<li class="eds-timeline-item' +
+          (h.tom ? ' eds-timeline-item-' + h.tom : '') +
+          '">' +
           '<span class="eds-timeline-marker" aria-hidden="true"></span>' +
           '<div class="eds-timeline-content"><div class="eds-timeline-header">' +
           '<span class="eds-timeline-title">' +
@@ -713,7 +718,7 @@
         if (!ok) return;
         remover([f.id]);
         guardarAviso({
-          variant: 'success',
+          tone: 'success',
           message: 'Fornecedor ' + f.razao + ' excluído (simulação).',
         });
         location.href = 'index.html';
@@ -1034,9 +1039,9 @@
       lista.push(registro);
       persistir();
       // O estado atual passa a ser o "sem alterações": o aviso de saída não aparece.
-      form.dispatchEvent(new window.CustomEvent('eds:dirty-reset'));
+      if (window.EDS && window.EDS.markClean) window.EDS.markClean(form);
       guardarAviso({
-        variant: 'success',
+        tone: 'success',
         message: 'Fornecedor ' + registro.razao + ' salvo (simulação).',
       });
       location.href = 'fornecedor.html?id=' + registro.id;
@@ -1050,7 +1055,7 @@
         el.uf.dispatchEvent(new window.Event('change', { bubbles: true }));
       }
     });
-    form.addEventListener('eds:cep-result', function (event) {
+    form.addEventListener('eds:cep-lookup', function (event) {
       if (event.detail.status !== 'found') return;
       var c = cidadePorNome(event.detail.data.localidade || '');
       if (!c) return;

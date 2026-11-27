@@ -6,7 +6,7 @@ export default function Basico() {
   return (
     <>
       <Field label="Vencimento">
-        <DatePicker name="vencimento" onChange={(value) => setIso(value)} />
+        <DatePicker name="vencimento" onValueChange={(value) => setIso(value)} />
       </Field>
       <p className="eds-text-small">Valor enviado: {iso ?? 'nenhum'}</p>
     </>

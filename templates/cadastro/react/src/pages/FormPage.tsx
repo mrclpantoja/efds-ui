@@ -333,7 +333,7 @@ function Formulario({ editando }: { editando?: Fornecedor }) {
       ],
     };
     salvar(registro);
-    show({ variant: 'success', message: `Fornecedor ${registro.razao} salvo (simulação).` });
+    show({ tone: 'success', message: `Fornecedor ${registro.razao} salvo (simulação).` });
     window.location.hash = `#/fornecedor/${registro.id}`;
   };
 
@@ -353,7 +353,7 @@ function Formulario({ editando }: { editando?: Fornecedor }) {
       {resumo.length > 0 ? (
         <Alert
           ref={resumoRef}
-          variant="danger"
+          tone="danger"
           tabIndex={-1}
           role="group"
           aria-labelledby="f-resumo-t"
@@ -642,7 +642,7 @@ function Formulario({ editando }: { editando?: Fornecedor }) {
                 name="cidade"
                 options={cidades.map((c) => ({ value: c.value, label: c.label }))}
                 value={v.cidade}
-                onChange={(valor) => {
+                onValueChange={(valor) => {
                   const cidade = cidades.find((c) => c.value === valor);
                   mudar({ cidade: valor, ...(cidade ? { uf: cidade.uf } : {}) });
                 }}
@@ -687,7 +687,7 @@ function Formulario({ editando }: { editando?: Fornecedor }) {
               <DatePicker
                 name="contratoEm"
                 value={v.contratoEm || null}
-                onChange={(iso) => mudar({ contratoEm: iso ?? '' })}
+                onValueChange={(iso) => mudar({ contratoEm: iso ?? '' })}
               />
             </Field>
             <Field
@@ -717,7 +717,7 @@ function Formulario({ editando }: { editando?: Fornecedor }) {
                 name="documentos[]"
                 accept=".pdf,.jpg,.png"
                 hint="PDF, JPG ou PNG. Os arquivos não saem do navegador neste exemplo."
-                onChange={setArquivos}
+                onValueChange={setArquivos}
               />
             </Field>
           </Secao>

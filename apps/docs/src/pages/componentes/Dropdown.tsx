@@ -77,6 +77,12 @@ export default function DropdownPage() {
               ),
             },
             {
+              name: 'open / defaultOpen',
+              type: 'boolean',
+              description:
+                'Abertura controlada (com onOpenChange) ou aberto ao montar (defaultOpen). Usa showPopover/hidePopover.',
+            },
+            {
               name: 'onOpenChange',
               type: '(open: boolean) => void',
               description: 'Chamado quando o menu abre ou fecha, inclusive por Esc e clique fora.',

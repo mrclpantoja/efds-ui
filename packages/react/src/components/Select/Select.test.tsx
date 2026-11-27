@@ -45,6 +45,6 @@ describe('Select', () => {
         <option>A</option>
       </Select>,
     );
-    expect(screen.getByRole('combobox')).toHaveAttribute('data-valid', 'true');
+    expect(screen.getByRole('combobox')).toHaveAttribute('data-valid');
   });
 });

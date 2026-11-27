@@ -49,7 +49,7 @@ export default function ErrorSummaryPage() {
       </Section>
 
       <Section title="HTML puro">
-        <Alert variant="info" title="Comportamento">
+        <Alert tone="info" title="Comportamento">
           <p>
             Com <code>data-eds-error-summary</code> o JS cuida de tudo (ver{' '}
             <a href={toHref('/comecar/validacao')}>Validação</a>): preenche o título e a lista ao

@@ -83,8 +83,8 @@ export function applyColumnFilter(
   const th = headerOf(table, key);
   const column = columnLabel(th);
   const m = getMessages();
-  if (key in filters) hub.announce(format(m.columnFilterApplied, { column, count }));
-  else if (had) hub.announce(format(m.columnFilterCleared, { column, count }));
+  if (key in filters) hub.announce(format(m.tableColumnFilterApplied, { column, count }));
+  else if (had) hub.announce(format(m.tableColumnFilterCleared, { column, count }));
   return true;
 }
 
@@ -105,7 +105,7 @@ export const columnFilterBehavior: Behavior = {
     const { signal } = ac;
     const popover = form.closest<HTMLElement>('[popover]');
     const button = th.querySelector<HTMLElement>('.eds-table-filter-btn');
-    const activeSuffix = () => getMessages().columnFilterActive;
+    const activeSuffix = () => getMessages().tableColumnFilterActive;
     // O nome base nunca leva o sufixo (o markup do servidor pode já trazê-lo).
     let baseLabel = button?.getAttribute('aria-label') ?? '';
     const tail = activeSuffix();
@@ -207,7 +207,7 @@ export const columnFilterBehavior: Behavior = {
       const lo = value.gte !== undefined ? (parseNumber(value.gte) ?? parseDate(value.gte)) : null;
       const hi = value.lte !== undefined ? (parseNumber(value.lte) ?? parseDate(value.lte)) : null;
       if (lo !== null && hi !== null && lo > hi) {
-        showError(getMessages().columnFilterRangeInvalid);
+        showError(getMessages().tableColumnFilterRangeInvalid);
         fields()
           .find((f) => bound(f.name) === 'gte')
           ?.focus();
@@ -219,7 +219,7 @@ export const columnFilterBehavior: Behavior = {
     // ---- Indicador de filtro ativo -----------------------------------------------------
     const syncIndicator = () => {
       const active = !isEmptyFilter(hub.query.filters[key]);
-      th.toggleAttribute('data-eds-filtered', active);
+      th.toggleAttribute('data-filtered', active);
       if (!button) return;
       button.toggleAttribute('data-active', active);
       const suffix = activeSuffix();

@@ -18,10 +18,11 @@ for (const camada of camadas) {
       await page.keyboard.press('ArrowDown');
       await expect(receber).toBeChecked();
       await expect(receber).toBeFocused();
-      // O desabilitado é pulado.
-      await expect(bloco.getByRole('radio', { name: /Transferência/ })).toBeDisabled();
+      // O desabilitado é pulado (voltar ao primeiro ou parar no último varia entre navegadores).
+      const transferencia = bloco.getByRole('radio', { name: /Transferência/ });
+      await expect(transferencia).toBeDisabled();
       await page.keyboard.press('ArrowDown');
-      await expect(pagar).toBeChecked();
+      await expect(transferencia).not.toBeChecked();
 
       const sms = bloco.getByRole('checkbox', { name: /Mensagem de texto/ });
       await sms.focus();

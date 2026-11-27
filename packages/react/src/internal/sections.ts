@@ -33,6 +33,13 @@ export function focusSectionTitle(section: HTMLElement): void {
     ? section
     : (section.querySelector<HTMLElement>(TITLES) ?? section);
   if (!title.hasAttribute('tabindex')) title.setAttribute('tabindex', '-1');
-  // A navegação por fragmento tira o foco de quem não é focável: o foco vem depois dela.
-  setTimeout(() => title.focus({ preventScroll: true }), 0);
+  // A navegação por fragmento tira o foco de quem não é focável, e o Firefox a conclui depois da
+  // primeira tarefa: o foco vai ao título numa tarefa e de novo no `hashchange` (até 500 ms).
+  const focus = () => {
+    if (document.activeElement !== title) title.focus({ preventScroll: true });
+  };
+  setTimeout(focus, 0);
+  const stop = new AbortController();
+  window.addEventListener('hashchange', focus, { once: true, signal: stop.signal });
+  setTimeout(() => stop.abort(), 500);
 }

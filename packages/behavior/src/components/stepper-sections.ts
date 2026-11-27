@@ -197,8 +197,7 @@ export const stepperSectionsBehavior: Behavior = {
           // O foco vai ao título; a navegação por fragmento rola até a seção em seguida.
           const title = titleOf(s.target);
           if (!title.hasAttribute('tabindex')) title.setAttribute('tabindex', '-1');
-          // A navegação por fragmento tira o foco de quem não é focável: o foco vem depois dela.
-          setTimeout(() => title.focus({ preventScroll: true }), 0);
+          focusAfterFragment(title);
           locked = true;
           if (lockTimer) clearTimeout(lockTimer);
           lockTimer = setTimeout(() => {
@@ -236,4 +235,18 @@ export const stepperSectionsBehavior: Behavior = {
 
 export function initStepperSections(root: ParentNode = document): () => void {
   return bindAll(root, [stepperSectionsBehavior]);
+}
+
+/**
+ * A navegação por fragmento tira o foco de quem não é focável, e o Firefox a conclui depois da
+ * primeira tarefa: o foco vai ao título numa tarefa e de novo no `hashchange` (até 500 ms).
+ */
+function focusAfterFragment(title: HTMLElement): void {
+  const focus = () => {
+    if (document.activeElement !== title) title.focus({ preventScroll: true });
+  };
+  setTimeout(focus, 0);
+  const stop = new AbortController();
+  window.addEventListener('hashchange', focus, { once: true, signal: stop.signal });
+  setTimeout(() => stop.abort(), 500);
 }

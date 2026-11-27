@@ -1,5 +1,6 @@
 import { forwardRef, useRef, type ReactNode } from 'react';
 import {
+  datedFileName,
   format as fillTemplate,
   getMessages,
   type ExportData,
@@ -72,7 +73,7 @@ export interface TableExportDoneInfo extends TableExportBeforeInfo {
 interface TableExportOwnProps {
   /** Formatos oferecidos, na ordem do menu. Padrão: `csv`, `xlsx`, `json`, `pdf`. */
   formats?: readonly ExportFormat[];
-  /** Nome do arquivo, sem extensão (ela é acrescentada). Padrão: `tabela`. */
+  /** Nome do arquivo, sem extensão; ganha `-aaaa-mm-dd` e a extensão. Padrão: `tabela`. */
   filename?: string;
   /** Título (PDF: cabeçalho; XLSX: nome da planilha). */
   title?: string;
@@ -156,8 +157,8 @@ export const TableExport = forwardRef<HTMLButtonElement, TableExportProps>(funct
       announce(words.empty);
       return;
     }
-    const base = filename.replace(/\.(csv|xlsx|json|pdf)$/i, '');
-    const finalName = `${base}.${fmt}`;
+    // Mesma regra do HTML: `nome-aaaa-mm-dd.ext`.
+    const finalName = datedFileName(filename, fmt);
     let finalData: ExportData = source;
     try {
       const result = latest.current.onBeforeExport?.(source, { format: fmt, filename: finalName });
@@ -168,7 +169,7 @@ export const TableExport = forwardRef<HTMLButtonElement, TableExportProps>(funct
         return;
       }
       const { exportFile } = await FORMAT_LOADERS[fmt]();
-      exportFile(finalData, { filename: base, title, subtitle, sheetName, locale });
+      exportFile(finalData, { filename: finalName, title, subtitle, sheetName, locale });
     } catch {
       announce(words.failed);
       return;

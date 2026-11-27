@@ -135,11 +135,16 @@ export default function AcessibilidadePage() {
       <Section title="Limitações conhecidas">
         <ul className="docs-list">
           <li>
-            O tooltip da Sidebar compacta e o menu &quot;⋯&quot; da Tree dependem de anchor
-            positioning, ainda ausente no Firefox (o menu cai no centro).
+            Sem anchor positioning (Firefox), os menus do Dropdown, o menu &quot;⋯&quot; da Tree e o
+            tooltip da Sidebar compacta são posicionados por JS (behavior e React): o menu abre
+            junto ao gatilho, alinhado ao fim, e o tooltip compensa a rolagem do trilho. Sem JS, o
+            menu fica na posição estática, junto ao gatilho, e o tooltip se desloca se o trilho
+            rolar. O menu de tabela do editor (sem o behavior carregado) também fica na posição
+            estática.
           </li>
           <li>
-            O Drawer a 400% de zoom deixa pouco espaço para o corpo (reflow aceito, com rolagem).
+            Em alturas muito baixas (zoom de 400%, celular deitado, até 30rem) Drawer e Modal rolam
+            por inteiro, com cabeçalho e rodapé compactos; o corpo não tem rolagem própria.
           </li>
           <li>
             A validação com leitores de tela (NVDA, VoiceOver), Safari e forced-colors reais é a

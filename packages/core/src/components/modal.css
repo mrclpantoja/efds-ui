@@ -162,6 +162,30 @@
     border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
   }
 
+  /* Altura muito baixa (zoom de 400% em tela comum: ~320x256 CSS px; celular deitado): o
+     cabeçalho e o rodapé deixam de ser fixos. O diálogo inteiro rola, o corpo não tem altura
+     própria e os espaços encolhem, para sobrar área útil (WCAG 1.4.10). */
+  @media (max-height: 30rem) {
+    .eds-modal {
+      overflow-y: auto;
+    }
+
+    .eds-modal-header {
+      min-block-size: 0;
+      padding-block: var(--eds-space-2);
+    }
+
+    .eds-modal-body {
+      flex: none;
+      overflow-y: visible;
+      padding-block: var(--eds-space-3);
+    }
+
+    .eds-modal-footer {
+      padding-block: var(--eds-space-2);
+    }
+  }
+
   /* Trava a rolagem da página enquanto há modal/drawer modal aberto (sem JS). */
   :where(html):has(:is(.eds-modal, .eds-drawer):modal) {
     overflow: hidden;

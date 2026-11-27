@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { flush, installDomPolyfills } from '../test-utils/dom-polyfills';
 import { initAlert } from './alert';
 import { initDropdown } from './dropdown';
@@ -47,6 +47,30 @@ describe('dropdown', () => {
     await user.keyboard('{Escape}');
     await flush();
     expect(log).toEqual(['open', 'close']);
+  });
+
+  it('sem anchor positioning, posiciona o menu junto ao gatilho e para ao fechar', async () => {
+    vi.stubGlobal('CSS', { supports: () => false });
+    onTestFinished(() => void vi.unstubAllGlobals());
+    const user = userEvent.setup();
+    await user.click(byId('gatilho'));
+    await flush();
+    expect(byId('menu').style.getPropertyValue('--_dropdown-x')).not.toBe('');
+    expect(byId('menu')).toHaveAttribute('data-placement');
+    await user.keyboard('{Escape}');
+    await flush();
+    byId('menu').style.removeProperty('--_dropdown-y');
+    window.dispatchEvent(new Event('scroll'));
+    expect(byId('menu').style.getPropertyValue('--_dropdown-y')).toBe('');
+  });
+
+  it('com anchor positioning não escreve coordenadas', async () => {
+    vi.stubGlobal('CSS', { supports: () => true });
+    onTestFinished(() => void vi.unstubAllGlobals());
+    const user = userEvent.setup();
+    await user.click(byId('gatilho'));
+    await flush();
+    expect(byId('menu').style.getPropertyValue('--_dropdown-x')).toBe('');
   });
 
   it('Esc fecha e atualiza aria-expanded', async () => {
@@ -117,6 +141,35 @@ describe('alert fechável', () => {
     const user = userEvent.setup();
     await user.click(byId('fechar'));
     expect(document.activeElement).toBe(byId('antes'));
+  });
+});
+
+describe('sidebar: scrollTop do trilho (tooltip da compacta)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    document.body.innerHTML = '';
+  });
+  const nav = () => document.getElementById('trilho') as HTMLElement;
+
+  it('sem anchor-scope, publica o scrollTop em --_sidebar-scroll e limpa ao destruir', () => {
+    vi.stubGlobal('CSS', { supports: () => false });
+    document.body.innerHTML = '<nav class="eds-sidebar" id="trilho" data-collapsed></nav>';
+    const destroy = initSidebar(document);
+    expect(nav().style.getPropertyValue('--_sidebar-scroll')).toBe('0px');
+    nav().scrollTop = 26;
+    nav().dispatchEvent(new Event('scroll'));
+    expect(nav().style.getPropertyValue('--_sidebar-scroll')).toBe('26px');
+    destroy();
+    expect(nav().style.getPropertyValue('--_sidebar-scroll')).toBe('');
+  });
+
+  it('com anchor-scope não faz nada', () => {
+    vi.stubGlobal('CSS', { supports: () => true });
+    document.body.innerHTML = '<nav class="eds-sidebar" id="trilho" data-collapsed></nav>';
+    const destroy = initSidebar(document);
+    nav().dispatchEvent(new Event('scroll'));
+    expect(nav().style.getPropertyValue('--_sidebar-scroll')).toBe('');
+    destroy();
   });
 });
 

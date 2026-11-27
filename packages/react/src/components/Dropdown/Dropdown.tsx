@@ -17,6 +17,7 @@ import {
   type Ref,
   type SyntheticEvent,
 } from 'react';
+import { placeMenuFallback } from '@efds-ui/behavior/balloon';
 import { cx } from '../../utils/cx';
 
 const MenuContext = createContext<string | undefined>(undefined);
@@ -74,6 +75,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(function Dropd
     document.addEventListener('focusin', onFocusIn);
     return () => document.removeEventListener('focusin', onFocusIn);
   }, [open, menuId, triggerId]);
+
+  // Sem anchor positioning (Firefox), coloca o menu junto ao gatilho; com suporte não faz nada.
+  useEffect(() => {
+    const menu = menuRef.current;
+    const triggerEl = document.getElementById(triggerId);
+    if (!open || !menu || !triggerEl) return undefined;
+    return placeMenuFallback(menu, triggerEl);
+  }, [open, triggerId]);
 
   const setRefs = (node: HTMLDivElement | null) => {
     menuRef.current = node;

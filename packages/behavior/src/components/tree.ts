@@ -1,6 +1,7 @@
 import { format, getMessages } from '../core/config';
 import { cloneGhost, createDragEngine, type DragSession } from '../core/drag';
 import { emit, ensureId, hidePopover, normalizeText, showPopover, uid } from '../core/dom';
+import { placeMenuFallback } from '../core/position';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer } from '../core/status';
 import { confirm } from './dialogs';
@@ -773,9 +774,15 @@ export const treeBehavior: Behavior = {
       }
     };
 
+    // Sem anchor positioning (Firefox), o JS coloca o menu junto ao gatilho (ver dropdown.css).
+    let stopPlacing: () => void = () => undefined;
+
     function onMenuToggle(event: Event) {
       const open = (event as Partial<ToggleEvent>).newState === 'open';
       menuButton?.setAttribute('aria-expanded', String(open));
+      stopPlacing();
+      stopPlacing = () => undefined;
+      if (open && menu && menuButton) stopPlacing = placeMenuFallback(menu, menuButton);
       if (open) {
         menu?.querySelector<HTMLElement>('.eds-dropdown-item:not([aria-disabled="true"])')?.focus();
         return;
@@ -1138,6 +1145,7 @@ export const treeBehavior: Behavior = {
       editing?.finish(false, false);
       clearDrop();
       announcer.dispose();
+      stopPlacing();
       if (menu) hidePopover(menu);
       for (const node of createdNodes) node.remove();
       for (const button of Array.from(tree.querySelectorAll('.eds-tree-action[popovertarget]'))) {

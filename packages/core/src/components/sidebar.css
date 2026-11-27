@@ -52,6 +52,8 @@
     /* Modo tooltip do rótulo: neutro na expandida; a compacta liga (ver abaixo). */
     --_sidebar-tip-position: static;
     --_sidebar-tip-offset: 0;
+    --_sidebar-tip-gap: 0;
+    --_sidebar-tip-follow: 0;
     --_sidebar-tip-pad: 0;
     --_sidebar-tip-bg: transparent;
     --_sidebar-tip-fg: currentColor;
@@ -235,6 +237,34 @@
     }
   }
 
+  /* Tooltip ancorado ao item (anchor positioning; Chrome e Safari): acompanha o item quando o
+     trilho rola. Sem suporte (Firefox) vale a posição estática acima, que se desloca pelo scrollTop
+     do trilho. O anchor-scope limita o nome ao próprio item (cada rótulo acha o seu). Só vale na
+     compacta: com o rótulo estático (expandida, off-canvas) os insets e a margem não se aplicam. */
+  @supports (anchor-scope: --_a) {
+    .eds-sidebar-item {
+      anchor-name: --_sidebar-item;
+      anchor-scope: --_sidebar-item;
+
+      &:is(:hover, :focus-visible) > .eds-sidebar-label {
+        position-anchor: --_sidebar-item;
+        inset-block: anchor(top) anchor(bottom);
+        inset-inline-start: anchor(end);
+        align-self: center;
+        margin-inline-start: var(--_sidebar-tip-gap);
+      }
+    }
+  }
+
+  /* Sem anchor-scope (Firefox): o rótulo-tooltip fica na posição estática, que não acompanha a
+     rolagem do trilho. O JS (followScrollTop) publica o scrollTop em --_sidebar-scroll e aqui o
+     rótulo o compensa. --_sidebar-tip-follow é 0 fora da compacta (nada se move). */
+  @supports not (anchor-scope: --_a) {
+    .eds-sidebar-item:is(:hover, :focus-visible) > .eds-sidebar-label {
+      translate: 0 calc(var(--_sidebar-scroll, 0px) * var(--_sidebar-tip-follow) * -1);
+    }
+  }
+
   /* Contador do item (ex.: "3 vencidas"): <span class="eds-sidebar-badge">3<span
      class="eds-visually-hidden"> vencidas</span></span> dentro do .eds-sidebar-item, depois do
      rótulo. Expandida: pílula discreta no fim do item. Compacta (trilho): vira um ponto sobre o canto
@@ -299,6 +329,8 @@
       var(--eds-layout-sidebar-width-collapsed) - var(--_sidebar-pad) - var(--_sidebar-item-start) +
         var(--eds-space-1)
     );
+    --_sidebar-tip-gap: var(--eds-space-1);
+    --_sidebar-tip-follow: 1;
     --_sidebar-tip-pad: var(--eds-space-1) var(--eds-space-2);
     --_sidebar-tip-bg: var(--eds-color-text-primary);
     --_sidebar-tip-fg: var(--eds-color-bg-surface);
@@ -319,6 +351,8 @@
         var(--eds-layout-sidebar-width-collapsed) - var(--_sidebar-pad) -
           var(--_sidebar-item-start) + var(--eds-space-1)
       );
+      --_sidebar-tip-gap: var(--eds-space-1);
+      --_sidebar-tip-follow: 1;
       --_sidebar-tip-pad: var(--eds-space-1) var(--eds-space-2);
       --_sidebar-tip-bg: var(--eds-color-text-primary);
       --_sidebar-tip-fg: var(--eds-color-bg-surface);
@@ -347,6 +381,8 @@
         var(--eds-layout-sidebar-width-collapsed) - var(--_sidebar-pad) -
           var(--_sidebar-item-start) + var(--eds-space-1)
       );
+      --_sidebar-tip-gap: var(--eds-space-1);
+      --_sidebar-tip-follow: 1;
       --_sidebar-tip-pad: var(--eds-space-1) var(--eds-space-2);
       --_sidebar-tip-bg: var(--eds-color-text-primary);
       --_sidebar-tip-fg: var(--eds-color-bg-surface);
@@ -367,6 +403,8 @@
         --_sidebar-text: 1;
         --_sidebar-tip-position: static;
         --_sidebar-tip-offset: 0;
+        --_sidebar-tip-gap: 0;
+        --_sidebar-tip-follow: 0;
         --_sidebar-tip-pad: 0;
         --_sidebar-tip-bg: transparent;
         --_sidebar-tip-fg: currentColor;

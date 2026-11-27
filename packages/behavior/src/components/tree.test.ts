@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { flush, installDomPolyfills } from '../test-utils/dom-polyfills';
 import { pointer, stubRect } from '../test-utils/pointer';
 import { toast } from './toast';
@@ -538,6 +538,22 @@ describe('tree', () => {
       expect(item('Mover para baixo')).toHaveAttribute('aria-disabled', 'true');
       expect(item('Mover para cima')).not.toHaveAttribute('aria-disabled');
       expect(document.activeElement).toBe(menu.querySelector('.eds-dropdown-item'));
+    });
+
+    it('sem anchor positioning, posiciona o menu junto ao gatilho e para ao fechar', async () => {
+      vi.stubGlobal('CSS', { supports: () => false });
+      onTestFinished(() => void vi.unstubAllGlobals());
+      const user = userEvent.setup();
+      await open(user, 'n5');
+      const menu = document.querySelector('.eds-dropdown') as HTMLElement;
+      expect(menu.style.getPropertyValue('--_dropdown-x')).not.toBe('');
+      expect(menu.style.getPropertyValue('--_dropdown-y')).not.toBe('');
+      expect(menu).toHaveAttribute('data-placement');
+      menu.hidePopover();
+      await flush();
+      menu.style.removeProperty('--_dropdown-y');
+      window.dispatchEvent(new Event('scroll'));
+      expect(menu.style.getPropertyValue('--_dropdown-y')).toBe('');
     });
 
     it('Shift+F10 e a tecla de Menu abrem o menu do item', async () => {

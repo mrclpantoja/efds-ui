@@ -297,3 +297,24 @@ describe('SidebarItem com contador', () => {
     expect(screen.getByRole('button', { name: 'Fila 0', hidden: true })).toBeInTheDocument();
   });
 });
+
+describe('Sidebar: scrollTop do trilho', () => {
+  it('sem anchor-scope, publica o scrollTop em --_sidebar-scroll', () => {
+    vi.stubGlobal('CSS', { supports: () => false });
+    const { container } = render(
+      <Sidebar aria-label="Principal" collapsible={false}>
+        <SidebarSection>
+          <SidebarItem href="/a">A</SidebarItem>
+        </SidebarSection>
+      </Sidebar>,
+    );
+    const nav = container.querySelector('nav') as HTMLElement;
+    expect(nav.style.getPropertyValue('--_sidebar-scroll')).toBe('0px');
+    nav.scrollTop = 30;
+    act(() => {
+      nav.dispatchEvent(new Event('scroll'));
+    });
+    expect(nav.style.getPropertyValue('--_sidebar-scroll')).toBe('30px');
+    vi.unstubAllGlobals();
+  });
+});

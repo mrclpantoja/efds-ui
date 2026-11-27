@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { Button } from '../Button';
 import { Dropdown, DropdownItem, DropdownSeparator } from './Dropdown';
 
@@ -33,6 +33,24 @@ describe('Dropdown', () => {
     expect(menu).toHaveAttribute('role', 'group');
     expect(screen.queryByRole('menu', { hidden: true })).toBeNull();
     expect(trigger).toHaveClass('eds-button');
+  });
+
+  it('sem anchor positioning, posiciona o menu junto ao gatilho', () => {
+    vi.stubGlobal('CSS', { supports: () => false });
+    onTestFinished(() => void vi.unstubAllGlobals());
+    const { menu } = setup();
+    expect(menu.style.getPropertyValue('--_dropdown-x')).toBe('');
+    toggle(menu, 'open');
+    expect(menu.style.getPropertyValue('--_dropdown-x')).not.toBe('');
+    expect(menu).toHaveAttribute('data-placement');
+  });
+
+  it('com anchor positioning não escreve coordenadas', () => {
+    vi.stubGlobal('CSS', { supports: () => true });
+    onTestFinished(() => void vi.unstubAllGlobals());
+    const { menu } = setup();
+    toggle(menu, 'open');
+    expect(menu.style.getPropertyValue('--_dropdown-x')).toBe('');
   });
 
   it('sincroniza aria-expanded pelo evento toggle e avisa onOpenChange', () => {

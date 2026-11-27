@@ -292,9 +292,12 @@ export default function SidebarPage() {
               zerada, e o valor continua sendo lido. Não use <code>display: none</code> nele.
             </li>
             <li>
-              <strong>Limitação conhecida:</strong> se o trilho compacto rolar (telas curtas, 768 a
-              1023px), o tooltip fica deslocado na vertical; a correção limpa depende de CSS Anchor
-              Positioning, ainda sem Firefox.
+              <strong>Tooltip e rolagem do trilho:</strong> o rótulo-tooltip é ancorado ao item (CSS
+              anchor positioning) e acompanha o trilho quando ele rola. Sem{' '}
+              <code>anchor-scope</code> (Firefox), o rótulo fica na posição estática e o CSS o
+              compensa pelo <code>scrollTop</code>, publicado em <code>--_sidebar-scroll</code> pelo
+              JS (behavior ou React); sem JS, o tooltip desloca na vertical se o trilho rolar (telas
+              curtas, 768 a 1023px).
             </li>
             <li>
               <strong>O consumidor deve garantir:</strong> ícones decorativos (o item já os marca) e

@@ -15,6 +15,7 @@ import {
   type ReactNode,
   type Ref,
 } from 'react';
+import { followScrollTop } from '@efds-ui/behavior/balloon';
 import { flushSync } from 'react-dom';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
@@ -97,6 +98,9 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
   useLayoutEffect(() => {
     if (ownId) setShellNavId?.(ownId);
   }, [ownId, setShellNavId]);
+
+  // Tooltip da compacta sem anchor-scope: publica o scrollTop do trilho (ver sidebar.css).
+  useEffect(() => (navRef.current ? followScrollTop(navRef.current) : undefined), []);
 
   const shellRef = useRef(shell);
   shellRef.current = shell;

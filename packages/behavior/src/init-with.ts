@@ -9,7 +9,11 @@ import { dropdownBehavior } from './components/dropdown';
 import { initLoader } from './components/loader';
 import { dialogBehavior, modalTriggerBehavior } from './components/modal';
 import { initSelectReadonly } from './components/select-readonly';
-import { sidebarBehavior, sidebarCollapseBehavior } from './components/sidebar';
+import {
+  sidebarBehavior,
+  sidebarCollapseBehavior,
+  sidebarScrollBehavior,
+} from './components/sidebar';
 import { tableBehavior } from './components/table';
 import { tableFilterBehavior } from './components/table-filter';
 import { tabsBehavior } from './components/tabs';
@@ -61,6 +65,7 @@ export function initWith(
       tableFilterBehavior,
       sidebarBehavior,
       sidebarCollapseBehavior,
+      sidebarScrollBehavior,
       comboboxBehavior,
       datepickerBehavior,
       daterangeBehavior,

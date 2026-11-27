@@ -4,7 +4,7 @@ import { readZip } from '../test-utils/zip';
 import { HELVETICA, HELVETICA_BOLD, winAnsiCode } from './afm';
 import { toCsv } from './csv';
 import { toJson } from './json';
-import { fileName, formatDecimal, normalize, parseDateText } from './model';
+import { datedFileName, fileName, formatDecimal, normalize, parseDateText } from './model';
 import { toPdf } from './pdf';
 import { columnLetters, excelSerial, sheetNameFor, toXlsx } from './xlsx';
 import { crc32 } from './zip';
@@ -67,6 +67,13 @@ describe('model', () => {
     expect(fileName('pedidos.XLSX', 'xlsx')).toBe('pedidos.xlsx');
     expect(fileName('', 'pdf')).toBe('tabela.pdf');
     expect(fileName('..', 'pdf')).toBe('tabela.pdf');
+  });
+
+  it('nome com data: base-aaaa-mm-dd, sem duplicar a extensão', () => {
+    const now = new Date(2026, 10, 5);
+    expect(datedFileName('pedidos', 'csv', now)).toBe('pedidos-2026-11-05.csv');
+    expect(datedFileName('pedidos.xlsx', 'xlsx', now)).toBe('pedidos-2026-11-05.xlsx');
+    expect(datedFileName('', 'pdf', now)).toBe('tabela-2026-11-05.pdf');
   });
 });
 

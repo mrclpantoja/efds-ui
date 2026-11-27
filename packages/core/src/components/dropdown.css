@@ -57,6 +57,19 @@
     }
   }
 
+  /* Sem anchor positioning (Firefox): o JS (placeMenuFallback, em @efds-ui/behavior/position) grava
+     o canto do menu em --_dropdown-x/-y (px, viewport) e o lado em data-placement. Sem o JS, o
+     menu fica na posição estática (junto ao gatilho), nunca no meio da tela. */
+  @supports not (position-area: block-end) {
+    .eds-dropdown {
+      position: fixed;
+      inset: auto;
+      margin: 0;
+      left: var(--_dropdown-x);
+      top: var(--_dropdown-y);
+    }
+  }
+
   .eds-dropdown-item {
     display: flex;
     align-items: center;

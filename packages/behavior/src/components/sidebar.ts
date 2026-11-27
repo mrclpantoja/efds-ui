@@ -1,4 +1,5 @@
 import { emit, ensureId, focusEl, hidePopover, safeMatches } from '../core/dom';
+import { followScrollTop } from '../core/position';
 import { bindAll, type Behavior } from '../core/registry';
 
 /**
@@ -105,6 +106,13 @@ export const sidebarCollapseBehavior: Behavior = {
   },
 };
 
+/** Tooltip da compacta sem anchor-scope: o trilho (qualquer .eds-sidebar) publica o scrollTop. */
+export const sidebarScrollBehavior: Behavior = {
+  name: 'sidebar-scroll',
+  selector: '.eds-sidebar',
+  bind: (nav) => followScrollTop(nav),
+};
+
 export function initSidebar(root: ParentNode = document): () => void {
-  return bindAll(root, [sidebarBehavior, sidebarCollapseBehavior]);
+  return bindAll(root, [sidebarBehavior, sidebarCollapseBehavior, sidebarScrollBehavior]);
 }

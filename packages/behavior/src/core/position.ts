@@ -200,3 +200,101 @@ export function watchViewport(fn: () => void): () => void {
     frame = 0;
   };
 }
+
+/** O navegador entende `position-area` (anchor positioning)? Sem isso o CSS pede o JS abaixo. */
+export function supportsAnchorPositioning(): boolean {
+  return (
+    typeof CSS !== 'undefined' &&
+    typeof CSS.supports === 'function' &&
+    CSS.supports('position-area', 'block-end')
+  );
+}
+
+/**
+ * Posiciona um menu (`.eds-dropdown` aberto) junto ao gatilho nos navegadores sem anchor
+ * positioning: grava `--_dropdown-x/-y` (px, canto superior esquerdo, viewport) e
+ * `data-placement`. O menu abre abaixo do gatilho, alinhado ao seu fim (`end`) ou início
+ * (`start`); vira para cima se faltar espaço embaixo e houver mais em cima. Reposiciona ao rolar
+ * ou redimensionar. Devolve a função que encerra a escuta (chamar ao fechar); com anchor
+ * positioning não faz nada, a regra de CSS cuida.
+ */
+export function placeMenuFallback(
+  menu: HTMLElement,
+  trigger: Element,
+  align: 'start' | 'end' = 'end',
+): () => void {
+  if (supportsAnchorPositioning()) return () => undefined;
+  // Mesma distância do --_dropdown-offset (space-1).
+  const gap = 4;
+  const margin = 8;
+
+  const place = () => {
+    const a = boxOf(trigger);
+    menu.style.removeProperty('max-block-size');
+    const size = menu.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const below = vh - (a.top + a.height) - gap - margin;
+    const above = a.top - gap - margin;
+    const up = size.height > below && above > below;
+    const rtl = isRtl(trigger);
+    const atEnd = (align === 'end') !== rtl;
+    // Não cabe nem no lado maior: o menu encolhe até o espaço livre e rola por dentro.
+    const free = Math.max(up ? above : below, 0);
+    const height = Math.min(size.height, free);
+    if (size.height > free) menu.style.maxBlockSize = `${Math.round(free)}px`;
+    // A barra de rolagem que surge ao encolher alarga o menu: mede a largura de novo.
+    const width = size.height > free ? menu.getBoundingClientRect().width : size.width;
+    let x = atEnd ? a.left + a.width - width : a.left;
+    let y = up ? a.top - gap - height : a.top + a.height + gap;
+    x = clamp(x, margin, vw - width - margin);
+    y = clamp(y, margin, vh - height - margin);
+    menu.style.setProperty('--_dropdown-x', `${Math.round(x)}px`);
+    menu.style.setProperty('--_dropdown-y', `${Math.round(y)}px`);
+    menu.setAttribute('data-placement', up ? 'top' : 'bottom');
+  };
+
+  place();
+  let frame = 0;
+  const onChange = () => {
+    if (typeof requestAnimationFrame !== 'function') return place();
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      place();
+    });
+  };
+  window.addEventListener('scroll', onChange, true);
+  window.addEventListener('resize', onChange);
+  return () => {
+    window.removeEventListener('scroll', onChange, true);
+    window.removeEventListener('resize', onChange);
+    if (frame && typeof cancelAnimationFrame === 'function') cancelAnimationFrame(frame);
+    frame = 0;
+  };
+}
+
+/** O navegador entende `anchor-scope`? Sem isso o tooltip da Sidebar compacta precisa do JS abaixo. */
+export function supportsAnchorScope(): boolean {
+  return (
+    typeof CSS !== 'undefined' &&
+    typeof CSS.supports === 'function' &&
+    CSS.supports('anchor-scope', 'all')
+  );
+}
+
+/**
+ * Grava o `scrollTop` de `scroller` em `--_sidebar-scroll` (px), a cada rolagem, para o CSS
+ * compensar o tooltip da Sidebar compacta (rótulo absoluto na posição estática, que não
+ * acompanha a rolagem do trilho). Só age sem `anchor-scope`; devolve a função que encerra.
+ */
+export function followScrollTop(scroller: HTMLElement): () => void {
+  if (supportsAnchorScope()) return () => undefined;
+  const write = () => scroller.style.setProperty('--_sidebar-scroll', `${scroller.scrollTop}px`);
+  write();
+  scroller.addEventListener('scroll', write, { passive: true });
+  return () => {
+    scroller.removeEventListener('scroll', write);
+    scroller.style.removeProperty('--_sidebar-scroll');
+  };
+}

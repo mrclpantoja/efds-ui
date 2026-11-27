@@ -353,7 +353,7 @@ export default function TablePage() {
               name: 'filename',
               type: 'string',
               default: "'tabela'",
-              description: 'Nome sem extensão (ela é acrescentada).',
+              description: 'Nome sem extensão; ganha -aaaa-mm-dd e a extensão, como no HTML.',
             },
             {
               name: 'title / subtitle / sheetName',

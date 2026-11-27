@@ -4,5 +4,11 @@
  */
 export { tooltipBehavior, TOOLTIP_SHOW_DELAY } from './components/tooltip';
 export { popoverBehavior } from './components/popover';
+export {
+  followScrollTop,
+  placeMenuFallback,
+  supportsAnchorPositioning,
+  supportsAnchorScope,
+} from './core/position';
 export type { Behavior } from './core/registry';
 export type { Placement } from './core/position';

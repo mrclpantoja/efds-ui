@@ -1,7 +1,7 @@
 import { createRef, useState, type Ref } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { installDialogPolyfill, installPopoverStyle } from '../../test-utils/dom-polyfills';
 import { DialogProvider } from '../Dialog';
 import { ToastProvider } from '../Toast';
@@ -413,6 +413,20 @@ describe('Tree: mover por teclado', () => {
 });
 
 describe('Tree: menu de ações', () => {
+  it('sem anchor positioning, posiciona o menu junto ao gatilho', async () => {
+    vi.stubGlobal('CSS', { supports: () => false });
+    onTestFinished(() => void vi.unstubAllGlobals());
+    const user = userEvent.setup();
+    render(<Harness editable />);
+    item('Almoxarifado').focus();
+    await user.keyboard('{Shift>}{F10}{/Shift}');
+    const first = await screen.findByRole('button', { name: 'Adicionar filho' });
+    const menu = first.closest('.eds-dropdown') as HTMLElement;
+    await waitFor(() => expect(menu.style.getPropertyValue('--_dropdown-x')).not.toBe(''));
+    expect(menu.style.getPropertyValue('--_dropdown-y')).not.toBe('');
+    expect(menu).toHaveAttribute('data-placement');
+  });
+
   it('Shift+F10 abre o menu, o foco vai ao primeiro item e "Adicionar pai" envolve o nó', async () => {
     const user = userEvent.setup();
     const onChanged = vi.fn();

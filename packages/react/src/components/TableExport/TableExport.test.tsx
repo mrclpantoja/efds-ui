@@ -54,6 +54,9 @@ beforeEach(() => {
  * Os geradores são carregados sob demanda (`import()`): o download chega depois do clique, em tempo
  * variável. Esperar em cada teste evita assert antes da hora e download vazando para o seguinte.
  */
+const today = new Date();
+const stamp = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
 const waitDownloads = (n: number) => vi.waitFor(() => expect(downloads).toHaveLength(n));
 
 const item = (name: string) => screen.getByRole('button', { name, hidden: true });
@@ -101,7 +104,7 @@ describe('TableExport', () => {
     render(<TableExport data={data} filename="pedidos" />);
     await user.click(item('CSV'));
     await waitDownloads(1);
-    expect(downloads[0]?.name).toBe('pedidos.csv');
+    expect(downloads[0]?.name).toBe(`pedidos-${stamp}.csv`);
     expect(downloads[0]?.type).toBe('text/csv;charset=utf-8');
     const csv = await text(downloads[0]!.blob);
     expect(csv).toContain('Comércio Modelo');
@@ -118,10 +121,10 @@ describe('TableExport', () => {
       await waitDownloads(i + 1);
     }
     expect(downloads.map((d) => d.name)).toEqual([
-      'pedidos.csv',
-      'pedidos.xlsx',
-      'pedidos.json',
-      'pedidos.pdf',
+      `pedidos-${stamp}.csv`,
+      `pedidos-${stamp}.xlsx`,
+      `pedidos-${stamp}.json`,
+      `pedidos-${stamp}.pdf`,
     ]);
     expect(downloads[1]?.type).toContain('spreadsheetml.sheet');
     expect(downloads[3]?.type).toBe('application/pdf');
@@ -151,7 +154,7 @@ describe('TableExport', () => {
     render(<TableExport data={data} onBeforeExport={before} filename="p" />);
     await user.click(item('JSON'));
     await waitDownloads(1);
-    expect(before).toHaveBeenCalledWith(data, { format: 'json', filename: 'p.json' });
+    expect(before).toHaveBeenCalledWith(data, { format: 'json', filename: `p-${stamp}.json` });
     const out = await text(downloads[0]!.blob);
     expect(out).toContain('***.***.***-**');
     expect(out).not.toContain('000.000.000');
@@ -192,9 +195,11 @@ describe('TableExport', () => {
     const { container } = render(<TableExport data={data} filename="p" onExport={onExport} />);
     await user.click(item('CSV'));
     await waitDownloads(1);
-    expect(onExport).toHaveBeenCalledWith({ format: 'csv', filename: 'p.csv', count: 2 });
+    expect(onExport).toHaveBeenCalledWith({ format: 'csv', filename: `p-${stamp}.csv`, count: 2 });
     const status = container.querySelector('[role="status"]')!;
-    await vi.waitFor(() => expect(status).toHaveTextContent('Arquivo p.csv gerado (2 linhas).'));
+    await vi.waitFor(() =>
+      expect(status).toHaveTextContent(`Arquivo p-${stamp}.csv gerado (2 linhas).`),
+    );
   });
 
   it('uma linha só usa a mensagem do singular; messages substitui os textos', async () => {
@@ -208,7 +213,7 @@ describe('TableExport', () => {
     );
     await user.click(item('CSV'));
     const status = container.querySelector('[role="status"]')!;
-    await vi.waitFor(() => expect(status).toHaveTextContent('Saved p.csv.'));
+    await vi.waitFor(() => expect(status).toHaveTextContent(`Saved p-${stamp}.csv.`));
   });
 
   it('sem linhas: avisa e não baixa', async () => {

@@ -343,3 +343,21 @@ export function fileName(base: string | undefined, ext: string): string {
   if (name === '') name = getMessages().exportFilename;
   return `${name}.${ext}`;
 }
+
+/** Data local `aaaa-mm-dd`. */
+export function dateStamp(now: Date = new Date()): string {
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
+/**
+ * Nome final de um arquivo exportado: `base-aaaa-mm-dd.ext`. A extensão que já vier em `base`
+ * é tirada antes. Regra única do HTML (`[data-eds-export]`) e do React (`TableExport`).
+ */
+export function datedFileName(
+  base: string | undefined,
+  ext: string,
+  now: Date = new Date(),
+): string {
+  const bare = (base ?? '').trim().replace(/\.(csv|xlsx|json|pdf)$/i, '');
+  return fileName(`${bare || getMessages().exportFilename}-${dateStamp(now)}`, ext);
+}

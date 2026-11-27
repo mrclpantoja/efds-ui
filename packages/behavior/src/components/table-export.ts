@@ -3,7 +3,7 @@ import { emit, hidePopover } from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer, type Announcer } from '../core/status';
 import { MIME, downloadFile, generate } from '../export';
-import { fileName } from '../export/model';
+import { datedFileName } from '../export/model';
 import type {
   ExportColumn,
   ExportColumnType,
@@ -148,9 +148,6 @@ function statusRegion(table: HTMLTableElement): HTMLElement {
   return created;
 }
 
-const today = (now: Date): string =>
-  `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-
 /**
  * Botões e itens de menu `[data-eds-export="csv|xlsx|json|pdf"][data-eds-export-target="ID"]`.
  * Opcionais: `data-eds-export-filename` (sem extensão; ganha `-aaaa-mm-dd`),
@@ -198,10 +195,7 @@ export const tableExportBehavior: Behavior = {
         const base =
           trigger.getAttribute('data-eds-export-filename') ?? (slug(caption) || m.exportFilename);
         const now = new Date();
-        const filename = fileName(
-          `${base.replace(/\.(csv|xlsx|json|pdf)$/i, '')}-${today(now)}`,
-          fmt,
-        );
+        const filename = datedFileName(base, fmt, now);
         const title = trigger.getAttribute('data-eds-export-title') ?? (caption || undefined);
         const subtitle = trigger.getAttribute('data-eds-export-subtitle') ?? undefined;
 

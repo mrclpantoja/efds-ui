@@ -22,7 +22,7 @@
 import { spawnSync } from 'node:child_process';
 import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import process from 'node:process';
 
 const root = join(import.meta.dirname, '..');
@@ -34,8 +34,9 @@ const argValue = (flag: string) => {
   const i = process.argv.indexOf(flag);
   return i === -1 ? undefined : process.argv[i + 1];
 };
-const packDir = argValue('--pack');
-const fromDir = argValue('--from');
+// Absolutos: o `pnpm pack` roda dentro da pasta de cada pacote.
+const packDir = argValue('--pack') && resolve(argValue('--pack') as string);
+const fromDir = argValue('--from') && resolve(argValue('--from') as string);
 const inCi = process.env.GITHUB_ACTIONS === 'true';
 
 function run(command: string, args: string[], cwd: string, allowFail = false) {

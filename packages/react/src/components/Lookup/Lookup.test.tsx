@@ -25,7 +25,7 @@ const search = vi.fn(async (q: string) => {
   );
 });
 
-const input = () => screen.getByRole('textbox', { name: 'Cliente' }) as HTMLInputElement;
+const input = () => screen.getByRole('combobox', { name: 'Cliente' }) as HTMLInputElement;
 
 describe('Lookup', () => {
   it('renderiza o contrato: código, botão de busca e descrição (output)', () => {
@@ -156,8 +156,76 @@ describe('Lookup', () => {
         texts={{ notFound: 'Code not found.' }}
       />,
     );
-    await user.type(screen.getByRole('textbox', { name: 'Client' }), '9');
+    await user.type(screen.getByRole('combobox', { name: 'Client' }), '9');
     await user.tab();
     await waitFor(() => expect(screen.getByText('Code not found.')).toBeInTheDocument());
+  });
+});
+
+describe('Lookup: autocompletar', () => {
+  it('digitar busca por código ou nome e as setas com Enter escolhem', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Lookup aria-label="Cliente" search={search} onChange={onChange} />);
+    const field = input();
+    expect(field).toHaveAttribute('aria-autocomplete', 'list');
+    expect(field).toHaveAttribute('aria-expanded', 'false');
+    await user.type(field, 'bor');
+    const option = await screen.findByRole('option', { name: /Boreal/, hidden: true });
+    expect(field).toHaveAttribute('aria-expanded', 'true');
+    expect(option).toHaveTextContent('11');
+    await user.keyboard('{ArrowDown}');
+    expect(field.getAttribute('aria-activedescendant')).toBe(option.id);
+    await user.keyboard('{Enter}');
+    expect(field.value).toBe('11');
+    expect(document.querySelector('output')).toHaveTextContent('Boreal Serviços');
+    expect(onChange).toHaveBeenCalledWith('11', expect.objectContaining({ code: '11' }));
+    expect(field).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('Esc fecha a lista sem apagar o texto; clique escolhe', async () => {
+    const user = userEvent.setup();
+    render(<Lookup aria-label="Cliente" search={search} />);
+    await user.type(input(), 'ced');
+    await screen.findByRole('option', { name: /Cedro/, hidden: true });
+    await user.keyboard('{Escape}');
+    expect(input()).toHaveAttribute('aria-expanded', 'false');
+    expect(input().value).toBe('ced');
+    await user.type(input(), 'r');
+    await user.click(await screen.findByRole('option', { name: /Cedro/, hidden: true }));
+    expect(input().value).toBe('12');
+  });
+
+  it('sem resultado e com onCreate mostra Cadastrar novo… e entrega o texto', async () => {
+    const user = userEvent.setup();
+    const onCreate = vi.fn();
+    render(<Lookup aria-label="Cliente" search={search} onCreate={onCreate} />);
+    await user.type(input(), 'zzz');
+    const create = await screen.findByRole('option', { name: 'Cadastrar novo…', hidden: true });
+    expect(create).toHaveClass('eds-combobox-option-create');
+    await user.click(create);
+    expect(onCreate).toHaveBeenCalledWith('zzz');
+  });
+
+  it('com resultados a opção de cadastrar só aparece com createAlways', async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(
+      <Lookup aria-label="Cliente" search={search} onCreate={() => undefined} />,
+    );
+    await user.type(input(), 'aur');
+    await screen.findByRole('option', { name: /Aurora/, hidden: true });
+    expect(screen.queryByRole('option', { name: 'Cadastrar novo…', hidden: true })).toBeNull();
+    rerender(
+      <Lookup aria-label="Cliente" search={search} onCreate={() => undefined} createAlways />,
+    );
+    expect(
+      screen.getByRole('option', { name: 'Cadastrar novo…', hidden: true }),
+    ).toBeInTheDocument();
+  });
+
+  it('autocomplete={false} mantém o campo simples', () => {
+    render(<Lookup aria-label="Cliente" search={search} autocomplete={false} />);
+    expect(screen.getByRole('textbox', { name: 'Cliente' })).not.toHaveAttribute('aria-expanded');
+    expect(document.querySelector('.eds-combobox-popup')).toBeNull();
   });
 });

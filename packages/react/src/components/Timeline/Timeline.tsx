@@ -1,7 +1,10 @@
 import { createElement, forwardRef, type OlHTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
+import { mergeTexts } from '../../utils/texts';
 
 export type TimelineTone = 'accent' | 'info' | 'success' | 'warning' | 'danger';
+/** Andamento do item (linha do tempo de etapas): concluído, em curso ou por vir. */
+export type TimelineState = 'done' | 'current' | 'upcoming';
 
 export interface TimelineItem {
   /** Chave estável. */
@@ -18,6 +21,11 @@ export interface TimelineItem {
   tone?: TimelineTone;
   /** Ícone (um `<svg>`) dentro do marcador. Sem ele, o marcador é um ponto. */
   icon?: ReactNode;
+  /**
+   * Andamento (`data-state`): o marcador ganha visto, anel ou tracejado, nunca só cor. Diga o estado
+   * também no texto (ex.: "(paga)" no título, oculto com `eds-visually-hidden`).
+   */
+  state?: TimelineState;
 }
 
 export interface TimelineGroup {
@@ -31,7 +39,27 @@ export interface TimelineGroup {
 interface TimelineBase extends Omit<OlHTMLAttributes<HTMLOListElement>, 'children'> {
   /** Variante compacta (menos respiro). */
   compact?: boolean;
+  /**
+   * `horizontal`: itens lado a lado, com o fio entre os marcadores; rola no próprio contêiner e,
+   * em largura estreita, volta a ser vertical. Com muitos itens, passe `tabIndex={0}` e `aria-label`
+   * para rolar pelo teclado. Padrão: `vertical`.
+   */
+  orientation?: 'vertical' | 'horizontal';
+  /**
+   * Só na horizontal: em contêiner estreito, `stack` (padrão) volta a ser vertical e `scroll` mantém
+   * a linha e rola (`.eds-timeline-scroll`).
+   */
+  narrow?: 'stack' | 'scroll';
+  /** Textos internos (padrões em pt-BR). */
+  texts?: Partial<TimelineTexts>;
 }
+
+export interface TimelineTexts {
+  /** Nome da lista horizontal (rolável pelo teclado) quando não há `aria-label`. */
+  label: string;
+}
+
+const defaultTexts: TimelineTexts = { label: 'Linha do tempo' };
 
 export type TimelineProps =
   | (TimelineBase & { items: TimelineItem[]; groups?: undefined; headingLevel?: undefined })
@@ -45,7 +73,7 @@ export type TimelineProps =
 
 function renderItem(item: TimelineItem) {
   return (
-    <li key={item.id} className="eds-timeline-item" data-tone={item.tone}>
+    <li key={item.id} className="eds-timeline-item" data-tone={item.tone} data-state={item.state}>
       <span className="eds-timeline-marker" aria-hidden="true">
         {item.icon}
       </span>
@@ -70,8 +98,30 @@ function renderItem(item: TimelineItem) {
  * inverso). Com `groups`, cada grupo ganha um cabeçalho.
  */
 export const Timeline = forwardRef<HTMLOListElement, TimelineProps>(function Timeline(props, ref) {
-  const { compact, className, items, groups, headingLevel = 3, ...rest } = props;
-  const cls = cx('eds-timeline', compact && 'eds-timeline-compact', className);
+  const {
+    compact,
+    orientation = 'vertical',
+    narrow = 'stack',
+    texts,
+    className,
+    items,
+    groups,
+    headingLevel = 3,
+    ...rest
+  } = props;
+  const cls = cx(
+    'eds-timeline',
+    compact && 'eds-timeline-compact',
+    orientation === 'horizontal' && 'eds-timeline-horizontal',
+    orientation === 'horizontal' && narrow === 'scroll' && 'eds-timeline-scroll',
+    className,
+  );
+  const t = mergeTexts(defaultTexts, texts);
+  // Horizontal: o <ol> rola sozinho; precisa de foco e nome para rolar pelo teclado.
+  const scrollProps =
+    orientation === 'horizontal'
+      ? { tabIndex: 0, 'aria-label': props['aria-label'] ?? t.label }
+      : {};
   if (groups) {
     return (
       <ol {...rest} ref={ref} className="eds-timeline-groups">
@@ -89,7 +139,7 @@ export const Timeline = forwardRef<HTMLOListElement, TimelineProps>(function Tim
     );
   }
   return (
-    <ol {...rest} ref={ref} className={cls}>
+    <ol {...rest} {...scrollProps} ref={ref} className={cls}>
       {items?.map(renderItem)}
     </ol>
   );

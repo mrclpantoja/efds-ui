@@ -1,11 +1,44 @@
 import { format, getMessages } from '../core/config';
-import { closeIcon, describeBy, emit, ensureId, focusEl, normalizeText, uid } from '../core/dom';
+import {
+  closeIcon,
+  describeBy,
+  emit,
+  ensureId,
+  focusEl,
+  hidePopover,
+  normalizeText,
+  showPopover,
+  uid,
+} from '../core/dom';
 import { bindAll, type Behavior } from '../core/registry';
 import { toLookupItem, type LookupItem } from '../core/fields';
 import { createErrorSlot } from '../core/error-slot';
 import { createAnnouncer } from '../core/status';
 
 const SEARCH_DEBOUNCE_MS = 250;
+const STATUS_MS = 500;
+const LOADING_STATUS_MS = 400;
+/** Teto de opções no autocompletar (a busca avançada do diálogo não tem teto). */
+const MAX_SUGGESTIONS = 50;
+
+/** Controle programático do Lookup (`EDS.lookup(el)`): o app devolve o cadastro feito por ele. */
+export interface LookupController {
+  /** Preenche código e descrição (como se tivessem sido escolhidos); `null` limpa o campo. */
+  setValue: (
+    value: { code: string; description?: string; [key: string]: unknown } | null,
+    options?: { focus?: boolean },
+  ) => void;
+  clear: () => void;
+  getValue: () => { code: string; description: string };
+}
+
+const controllers = new WeakMap<Element, LookupController>();
+
+/** Controlador do Lookup que contém (ou é) `el`; `null` se não houver um ligado. */
+export function lookupController(el: Element | null | undefined): LookupController | null {
+  const root = el?.closest('[data-eds-lookup]');
+  return (root && controllers.get(root)) ?? null;
+}
 
 interface LookupColumn {
   key: string;
@@ -59,6 +92,13 @@ async function getJson(
  * Outros atributos: `data-eds-lookup-dialog` (id de um diálogo seu, com `[data-eds-lookup-search]` e
  * `tbody[data-eds-lookup-results]`), `data-eds-lookup-title`, `data-eds-lookup-columns` (JSON
  * `[{ "key", "label", "hideNarrow"? }]`). Evento `eds:lookup-change` (`{ code, description, item }`).
+ *
+ * Autocompletar (ligado quando há lista local ou `data-eds-lookup-source`; desligue com
+ * `data-eds-lookup-autocomplete="off"`): digitar no campo busca por código OU nome e abre uma lista
+ * (APG combobox "list autocomplete", visual do Combobox). `data-eds-lookup-create="Cadastrar novo…"`
+ * acrescenta a opção final quando nada é encontrado (`data-eds-lookup-create-always`: sempre),
+ * que dispara o evento cancelável `eds:lookup-create` (`{ text }`); o app cadastra e devolve o
+ * resultado por `EDS.lookup(el).setValue({ code, description })`. `data-eds-min-chars` (padrão 1).
  */
 export const lookupBehavior: Behavior = {
   name: 'lookup',
@@ -173,8 +213,20 @@ export const lookupBehavior: Behavior = {
       });
     };
 
+    const applyItem = (item: LookupItem) => {
+      input.value = item.code;
+      resolvedCode = item.code;
+      clearError();
+      setDescription(item.description);
+      notify(item, item.code);
+    };
+
+    let autoKey: (event: KeyboardEvent) => boolean = () => false;
+    let closeAuto: () => void = () => undefined;
+
     const applyCode = async (code: string) => {
       resolving?.abort();
+      closeAuto();
       const trimmed = code.trim();
       resolvedCode = input.value;
       if (trimmed === '') {
@@ -220,6 +272,7 @@ export const lookupBehavior: Behavior = {
     input.addEventListener(
       'keydown',
       (event) => {
+        if (event.isComposing || autoKey(event)) return;
         // Enter confirma o código (e só envia o formulário quando já está resolvido).
         if (event.key === 'Enter' && input.value !== resolvedCode) {
           event.preventDefault();
@@ -277,12 +330,8 @@ export const lookupBehavior: Behavior = {
     };
 
     const select = (item: LookupItem) => {
-      input.value = item.code;
-      resolvedCode = item.code;
-      clearError();
-      setDescription(item.description);
       dlg.close();
-      notify(item, item.code);
+      applyItem(item);
       focusEl(input);
     };
 
@@ -391,6 +440,7 @@ export const lookupBehavior: Behavior = {
       'click',
       () => {
         if (dlg.open || input.disabled || input.readOnly) return;
+        closeAuto();
         searchField.value = '';
         body.replaceChildren();
         dlg.showModal();
@@ -408,6 +458,391 @@ export const lookupBehavior: Behavior = {
       },
       { signal },
     );
+
+    // ---- Autocompletar no campo (APG combobox "list autocomplete") ---------------------------
+    const canAuto =
+      root.getAttribute('data-eds-lookup-autocomplete') !== 'off' &&
+      (local !== null || source !== '');
+    if (canAuto) {
+      const createAttr = root.getAttribute('data-eds-lookup-create');
+      const createAlways = root.hasAttribute('data-eds-lookup-create-always');
+      const minChars = Math.max(1, Number(root.getAttribute('data-eds-min-chars') ?? 1) || 1);
+      const listId = uid('lookup-list');
+
+      const popup = document.createElement('div');
+      popup.className = 'eds-combobox-popup';
+      popup.setAttribute('popover', 'manual');
+      const listbox = document.createElement('ul');
+      listbox.className = 'eds-combobox-listbox';
+      listbox.id = listId;
+      listbox.setAttribute('role', 'listbox');
+      const label = input.id
+        ? Array.from(root.ownerDocument.querySelectorAll('label')).find(
+            (l) => l.htmlFor === input.id,
+          )
+        : undefined;
+      if (label) listbox.setAttribute('aria-labelledby', ensureId(label, 'lookup-label'));
+      else listbox.setAttribute('aria-label', input.getAttribute('aria-label') ?? m.lookupTitle);
+      const emptyEl = document.createElement('p');
+      emptyEl.className = 'eds-combobox-empty';
+      emptyEl.hidden = true;
+      const loadingEl = document.createElement('p');
+      loadingEl.className = 'eds-combobox-loading';
+      loadingEl.hidden = true;
+      const spinner = document.createElement('span');
+      spinner.className = 'eds-spinner eds-spinner-sm';
+      spinner.setAttribute('aria-hidden', 'true');
+      loadingEl.append(spinner, ` ${m.lookupLoading}`);
+      popup.append(listbox, emptyEl, loadingEl);
+      const statusEl = document.createElement('span');
+      statusEl.className = 'eds-visually-hidden';
+      statusEl.setAttribute('role', 'status');
+      root.append(popup, statusEl);
+      const say = createAnnouncer(statusEl);
+
+      const priorRole = input.getAttribute('role');
+      const priorAutocomplete = input.getAttribute('aria-autocomplete');
+      input.setAttribute('role', 'combobox');
+      input.setAttribute('aria-autocomplete', 'list');
+      input.setAttribute('aria-expanded', 'false');
+      input.setAttribute('aria-controls', listId);
+
+      const suggestions = new Map<string, LookupItem>();
+      let open = false;
+      let highlighted: HTMLElement | null = null;
+      let ctl: AbortController | null = null;
+      let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+      let statusTimer: ReturnType<typeof setTimeout> | null = null;
+      let loadingTimer: ReturnType<typeof setTimeout> | null = null;
+
+      const optionEls = () => Array.from(listbox.querySelectorAll<HTMLElement>('[role="option"]'));
+
+      const setHighlight = (option: HTMLElement | null, scroll = true) => {
+        if (highlighted && highlighted !== option) highlighted.removeAttribute('aria-selected');
+        highlighted = option;
+        if (option) {
+          option.setAttribute('aria-selected', 'true');
+          input.setAttribute('aria-activedescendant', option.id);
+          if (scroll && typeof option.scrollIntoView === 'function')
+            option.scrollIntoView({ block: 'nearest' });
+        } else input.removeAttribute('aria-activedescendant');
+      };
+
+      const position = () => {
+        if (!open) return;
+        const box = root.getBoundingClientRect();
+        const field = input.getBoundingClientRect();
+        const height = popup.getBoundingClientRect().height;
+        const below = window.innerHeight - field.bottom;
+        const top = height > below && field.top > below;
+        const popupWidth = popup.offsetWidth;
+        const x =
+          popupWidth > 0
+            ? Math.max(0, Math.min(box.left, window.innerWidth - popupWidth))
+            : box.left;
+        popup.style.setProperty('--_combobox-x', `${Math.round(x)}px`);
+        popup.style.setProperty('--_combobox-width', `${Math.round(box.width)}px`);
+        popup.style.setProperty('--_combobox-y', `${Math.round(top ? field.top : field.bottom)}px`);
+        if (top) popup.setAttribute('data-placement', 'top');
+        else popup.removeAttribute('data-placement');
+      };
+      let frame = 0;
+      const onViewport = () => {
+        if (typeof requestAnimationFrame !== 'function') return position();
+        if (frame) return;
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          position();
+        });
+      };
+
+      const openPopup = () => {
+        if (open || input.readOnly || input.disabled) return;
+        open = true;
+        input.setAttribute('aria-expanded', 'true');
+        showPopover(popup);
+        position();
+        window.addEventListener('resize', onViewport);
+        window.addEventListener('scroll', onViewport, true);
+      };
+      const closePopup = () => {
+        if (statusTimer) clearTimeout(statusTimer);
+        statusTimer = null;
+        if (!open) return;
+        open = false;
+        setHighlight(null);
+        input.setAttribute('aria-expanded', 'false');
+        hidePopover(popup);
+        say.say('');
+        window.removeEventListener('resize', onViewport);
+        window.removeEventListener('scroll', onViewport, true);
+        if (frame && typeof cancelAnimationFrame === 'function') cancelAnimationFrame(frame);
+        frame = 0;
+      };
+      const abortSearch = () => {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = null;
+        if (loadingTimer) clearTimeout(loadingTimer);
+        loadingTimer = null;
+        ctl?.abort();
+        ctl = null;
+        loadingEl.hidden = true;
+        popup.removeAttribute('aria-busy');
+      };
+      closeAuto = () => {
+        abortSearch();
+        closePopup();
+      };
+
+      const render = (items: LookupItem[], text: string) => {
+        listbox.textContent = '';
+        suggestions.clear();
+        for (const item of items.slice(0, MAX_SUGGESTIONS)) {
+          const li = document.createElement('li');
+          li.id = uid('lookup-opt');
+          li.className = 'eds-combobox-option';
+          li.setAttribute('role', 'option');
+          li.setAttribute('data-value', item.code);
+          const code = document.createElement('span');
+          code.className = 'eds-combobox-option-code';
+          code.textContent = item.code;
+          const name = document.createElement('span');
+          name.className = 'eds-combobox-option-text';
+          name.textContent = item.description;
+          li.append(code, name);
+          suggestions.set(li.id, item);
+          listbox.append(li);
+        }
+        if (createAttr !== null && text !== '' && (createAlways || items.length === 0)) {
+          const li = document.createElement('li');
+          li.id = uid('lookup-opt');
+          li.className = 'eds-combobox-option eds-combobox-option-create';
+          li.setAttribute('role', 'option');
+          li.setAttribute('data-eds-create', '');
+          li.textContent = createAttr.trim() === '' ? getMessages().lookupCreate : createAttr;
+          listbox.append(li);
+        }
+        emptyEl.textContent = getMessages().comboNoResults;
+        emptyEl.hidden = listbox.children.length > 0;
+      };
+
+      const resultsText = (count: number) => {
+        const msgs = getMessages();
+        return count === 0
+          ? msgs.comboNoResults
+          : count === 1
+            ? msgs.comboResultsOne
+            : format(msgs.comboResultsMany, { count });
+      };
+
+      const run = async () => {
+        ctl?.abort();
+        const text = input.value.trim();
+        if (text.length < minChars) {
+          closeAuto();
+          return;
+        }
+        const current = new AbortController();
+        ctl = current;
+        popup.setAttribute('aria-busy', 'true');
+        if (source !== '') {
+          loadingEl.hidden = false;
+          if (loadingTimer) clearTimeout(loadingTimer);
+          loadingTimer = setTimeout(() => {
+            loadingTimer = null;
+            if (ctl === current) say.say(getMessages().lookupLoading);
+          }, LOADING_STATUS_MS);
+        }
+        try {
+          const found = await search(text, current.signal);
+          if (current.signal.aborted) return;
+          render(found, text);
+          if (document.activeElement === input) {
+            openPopup();
+            position();
+            if (statusTimer) clearTimeout(statusTimer);
+            statusTimer = setTimeout(() => {
+              statusTimer = null;
+              if (open) say.say(resultsText(suggestions.size));
+            }, STATUS_MS);
+          }
+        } catch (error) {
+          if (
+            current.signal.aborted ||
+            (error instanceof DOMException && error.name === 'AbortError')
+          )
+            return;
+          render([], '');
+          emptyEl.textContent = getMessages().lookupError;
+          emptyEl.hidden = false;
+          if (document.activeElement === input) openPopup();
+          say.say(getMessages().lookupError);
+        } finally {
+          if (ctl === current) {
+            ctl = null;
+            if (loadingTimer) clearTimeout(loadingTimer);
+            loadingTimer = null;
+            loadingEl.hidden = true;
+            popup.removeAttribute('aria-busy');
+          }
+        }
+      };
+
+      const choose = (option: HTMLElement) => {
+        if (option.hasAttribute('data-eds-create')) {
+          const text = input.value.trim();
+          closeAuto();
+          // O texto vai ao cadastro: sair do campo não deve acusar "código não encontrado".
+          resolvedCode = input.value;
+          emit(root, 'lookup-create', { text }, true);
+          return;
+        }
+        const item = suggestions.get(option.id);
+        if (!item) return;
+        closeAuto();
+        applyItem(item);
+      };
+
+      const move = (delta: 1 | -1) => {
+        const list = optionEls();
+        if (list.length === 0) return;
+        const index = highlighted ? list.indexOf(highlighted) : -1;
+        const next = index < 0 ? (delta > 0 ? 0 : list.length - 1) : index + delta;
+        setHighlight(list[Math.min(Math.max(next, 0), list.length - 1)] ?? null);
+      };
+
+      autoKey = (event) => {
+        const busy = popup.getAttribute('aria-busy') === 'true';
+        switch (event.key) {
+          case 'ArrowDown':
+          case 'ArrowUp': {
+            event.preventDefault();
+            if (input.readOnly || busy) return true;
+            const down = event.key === 'ArrowDown';
+            if (!open) {
+              if (optionEls().length === 0) {
+                void run();
+                return true;
+              }
+              openPopup();
+              position();
+              if (!event.altKey) move(down ? 1 : -1);
+            } else if (event.altKey && !down) closePopup();
+            else if (!event.altKey) move(down ? 1 : -1);
+            return true;
+          }
+          case 'Enter':
+            if (open && busy) {
+              event.preventDefault();
+              return true;
+            }
+            if (open && highlighted) {
+              event.preventDefault();
+              choose(highlighted);
+              return true;
+            }
+            if (open) closeAuto();
+            return false;
+          case 'Escape':
+            if (open) {
+              event.preventDefault();
+              event.stopPropagation();
+              closeAuto();
+              return true;
+            }
+            return false;
+          case 'Tab':
+            closeAuto();
+            return false;
+          default:
+            return false;
+        }
+      };
+
+      input.addEventListener(
+        'input',
+        () => {
+          setHighlight(null);
+          if (debounceTimer) clearTimeout(debounceTimer);
+          debounceTimer = null;
+          if (input.value.trim().length < minChars) {
+            closeAuto();
+            return;
+          }
+          if (local) void run();
+          else
+            debounceTimer = setTimeout(() => {
+              debounceTimer = null;
+              void run();
+            }, SEARCH_DEBOUNCE_MS);
+        },
+        { signal },
+      );
+      input.addEventListener('blur', () => closeAuto(), { signal });
+      popup.addEventListener('pointerdown', (event) => event.preventDefault(), { signal });
+      popup.addEventListener(
+        'click',
+        (event) => {
+          const option = (event.target as Element).closest<HTMLElement>('[role="option"]');
+          if (option && listbox.contains(option)) choose(option);
+        },
+        { signal },
+      );
+      popup.addEventListener(
+        'pointermove',
+        (event) => {
+          const option = (event.target as Element).closest<HTMLElement>('[role="option"]');
+          if (option && listbox.contains(option) && option !== highlighted)
+            setHighlight(option, false);
+        },
+        { signal },
+      );
+
+      undo.push(() => {
+        closeAuto();
+        say.dispose();
+        popup.remove();
+        statusEl.remove();
+        for (const [name, prior] of [
+          ['role', priorRole],
+          ['aria-autocomplete', priorAutocomplete],
+        ] as const) {
+          if (prior === null) input.removeAttribute(name);
+          else input.setAttribute(name, prior);
+        }
+        input.removeAttribute('aria-expanded');
+        input.removeAttribute('aria-controls');
+        input.removeAttribute('aria-activedescendant');
+      });
+    }
+
+    // ---- Controle programático ------------------------------------------------------------
+    const controller: LookupController = {
+      setValue(value, options) {
+        resolving?.abort();
+        closeAuto();
+        const item = value ? toLookupItem(value) : null;
+        if (!item) {
+          input.value = '';
+          resolvedCode = '';
+          clearError();
+          setDescription('');
+          notify(null, '');
+        } else applyItem(item);
+        if (options?.focus !== false) focusEl(input);
+      },
+      clear() {
+        controller.setValue(null, { focus: false });
+      },
+      getValue() {
+        return {
+          code: input.value.trim(),
+          description: output?.hasAttribute('data-empty') ? '' : (output?.textContent ?? ''),
+        };
+      },
+    };
+    controllers.set(root, controller);
+    undo.push(() => controllers.delete(root));
 
     return () => {
       ac.abort();

@@ -1,0 +1,46 @@
+<!-- Só CSS. .eds-timeline-horizontal no <ol>: itens lado a lado, fio entre marcadores; rola no próprio
+     contêiner quando não cabe e, abaixo de 30rem de largura, vira vertical. data-state (done | current |
+     upcoming) marca o marcador sem depender só de cor (visto, anel, tracejado). Com muitos itens,
+     tabindex="0" e aria-label no <ol> permitem rolar pelo teclado. -->
+<ol class="eds-timeline eds-timeline-horizontal" aria-label="Vencimentos do contrato" tabindex="0">
+  <li class="eds-timeline-item" data-state="done">
+    <span class="eds-timeline-marker" aria-hidden="true"></span>
+    <div class="eds-timeline-content">
+      <div class="eds-timeline-header">
+        <span class="eds-timeline-title">Parcela 1<span class="eds-visually-hidden"> (paga)</span></span>
+      </div>
+      <time class="eds-timeline-time" datetime="2026-09-10">10/09/2026</time>
+      <p class="eds-timeline-text">R$ 1.250,00</p>
+    </div>
+  </li>
+  <li class="eds-timeline-item" data-state="done">
+    <span class="eds-timeline-marker" aria-hidden="true"></span>
+    <div class="eds-timeline-content">
+      <div class="eds-timeline-header">
+        <span class="eds-timeline-title">Parcela 2<span class="eds-visually-hidden"> (paga)</span></span>
+      </div>
+      <time class="eds-timeline-time" datetime="2026-10-10">10/10/2026</time>
+      <p class="eds-timeline-text">R$ 1.250,00</p>
+    </div>
+  </li>
+  <li class="eds-timeline-item" data-state="current">
+    <span class="eds-timeline-marker" aria-hidden="true"></span>
+    <div class="eds-timeline-content">
+      <div class="eds-timeline-header">
+        <span class="eds-timeline-title">Parcela 3<span class="eds-visually-hidden"> (em aberto)</span></span>
+      </div>
+      <time class="eds-timeline-time" datetime="2026-11-10">10/11/2026</time>
+      <p class="eds-timeline-text">R$ 1.250,00</p>
+    </div>
+  </li>
+  <li class="eds-timeline-item" data-state="upcoming">
+    <span class="eds-timeline-marker" aria-hidden="true"></span>
+    <div class="eds-timeline-content">
+      <div class="eds-timeline-header">
+        <span class="eds-timeline-title">Parcela 4<span class="eds-visually-hidden"> (a vencer)</span></span>
+      </div>
+      <time class="eds-timeline-time" datetime="2026-12-10">10/12/2026</time>
+      <p class="eds-timeline-text">R$ 1.250,00</p>
+    </div>
+  </li>
+</ol>

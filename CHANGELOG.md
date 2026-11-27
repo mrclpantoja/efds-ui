@@ -11,6 +11,13 @@ Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `
 - `@efds-ui/react`: `useTableColumns`, `TableColumnsMenu`, `TableColumnFilter`, `TableBulkBar`, `TableEditableCell`, `useTableQuery`; `sortTableData` aceita lista e `filterTableData` aceita `filters`.
 - Migração (sem quebra obrigatória): o detalhe de `eds:table-sort` ganha `key`, `sort`, `multi` e `reason`; `eds:table-select-change` ganha `ids` e `scope`; o filtro local passa pelo coordenador de linhas (mesmos atributos e eventos); a exportação omite colunas ocultas pelo usuário; `data-eds-filter-columns` aceita ids.
 
+### Padrões do template ERP
+
+- `@efds-ui/core` (CSS): cartão de opção (`.eds-option-card`), disco de ícone (`.eds-icon-disc`), linha do tempo horizontal e `data-state` nos itens, Stepper como indicador de seções (`.eds-stepper-link`) e, no Combobox, `.eds-combobox-option-code` e `-create`.
+- `@efds-ui/behavior`: Lookup com autocompletar por código ou nome (`data-eds-lookup-autocomplete="off"` desliga), opção "Cadastrar novo…" (`data-eds-lookup-create`, `eds:lookup-create`) e `EDS.lookup(el).setValue/clear/getValue`; indicador de seções `data-eds-stepper-sections` (`aria-current`, `data-state="done"`, anúncio, `eds:stepper-section-change`); mensagens `lookupCreate`, `stepperSectionDone`, `stepperDone` e `stepperSectionSummary`.
+- `@efds-ui/react`: `OptionCard`, `OptionCardGroup`, `IconDisc`, `Timeline` com `orientation="horizontal"` e `state`, `Stepper` com `href` por etapa (indicador) e `useSectionProgress`, `Lookup` com `autocomplete`, `onCreate` e `createAlways`.
+- Migração: com o autocompletar ligado por padrão, o campo do Lookup passa de `textbox` a `combobox` (ajuste testes que o buscam por papel) e a lista aparece ao digitar; use `data-eds-lookup-autocomplete="off"` (HTML) ou `autocomplete={false}` (React) para manter o comportamento antigo. O popup do Combobox e do Lookup passa a limitar a posição horizontal à janela.
+
 ## 0.1.2 (24/11/2026)
 
 Primeira versão publicada pelo GitHub Actions, com proveniência (selo que liga cada pacote ao commit e ao build que o geraram). Sem mudança de API.

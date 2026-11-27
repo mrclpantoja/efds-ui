@@ -1,0 +1,262 @@
+/* Cartão de opção: escolha de um tipo/plano/modalidade com título, apoio e marca, em vez de uma
+   lista de rádios. O controle nativo (radio ou checkbox) continua sendo o dono do estado e do teclado.
+   Markup:
+     <fieldset class="eds-fieldset">
+       <legend class="eds-legend">Tipo de lançamento</legend>
+       <div class="eds-option-cards">
+         <label class="eds-option-card">
+           <input type="radio" name="tipo" value="pagar" checked />
+           <span class="eds-option-card-text">
+             <span class="eds-option-card-title">A pagar</span>
+             <span class="eds-option-card-description">Despesas, fornecedores e contas.</span>
+           </span>
+           <span class="eds-option-card-mark" aria-hidden="true"><svg>…</svg></span>
+         </label>
+       </div>
+     </fieldset>
+   - O input é filho direto do label e cobre o cartão (transparente): clique, foco e teclado são nativos.
+   - Estado por atributo do input: :checked, :focus-visible, :disabled e [aria-invalid="true"].
+   - Marca (.eds-option-card-mark) é opcional: círculo (radio) ou quadrado (checkbox) que se preenche ao
+     marcar; o <svg> filho é o visto. Sem a marca, o CSS desenha o visto no canto. A seleção nunca
+     depende só de cor: a borda engrossa e aparece o visto.
+   - Ícone opcional à esquerda: <span class="eds-option-card-icon" aria-hidden="true"> entre o input e o texto,
+     com um <svg> ou um .eds-icon-disc.
+   - Descrição opcional. Grupo (.eds-option-cards): colunas automáticas conforme a largura do contêiner. */
+@layer eds.components {
+  .eds-option-cards {
+    --_option-card-min: calc(var(--eds-space-9) * 3.5);
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--_option-card-min)), 1fr));
+    gap: var(--eds-space-3);
+    min-inline-size: 0;
+  }
+
+  .eds-option-card {
+    --_oc-bg: var(--eds-color-bg-surface);
+    --_oc-border: var(--eds-color-border-strong);
+    --_oc-ring: transparent;
+    --_oc-title: var(--eds-color-text-primary);
+    --_oc-text: var(--eds-color-text-secondary);
+    --_oc-mark-bg: transparent;
+    --_oc-mark-border: var(--eds-color-border-strong);
+    --_oc-mark-fg: transparent;
+    --_oc-mark-radius: var(--eds-radius-full);
+    --_oc-mark-size: var(--eds-icon-size-lg);
+
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--eds-space-3);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: var(--eds-target-min);
+    padding: var(--eds-space-4);
+    border: var(--eds-border-width) solid var(--_oc-border);
+    border-radius: var(--eds-radius-lg);
+    background: var(--_oc-bg);
+    box-shadow: 0 0 0 var(--eds-border-width) var(--_oc-ring);
+    cursor: pointer;
+    transition:
+      border-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      background-color var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      box-shadow var(--eds-motion-duration-fast) var(--eds-motion-easing-standard);
+
+    &:has(> input[type='checkbox']) {
+      --_oc-mark-radius: var(--eds-radius-sm);
+    }
+
+    /* Ícone à esquerda (opcional): .eds-option-card-icon antes do texto, com um .eds-icon-disc ou um svg. */
+    &:has(> .eds-option-card-icon) {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    &:has(> .eds-option-card-icon):not(:has(> .eds-option-card-mark)) {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    &:hover {
+      --_oc-border: var(--eds-color-text-muted);
+    }
+
+    &:has(> input:checked) {
+      --_oc-bg: var(--eds-color-action-primary-subtle);
+      --_oc-border: var(--eds-color-action-primary);
+      --_oc-ring: var(--eds-color-action-primary);
+      --_oc-mark-bg: var(--eds-color-action-primary);
+      --_oc-mark-border: var(--eds-color-action-primary);
+      --_oc-mark-fg: var(--eds-color-text-on-action);
+    }
+
+    &:has(> input[aria-invalid='true']) {
+      --_oc-border: var(--eds-color-status-danger);
+      --_oc-ring: var(--eds-color-status-danger);
+    }
+
+    &:has(> input:focus-visible) {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: var(--eds-focus-ring-offset);
+    }
+
+    &:has(> input:disabled) {
+      --_oc-bg: var(--eds-color-bg-subtle);
+      --_oc-border: var(--eds-color-border-default);
+      --_oc-ring: transparent;
+      --_oc-title: var(--eds-color-text-muted);
+      --_oc-text: var(--eds-color-text-muted);
+      --_oc-mark-bg: transparent;
+      --_oc-mark-border: var(--eds-color-border-default);
+      --_oc-mark-fg: transparent;
+
+      cursor: not-allowed;
+    }
+
+    /* Desabilitado e marcado: mantém o visto, sem a cor de ação. */
+    &:has(> input:disabled:checked) {
+      --_oc-mark-bg: var(--eds-color-border-strong);
+      --_oc-mark-border: var(--eds-color-border-strong);
+      --_oc-mark-fg: var(--eds-color-bg-subtle);
+    }
+
+    /* O controle nativo cobre o cartão inteiro, transparente. */
+    & > input {
+      position: absolute;
+      inset: 0;
+      inline-size: 100%;
+      block-size: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: inherit;
+    }
+
+    /* Sem .eds-option-card-mark: visto no canto, só quando marcado (não depende de cor). */
+    &:not(:has(> .eds-option-card-mark))::after {
+      content: '';
+      position: absolute;
+      inset-block-start: var(--eds-space-3);
+      inset-inline-end: var(--eds-space-3);
+      inline-size: var(--_oc-mark-size);
+      block-size: var(--_oc-mark-size);
+      border-radius: var(--_oc-mark-radius);
+      background: var(--_oc-mark-bg);
+      color: var(--_oc-mark-fg);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    &:not(:has(> .eds-option-card-mark)):has(> input:checked)::after {
+      opacity: 1;
+      mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l3 3 5-6' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+          center / 70% no-repeat,
+        linear-gradient(currentColor 0 0);
+      mask-composite: exclude;
+    }
+
+    /* Com o visto no canto, reserva o espaço do texto. */
+    &:not(:has(> .eds-option-card-mark)) {
+      padding-inline-end: calc(var(--eds-space-3) * 2 + var(--_oc-mark-size));
+    }
+  }
+
+  /* Ícone decorativo à esquerda: o nome vem do título. */
+  .eds-option-card-icon {
+    display: inline-grid;
+    place-items: center;
+    color: var(--_oc-text);
+
+    & > svg {
+      inline-size: var(--eds-icon-size-lg);
+      block-size: var(--eds-icon-size-lg);
+    }
+  }
+
+  .eds-option-card-text {
+    display: grid;
+    gap: var(--eds-space-0-5);
+    min-inline-size: 0;
+  }
+
+  .eds-option-card-title {
+    color: var(--_oc-title);
+    font-size: var(--eds-font-size-body-lg);
+    font-weight: var(--eds-font-weight-semibold);
+    line-height: var(--eds-line-height-body-lg);
+    overflow-wrap: anywhere;
+  }
+
+  .eds-option-card-description {
+    color: var(--_oc-text);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    overflow-wrap: anywhere;
+  }
+
+  /* Marca de seleção: círculo (radio) ou quadrado (checkbox); o <svg> filho é o visto. */
+  .eds-option-card-mark {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_oc-mark-size);
+    block-size: var(--_oc-mark-size);
+    border: var(--eds-border-width) solid var(--_oc-mark-border);
+    border-radius: var(--_oc-mark-radius);
+    background: var(--_oc-mark-bg);
+    color: var(--_oc-mark-fg);
+
+    & > svg {
+      inline-size: var(--eds-icon-size-sm);
+      block-size: var(--eds-icon-size-sm);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-option-card {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-option-card {
+      --_oc-bg: Canvas;
+      --_oc-border: ButtonText;
+      --_oc-title: CanvasText;
+      --_oc-text: CanvasText;
+      --_oc-mark-border: ButtonText;
+      --_oc-mark-fg: HighlightText;
+
+      forced-color-adjust: none;
+
+      &:has(> input:checked) {
+        --_oc-border: Highlight;
+        --_oc-ring: Highlight;
+        --_oc-mark-bg: Highlight;
+        --_oc-mark-border: Highlight;
+        --_oc-mark-fg: HighlightText;
+
+        outline: var(--eds-border-width-strong) solid Highlight;
+        outline-offset: calc(var(--eds-border-width-strong) * -1);
+      }
+
+      &:has(> input:focus-visible) {
+        outline: var(--eds-focus-ring-width) solid Highlight;
+        outline-offset: var(--eds-focus-ring-offset);
+      }
+
+      &:has(> input:disabled) {
+        --_oc-border: GrayText;
+        --_oc-title: GrayText;
+        --_oc-text: GrayText;
+        --_oc-mark-border: GrayText;
+        --_oc-mark-fg: transparent;
+      }
+
+      &:has(> input:disabled:checked) {
+        --_oc-mark-bg: GrayText;
+        --_oc-mark-fg: Canvas;
+      }
+    }
+  }
+}

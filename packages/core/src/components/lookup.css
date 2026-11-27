@@ -12,6 +12,16 @@
    - Diálogo de busca: abaixo de 768px de viewport ocupa a tela inteira (qualquer .eds-modal que
      contenha .eds-lookup-results). A tabela não rola na horizontal: marque as colunas secundárias com
      .eds-table-hide-narrow (th e td) para escondê-las quando a tabela estiver estreita.
+   - Autocompletar (o JS liga a lista): o campo de código abre uma lista de sugestões
+     com as classes do Combobox, dentro do próprio .eds-lookup:
+       <div class="eds-combobox-popup" popover="manual">
+         <ul class="eds-combobox-listbox" role="listbox" aria-label="Sugestões de cliente">
+           <li class="eds-combobox-option" role="option"><span class="eds-combobox-option-code">0042</span>Cliente Exemplo</li>
+           <li class="eds-combobox-option eds-combobox-option-create" role="option"><svg>…</svg>Cadastrar novo…</li>
+         </ul>
+         <p class="eds-combobox-empty" hidden>…</p><p class="eds-combobox-loading" hidden>…</p>
+       </div>
+     A lista é mais larga que o campo de código (largura mínima abaixo).
    - Tamanhos: .eds-lookup-sm / -lg (alturas dos controles via tokens, logo da densidade). */
 @layer eds.components {
   .eds-lookup {
@@ -78,6 +88,12 @@
     &[data-empty='true'] {
       color: var(--eds-color-text-secondary);
     }
+  }
+
+  /* Sugestões: o popup herda a largura do campo de código (estreito); aqui ganha um mínimo para caber o
+     código e a descrição, sem passar da viewport. */
+  .eds-lookup .eds-combobox-popup {
+    min-inline-size: min(calc(var(--eds-space-9) * 5), calc(100vw - var(--eds-space-4) * 2));
   }
 
   /* Tabela de resultados do diálogo: a descrição quebra linha e o botão "Selecionar" fica à vista

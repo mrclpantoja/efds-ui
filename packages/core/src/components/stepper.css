@@ -17,7 +17,12 @@
      Nunca só por cor: número (upcoming/current), check (complete) e "!" (error) vêm do marcador,
      gerados por CSS (contador). Um <svg> dentro do marcador substitui o glifo gerado.
      O estado dito em voz (concluída, com erro) vai em texto .eds-visually-hidden no rótulo.
+   - "done" é sinônimo de "complete" (mesmo visual).
    - Etapa concluída clicável (voltar): o rótulo é um <button> ou <a> com .eds-stepper-label.
+   - Indicador de seções da página: o rótulo leva um <a class="eds-stepper-link" href="#secao"> (rola até
+     a seção). O JS marca aria-current="step" no link da seção visível e o item assume o estado atual
+     sem data-state; as demais ficam como o autor marcou (done/upcoming). Concluída leva o check do
+     marcador, então a leitura não depende de cor.
    - O <ol> é um container de largura (eds-stepper): abaixo de 36rem a versão horizontal mostra só
      a etapa atual e o .eds-stepper-summary ("Etapa 2 de 4", dentro do item atual). O contêiner
      precisa de largura própria (bloco ou item de grid), não de uma coluna flex que encolhe ao conteúdo. */
@@ -67,7 +72,8 @@
     }
 
     &[data-state='current'],
-    &[aria-current='step'] {
+    &[aria-current='step'],
+    &:has(.eds-stepper-link[aria-current='step']) {
       --_step-marker-bg: var(--eds-color-action-primary);
       --_step-marker-fg: var(--eds-color-text-on-action);
       --_step-marker-border: var(--eds-color-action-primary);
@@ -75,7 +81,8 @@
       --_step-label-weight: var(--eds-font-weight-semibold);
     }
 
-    &[data-state='complete'] {
+    &[data-state='complete'],
+    &[data-state='done'] {
       --_step-marker-bg: var(--eds-color-action-primary-subtle);
       --_step-marker-fg: var(--eds-color-action-primary);
       --_step-marker-border: var(--eds-color-action-primary);
@@ -123,7 +130,8 @@
   }
 
   /* Concluída: check desenhado com bordas (herda a cor do marcador). */
-  .eds-stepper-item[data-state='complete'] > .eds-stepper-marker:not(:has(> svg))::before {
+  :is(.eds-stepper-item[data-state='complete'], .eds-stepper-item[data-state='done'])
+    > .eds-stepper-marker:not(:has(> svg))::before {
     content: '' / '';
     inline-size: 0.3125rem;
     block-size: 0.625rem;
@@ -168,6 +176,26 @@
     &:active {
       color: var(--eds-color-text-primary);
       text-decoration: underline;
+      text-decoration-thickness: calc(var(--eds-border-width) * 2);
+    }
+  }
+
+  /* Link de seção (indicador de página): herda a cor do rótulo, sublinha ao apontar; alvo mínimo. */
+  .eds-stepper-link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--eds-control-height-sm);
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:active {
+      color: var(--eds-color-text-primary);
+      text-decoration: underline;
+    }
+
+    &:active {
       text-decoration-thickness: calc(var(--eds-border-width) * 2);
     }
   }
@@ -233,7 +261,12 @@
     .eds-stepper:not(.eds-stepper-vertical) {
       /* visibility (e não display:none): o item sem caixa não conta no counter e o marcador da
          etapa atual mostraria 1. Fora do fluxo, sem tamanho, fora do foco e da árvore. */
-      & > .eds-stepper-item:not([data-state='current'], [aria-current='step']) {
+      &
+        > .eds-stepper-item:not(
+          [data-state='current'],
+          [aria-current='step'],
+          :has(.eds-stepper-link[aria-current='step'])
+        ) {
         position: absolute;
         inline-size: 0;
         block-size: 0;
@@ -241,7 +274,12 @@
         visibility: hidden;
       }
 
-      & > .eds-stepper-item:is([data-state='current'], [aria-current='step']) {
+      &
+        > .eds-stepper-item:is(
+          [data-state='current'],
+          [aria-current='step'],
+          :has(.eds-stepper-link[aria-current='step'])
+        ) {
         flex: 1 1 auto;
 
         &::after {
@@ -268,13 +306,15 @@
       --_step-line: GrayText;
 
       &[data-state='current'],
-      &[aria-current='step'] {
+      &[aria-current='step'],
+      &:has(.eds-stepper-link[aria-current='step']) {
         --_step-marker-bg: Highlight;
         --_step-marker-fg: HighlightText;
         --_step-marker-border: Highlight;
       }
 
-      &[data-state='complete'] {
+      &[data-state='complete'],
+      &[data-state='done'] {
         --_step-marker-border: Highlight;
         --_step-marker-fg: Highlight;
         --_step-line: Highlight;

@@ -70,7 +70,12 @@ export function usePopupPosition(
       const height = popup.offsetHeight;
       const below = window.innerHeight - rect.bottom;
       const onTop = height > 0 && below < height && rect.top > below;
-      popup.style.setProperty(`--_${prefix}-x`, `${rect.left}px`);
+      // Popup com largura mínima maior que o campo não pode sair da janela.
+      const x =
+        popup.offsetWidth > 0
+          ? Math.max(0, Math.min(rect.left, window.innerWidth - popup.offsetWidth))
+          : rect.left;
+      popup.style.setProperty(`--_${prefix}-x`, `${x}px`);
       popup.style.setProperty(`--_${prefix}-y`, `${onTop ? rect.top : rect.bottom}px`);
       popup.style.setProperty(`--_${prefix}-width`, `${rect.width}px`);
       if (onTop) popup.setAttribute('data-placement', 'top');

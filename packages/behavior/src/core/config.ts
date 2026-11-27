@@ -213,6 +213,14 @@ export interface Messages extends ValidationMessages {
   lookupRetry: string;
   lookupClose: string;
   lookupTitle: string;
+  /** Opção final do autocompletar quando o autor liga `data-eds-lookup-create`. */
+  lookupCreate: string;
+  /** Indicador de seções (`data-eds-stepper-sections`): "{label}" é o nome da seção concluída. */
+  stepperSectionDone: string;
+  /** Texto oculto do item concluído do indicador de seções. */
+  stepperDone: string;
+  /** Resumo do contêiner estreito: "{current}" de "{total}". */
+  stepperSectionSummary: string;
   // Máscaras com validação opcional
   maskInvalidTime: string;
   maskInvalidCompetence: string;
@@ -572,6 +580,10 @@ export const defaultMessages: Messages = {
   lookupRetry: 'Tentar de novo',
   lookupClose: 'Fechar',
   lookupTitle: 'Buscar',
+  lookupCreate: 'Cadastrar novo…',
+  stepperSectionDone: 'Seção {label} concluída.',
+  stepperDone: ' (concluída)',
+  stepperSectionSummary: 'Seção {current} de {total}',
   // Máscaras com validação opcional
   maskInvalidTime: 'Hora inválida. Use hh:mm, de 00:00 a 23:59.',
   maskInvalidCompetence: 'Competência inválida. Use mm/aaaa, com o mês de 01 a 12.',

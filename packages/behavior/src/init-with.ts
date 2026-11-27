@@ -29,6 +29,7 @@ import { filterBarBehavior } from './components/filter-bar';
 import { popoverBehavior } from './components/popover';
 import { tooltipBehavior } from './components/tooltip';
 import { wizardBehavior } from './components/wizard';
+import { stepperSectionsBehavior } from './components/stepper-sections';
 // Estado de envio de formulário
 import { formSubmitBehavior } from './components/form-submit';
 // Onda C (campos)
@@ -90,6 +91,7 @@ export function initWith(
       tooltipBehavior,
       popoverBehavior,
       wizardBehavior,
+      stepperSectionsBehavior,
       filterBarBehavior,
       // Estado de envio de formulário
       formSubmitBehavior,

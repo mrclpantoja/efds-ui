@@ -209,8 +209,20 @@ export { Tooltip } from './components/Tooltip';
 export type { TooltipProps, TooltipPlacement } from './components/Tooltip';
 export { Popover } from './components/Popover';
 export type { PopoverProps, PopoverPlacement } from './components/Popover';
-export { Stepper } from './components/Stepper';
-export type { StepperProps, StepperStep, StepperTexts, StepState } from './components/Stepper';
+export { Stepper, useSectionProgress } from './components/Stepper';
+export type {
+  SectionProgress,
+  SectionProgressOptions,
+  SectionProgressSection,
+  StepperProps,
+  StepperStep,
+  StepperTexts,
+  StepState,
+} from './components/Stepper';
+export { OptionCard, OptionCardGroup } from './components/OptionCard';
+export type { OptionCardGroupProps, OptionCardProps } from './components/OptionCard';
+export { IconDisc } from './components/IconDisc';
+export type { IconDiscProps, IconDiscSize, IconDiscTone } from './components/IconDisc';
 export { Wizard } from './components/Wizard';
 export type { WizardProps, WizardStep, WizardTexts } from './components/Wizard';
 export { Stat, StatGrid } from './components/Stat';
@@ -384,6 +396,8 @@ export type {
   TimelineProps,
   TimelineItem,
   TimelineGroup,
+  TimelineState,
+  TimelineTexts,
   TimelineTone,
 } from './components/Timeline';
 export { NotificationBell } from './components/NotificationBell';

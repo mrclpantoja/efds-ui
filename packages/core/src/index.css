@@ -38,6 +38,7 @@
 @import './components/password.css';
 @import './components/otp.css';
 @import './components/lookup.css';
+@import './components/option-card.css';
 @import './components/copy.css';
 @import './components/secret.css';
 
@@ -56,6 +57,7 @@
 @import './components/command.css';
 @import './components/banner.css';
 @import './components/divider.css';
+@import './components/icon-disc.css';
 
 /* Componentes — Navigation */
 @import './components/navbar.css';

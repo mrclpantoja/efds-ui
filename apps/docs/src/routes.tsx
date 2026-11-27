@@ -92,6 +92,8 @@ import ConditionalPage from './pages/componentes/Conditional';
 import CepPage from './pages/componentes/Cep';
 import InputGroupPage from './pages/componentes/InputGroup';
 import LookupPage from './pages/componentes/Lookup';
+import OptionCardPage from './pages/componentes/OptionCard';
+import IconDiscPage from './pages/componentes/IconDisc';
 import OtpPage from './pages/componentes/Otp';
 import PasswordPage from './pages/componentes/Password';
 // Onda D
@@ -176,6 +178,7 @@ const componentCategory: Record<string, SectionId> = {
       'combobox',
       'multi-select',
       'lookup',
+      'option-card',
       'cep',
       'file-input',
       'file-upload',
@@ -230,6 +233,7 @@ const componentCategory: Record<string, SectionId> = {
       'stat',
       'description-list',
       'timeline',
+      'icon-disc',
       'badge',
       'tag',
       'avatar',
@@ -446,6 +450,18 @@ const allRoutes: readonly DocRoute[] = [
   },
   { path: '/componentes/stat', title: 'Indicador (Stat)', section: 'componentes', page: StatPage },
   { path: '/componentes/input', title: 'Input', section: 'componentes', page: InputPage },
+  {
+    path: '/componentes/option-card',
+    title: 'Cartão de opção',
+    section: 'componentes',
+    page: OptionCardPage,
+  },
+  {
+    path: '/componentes/icon-disc',
+    title: 'Disco de ícone',
+    section: 'componentes',
+    page: IconDiscPage,
+  },
   {
     path: '/componentes/lookup',
     title: 'Lookup (busca por código)',

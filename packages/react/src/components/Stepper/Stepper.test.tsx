@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Stepper } from './Stepper';
+import { useSectionProgress } from './useSectionProgress';
 
 const steps = [
   { label: 'Dados' },
@@ -67,5 +68,71 @@ describe('Stepper', () => {
     );
     expect(screen.getByText('Step 2 of 4')).toBeInTheDocument();
     expect(screen.getByText('(done)', { exact: false })).toBeInTheDocument();
+  });
+});
+
+describe('Stepper: indicador de seções', () => {
+  const sections = [
+    { label: 'Dados', href: '#sec-dados', state: 'done' as const },
+    { label: 'Valores', href: '#sec-valores' },
+    { label: 'Revisão', href: '#sec-revisao' },
+  ];
+
+  it('rótulos viram links; aria-current no link da seção lida e resumo de seção', () => {
+    render(<Stepper aria-label="Seções" steps={sections} current={1} />);
+    const link = screen.getByRole('link', { name: 'Valores' });
+    expect(link).toHaveClass('eds-stepper-link');
+    expect(link).toHaveAttribute('href', '#sec-valores');
+    expect(link).toHaveAttribute('aria-current', 'step');
+    expect(screen.getByRole('link', { name: /Dados/ })).toHaveTextContent('(concluída)');
+    expect(document.querySelector('.eds-stepper-summary')).toHaveTextContent('Seção 2 de 3');
+    expect(document.querySelector('li[aria-current]')).toBeNull();
+  });
+
+  it('clicar no link leva o foco ao título da seção', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <Stepper aria-label="Seções" steps={sections} current={0} />
+        <section id="sec-valores">
+          <h2>Valores</h2>
+        </section>
+      </>,
+    );
+    await user.click(screen.getByRole('link', { name: 'Valores' }));
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Valores' })).toHaveFocus());
+  });
+});
+
+describe('useSectionProgress', () => {
+  function Demo() {
+    const { current, states } = useSectionProgress([
+      { id: 's1', label: 'Dados' },
+      { id: 's2', label: 'Contato' },
+    ]);
+    return (
+      <>
+        <p data-testid="out">{`${current}:${states.join(',')}`}</p>
+        <section id="s1">
+          <h2>Dados</h2>
+          <input aria-label="Nome" required />
+        </section>
+        <section id="s2">
+          <h2>Contato</h2>
+          <input aria-label="Fone" />
+        </section>
+      </>
+    );
+  }
+
+  it('conclui a seção quando o obrigatório é preenchido e anuncia uma vez', async () => {
+    const user = userEvent.setup();
+    render(<Demo />);
+    expect(screen.getByTestId('out').textContent).not.toContain('done');
+    await user.type(screen.getByLabelText('Nome'), 'Maria Exemplo');
+    await waitFor(() => expect(screen.getByTestId('out')).toHaveTextContent(/:done,/));
+    await waitFor(() =>
+      expect(document.querySelector('[role="status"]')).toHaveTextContent('Seção Dados concluída.'),
+    );
   });
 });

@@ -11,6 +11,12 @@ import {
   type ReactNode,
 } from 'react';
 import { useAnnouncer } from '../../internal/announcer';
+import {
+  LOADING_STATUS_DELAY_MS,
+  STATUS_DELAY_MS,
+  usePopupPosition,
+  useScrollActiveIntoView,
+} from '../../internal/combobox-shared';
 import { SearchGlyph } from '../../internal/glyphs-c1';
 import { mergeRefs } from '../../internal/refs-d';
 import { cx } from '../../utils/cx';
@@ -18,6 +24,7 @@ import { mergeTexts } from '../../utils/texts';
 import { Button } from '../Button';
 import { Input, type InputProps, type InputSize } from '../Input';
 import { Modal } from '../Modal';
+import { Spinner } from '../Spinner';
 
 export interface LookupItem {
   code: string;
@@ -52,6 +59,8 @@ export interface LookupTexts {
   none: string;
   results: (count: number) => string;
   close: string;
+  /** Opção final do autocompletar quando há `onCreate`. */
+  create: string;
 }
 
 const defaultTexts: LookupTexts = {
@@ -70,6 +79,7 @@ const defaultTexts: LookupTexts = {
   results: (count) =>
     count === 1 ? '1 resultado disponível.' : `${count} resultados disponíveis.`,
   close: 'Fechar',
+  create: 'Cadastrar novo…',
 };
 
 export interface LookupProps extends Omit<
@@ -104,9 +114,23 @@ export interface LookupProps extends Omit<
   dialogTitle?: ReactNode;
   size?: InputSize;
   texts?: Partial<LookupTexts>;
+  /**
+   * Autocompletar por código ou nome no próprio campo (APG combobox "list autocomplete"), usando
+   * a mesma `search` do diálogo, que segue para a busca avançada. Padrão: `true`.
+   */
+  autocomplete?: boolean;
+  /**
+   * Liga a opção final "Cadastrar novo…" do autocompletar (quando nada é encontrado). Recebe o
+   * texto digitado; abra o seu cadastro e devolva o resultado em `value`/`onChange`.
+   */
+  onCreate?: (text: string) => void;
+  /** Mostra a opção de cadastrar também quando há resultados. */
+  createAlways?: boolean;
 }
 
 const SEARCH_DEBOUNCE_MS = 250;
+/** Teto de opções no autocompletar (a busca avançada do diálogo não tem teto). */
+const MAX_SUGGESTIONS = 50;
 
 /**
  * Campo de código com a descrição ao lado e a busca num modal. Ao sair do campo o código é
@@ -126,6 +150,9 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
     dialogTitle,
     size = 'md',
     texts: textsProp,
+    autocomplete = true,
+    onCreate,
+    createAlways = false,
     className,
     disabled,
     readOnly,
@@ -158,6 +185,30 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
     },
     [resolve, search],
   );
+
+  // ---- Autocompletar ------------------------------------------------------------------------
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const [suggestions, setSuggestions] = useState<LookupItem[]>([]);
+  const [acOpen, setAcOpen] = useState(false);
+  const [acActive, setAcActive] = useState(-1);
+  const [acLoading, setAcLoading] = useState(false);
+  const [acError, setAcError] = useState(false);
+  const [acStatus, setAcStatus] = useState('');
+  const acRun = useRef<AbortController | null>(null);
+  const acTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const searchLatest = useRef(search);
+  searchLatest.current = search;
+
+  const stopAuto = useCallback(() => {
+    if (acTimer.current) clearTimeout(acTimer.current);
+    acTimer.current = null;
+    acRun.current?.abort();
+    acRun.current = null;
+    setAcLoading(false);
+    setAcOpen(false);
+    setAcActive(-1);
+  }, []);
 
   const applyCode = useCallback(
     async (next: string, notify: boolean) => {
@@ -205,15 +256,153 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => setCode(event.target.value);
+  const startAuto = (text: string) => {
+    if (acTimer.current) clearTimeout(acTimer.current);
+    acRun.current?.abort();
+    if (!autocomplete || text.trim() === '') {
+      stopAuto();
+      return;
+    }
+    acTimer.current = setTimeout(() => {
+      acTimer.current = null;
+      const controller = new AbortController();
+      acRun.current = controller;
+      setAcError(false);
+      // Resposta lenta: mostra "Buscando…" no popup (a rápida não pisca).
+      const slow = setTimeout(() => {
+        if (acRun.current === controller) {
+          setAcLoading(true);
+          setAcOpen(true);
+        }
+      }, LOADING_STATUS_DELAY_MS);
+      searchLatest
+        .current(text.trim(), controller.signal)
+        .then((found) => {
+          if (controller.signal.aborted) return;
+          setSuggestions(found.slice(0, MAX_SUGGESTIONS));
+          setAcOpen(true);
+          setAcActive(-1);
+        })
+        .catch(() => {
+          if (controller.signal.aborted) return;
+          setSuggestions([]);
+          setAcError(true);
+          setAcOpen(true);
+        })
+        .finally(() => {
+          clearTimeout(slow);
+          if (acRun.current === controller) {
+            acRun.current = null;
+            setAcLoading(false);
+          }
+        });
+    }, SEARCH_DEBOUNCE_MS);
+  };
+
+  const showCreate =
+    onCreate != null && code.trim() !== '' && (createAlways || suggestions.length === 0);
+  const optionCount = suggestions.length + (showCreate ? 1 : 0);
+  const showEmpty = acOpen && !acLoading && !acError && optionCount === 0;
+  const expanded = acOpen && (optionCount > 0 || acLoading || acError || showEmpty);
+  const optionId = (i: number) => `${uid}-opt-${i}`;
+  const activeIndex = acActive >= 0 && acActive < optionCount ? acActive : -1;
+  usePopupPosition(popupRef, rootRef, expanded, `${optionCount}-${acLoading}`);
+  useScrollActiveIntoView(activeIndex >= 0 ? optionId(activeIndex) : undefined);
+  useEffect(() => () => stopAuto(), [stopAuto]);
+
+  // Status para leitor de tela: depois de uma pausa, com a contagem (setas não anunciam).
+  useEffect(() => {
+    if (!expanded || acLoading) {
+      setAcStatus(acLoading ? t.loading : '');
+      return undefined;
+    }
+    const timer = setTimeout(
+      () =>
+        setAcStatus(
+          acError ? t.error : suggestions.length === 0 ? t.none : t.results(suggestions.length),
+        ),
+      STATUS_DELAY_MS,
+    );
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expanded, acLoading, acError, suggestions]);
+
+  const chooseSuggestion = (index: number) => {
+    const item = suggestions[index];
+    if (!item) {
+      // Última posição: a opção de cadastrar.
+      if (showCreate) {
+        const text = code.trim();
+        stopAuto();
+        // O texto vai ao cadastro: sair do campo não deve acusar "código não encontrado".
+        resolvedFor.current = code;
+        onCreate?.(text);
+      }
+      return;
+    }
+    stopAuto();
+    setCode(item.code);
+    resolvedFor.current = item.code;
+    setDescription(item.description);
+    setErrorText(null);
+    onChange?.(item.code, item);
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setCode(event.target.value);
+    startAuto(event.target.value);
+  };
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     onBlur?.(event);
+    stopAuto();
     if (code !== resolvedFor.current && (resolvedFor.current !== null || code !== '')) {
       void applyCode(code, true);
     }
   };
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     onKeyDown?.(event);
+    if (event.defaultPrevented) return;
+    if (autocomplete && !readOnly && !event.nativeEvent.isComposing) {
+      switch (event.key) {
+        case 'ArrowDown':
+        case 'ArrowUp': {
+          event.preventDefault();
+          const down = event.key === 'ArrowDown';
+          if (!expanded) {
+            if (code.trim() !== '' && !acLoading) startAuto(code);
+          } else if (event.altKey && !down) stopAuto();
+          else if (!event.altKey && !acLoading && optionCount > 0)
+            setAcActive(
+              down
+                ? Math.min(activeIndex + 1, optionCount - 1)
+                : activeIndex <= 0
+                  ? 0
+                  : activeIndex - 1,
+            );
+          return;
+        }
+        case 'Enter':
+          if (expanded && acLoading) {
+            event.preventDefault();
+            return;
+          }
+          if (expanded && activeIndex >= 0) {
+            event.preventDefault();
+            chooseSuggestion(activeIndex);
+            return;
+          }
+          if (expanded) stopAuto();
+          break;
+        case 'Escape':
+          if (expanded) {
+            event.preventDefault();
+            event.stopPropagation();
+            stopAuto();
+          }
+          return;
+        default:
+      }
+    }
     // Enter confirma o código (e só envia o formulário quando já está resolvido).
     if (event.key === 'Enter' && !event.defaultPrevented && code !== resolvedFor.current) {
       event.preventDefault();
@@ -298,9 +487,22 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
 
   return (
     <>
-      <div className={cx('eds-lookup', size !== 'md' && `eds-lookup-${size}`, className)}>
+      <div
+        ref={rootRef}
+        className={cx('eds-lookup', size !== 'md' && `eds-lookup-${size}`, className)}
+      >
         <Input
           {...rest}
+          {...(autocomplete
+            ? {
+                role: 'combobox',
+                'aria-autocomplete': 'list' as const,
+                'aria-expanded': expanded,
+                'aria-controls': `${uid}-list`,
+                'aria-activedescendant':
+                  expanded && activeIndex >= 0 ? optionId(activeIndex) : undefined,
+              }
+            : null)}
           ref={merged}
           className="eds-lookup-code"
           autoComplete="off"
@@ -336,6 +538,70 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
         >
           {busy ? t.loading : description === '' ? '—' : description}
         </output>
+        {autocomplete && (
+          <>
+            <div
+              ref={popupRef}
+              className="eds-combobox-popup"
+              popover="manual"
+              aria-busy={acLoading || undefined}
+            >
+              <ul
+                id={`${uid}-list`}
+                className="eds-combobox-listbox"
+                role="listbox"
+                aria-label={rest['aria-label'] ?? buttonLabel ?? t.title}
+                hidden={optionCount === 0}
+              >
+                {suggestions.map((item, i) => (
+                  // Teclado: tratado no input (aria-activedescendant); a opção só recebe o clique.
+                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                  <li
+                    key={item.code}
+                    id={optionId(i)}
+                    className="eds-combobox-option"
+                    role="option"
+                    aria-selected={i === activeIndex}
+                    data-value={item.code}
+                    onPointerDown={(event) => event.preventDefault()}
+                    onPointerMove={() => {
+                      if (acActive !== i) setAcActive(i);
+                    }}
+                    onClick={() => chooseSuggestion(i)}
+                  >
+                    <span className="eds-combobox-option-code">{item.code}</span>
+                    <span className="eds-combobox-option-text">{item.description}</span>
+                  </li>
+                ))}
+                {showCreate && (
+                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                  <li
+                    id={optionId(suggestions.length)}
+                    className="eds-combobox-option eds-combobox-option-create"
+                    role="option"
+                    aria-selected={suggestions.length === activeIndex}
+                    onPointerDown={(event) => event.preventDefault()}
+                    onPointerMove={() => {
+                      if (acActive !== suggestions.length) setAcActive(suggestions.length);
+                    }}
+                    onClick={() => chooseSuggestion(suggestions.length)}
+                  >
+                    {t.create}
+                  </li>
+                )}
+              </ul>
+              <p className="eds-combobox-empty" hidden={!(showEmpty || acError)}>
+                {acError ? t.error : t.none}
+              </p>
+              <p className="eds-combobox-loading" hidden={!acLoading}>
+                <Spinner size="sm" decorative /> {t.loading}
+              </p>
+            </div>
+            <span className="eds-visually-hidden" role="status">
+              {acStatus}
+            </span>
+          </>
+        )}
       </div>
       {errorText !== null && (
         <p className="eds-error" id={errId}>

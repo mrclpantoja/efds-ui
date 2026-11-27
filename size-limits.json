@@ -1,8 +1,8 @@
 {
   "_comentario": "Limites de gzip (bytes) por arquivo de dist/ e total por pacote. Gerado por \"node scripts/check-size.ts --write\" (tamanho atual + 10%). Subir um limite é decisão de revisão: explique no PR.",
   "limites": {
-    "core/index.css": 41960,
-    "core (total)": 124540,
+    "core/index.css": 46470,
+    "core (total)": 137360,
     "themes/index.css": 1230,
     "themes (total)": 4400,
     "behavior/eds-behavior.js": 120680,

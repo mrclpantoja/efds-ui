@@ -41,6 +41,8 @@ import { initFilterBar } from './components/filter-bar';
 import { initPopover } from './components/popover';
 import { initTooltip } from './components/tooltip';
 import { initWizard } from './components/wizard';
+import { initStepperSections } from './components/stepper-sections';
+import { lookupController } from './components/lookup';
 // Estado de envio de formulário
 import { initFormSubmit, setSubmitConfig, type SubmitOptions } from './components/form-submit';
 // Onda C (campos)
@@ -119,6 +121,9 @@ export { avatarInitials, avatarTone } from './components/avatar';
 export type { SortCriterion, SortDirection } from './components/table';
 // Table avançada: controlador (`EDS.table(el)`) e consulta
 export { tableController, tableController as table };
+// Lookup: controle programático (`EDS.lookup(el).setValue(...)`)
+export { lookupController, lookupController as lookup };
+export type { LookupController } from './components/lookup';
 export type {
   TableController,
   TableState,
@@ -162,6 +167,7 @@ export {
   initPopover,
   initTooltip,
   initWizard,
+  initStepperSections,
   // Onda C (campos)
   initLookup,
   initNumber,

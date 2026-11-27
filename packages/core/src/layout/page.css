@@ -6,7 +6,8 @@
  *       <nav class="eds-breadcrumb">…</nav>
  *       <div class="eds-page-heading">
  *         <h1 class="eds-page-title">Pedidos</h1>   (ícone opcional antes do texto: <svg aria-hidden="true"> ou
- *                                                    <span class="eds-page-title-icon" aria-hidden="true">)
+ *                                                    <span class="eds-page-title-icon" aria-hidden="true">; ou um
+ *                                                    <span class="eds-icon-disc"> com o texto num <span>)
  *         <p class="eds-page-description">…</p>
  *         <div class="eds-page-meta">…badges…</div>        (opcional)
  *       </div>
@@ -77,7 +78,7 @@
 
   /* Flex só quando há ícone: sem ele o título continua um bloco comum (<em>, <span> e links no
      texto seguem em linha). Com ícone, o texto com marcação interna deve vir num único <span>. */
-  .eds-page-title:has(> .eds-page-title-icon, > svg) {
+  .eds-page-title:has(> .eds-page-title-icon, > svg, > .eds-icon-disc) {
     display: flex;
     gap: var(--eds-space-3);
     align-items: flex-start;
@@ -98,6 +99,11 @@
       inline-size: 100%;
       block-size: 100%;
     }
+  }
+
+  /* Disco de ícone antes do título: centrado na altura do bloco do título. */
+  .eds-page-title:has(> .eds-icon-disc) {
+    align-items: center;
   }
 
   .eds-page-description {

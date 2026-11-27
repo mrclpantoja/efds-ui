@@ -60,4 +60,40 @@ describe('Timeline', () => {
       container.querySelectorAll('.eds-timeline-group > ol.eds-timeline-compact'),
     ).toHaveLength(2);
   });
+
+  it('horizontal: classe, rolagem pelo teclado (tabIndex e nome) e estado por item', () => {
+    render(
+      <Timeline
+        orientation="horizontal"
+        items={[
+          { id: 'a', title: 'Parcela 1', state: 'done' },
+          { id: 'b', title: 'Parcela 2', state: 'current' },
+        ]}
+      />,
+    );
+    const list = screen.getByRole('list', { name: 'Linha do tempo' });
+    expect(list).toHaveClass('eds-timeline', 'eds-timeline-horizontal');
+    expect(list).toHaveAttribute('tabindex', '0');
+    const rows = within(list).getAllByRole('listitem');
+    expect(rows.map((r) => r.getAttribute('data-state'))).toEqual(['done', 'current']);
+  });
+
+  it('horizontal: o aria-label do autor prevalece; vertical não ganha tabindex', () => {
+    const { rerender } = render(
+      <Timeline orientation="horizontal" aria-label="Vencimentos" items={items} />,
+    );
+    expect(screen.getByRole('list', { name: 'Vencimentos' })).toHaveAttribute('tabindex', '0');
+    rerender(<Timeline aria-label="Histórico" items={items} />);
+    expect(screen.getByRole('list', { name: 'Histórico' })).not.toHaveAttribute('tabindex');
+  });
+
+  it('horizontal com narrow="scroll" mantém a linha (classe eds-timeline-scroll)', () => {
+    render(<Timeline orientation="horizontal" narrow="scroll" items={items} />);
+    expect(screen.getByRole('list', { name: 'Linha do tempo' })).toHaveClass('eds-timeline-scroll');
+  });
+
+  it('narrow não vale na vertical', () => {
+    const { container } = render(<Timeline narrow="scroll" items={items} />);
+    expect(container.querySelector('ol')).not.toHaveClass('eds-timeline-scroll');
+  });
 });

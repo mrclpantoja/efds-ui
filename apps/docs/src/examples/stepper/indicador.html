@@ -1,0 +1,41 @@
+<!-- Behavior: nav/ol com data-eds-stepper-sections. Cada rótulo leva um <a class="eds-stepper-link"> para a
+     âncora da seção; o JS marca aria-current="step" no link da seção lida (IntersectionObserver, sem rolar
+     sozinho), põe data-state="done" quando a seção está concluída (nenhum campo inválido e algum obrigatório
+     ou preenchido), anuncia "Seção X concluída." uma vez e leva o foco ao título ao clicar no link.
+     done e complete têm o mesmo visual (check no marcador, não só cor). Contêiner estreito (< 36rem): só a
+     etapa atual + .eds-stepper-summary (o JS escreve "Seção N de M"). -->
+<ol class="eds-stepper" aria-label="Seções do lançamento" data-eds-stepper-sections>
+  <li class="eds-stepper-item" data-state="upcoming">
+    <span class="eds-stepper-marker" aria-hidden="true"></span>
+    <span class="eds-stepper-label"><a class="eds-stepper-link" href="#ind-dados">Dados</a></span>
+  </li>
+  <li class="eds-stepper-item" data-state="upcoming">
+    <span class="eds-stepper-marker" aria-hidden="true"></span>
+    <span class="eds-stepper-label"><a class="eds-stepper-link" href="#ind-valores">Valores</a></span>
+  </li>
+  <li class="eds-stepper-item" data-state="upcoming">
+    <span class="eds-stepper-marker" aria-hidden="true"></span>
+    <span class="eds-stepper-label"><a class="eds-stepper-link" href="#ind-revisao">Revisão</a></span>
+  </li>
+</ol>
+
+<form class="eds-stack eds-gap-6" novalidate>
+  <fieldset class="eds-fieldset" id="ind-dados">
+    <legend class="eds-legend">Dados</legend>
+    <div class="eds-field">
+      <label class="eds-label" for="ind-nome">Fornecedor <span aria-hidden="true">*</span></label>
+      <input class="eds-input" id="ind-nome" required autocomplete="off" />
+    </div>
+  </fieldset>
+  <fieldset class="eds-fieldset" id="ind-valores">
+    <legend class="eds-legend">Valores</legend>
+    <div class="eds-field">
+      <label class="eds-label" for="ind-valor">Valor <span aria-hidden="true">*</span></label>
+      <input class="eds-input" id="ind-valor" required inputmode="decimal" autocomplete="off" />
+    </div>
+  </fieldset>
+  <fieldset class="eds-fieldset" id="ind-revisao">
+    <legend class="eds-legend">Revisão</legend>
+    <label class="eds-check"><input type="checkbox" class="eds-checkbox" required /> Conferi os dados</label>
+  </fieldset>
+</form>

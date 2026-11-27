@@ -107,7 +107,11 @@ const componentDescriptions: Record<string, string> = {
   stat: 'Indicador (card de KPI) para dashboards, com tendência e status, em HTML, CSS e React.',
   input:
     'Campo de texto (input) com estados de erro, sucesso e somente leitura, em HTML, CSS e React.',
-  lookup: 'Lookup: campo de código com descrição e busca em modal, comum em ERPs, em HTML e React.',
+  lookup:
+    'Lookup: campo de código com autocompletar por código ou nome, descrição e busca em modal, em HTML e React.',
+  'option-card':
+    'Cartão de opção: rádio e caixa de seleção com título e descrição, só CSS e React.',
+  'icon-disc': 'Disco de ícone decorativo com tons e tamanhos, em HTML, CSS e React.',
   modal:
     'Modal (janela de diálogo) acessível com <dialog> nativo, foco preso e Esc, em HTML, CSS e React.',
   'multi-select':
@@ -131,7 +135,8 @@ const componentDescriptions: Record<string, string> = {
   pagination: 'Paginação acessível para tabelas e listas, em HTML, CSS e React.',
   'empty-state':
     'Estado vazio (empty state) para tabelas e listas sem resultado, em HTML, CSS e React.',
-  stepper: 'Stepper (etapas) e wizard de formulário com validação por etapa, em HTML e React.',
+  stepper:
+    'Stepper (etapas), indicador de seções de página longa e wizard com validação por etapa, em HTML e React.',
   progress: 'Barra de progresso acessível com <progress> nativo, em HTML, CSS e React.',
   'error-summary':
     'Resumo de erros do formulário com links que levam o foco ao campo inválido (WCAG 3.3.1 e 3.3.3), em HTML, CSS e React.',
@@ -139,7 +144,8 @@ const componentDescriptions: Record<string, string> = {
     'Estado de envio de formulário: bloqueia envio duplo e mostra enviando, salvo ou falhou no botão, em HTML e React.',
   'error-state': 'Estado de erro com botão de tentar de novo, em HTML, CSS e React.',
   copy: 'Botão de copiar para a área de transferência e campo de segredo (mostrar e ocultar), em HTML e React.',
-  timeline: 'Timeline (linha do tempo) de eventos e histórico, em HTML, CSS e React.',
+  timeline:
+    'Timeline (linha do tempo) vertical ou horizontal de eventos e etapas, em HTML, CSS e React.',
   notifications: 'Sino de notificações com contador e lista em popover, em HTML e React.',
   'dirty-guard':
     'Aviso de alterações não salvas ao sair da página ou do formulário, em HTML e React.',

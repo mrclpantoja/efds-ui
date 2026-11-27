@@ -7,6 +7,9 @@ import { UseCases } from '../../components/UseCases';
 import Agrupada from '../../examples/timeline/agrupada';
 import agrupadaHtml from '../../examples/timeline/agrupada.html?raw';
 import agrupadaSource from '../../examples/timeline/agrupada.tsx?raw';
+import Horizontal from '../../examples/timeline/horizontal';
+import horizontalHtml from '../../examples/timeline/horizontal.html?raw';
+import horizontalSource from '../../examples/timeline/horizontal.tsx?raw';
 import Basico from '../../examples/timeline/basico';
 import basicoHtml from '../../examples/timeline/basico.html?raw';
 import basicoSource from '../../examples/timeline/basico.tsx?raw';
@@ -43,6 +46,12 @@ export default function TimelinePage() {
           html={agrupadaHtml}
           react={{ Component: Agrupada, source: agrupadaSource }}
         />
+        <Example
+          title="Horizontal, com andamento"
+          description="Itens lado a lado, com o fio entre os marcadores; rola no próprio contêiner e, abaixo de 30rem, volta a ser vertical. data-state (done, current, upcoming) mostra visto, anel ou tracejado e o estado vai também em texto oculto. Com muitos itens, a lista recebe tabindex e nome para rolar pelo teclado (o React já faz isso)."
+          html={horizontalHtml}
+          react={{ Component: Horizontal, source: horizontalSource }}
+        />
       </Section>
 
       <Section title="HTML puro">
@@ -62,7 +71,8 @@ export default function TimelinePage() {
             {
               name: 'items',
               type: 'TimelineItem[]',
-              description: 'id, title, time, dateTime, text, actor, tone, icon.',
+              description:
+                'id, title, time, dateTime, text, actor, tone, icon, state (done, current, upcoming).',
             },
             {
               name: 'groups',
@@ -70,6 +80,25 @@ export default function TimelinePage() {
               description: 'No lugar de items: agrupa, com um cabeçalho por grupo.',
             },
             { name: 'compact', type: 'boolean', description: 'Variante compacta.' },
+            {
+              name: 'orientation',
+              type: "'vertical' | 'horizontal'",
+              default: "'vertical'",
+              description:
+                'Horizontal: itens lado a lado. O <ol> ganha tabIndex 0 e aria-label (texts.label ou o seu) para rolar pelo teclado.',
+            },
+            {
+              name: 'narrow',
+              type: "'stack' | 'scroll'",
+              default: "'stack'",
+              description:
+                'Só na horizontal: em largura estreita, stack volta a ser vertical e scroll mantém a linha e rola.',
+            },
+            {
+              name: 'texts',
+              type: 'Partial<TimelineTexts>',
+              description: 'label: nome da lista horizontal quando não há aria-label.',
+            },
             {
               name: 'headingLevel',
               type: '2 | 3 | 4 | 5 | 6',
@@ -86,6 +115,19 @@ export default function TimelinePage() {
           rows={[
             { name: '.eds-timeline', effect: 'A lista ordenada.' },
             { name: '.eds-timeline-compact', effect: 'Menos respiro.' },
+            {
+              name: '.eds-timeline-horizontal',
+              effect: 'Itens lado a lado; rola no contêiner e vira vertical em largura estreita.',
+            },
+            {
+              name: '.eds-timeline-scroll',
+              effect:
+                'Com a horizontal: mantém a linha em largura estreita e rola (parcelas, meses).',
+            },
+            {
+              name: '.eds-timeline-item[data-state]',
+              effect: 'done, current ou upcoming: visto, anel ou tracejado (também na vertical).',
+            },
             {
               name: '.eds-timeline-item[data-tone]',
               effect: 'Evento; tom accent, info, success, warning ou danger.',

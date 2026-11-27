@@ -1,0 +1,62 @@
+<!-- Só CSS: o controle nativo (radio ou checkbox) é filho direto do label e cobre o cartão; o estado vem
+     de :checked, :focus-visible, :disabled e aria-invalid. Ícone à esquerda (.eds-option-card-icon) e marca (.eds-option-card-mark) opcionais; sem
+     ela o CSS desenha o visto no canto. Grupo: .eds-option-cards (colunas automáticas) num fieldset. -->
+<div class="eds-stack eds-gap-6">
+  <fieldset class="eds-fieldset">
+    <legend class="eds-legend">Tipo de lançamento</legend>
+    <div class="eds-option-cards">
+      <label class="eds-option-card">
+        <input type="radio" name="op-tipo" value="pagar" checked />
+        <span class="eds-option-card-icon" aria-hidden="true"><span class="eds-icon-disc" data-tone="warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" /></svg></span></span>
+        <span class="eds-option-card-text">
+          <span class="eds-option-card-title">A pagar</span>
+          <span class="eds-option-card-description">Despesas, fornecedores e contas.</span>
+        </span>
+        <span class="eds-option-card-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span>
+      </label>
+      <label class="eds-option-card">
+        <input type="radio" name="op-tipo" value="receber" />
+        <span class="eds-option-card-icon" aria-hidden="true"><span class="eds-icon-disc" data-tone="success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg></span></span>
+        <span class="eds-option-card-text">
+          <span class="eds-option-card-title">A receber</span>
+          <span class="eds-option-card-description">Vendas, clientes e recebimentos.</span>
+        </span>
+        <span class="eds-option-card-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span>
+      </label>
+      <label class="eds-option-card">
+        <input type="radio" name="op-tipo" value="transferencia" disabled />
+        <span class="eds-option-card-text">
+          <span class="eds-option-card-title">Transferência</span>
+          <span class="eds-option-card-description">Indisponível neste perfil.</span>
+        </span>
+        <span class="eds-option-card-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></span>
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset class="eds-fieldset">
+    <legend class="eds-legend">Canais de aviso</legend>
+    <div class="eds-option-cards">
+      <label class="eds-option-card">
+        <input type="checkbox" name="op-canal" value="email" aria-invalid="true" aria-describedby="op-canal-erro" />
+        <span class="eds-option-card-text">
+          <span class="eds-option-card-title">E-mail</span>
+        </span>
+      </label>
+      <label class="eds-option-card">
+        <input type="checkbox" name="op-canal" value="sms" aria-invalid="true" aria-describedby="op-canal-erro" />
+        <span class="eds-option-card-text">
+          <span class="eds-option-card-title">Mensagem de texto</span>
+          <span class="eds-option-card-description">Só para avisos urgentes.</span>
+        </span>
+      </label>
+      <label class="eds-option-card">
+        <input type="checkbox" name="op-canal" value="app" aria-invalid="true" aria-describedby="op-canal-erro" />
+        <span class="eds-option-card-text">
+          <span class="eds-option-card-title">Aplicativo</span>
+        </span>
+      </label>
+    </div>
+    <p class="eds-error" id="op-canal-erro">Escolha ao menos um canal.</p>
+  </fieldset>
+</div>

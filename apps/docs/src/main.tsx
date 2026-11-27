@@ -9,6 +9,7 @@ import {
   configure,
   confirm,
   loader,
+  lookup,
   prompt,
   submitState,
   table,
@@ -34,6 +35,7 @@ configure({ loader: { mode: 'manual' }, cepUrl: '/mock/cep/{cep}' });
   prompt,
   submitState,
   table,
+  lookup,
 };
 
 installRouter();

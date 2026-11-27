@@ -1,13 +1,20 @@
 import { forwardRef, type OlHTMLAttributes } from 'react';
 import { cx } from '../../utils/cx';
+import { focusSectionTitle } from '../../internal/sections';
 import { mergeTexts } from '../../utils/texts';
 
-export type StepState = 'complete' | 'current' | 'upcoming' | 'error';
+/** `done` e sinônimo visual de `complete` (usado pelo indicador de seções). */
+export type StepState = 'complete' | 'done' | 'current' | 'upcoming' | 'error';
 
 export interface StepperStep {
   label: string;
   /** Sobrescreve o estado derivado de `current` (ex.: `error`). */
   state?: StepState;
+  /**
+   * Indicador de seções: o rótulo vira um link para a âncora (`#secao`) e o clique leva o foco ao
+   * título dela. Com `href` em alguma etapa, o `Stepper` passa ao modo indicador.
+   */
+  href?: string;
 }
 
 export interface StepperTexts {
@@ -17,19 +24,25 @@ export interface StepperTexts {
   error: string;
   /** Resumo do contêiner estreito: "Etapa 2 de 4". */
   summary: (current: number, total: number) => string;
+  /** Resumo do contêiner estreito no modo indicador de seções: "Seção 2 de 4". */
+  sectionSummary: (current: number, total: number) => string;
 }
 
 export const defaultStepperTexts: StepperTexts = {
   complete: ' (concluída)',
   error: ' (com erro)',
   summary: (current, total) => `Etapa ${current} de ${total}`,
+  sectionSummary: (current, total) => `Seção ${current} de ${total}`,
 };
 
 export interface StepperProps extends Omit<OlHTMLAttributes<HTMLOListElement>, 'children'> {
   /** Nome do indicador de progresso. */
   'aria-label': string;
   steps: readonly StepperStep[];
-  /** Índice (a partir de 0) da etapa atual. Antes dela: concluídas; depois: futuras. */
+  /**
+   * Índice (a partir de 0) da etapa atual. Antes dela: concluídas; depois: futuras. No modo
+   * indicador de seções, é a seção lida e os estados vêm de `state` (ver `useSectionProgress`).
+   */
   current: number;
   vertical?: boolean;
   /**
@@ -52,6 +65,7 @@ export const Stepper = forwardRef<HTMLOListElement, StepperProps>(function Stepp
 ) {
   const t = mergeTexts(defaultStepperTexts, texts);
   const states = stepStates(steps, current);
+  const indicator = steps.some((step) => step.href !== undefined);
   return (
     <ol
       {...rest}
@@ -61,8 +75,45 @@ export const Stepper = forwardRef<HTMLOListElement, StepperProps>(function Stepp
       {steps.map((step, i) => {
         const state = states[i] ?? 'upcoming';
         const isCurrent = i === current;
-        const hidden = state === 'complete' ? t.complete : state === 'error' ? t.error : null;
+        const hidden =
+          state === 'complete' || state === 'done'
+            ? t.complete
+            : state === 'error'
+              ? t.error
+              : null;
         const suffix = hidden ? <span className="eds-visually-hidden">{hidden}</span> : null;
+        if (indicator) {
+          return (
+            <li key={i} className="eds-stepper-item" data-state={state}>
+              <span className="eds-stepper-marker" aria-hidden="true" />
+              <span className="eds-stepper-label">
+                {step.href !== undefined ? (
+                  <a
+                    className="eds-stepper-link"
+                    href={step.href}
+                    aria-current={isCurrent ? 'step' : undefined}
+                    onClick={() => {
+                      const id = step.href?.startsWith('#') ? step.href.slice(1) : '';
+                      const section = id ? document.getElementById(decodeURIComponent(id)) : null;
+                      if (section) focusSectionTitle(section);
+                    }}
+                  >
+                    {step.label}
+                    {suffix}
+                  </a>
+                ) : (
+                  <>
+                    {step.label}
+                    {suffix}
+                  </>
+                )}
+              </span>
+              {isCurrent && (
+                <span className="eds-stepper-summary">{t.sectionSummary(i + 1, steps.length)}</span>
+              )}
+            </li>
+          );
+        }
         return (
           <li
             key={i}

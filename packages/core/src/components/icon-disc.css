@@ -1,0 +1,82 @@
+/* Disco de ícone: o ícone sobre um fundo tonal suave (cabeçalho de página, cartão de tipo, seção).
+   Decorativo: o <svg> filho leva aria-hidden e o significado vem do texto ao lado.
+   Markup:
+     <span class="eds-icon-disc [eds-icon-disc-sm|eds-icon-disc-lg|eds-icon-disc-round]"
+           data-tone="accent|neutral|success|warning|danger|info"><svg aria-hidden="true">…</svg></span>
+   - Tom por data-tone (accent padrão). O ícone usa o par -text/-subtle do tom (contraste ≥ 3:1,
+     calculado nos temas e modos); o tom é reforço, nunca o único sinal.
+   - Forma: quadrado suave (segue data-shape); .eds-icon-disc-round deixa circular.
+   - Título de página: <h1 class="eds-page-title"><span class="eds-icon-disc">…</span><span>Texto</span></h1>
+     (ver layout/page.css). */
+@layer eds.components {
+  .eds-icon-disc {
+    --_disc-size: calc(var(--eds-icon-size-xl) + var(--eds-space-2));
+    --_disc-icon: var(--eds-icon-size-md);
+    --_disc-radius: var(--eds-radius-md);
+    --_disc-bg: var(--eds-color-action-primary-subtle);
+    --_disc-fg: var(--eds-color-action-primary);
+
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_disc-size);
+    block-size: var(--_disc-size);
+    border-radius: var(--_disc-radius);
+    background: var(--_disc-bg);
+    color: var(--_disc-fg);
+
+    & > svg {
+      display: block;
+      inline-size: var(--_disc-icon);
+      block-size: var(--_disc-icon);
+    }
+
+    &[data-tone='neutral'] {
+      --_disc-bg: var(--eds-color-bg-subtle);
+      --_disc-fg: var(--eds-color-text-secondary);
+    }
+
+    &[data-tone='info'] {
+      --_disc-bg: var(--eds-color-status-info-subtle);
+      --_disc-fg: var(--eds-color-status-info-text);
+    }
+
+    &[data-tone='success'] {
+      --_disc-bg: var(--eds-color-status-success-subtle);
+      --_disc-fg: var(--eds-color-status-success-text);
+    }
+
+    &[data-tone='warning'] {
+      --_disc-bg: var(--eds-color-status-warning-subtle);
+      --_disc-fg: var(--eds-color-status-warning-text);
+    }
+
+    &[data-tone='danger'] {
+      --_disc-bg: var(--eds-color-status-danger-subtle);
+      --_disc-fg: var(--eds-color-status-danger-text);
+    }
+  }
+
+  .eds-icon-disc-sm {
+    --_disc-size: calc(var(--eds-icon-size-lg) + var(--eds-space-2));
+    --_disc-icon: var(--eds-icon-size-sm);
+  }
+
+  .eds-icon-disc-lg {
+    --_disc-size: calc(var(--eds-icon-size-xl) + var(--eds-space-5));
+    --_disc-icon: var(--eds-icon-size-lg);
+  }
+
+  .eds-icon-disc-round {
+    --_disc-radius: var(--eds-radius-full);
+  }
+
+  @media (forced-colors: active) {
+    .eds-icon-disc {
+      border: var(--eds-border-width) solid CanvasText;
+      background: Canvas;
+      color: CanvasText;
+    }
+  }
+}

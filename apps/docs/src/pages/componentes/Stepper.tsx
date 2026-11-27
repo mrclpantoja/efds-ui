@@ -8,6 +8,9 @@ import { toHref } from '../../router';
 import Basico from '../../examples/stepper/basico';
 import basicoHtml from '../../examples/stepper/basico.html?raw';
 import basicoSource from '../../examples/stepper/basico.tsx?raw';
+import Indicador from '../../examples/stepper/indicador';
+import indicadorHtml from '../../examples/stepper/indicador.html?raw';
+import indicadorSource from '../../examples/stepper/indicador.tsx?raw';
 import Vertical from '../../examples/stepper/vertical';
 import verticalHtml from '../../examples/stepper/vertical.html?raw';
 import verticalSource from '../../examples/stepper/vertical.tsx?raw';
@@ -50,6 +53,12 @@ export default function StepperPage() {
           react={{ Component: Vertical, source: verticalSource }}
         />
         <Example
+          title="Indicador de seções de uma página longa"
+          description="Cada rótulo é um link para a seção. aria-current marca a seção lida (sem rolar sozinho); a seção fica concluída quando nenhum campo é inválido e há obrigatório ou campo preenchido, e isso é anunciado uma vez. Clicar no link leva o foco ao título da seção. Preencha os campos e role a página."
+          html={indicadorHtml}
+          react={{ Component: Indicador, source: indicadorSource }}
+        />
+        <Example
           title="Wizard"
           description="Avançar valida os campos do painel (cada inválido mostra o erro na página), move o foco ao título da nova etapa e anuncia “Etapa 2 de 3: Endereço.”. Enter também avança. Etapas concluídas voltam por clique. O envio final valida todos os painéis. Os valores se preservam ao voltar."
           html={wizardHtml}
@@ -80,6 +89,25 @@ export default function StepperPage() {
         </Alert>
       </Section>
 
+      <Section title="HTML puro: indicador de seções">
+        <Alert variant="info" title="data-eds-stepper-sections">
+          <p>
+            No <code>ol.eds-stepper</code> (ou no <code>nav</code> que o contém), ponha{' '}
+            <code>data-eds-stepper-sections</code>; em cada item, um{' '}
+            <code>a.eds-stepper-link href=&quot;#secao&quot;</code> para o elemento da seção. O{' '}
+            <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> usa
+            IntersectionObserver para marcar <code>aria-current=&quot;step&quot;</code> no link da
+            seção lida (a última cujo topo passou dos 40% superiores da janela), atualiza{' '}
+            <code>data-state</code> (<code>done</code>, <code>current</code>, <code>upcoming</code>)
+            e escreve “Seção N de M” no item atual. Seção concluída: nenhum controle inválido e ao
+            menos um obrigatório ou campo preenchido; ela ganha o texto oculto “(concluída)” e o
+            anúncio “Seção X concluída.” (uma vez, pela região de status comum). O evento{' '}
+            <code>eds:stepper-section-change</code> traz <code>{'{ id, index, label }'}</code>{' '}
+            quando a seção lida muda.
+          </p>
+        </Alert>
+      </Section>
+
       <Section title="API React">
         <PropsTable
           caption="Props de Stepper"
@@ -92,12 +120,13 @@ export default function StepperPage() {
             },
             {
               name: 'steps',
-              type: '{ label: string; state?: StepState }[]',
+              type: '{ label: string; state?: StepState; href?: string }[]',
               required: true,
               description: (
                 <>
                   <code>state</code> sobrescreve o estado derivado (<code>error</code>, por
-                  exemplo).
+                  exemplo). Com <code>href</code> em alguma etapa, o Stepper vira o indicador de
+                  seções: o rótulo é um link e o clique leva o foco ao título da seção.
                 </>
               ),
             },
@@ -117,7 +146,30 @@ export default function StepperPage() {
             {
               name: 'texts',
               type: 'Partial<StepperTexts>',
-              description: 'complete, error (textos ocultos) e summary(current, total).',
+              description:
+                'complete, error (textos ocultos), summary e sectionSummary(current, total).',
+            },
+          ]}
+        />
+        <PropsTable
+          caption="useSectionProgress(sections, options?)"
+          rows={[
+            {
+              name: 'sections',
+              type: '{ id: string; label: string }[]',
+              required: true,
+              description: 'Os elementos da página (por id) que o indicador acompanha.',
+            },
+            {
+              name: 'options.sectionDone',
+              type: '(label: string) => string',
+              description: 'Texto do anúncio "Seção X concluída.".',
+            },
+            {
+              name: 'retorno',
+              type: '{ current: number; states: StepState[] }',
+              description:
+                'current é a seção lida; states (done, current, upcoming) vai em steps[i].state.',
             },
           ]}
         />
@@ -175,6 +227,11 @@ export default function StepperPage() {
             {
               name: '.eds-stepper-item',
               effect: 'Uma etapa. Estado em data-state e, na atual, aria-current="step".',
+            },
+            {
+              name: '.eds-stepper-link',
+              effect:
+                'Link do rótulo (indicador de seções); aria-current="step" no link da seção lida. data-state="done" é sinônimo de complete.',
             },
             {
               name: '[data-state="complete|current|upcoming|error"]',

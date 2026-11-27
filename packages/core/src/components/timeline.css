@@ -23,6 +23,12 @@
    - Tom por data-tone no item (neutral padrão | accent | info | success | warning | danger). O tom é
      reforço: o marcador leva ícone e o título diz o que houve. Marcador vazio vira um ponto.
    - Compacta: .eds-timeline-compact (marcador menor, menos respiro, texto de apoio em linha).
+   - Horizontal: .eds-timeline-horizontal no <ol> (itens lado a lado, fio entre marcadores, rola no
+     próprio contêiner; abaixo de 30rem vira vertical, salvo com .eds-timeline-scroll, que mantém a
+     linha e rola). Com muitos itens, põe tabindex="0" e aria-label
+     no <ol> para a rolagem funcionar no teclado.
+   - Estado do marcador: data-state="done|current|upcoming" no item (concluído com visto, atual com
+     anel, futuro tracejado); opcional e vale nas duas direções.
    - Ordem: do mais recente para o mais antigo (ou o inverso) é decisão do autor; o CSS não inverte. */
 @layer eds.components {
   .eds-timeline {
@@ -61,7 +67,7 @@
       inset-block: calc(var(--_tl-marker) + var(--eds-space-1)) var(--eds-space-1);
       inset-inline-start: calc((var(--_tl-marker) - var(--eds-border-width)) / 2);
       inline-size: var(--eds-border-width);
-      background: var(--eds-color-border-default);
+      background: var(--_tl-line, var(--eds-color-border-default));
     }
 
     &:last-child {
@@ -219,6 +225,147 @@
     font-weight: var(--eds-font-weight-semibold);
   }
 
+  /* ---- Estado do marcador: data-state="done|current|upcoming" no item (opcional, vale nas duas
+     direções). Não depende só de cor: concluído leva visto, atual leva anel duplo, futuro leva
+     borda tracejada. Vem depois do tom, que ele sobrepõe. ---- */
+
+  .eds-timeline-item[data-state='done'] {
+    --_tl-fg: var(--eds-color-text-on-action);
+    --_tl-bg: var(--eds-color-action-primary);
+    --_tl-border: var(--eds-color-action-primary);
+    --_tl-line: var(--eds-color-action-primary);
+  }
+
+  .eds-timeline-item[data-state='current'] {
+    --_tl-fg: var(--eds-color-action-primary);
+    --_tl-bg: var(--eds-color-action-primary-subtle);
+    --_tl-border: var(--eds-color-action-primary);
+
+    & > .eds-timeline-marker {
+      border-width: var(--eds-border-width-strong);
+      box-shadow: 0 0 0 var(--eds-border-width-strong) var(--eds-color-bg-surface);
+      outline: var(--eds-border-width) solid var(--_tl-border);
+      outline-offset: var(--eds-border-width-strong);
+    }
+
+    & .eds-timeline-title {
+      font-weight: var(--eds-font-weight-semibold);
+    }
+  }
+
+  .eds-timeline-item[data-state='upcoming'] {
+    --_tl-fg: var(--eds-color-text-secondary);
+    --_tl-bg: var(--eds-color-bg-surface);
+    --_tl-border: var(--eds-color-border-strong);
+
+    & > .eds-timeline-marker {
+      border-style: dashed;
+    }
+
+    & .eds-timeline-title {
+      color: var(--eds-color-text-secondary);
+    }
+  }
+
+  /* Concluído sem ícone próprio: o ponto vira um visto (herda a cor do marcador). */
+  .eds-timeline-item[data-state='done'] > .eds-timeline-marker:empty::before {
+    inline-size: 0.3125rem;
+    block-size: 0.625rem;
+    border-radius: 0;
+    border-inline-end: var(--eds-border-width-strong) solid currentColor;
+    border-block-end: var(--eds-border-width-strong) solid currentColor;
+    background: transparent;
+    translate: 0 -10%;
+    rotate: 45deg;
+  }
+
+  /* ---- Horizontal: itens lado a lado, marcador no alto e conteúdo embaixo. Rola dentro do próprio
+     contêiner quando não cabe. Abaixo de 30rem de largura do contêiner volta a ser vertical (o
+     <ol> é o contêiner; precisa de largura própria, como o Stepper). Para a rolagem ser acessível
+     por teclado, o autor põe tabindex="0" e aria-label no <ol> quando houver muitos itens. ---- */
+
+  .eds-timeline-horizontal {
+    --_tlh-item: calc(var(--eds-space-9) * 2.75);
+
+    container: eds-timeline / inline-size;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(var(--_tlh-item), 1fr);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding-block-end: var(--eds-space-2);
+
+    &:focus-visible {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: var(--eds-focus-ring-offset);
+    }
+
+    & > .eds-timeline-item {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: var(--eds-space-2);
+      padding-block-end: 0;
+      padding-inline-end: var(--eds-space-3);
+
+      /* Fio até o próximo marcador, na altura do centro deste. */
+      &:not(:last-child)::before {
+        inset-block: calc((var(--_tl-marker) - var(--eds-border-width-strong)) / 2) auto;
+        inset-inline: calc(var(--_tl-marker) + var(--eds-space-2)) var(--eds-space-2);
+        inline-size: auto;
+        block-size: var(--eds-border-width-strong);
+        border-radius: var(--eds-radius-sm);
+      }
+
+      & > .eds-timeline-marker {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      & > .eds-timeline-content {
+        grid-column: 1;
+        grid-row: 2;
+        padding-block-start: 0;
+      }
+    }
+  }
+
+  /* .eds-timeline-scroll: continua horizontal em contêiner estreito e rola (ex.: parcelas, meses). */
+  @container eds-timeline (inline-size < 30rem) {
+    .eds-timeline-horizontal:not(.eds-timeline-scroll) {
+      /* O <ol> não pode mudar a si mesmo por @container: fixar a coluna 1 faz o posicionamento
+         automático empilhar os itens (linha automática). */
+      & > .eds-timeline-item {
+        grid-column: 1;
+        grid-row: auto;
+        grid-template-columns: var(--_tl-marker) minmax(0, 1fr);
+        row-gap: 0;
+        padding-block-end: var(--_tl-space);
+        padding-inline-end: 0;
+
+        &:last-child {
+          padding-block-end: 0;
+        }
+
+        &:not(:last-child)::before {
+          inset-block: calc(var(--_tl-marker) + var(--eds-space-1)) var(--eds-space-1);
+          inset-inline: calc((var(--_tl-marker) - var(--eds-border-width-strong)) / 2) auto;
+          inline-size: var(--eds-border-width-strong);
+          block-size: auto;
+        }
+
+        & > .eds-timeline-marker {
+          grid-column: 1;
+          grid-row: auto;
+        }
+
+        & > .eds-timeline-content {
+          grid-column: 2;
+          grid-row: auto;
+          padding-block-start: calc((var(--_tl-marker) - var(--eds-line-height-body)) / 2);
+        }
+      }
+    }
+  }
+
   @media (forced-colors: active) {
     .eds-timeline-marker {
       border-color: CanvasText;
@@ -228,6 +375,18 @@
 
     .eds-timeline-item:not(:last-child)::before {
       background: CanvasText;
+    }
+
+    .eds-timeline-item[data-state='done'] > .eds-timeline-marker {
+      border-color: Highlight;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    .eds-timeline-item[data-state='current'] > .eds-timeline-marker {
+      outline-color: Highlight;
+      border-color: Highlight;
+      color: Highlight;
     }
   }
 }

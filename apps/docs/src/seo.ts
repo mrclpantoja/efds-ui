@@ -32,6 +32,8 @@ const descriptions: Record<string, string> = {
     'Validação de formulários em pt-BR: CPF, CNPJ alfanumérico, CEP, telefone, e-mail, PIS, título e placa, com erro visível, resumo de erros e foco, em HTML e React.',
   '/comecar/receitas-formulario':
     'Receitas de formulário: React Hook Form, Zod e validação no servidor (Laravel, Spring, ASP.NET) com o resumo de erros do efDS.ui.',
+  '/comecar/servidor-arquivos':
+    'Contrato HTTP do gerenciador e do visualizador de arquivos do efDS.ui, com segurança exigida do servidor e implementações de referência em Laravel e Node para S3 e disco.',
   '/comecar/formatadores':
     'Formatadores em pt-BR para moeda, número, data, CPF, CNPJ, telefone e CEP, com mascaramento de CPF para LGPD.',
   '/comecar/exportacao':
@@ -149,6 +151,8 @@ const componentDescriptions: Record<string, string> = {
   notifications: 'Sino de notificações com contador e lista em popover, em HTML e React.',
   'dirty-guard':
     'Aviso de alterações não salvas ao sair da página ou do formulário, em HTML e React.',
+  files:
+    'Gerenciador de arquivos com pastas, envio, mover e copiar, lixeira com desfazer e versões, sobre a API do seu sistema, em HTML e React.',
   'session-timeout':
     'Aviso de sessão expirando por inatividade, sincronizado entre abas, em HTML e React.',
   conditional:

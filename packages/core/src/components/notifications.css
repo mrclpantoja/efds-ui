@@ -14,6 +14,7 @@
          <li class="eds-notification" data-unread>
            <a class="eds-notification-link" href="#">
              <span class="eds-notification-dot" aria-hidden="true"></span>
+             <span class="eds-icon-disc eds-icon-disc-sm eds-notification-icon" aria-hidden="true"><svg aria-hidden="true">…</svg></span>
              <span class="eds-notification-body">
                <span class="eds-notification-status">Não lida</span>
                <span class="eds-notification-title">Pedido PED-0001 aprovado</span>
@@ -29,6 +30,8 @@
      Sem não lidas: ponha [hidden] em .eds-notifications-count.
    - Não lida = texto "Não lida" (.eds-notification-status) + ponto + título em negrito; lida: o status
      e o ponto somem (o ponto mantém o espaço, para alinhar o texto). Cor nunca sozinha.
+   - Ícone opcional por item: .eds-notification-icon (disco de ícone pequeno, decorativo) entre o ponto e o
+     corpo; o tom vem de .eds-icon-disc-{info,success,warning,danger}. Sem ele, o item fica como antes.
    - O item pode ser <a> ou <button> (.eds-notification-link). */
 @layer eds.components {
   .eds-notifications {
@@ -132,6 +135,11 @@
 
   .eds-notification[data-unread] .eds-notification-dot {
     background: var(--eds-color-action-primary);
+  }
+
+  /* Ícone do item (disco pequeno): fica no topo, ao lado do título; nunca encolhe (o corpo quebra o texto). */
+  .eds-notification-icon {
+    flex: none;
   }
 
   .eds-notification-body {

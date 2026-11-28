@@ -12,6 +12,9 @@ import {
   setMessages,
   type Messages,
 } from './core/config';
+import { resetViewerConfig, setViewerConfig } from './core/viewer-config';
+import type { ViewerOptions } from './core/viewer-logic';
+import { resetFilesConfig, setFilesConfig, type FilesConfig } from './files/config';
 import { initAlert } from './components/alert';
 import { initButtonBusy } from './components/button-busy';
 import { initSelectReadonly } from './components/select-readonly';
@@ -96,6 +99,16 @@ export interface BehaviorOptions {
   cepUrl?: string;
   /** Estado de envio de formulário (`data-eds-submit`): tempo do resultado no botão. */
   submit?: SubmitOptions;
+  /**
+   * Visualizador de arquivos (`EDS.viewer`): PDF embutido ou em link, tempo limite, limite do texto
+   * e se Baixar e Abrir em nova aba aparecem. Só vale na compilação completa.
+   */
+  viewer?: ViewerOptions;
+  /**
+   * Gerenciador de arquivos (`data-eds-files`): cabeçalhos de toda requisição (CSRF, token),
+   * credenciais e adaptador próprio. Só vale na compilação completa.
+   */
+  files?: FilesConfig;
 }
 
 /** Configura locale, textos e loader. Pode ser chamado antes ou depois de `init`. */
@@ -105,10 +118,13 @@ export function configure(options: BehaviorOptions): void {
   setLoaderConfig(options.loader);
   setCepUrl(options.cepUrl);
   setSubmitConfig(options.submit);
+  setViewerConfig(options.viewer);
+  setFilesConfig(options.files);
 }
 
 export { defaultMessages, resetCepUrl, resetLocale, resetMessages };
-export { resetLoaderConfig, resetSubmitConfig };
+export { resetLoaderConfig, resetSubmitConfig, resetViewerConfig, resetFilesConfig };
+export type { ViewerOptions };
 // Página e feedback
 export { session, initSession } from './components/session';
 export type { SessionHandle, SessionOptions } from './components/session';

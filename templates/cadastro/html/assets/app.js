@@ -306,17 +306,20 @@
     }
 
     /**
-     * Ordem atual das colunas no cabeçalho (o usuário pode reordená-las pelo painel "Colunas"):
-     * as linhas novas já nascem nessa ordem, que é a que o behavior espera.
+     * Colunas na ordem em que estão escritas no HTML do cabeçalho. O behavior reordena as linhas
+     * sozinho, mesmo depois de o usuário mover colunas (painel "Colunas" ou alça do cabeçalho).
      */
-    function ordemColunas() {
-      return Array.prototype.map.call(table.tHead.rows[0].cells, function (th) {
-        return (
-          th.getAttribute('data-eds-col') ||
-          (th.classList.contains('eds-table-check') ? 'check' : 'acoes')
-        );
-      });
-    }
+    var COLUNAS = [
+      'check',
+      'razao',
+      'id',
+      'documento',
+      'categoria',
+      'cidade',
+      'situacao',
+      'limite',
+      'acoes',
+    ];
 
     function linhaHtml(f) {
       var sit = D.situacoes[f.situacao];
@@ -391,11 +394,9 @@
         '" data-eds-row-label="' +
         f.id +
         '">' +
-        ordemColunas()
-          .map(function (coluna) {
-            return celulas[coluna];
-          })
-          .join('') +
+        COLUNAS.map(function (coluna) {
+          return celulas[coluna];
+        }).join('') +
         '</tr>'
       );
     }
@@ -1238,27 +1239,6 @@
       if (!c) return;
       var opcao = form.querySelector('#f-cidade-lista [data-value="' + c.value + '"]');
       if (opcao) opcao.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
-    });
-
-    // ---- Lookup com `required`: o aviso de "campo obrigatório" é do formulário e o Lookup não o
-    // recolhe sozinho ao escolher; aqui ele sai assim que há um código.
-    form.addEventListener('eds:lookup-change', function (event) {
-      if (!event.detail.code) return;
-      var campo = event.target.querySelector('input');
-      var aviso = document.getElementById(campo.id + '-err');
-      if (aviso && campo.validity.valid) {
-        campo.removeAttribute('aria-invalid');
-        campo.setAttribute(
-          'aria-describedby',
-          (campo.getAttribute('aria-describedby') || '')
-            .split(/\s+/)
-            .filter(function (id) {
-              return id && id !== aviso.id;
-            })
-            .join(' '),
-        );
-        aviso.remove();
-      }
     });
 
     // ---- "Cadastrar novo…" no Lookup de categorias: aqui, um diálogo pergunta o nome (em produção,

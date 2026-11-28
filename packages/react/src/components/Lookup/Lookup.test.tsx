@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { installDialogPolyfill } from '../../test-utils/dom-polyfills';
 import { Field } from '../Field';
+import { useFormValidation } from '../FormValidation';
 import { Lookup, type LookupItem } from './Lookup';
 
 const DATA: LookupItem[] = [
@@ -229,5 +230,33 @@ describe('Lookup: autocompletar', () => {
     render(<Lookup aria-label="Cliente" search={search} autocomplete={false} />);
     expect(screen.getByRole('textbox', { name: 'Cliente' })).not.toHaveAttribute('aria-expanded');
     expect(document.querySelector('.eds-combobox-popup')).toBeNull();
+  });
+});
+
+describe('Lookup com useFormValidation', () => {
+  it('escolher no modal com o campo vazio faz o erro de obrigatório sair', async () => {
+    const user = userEvent.setup();
+    function Form() {
+      const { formProps, errorOf } = useFormValidation();
+      return (
+        <form {...formProps}>
+          <Field label="Cliente" required error={errorOf('cliente')}>
+            <Lookup name="cliente" search={search} texts={{ open: 'Buscar cliente' }} />
+          </Field>
+          <button type="submit">Enviar</button>
+        </form>
+      );
+    }
+    render(<Form />);
+    await user.click(screen.getByRole('button', { name: 'Enviar' }));
+    expect(await screen.findByText('Preencha este campo.')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Buscar cliente' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Buscar' });
+    await waitFor(() => expect(within(dialog).getAllByRole('row')).toHaveLength(4));
+    await user.click(
+      within(dialog).getByRole('button', { name: 'Selecionar 12, Cedro Alimentos' }),
+    );
+    await waitFor(() => expect(screen.queryByText('Preencha este campo.')).toBeNull());
+    expect(input()).not.toHaveAttribute('aria-invalid', 'true');
   });
 });

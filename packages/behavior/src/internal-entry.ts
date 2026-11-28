@@ -45,3 +45,69 @@ export type {
   CropperControllerOptions,
   CropperTexts,
 } from './image/cropper-controller';
+// Visualizador de arquivos: tipo, tamanho e regras comuns ao HTML e ao React
+export { extensionOf, formatFileSize, kindOf } from './core/file-kind';
+export type { FileKind } from './core/file-kind';
+export {
+  PAN_STEP,
+  ZOOM_MAX,
+  ZOOM_MIN,
+  ZOOM_STEPS,
+  ViewerLoadError,
+  actualSizeZoom,
+  blocksViewerKeys,
+  canEmbedPdf,
+  clampPan,
+  clampZoom,
+  isSideways,
+  nextRotation,
+  readTextLimited,
+  resolveViewerOptions,
+  stepZoom,
+  viewerDefaults,
+  viewerKeyAction,
+  viewerKind,
+} from './core/viewer-logic';
+export type {
+  ViewerAction,
+  ViewerErrorReason,
+  ViewerItem,
+  ViewerKeyContext,
+  ViewerOptions,
+  ViewerPdfMode,
+  ViewerTrack,
+} from './core/viewer-logic';
+// Gerenciador de arquivos: controlador, textos, caminhos, tipos e ícones
+export { createFilesController } from './files/controller';
+export type {
+  AnyEntry,
+  ConflictAnswer,
+  FilesAction,
+  FilesController,
+  FilesControllerOptions,
+  FilesEventName,
+  FilesMode,
+  FilesState,
+  FilesStatus,
+  FilesUi,
+  FilesView,
+  OpResult,
+  UploadJob,
+  ViewerEntry,
+} from './files/controller';
+export { FILES_ICONS } from './files/icons';
+export type { FilesIcon } from './files/icons';
+export {
+  ancestorsOf,
+  entryKind as filesEntryKind,
+  formatDateTime as formatFilesDate,
+  formatSize as formatFilesSize,
+  isInside,
+  nameProblem,
+  parentOf,
+  baseName as pathBaseName,
+  extensionOf as filesExtensionOf,
+} from './files/logic';
+export type { SortKey as FilesSortKey, SortState as FilesSortState } from './files/logic';
+export { defaultFilesTexts, fill as fillTemplate, plural as pluralTemplate } from './files/texts';
+export type { FilesTexts } from './files/texts';

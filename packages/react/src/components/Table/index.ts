@@ -27,7 +27,8 @@ export type {
   TableTexts,
   TableColumnKind,
 } from './Table';
-export { sortTableData, filterTableData, useTableFilter } from './data';
+export { sortTableData, filterTableData, useTableFilter, describeColumnFilter } from './data';
+export type { DescribeFilterOptions, FilterTextType } from './data';
 export type {
   SortTableDataOptions,
   FilterTableDataOptions,

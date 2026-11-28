@@ -27,6 +27,31 @@ describe('Stat', () => {
     expect(delta.querySelector('.eds-stat-meta')).toHaveTextContent('vs. mês anterior');
   });
 
+  it('icon vira um disco decorativo no canto, sem alterar rótulo, valor e variação', () => {
+    const { container } = render(
+      <Stat
+        label="Usuários ativos"
+        value="1.284"
+        delta="4,2%"
+        trend="up"
+        icon={<svg data-testid="ico" />}
+        iconTone="info"
+      />,
+    );
+    const root = container.firstElementChild as HTMLElement;
+    const disc = root.querySelector('.eds-icon-disc') as HTMLElement;
+    expect(disc).toHaveClass('eds-stat-icon', 'eds-icon-disc-info');
+    expect(disc).toHaveAttribute('aria-hidden', 'true');
+    expect(disc.firstElementChild).toBe(screen.getByTestId('ico'));
+    expect(root.firstElementChild).toBe(disc);
+    expect(root.querySelector('.eds-stat-delta')).toHaveAttribute('data-trend', 'up');
+  });
+
+  it('sem icon não há disco', () => {
+    const { container } = render(<Stat label="L" value="1" />);
+    expect(container.querySelector('.eds-icon-disc')).toBeNull();
+  });
+
   it('queda e sem variação usam o texto da direção; sem delta não há linha', () => {
     const { rerender, container } = render(
       <Stat label="L" value="1" delta="3%" trend="down" tone="danger" />,

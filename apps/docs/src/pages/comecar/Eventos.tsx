@@ -372,6 +372,29 @@ const eventos: Record<string, readonly Evento[]> = {
       detail: '{ file }: o ajuste foi cancelado; o campo volta ao arquivo aceito antes.',
     },
   ],
+  'Visualizador de arquivos': [
+    {
+      name: 'eds:viewer-open',
+      on: '[data-eds-viewer] (ou o diálogo, se aberto por EDS.viewer.open)',
+      detail:
+        '{ item, index, items, trigger, dialog }: cancelável. dialog serve para preencher .eds-viewer-actions.',
+    },
+    {
+      name: 'eds:viewer-change',
+      on: '[data-eds-viewer]',
+      detail: '{ item, index }: o arquivo mostrado mudou.',
+    },
+    {
+      name: 'eds:viewer-close',
+      on: '[data-eds-viewer]',
+      detail: '{ item, index }: o visualizador fechou no último arquivo visto.',
+    },
+    {
+      name: 'eds:viewer-error',
+      on: '[data-eds-viewer]',
+      detail: "{ item, reason }: reason é 'timeout', 'network' ou 'too-large'.",
+    },
+  ],
 };
 
 export default function EventosPage() {

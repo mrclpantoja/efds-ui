@@ -1,0 +1,24 @@
+<!-- Behavior: [data-eds-viewer] liga o link ao diálogo; itens com o mesmo data-eds-viewer-group navegam entre si
+     (setas, Home, End). O href é a URL de visualização (inline); data-eds-viewer-type é o MIME, data-eds-viewer-name
+     o nome mostrado e data-eds-viewer-download a URL de baixar (padrão: o próprio href). Sem JavaScript, cada
+     link abre o arquivo em outra página. Arquivos fictícios gerados para a documentação. -->
+<div class="eds-stack eds-stack-row eds-stack-wrap eds-gap-3 eds-stack-align-start">
+  <a class="eds-button eds-button-secondary" href="/arquivos/relatorio-vistoria.pdf"
+    data-eds-viewer data-eds-viewer-group="anexos-processo" data-eds-viewer-type="application/pdf"
+    data-eds-viewer-name="Relatório de vistoria.pdf" data-eds-viewer-size="1260">Relatório (PDF)</a>
+  <a class="eds-button eds-button-secondary" href="/arquivos/foto-obra.jpg"
+    data-eds-viewer data-eds-viewer-group="anexos-processo" data-eds-viewer-type="image/jpeg"
+    data-eds-viewer-name="Foto da obra.jpg" data-eds-viewer-size="36155">Foto da obra</a>
+  <a class="eds-button eds-button-secondary" href="/arquivos/video-vistoria.webm"
+    data-eds-viewer data-eds-viewer-group="anexos-processo" data-eds-viewer-type="video/webm"
+    data-eds-viewer-name="Vídeo da vistoria.webm">Vídeo</a>
+  <a class="eds-button eds-button-secondary" href="/arquivos/audio-ata.wav"
+    data-eds-viewer data-eds-viewer-group="anexos-processo" data-eds-viewer-type="audio/wav"
+    data-eds-viewer-name="Áudio da reunião.wav">Áudio</a>
+  <a class="eds-button eds-button-secondary" href="/arquivos/resumo-vistoria.txt"
+    data-eds-viewer data-eds-viewer-group="anexos-processo" data-eds-viewer-type="text/plain"
+    data-eds-viewer-name="Resumo da vistoria.txt">Resumo (texto)</a>
+  <a class="eds-button eds-button-secondary" href="/arquivos/pacote-ficticio.zip"
+    data-eds-viewer data-eds-viewer-group="anexos-processo" data-eds-viewer-type="application/zip"
+    data-eds-viewer-name="Pacote de documentos.zip" data-eds-viewer-size="22">Pacote (ZIP)</a>
+</div>

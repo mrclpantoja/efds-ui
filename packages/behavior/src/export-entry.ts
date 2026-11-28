@@ -24,6 +24,8 @@ export {
   sortByCriteria,
   sortValues,
 } from './core/data';
+export { describeColumnFilter } from './core/filter-text';
+export type { DescribeFilterOptions, FilterTextType } from './core/filter-text';
 export type { FilterValue, SortCriterion, SortDirection } from './core/data';
 // Consulta da Table (página, ordenação, busca, filtros) e o formato dela na URL.
 export {

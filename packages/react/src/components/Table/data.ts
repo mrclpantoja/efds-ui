@@ -194,3 +194,6 @@ export function useTableFilter<T>(
     },
   };
 }
+
+export { describeColumnFilter } from '@efds-ui/behavior/export';
+export type { DescribeFilterOptions, FilterTextType } from '@efds-ui/behavior/export';

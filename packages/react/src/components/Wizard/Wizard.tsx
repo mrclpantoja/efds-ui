@@ -12,6 +12,8 @@ import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { useAnnouncer } from '../../internal/announcer';
 import { controlsOf, createFieldErrors, type FieldControl } from '../../internal/field-errors';
+import { fieldLabel, representativeOf } from '@efds-ui/behavior/internal';
+import { ErrorSummary, type ErrorSummaryItem, type ErrorSummaryProps } from '../ErrorSummary';
 import { Stepper, type StepperTexts, type StepperStepState } from '../Stepper';
 
 export interface WizardStep {
@@ -38,6 +40,9 @@ const defaultWizardTexts: WizardTexts = {
   stepper: {},
 };
 
+/** Ajustes do resumo de erros do Wizard (os campos `errors` e `focusKey` ficam por conta dele). */
+export type WizardErrorSummary = Omit<ErrorSummaryProps, 'errors' | 'focusKey' | 'moveFocus'>;
+
 export interface WizardProps extends Omit<
   FormHTMLAttributes<HTMLFormElement>,
   'onSubmit' | 'children' | 'onChange'
@@ -62,6 +67,13 @@ export interface WizardProps extends Omit<
   onStepChange?: (index: number, from: number) => void;
   /** Envio final, com todos os painéis válidos. O envio nativo do formulário é impedido. */
   onComplete?: (data: FormData, form: HTMLFormElement) => void;
+  /**
+   * Mostra um `ErrorSummary` com os campos inválidos do painel quando o avanço (ou o envio final) é
+   * recusado: ele recebe o foco no lugar do primeiro campo, cada item leva ao campo e some ao
+   * corrigir ou ao mudar de etapa. Passe um objeto para ajustar o resumo (`headingLevel`, `texts`...).
+   * Sem isto, o foco segue ao primeiro campo inválido, como sempre.
+   */
+  errorSummary?: boolean | WizardErrorSummary;
   texts?: Partial<WizardTexts>;
 }
 
@@ -81,6 +93,7 @@ export const Wizard = forwardRef<HTMLFormElement, WizardProps>(function Wizard(
     onBeforeStepChange,
     onStepChange,
     onComplete,
+    errorSummary,
     texts,
     className,
     ...rest
@@ -102,6 +115,10 @@ export const Wizard = forwardRef<HTMLFormElement, WizardProps>(function Wizard(
   const headings = useRef<(HTMLElement | null)[]>([]);
   const focusAfter = useRef(false);
   const [fieldErrors] = useState(createFieldErrors);
+  const [summaryItems, setSummaryItems] = useState<ErrorSummaryItem[]>([]);
+  const [summaryKey, setSummaryKey] = useState(0);
+  const summaryOn = Boolean(errorSummary);
+  const clearSummary = () => setSummaryItems((prev) => (prev.length === 0 ? prev : []));
   const { text: statusText, announce } = useAnnouncer();
 
   useEffect(() => {
@@ -113,7 +130,27 @@ export const Wizard = forwardRef<HTMLFormElement, WizardProps>(function Wizard(
   const validatePanel = (index: number): boolean => {
     const panel = panels.current[index];
     if (!panel) return true;
-    if (!fieldErrors.validatePanel(panel)) return false;
+    const ok = fieldErrors.validatePanel(panel, {
+      focus: !summaryOn,
+      onInvalid: (controls) => {
+        if (!summaryOn) return;
+        setSummaryItems(
+          controls.map((control) => {
+            const element = representativeOf(control);
+            if (element.id === '') element.id = `${baseId}-f-${element.name || index}`;
+            return {
+              id: element.id,
+              name: element.name || element.id,
+              label: fieldLabel(element),
+              message: fieldErrors.messageOf(control),
+            };
+          }),
+        );
+        setSummaryKey((key) => key + 1);
+      },
+    });
+    if (!ok) return false;
+    clearSummary();
     return validate ? validate(index, panel) : true;
   };
 
@@ -121,6 +158,7 @@ export const Wizard = forwardRef<HTMLFormElement, WizardProps>(function Wizard(
     if (to < 0 || to > last || to === current) return;
     if (onBeforeStepChange?.(current, to) === false) return;
     const from = current;
+    clearSummary();
     focusAfter.current = true;
     setCurrent(to);
     announce(t.step(to + 1, total, steps[to]?.title ?? ''));
@@ -174,6 +212,17 @@ export const Wizard = forwardRef<HTMLFormElement, WizardProps>(function Wizard(
       target instanceof HTMLTextAreaElement
     ) {
       fieldErrors.refresh(target as FieldControl);
+      // O resumo perde o que foi corrigido e acompanha o motivo do que segue inválido.
+      setSummaryItems((prev) => {
+        if (prev.length === 0) return prev;
+        const next = prev
+          .map((item) => ({ item, el: document.getElementById(item.id) as FieldControl | null }))
+          .filter(({ el }) => el !== null && !el.validity.valid)
+          .map(({ item, el }) => ({ ...item, message: fieldErrors.messageOf(el as FieldControl) }));
+        return next.length === prev.length && next.every((n, i) => n.message === prev[i]?.message)
+          ? prev
+          : next;
+      });
     }
   };
 
@@ -198,6 +247,13 @@ export const Wizard = forwardRef<HTMLFormElement, WizardProps>(function Wizard(
         onStepClick={goTo}
         texts={t.stepper}
       />
+      {summaryOn ? (
+        <ErrorSummary
+          {...(typeof errorSummary === 'object' ? errorSummary : null)}
+          errors={summaryItems}
+          focusKey={summaryKey}
+        />
+      ) : null}
       {steps.map((step, i) => (
         <section
           key={i}

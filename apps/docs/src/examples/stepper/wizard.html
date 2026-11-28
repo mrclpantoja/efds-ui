@@ -1,6 +1,7 @@
 <!-- Behavior: [data-eds-wizard] no form. Painéis [data-eds-wizard-step] (os demais ficam hidden),
      botões [data-eds-wizard-prev] e [data-eds-wizard-next]. Antes de avançar valida os campos do
-     painel atual (checkValidity + reportValidity no primeiro inválido); depois move o foco ao título
+     painel atual (erro visível em cada inválido; com [data-eds-error-summary] no form, os inválidos
+     do painel entram no resumo, que recebe o foco, em vez do primeiro campo); depois move o foco ao título
      do painel novo, anuncia "Etapa 2 de 3: Endereço." e atualiza o stepper (data-state, aria-current,
      .eds-stepper-summary). Eventos: eds:wizard-beforechange (cancelável, detail {from,to}) e
      eds:wizard-change. Etapas concluídas voltam por clique no botão do rótulo. -->
@@ -20,6 +21,11 @@
       <span class="eds-stepper-label">Confirmação</span>
     </li>
   </ol>
+
+  <div class="eds-error-summary" data-eds-error-summary tabindex="-1" aria-labelledby="wz-erros" hidden>
+    <h2 class="eds-error-summary-title" id="wz-erros"></h2>
+    <ul class="eds-error-summary-list"></ul>
+  </div>
 
   <section data-eds-wizard-step aria-labelledby="wz-t1">
     <h3 class="eds-text-h4" id="wz-t1" tabindex="-1">Dados</h3>

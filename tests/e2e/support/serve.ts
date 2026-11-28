@@ -38,6 +38,10 @@ const TYPES: Record<string, string> = {
   '.woff2': 'font/woff2',
   '.xml': 'application/xml; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
+  '.pdf': 'application/pdf',
+  '.webm': 'video/webm',
+  '.wav': 'audio/wav',
+  '.zip': 'application/zip',
 };
 
 function resolveFile(pathname: string): { file: string; status: number } | null {

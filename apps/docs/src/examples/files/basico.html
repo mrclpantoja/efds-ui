@@ -1,0 +1,6 @@
+<!-- Behavior: [data-eds-files] monta o gerenciador dentro do contêiner. data-eds-files-api é a base da
+     API HTTP do sistema (contrato em "Servidor de arquivos"); sem ela nada é requisitado.
+     -path = pasta inicial, -view = list | grid, -root-label = nome da raiz na trilha.
+     Nesta página a API é um adaptador em memória, só com dados fictícios: nada sai do navegador. -->
+<div data-eds-files data-eds-files-api="/api/arquivos" data-eds-files-path="/"
+  data-eds-files-view="list" aria-label="Arquivos do contrato"></div>

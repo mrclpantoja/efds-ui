@@ -12,6 +12,7 @@ import {
 import { cx } from '../../utils/cx';
 import type { Tone } from '../../internal/tone';
 import { mergeTexts } from '../../utils/texts';
+import { IconDisc, type IconDiscTone } from '../IconDisc';
 import { Skeleton } from '../Skeleton';
 
 export type StatTrend = 'up' | 'down' | 'flat';
@@ -53,6 +54,13 @@ export interface StatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
    * `texts.loading`; dentro, quem anuncia é a grade (uma vez só).
    */
   loading?: boolean;
+  /**
+   * Ícone decorativo (um `<svg>`) num disco no canto do card. Fica `aria-hidden`: o significado
+   * vem do `label`. Independe de `tone` (leitura da variação).
+   */
+  icon?: ReactNode;
+  /** Tom do disco do `icon`. Padrão: `accent`. */
+  iconTone?: IconDiscTone;
   texts?: Partial<StatTexts>;
 }
 
@@ -66,6 +74,8 @@ export const Stat = forwardRef<HTMLDivElement, StatProps>(function Stat(
     tone = 'neutral',
     meta,
     loading = false,
+    icon,
+    iconTone,
     texts,
     className,
     ...rest
@@ -87,6 +97,11 @@ export const Stat = forwardRef<HTMLDivElement, StatProps>(function Stat(
       className={cx('eds-card', 'eds-stat', className)}
       aria-busy={loading || undefined}
     >
+      {icon != null && (
+        <IconDisc tone={iconTone} className="eds-stat-icon">
+          {icon}
+        </IconDisc>
+      )}
       {loading ? (
         <>
           {!register && (

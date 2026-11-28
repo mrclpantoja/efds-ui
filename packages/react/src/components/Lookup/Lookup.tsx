@@ -324,6 +324,14 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expanded, acLoading, acError, suggestions]);
 
+  /**
+   * Escolha sem digitação (lista ou diálogo): o valor muda por estado e o navegador não dispara
+   * `input`. Avisa o formulário (`useFormValidation`) para que o erro de "obrigatório" saia.
+   */
+  const notifyNative = () => {
+    setTimeout(() => inputRef.current?.dispatchEvent(new Event('input', { bubbles: true })), 0);
+  };
+
   const chooseSuggestion = (index: number) => {
     const item = suggestions[index];
     if (!item) {
@@ -343,6 +351,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
     setDescription(item.description);
     setErrorText(null);
     onValueChange?.(item.code, item);
+    notifyNative();
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -473,6 +482,7 @@ export const Lookup = forwardRef<HTMLInputElement, LookupProps>(function Lookup(
     setDescription(item.description);
     setErrorText(null);
     onValueChange?.(item.code, item);
+    notifyNative();
     // O diálogo devolve o foco ao botão ao fechar; o campo o recebe em seguida.
     setTimeout(() => inputRef.current?.focus(), 0);
   };

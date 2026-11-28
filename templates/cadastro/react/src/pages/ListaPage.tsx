@@ -34,6 +34,8 @@ import {
   useTableColumns,
   useTableFilter,
   useToast,
+  describeColumnFilter,
+  type FilterTextType,
   type FilterValue,
   type TableColumnDef,
   type TableSortState,
@@ -59,14 +61,17 @@ const plural = (n: number, um: string, varios: string) => `${n} ${n === 1 ? um :
  * as ações ficam de fora: não se movem nem se ocultam. O nome do fornecedor é fixo no início.
  */
 const COLUNAS: TableColumnDef[] = [
-  { id: 'id', label: 'Código' },
   { id: 'razao', label: 'Fornecedor', pin: 'start' },
+  { id: 'id', label: 'Código' },
   { id: 'documento', label: 'Documento' },
   { id: 'categoria', label: 'Categoria' },
   { id: 'cidade', label: 'Cidade' },
   { id: 'situacao', label: 'Situação' },
   { id: 'limite', label: 'Limite' },
 ];
+
+/** Tipo dos limites de filtro por coluna (o chip mostra "R$ 50.000,00", não "50000"). */
+const TIPO_FILTRO: Record<string, FilterTextType> = { limite: 'currency' };
 
 /** Texto da coluna Fornecedor: razão social e, se houver, o nome fantasia (o que a célula mostra). */
 const textoFornecedor = (f: Fornecedor) => `${f.razao} ${f.tipo !== 'pf' ? f.fantasia : ''}`.trim();
@@ -239,10 +244,7 @@ export function ListaPage() {
   });
   const rotuloFiltro = (chave: string, valor: FilterValue): string => {
     const nome = COLUNAS.find((c) => c.id === chave)?.label ?? chave;
-    if (typeof valor === 'string') return `${nome}: ${valor}`;
-    if (Array.isArray(valor)) return `${nome}: ${valor.join(', ')}`;
-    if (valor.gte && valor.lte) return `${nome}: de ${valor.gte} a ${valor.lte}`;
-    return valor.gte ? `${nome}: a partir de ${valor.gte}` : `${nome}: até ${valor.lte ?? ''}`;
+    return `${nome}: ${describeColumnFilter(valor, { type: TIPO_FILTRO[chave] })}`;
   };
   const chipsColuna = Object.entries(filtrosColuna).map(([chave, valor]) => ({
     chave,

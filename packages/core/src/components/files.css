@@ -1,0 +1,576 @@
+/* Gerenciador de arquivos: pastas, lista ou grade, envio, mover/copiar, lixeira e versões.
+   O JS (data-eds-files / FileManager) monta o markup; o CSS só cuida da aparência. Reaproveita
+   Table, Tree, Breadcrumb, Dropdown, Modal, Drawer, Progress, EmptyState e Skeleton.
+   Markup (resumo; contrato em docs/architecture/arquivos.md):
+     <div class="eds-files" data-view="list|grid" data-mode="folder|trash" data-state="loading|ready|error|forbidden" [data-readonly]>
+       <header class="eds-files-toolbar">
+         <nav class="eds-breadcrumb eds-files-path" aria-label="Local">…</nav>
+         <div class="eds-files-tools"><div class="eds-files-search">…</div><div class="eds-files-actions">…</div></div>
+       </header>
+       <div class="eds-files-body">
+         <aside class="eds-files-tree">…<div class="eds-tree">…</div></aside>
+         <div class="eds-files-main">
+           <div class="eds-files-notice"><h2 class="eds-files-heading">…</h2>…</div>
+           <div class="eds-files-content">…table.eds-table | ul.eds-files-grid | .eds-empty…</div>
+           <div class="eds-files-more">…</div> <section class="eds-files-uploads">…</section>
+           <div class="eds-table-bulk eds-files-bulk">…</div>
+         </div>
+       </div>
+     </div>
+   Estados por atributo: [data-selected] e [data-cut] na linha ou no cartão, [data-drop-target] no
+   alvo de soltar, [data-dragging="files"] no contêiner ao arrastar arquivos do sistema.
+   Responde ao contêiner (container query): abaixo de 48rem a árvore sai da coluna e vira o Drawer
+   "Pastas". Quem desenha o ícone de cada tipo é o JS (SVG com currentColor). */
+@layer eds.components {
+  .eds-files {
+    container: eds-files / inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-3);
+    min-inline-size: 0;
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-body);
+    line-height: var(--eds-line-height-body);
+  }
+
+  /* Barra: trilha e ferramentas */
+  .eds-files-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-2) var(--eds-space-4);
+  }
+
+  .eds-files-path {
+    flex: 1 1 14rem;
+    min-inline-size: 0;
+  }
+
+  .eds-files-path a[data-drop-target] {
+    color: var(--eds-color-text-primary);
+    outline: var(--eds-focus-ring-width) solid var(--eds-color-action-primary);
+    outline-offset: 2px;
+    border-radius: var(--eds-radius-sm);
+  }
+
+  .eds-files-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2);
+    min-inline-size: 0;
+  }
+
+  .eds-files-search {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-3);
+    min-inline-size: 0;
+
+    & .eds-input {
+      inline-size: 14rem;
+      max-inline-size: 100%;
+    }
+
+    &[hidden],
+    & [hidden] {
+      display: none;
+    }
+  }
+
+  .eds-files-recursive {
+    white-space: nowrap;
+    font-size: var(--eds-font-size-label);
+  }
+
+  .eds-files-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2);
+
+    & [hidden] {
+      display: none;
+    }
+  }
+
+  .eds-files-view {
+    display: inline-flex;
+    gap: var(--eds-space-1);
+
+    & [aria-pressed='true'] {
+      background: var(--eds-color-bg-subtle);
+      border-color: var(--eds-color-action-primary);
+      color: var(--eds-color-action-primary);
+    }
+  }
+
+  .eds-files-tree-open {
+    display: none;
+  }
+
+  /* Corpo: árvore + conteúdo */
+  .eds-files-body {
+    display: grid;
+    grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+    gap: var(--eds-space-4);
+    align-items: start;
+  }
+
+  .eds-files-tree {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-block-size: 70dvh;
+    padding: var(--eds-space-2);
+    overflow: auto;
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+  }
+
+  .eds-files-tree-view {
+    min-inline-size: max-content;
+  }
+
+  .eds-files-pick-tree {
+    box-sizing: border-box;
+    max-block-size: 40dvh;
+    margin-block: var(--eds-space-2);
+    padding: var(--eds-space-2);
+    overflow: auto;
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+  }
+
+  .eds-files-pick-status {
+    margin: 0;
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-label);
+  }
+
+  .eds-files-main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--eds-space-3);
+    min-inline-size: 0;
+  }
+
+  .eds-files-notice {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-2);
+
+    &:not(:has(.eds-files-heading:not(.eds-files-heading-sr), button:not([hidden]))) {
+      display: contents;
+    }
+  }
+
+  .eds-files-heading {
+    margin: 0;
+    font-size: var(--eds-font-size-h4);
+    line-height: var(--eds-line-height-h4);
+    font-weight: var(--eds-font-weight-semibold);
+
+    &:focus-visible {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 2px;
+    }
+  }
+
+  /* Título da pasta oculto na lista, mas focável por código (o foco vai para ele ao navegar). Não
+     usa .eds-visually-hidden: ela se revela quando recebe foco. */
+  .eds-files-heading-sr {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .eds-files-content {
+    min-inline-size: 0;
+  }
+
+  .eds-files-skeleton {
+    display: grid;
+    gap: var(--eds-space-3);
+    padding: var(--eds-space-4);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+  }
+
+  .eds-files-more {
+    display: flex;
+    justify-content: center;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  /* Lista */
+  .eds-files-table-wrap {
+    & .eds-table {
+      table-layout: auto;
+    }
+  }
+
+  .eds-files-name-cell {
+    max-inline-size: 28rem;
+  }
+
+  .eds-files-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--eds-space-2);
+    max-inline-size: 100%;
+    color: var(--eds-color-text-primary);
+    text-decoration: none;
+    border-radius: var(--eds-radius-sm);
+
+    &:hover .eds-files-label {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-focus-ring);
+      outline-offset: 2px;
+    }
+  }
+
+  .eds-files-name {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--eds-space-2);
+    min-inline-size: 0;
+  }
+
+  .eds-files-icon {
+    flex: none;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    color: var(--eds-color-text-secondary);
+  }
+
+  .eds-files-icon-folder {
+    color: var(--eds-color-action-primary);
+  }
+
+  .eds-files-label {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .eds-files-origin {
+    flex: none;
+    color: var(--eds-color-text-muted);
+    font-size: var(--eds-font-size-small);
+  }
+
+  .eds-files-table tbody tr {
+    &[data-cut] {
+      opacity: 0.55;
+    }
+
+    &[data-dragging] {
+      opacity: 0.4;
+    }
+
+    &[data-drop-target] {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-action-primary);
+      outline-offset: calc(-1 * var(--eds-focus-ring-width));
+      background: var(--eds-color-bg-subtle);
+    }
+  }
+
+  /* Grade */
+  .eds-files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--eds-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-files-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+
+    &:has(input:checked) {
+      border-color: var(--eds-color-action-primary);
+      background: var(--eds-color-bg-subtle);
+    }
+
+    &[data-cut] {
+      opacity: 0.55;
+    }
+
+    &[data-dragging] {
+      opacity: 0.4;
+    }
+
+    &:has([data-drop-target]),
+    &[data-drop-target] {
+      outline: var(--eds-focus-ring-width) solid var(--eds-color-action-primary);
+    }
+  }
+
+  .eds-files-card-main {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--eds-space-1);
+    padding: var(--eds-space-3);
+    padding-block-start: 0;
+  }
+
+  .eds-files-card-main:focus-visible {
+    outline-offset: calc(-1 * var(--eds-focus-ring-width));
+  }
+
+  .eds-files-thumb {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--eds-radius-sm);
+    background: var(--eds-color-bg-subtle);
+
+    & img {
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+    }
+
+    & .eds-files-icon {
+      inline-size: 2.5rem;
+      block-size: 2.5rem;
+    }
+  }
+
+  .eds-files-meta {
+    color: var(--eds-color-text-muted);
+    font-size: var(--eds-font-size-small);
+  }
+
+  .eds-files-card-check {
+    padding: var(--eds-space-1);
+    padding-inline-end: 0;
+  }
+
+  .eds-files-card-more {
+    position: absolute;
+    inset-block-start: var(--eds-space-1);
+    inset-inline-end: var(--eds-space-1);
+  }
+
+  .eds-files-card-check,
+  .eds-files-card-more {
+    z-index: 1;
+  }
+
+  /* Arrastar arquivos do sistema para a área */
+  .eds-files-drop-hint {
+    position: absolute;
+    inset: 0;
+    z-index: var(--eds-z-sticky);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--eds-space-2);
+    border: calc(var(--eds-border-width) * 2) dashed var(--eds-color-action-primary);
+    border-radius: var(--eds-radius-md);
+    background: color-mix(in srgb, var(--eds-color-bg-surface) 88%, transparent);
+    color: var(--eds-color-action-primary);
+    font-weight: var(--eds-font-weight-semibold);
+    pointer-events: none;
+  }
+
+  .eds-files[data-dragging='files'] .eds-files-drop-hint {
+    display: flex;
+  }
+
+  /* Envios */
+  .eds-files-uploads {
+    padding: var(--eds-space-3);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+    background: var(--eds-color-bg-surface);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .eds-files-uploads-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--eds-space-2);
+  }
+
+  .eds-files-uploads-title {
+    margin: 0;
+    font-size: var(--eds-font-size-label);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-files-upload-list {
+    display: grid;
+    gap: var(--eds-space-2);
+    margin: var(--eds-space-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-files-upload {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(5rem, 10rem) auto auto;
+    align-items: center;
+    gap: var(--eds-space-3);
+
+    &[data-status='error'] .eds-files-upload-status {
+      color: var(--eds-color-status-danger-text);
+    }
+
+    &[data-status='done'] .eds-files-upload-status {
+      color: var(--eds-color-status-success-text);
+    }
+  }
+
+  .eds-files-upload-name {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .eds-files-upload-status {
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+  }
+
+  /* Lote: só a posição; o resto vem de .eds-table-bulk */
+  .eds-files-bulk {
+    margin-block-start: 0;
+  }
+
+  /* Menu "⋯" e de contexto: popover posicionado por --_files-menu-x / --_files-menu-y */
+  .eds-files-menu {
+    inset: auto;
+    margin: 0;
+    position: fixed;
+    inset-inline-start: var(--_files-menu-x, 0);
+    inset-block-start: var(--_files-menu-y, 0);
+
+    & .eds-dropdown-item {
+      display: flex;
+      inline-size: 100%;
+    }
+  }
+
+  /* Versões */
+  .eds-files-versions {
+    display: grid;
+    gap: var(--eds-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .eds-files-version {
+    padding: var(--eds-space-3);
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--eds-radius-md);
+  }
+
+  .eds-files-version-title {
+    display: flex;
+    align-items: center;
+    gap: var(--eds-space-2);
+    margin: 0;
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-files-version-meta {
+    margin: var(--eds-space-1) 0 0;
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+  }
+
+  .eds-files-version-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--eds-space-2);
+    margin-block-start: var(--eds-space-2);
+  }
+
+  /* Contêiner estreito: a árvore vira o Drawer "Pastas" */
+  @container eds-files (max-width: 48rem) {
+    .eds-files-body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .eds-files-tree {
+      display: none;
+    }
+
+    .eds-files-tree-open {
+      display: inline-flex;
+    }
+
+    .eds-files-search {
+      flex: 1 1 100%;
+
+      & .eds-input {
+        inline-size: 100%;
+      }
+    }
+
+    .eds-files-upload {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-files * {
+      scroll-behavior: auto;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-files-table tbody tr[data-drop-target],
+    .eds-files-card:has([data-drop-target]) {
+      outline-color: Highlight;
+    }
+
+    .eds-files-card:has(input:checked) {
+      outline: calc(var(--eds-focus-ring-width) * 2) solid Highlight;
+    }
+  }
+
+  @media print {
+    .eds-files-toolbar,
+    .eds-files-tree,
+    .eds-files-bulk,
+    .eds-files-uploads,
+    .eds-files-more {
+      display: none;
+    }
+  }
+}

@@ -25,7 +25,7 @@ import {
 } from '@efds-ui/react';
 import { BellIcon, DashboardIcon, SearchIcon, UserIcon } from '@efds-ui/icons';
 import { usuario, type Notificacao } from './data';
-import { EngrenagemIcon, MarcaIcon, SairIcon } from './icones';
+import { EngrenagemIcon, MarcaIcon, SairIcon, TracoIcon } from './icones';
 
 export type Rota = 'inicio' | 'notificacoes' | 'perfil' | 'configuracoes' | 'nao-encontrada';
 
@@ -204,7 +204,12 @@ export function Shell({
           </Button>
           <NavbarActions>
             <NotificationBell
-              items={notificacoes.map((n) => ({ ...n, href: caminhos.notificacoes }))}
+              items={notificacoes.map(({ tom, icone, ...n }) => ({
+                ...n,
+                href: caminhos.notificacoes,
+                icon: <TracoIcon d={icone} />,
+                iconTone: tom,
+              }))}
               onRead={onLer}
               onReadAll={onLerTodas}
             />

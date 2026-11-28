@@ -184,3 +184,42 @@ describe('Wizard: etapa controlada', () => {
     expect(items()[0]).toHaveAttribute('data-state', 'done');
   });
 });
+
+describe('Wizard com errorSummary', () => {
+  const group = () => document.querySelector('.eds-error-summary') as HTMLElement;
+  const links = () =>
+    Array.from(group().querySelectorAll('a')).map((a) => (a.textContent ?? '').split(':')[0]);
+
+  it('lista os inválidos do painel, foca o resumo e leva ao campo pelo link', async () => {
+    const user = userEvent.setup();
+    render(<Wizard aria-label="E" steps={steps} errorSummary />);
+    expect(group()).toHaveAttribute('hidden');
+    await user.click(screen.getByRole('button', { name: 'Avançar' }));
+    expect(group()).not.toHaveAttribute('hidden');
+    expect(links()).toEqual(['Nome']);
+    expect(group()).toHaveFocus();
+    expect(screen.getByLabelText('Nome')).toHaveAttribute('aria-invalid', 'true');
+    await user.click(group().querySelector('a') as HTMLElement);
+    expect(screen.getByLabelText('Nome')).toHaveFocus();
+  });
+
+  it('corrigir esconde o resumo e avançar segue sem ele', async () => {
+    const user = userEvent.setup();
+    render(<Wizard aria-label="E" steps={steps} errorSummary={{ headingLevel: 3 }} />);
+    await user.click(screen.getByRole('button', { name: 'Avançar' }));
+    expect(group().querySelector('h3')).not.toBeNull();
+    await user.type(screen.getByLabelText('Nome'), 'Ana');
+    expect(group()).toHaveAttribute('hidden');
+    await user.click(screen.getByRole('button', { name: 'Avançar' }));
+    expect(screen.getByLabelText('Rua')).toBeVisible();
+    expect(group()).toHaveAttribute('hidden');
+  });
+
+  it('sem a prop, o foco vai ao campo e não há resumo', async () => {
+    const user = userEvent.setup();
+    render(<Wizard aria-label="E" steps={steps} />);
+    await user.click(screen.getByRole('button', { name: 'Avançar' }));
+    expect(document.querySelector('.eds-error-summary')).toBeNull();
+    expect(screen.getByLabelText('Nome')).toHaveFocus();
+  });
+});

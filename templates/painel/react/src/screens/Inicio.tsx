@@ -10,6 +10,7 @@ import {
   Grid,
   Progress,
   Stack,
+  Stat,
   StatGrid,
   Table,
   TableBody,
@@ -20,8 +21,7 @@ import {
   Timeline,
 } from '@efds-ui/react';
 import { acessos, atividades, chamados, indicadores, metas, situacoes } from '../data';
-import { AtencaoIcon, ConfereIcon } from '../icones';
-import { StatComIcone } from '../StatComIcone';
+import { AtencaoIcon, ConfereIcon, TracoIcon } from '../icones';
 import { caminhos, Shell, type ShellBaseProps } from '../Shell';
 
 const numero = new Intl.NumberFormat('pt-BR');
@@ -57,9 +57,9 @@ export function Inicio(props: ShellBaseProps) {
         </h2>
         <StatGrid>
           {indicadores.map((i) => (
-            <StatComIcone
+            <Stat
               key={i.label}
-              icone={i.icone}
+              icon={<TracoIcon d={i.icone} />}
               label={i.label}
               value={i.value}
               delta={i.delta}

@@ -42,8 +42,11 @@ const describeBy = (el: Element, id: string, on: boolean): void => {
 export function createFieldErrors() {
   const entries = new Map<FieldControl, Entry>();
 
+  const messageOf = (control: FieldControl): string =>
+    control.getAttribute('data-eds-error-message') || control.validationMessage;
+
   const show = (control: FieldControl): void => {
-    const message = control.getAttribute('data-eds-error-message') || control.validationMessage;
+    const message = messageOf(control);
     const root = control.closest<HTMLElement>(COMPOSITE);
     let entry = entries.get(control);
     if (!entry) {
@@ -93,8 +96,16 @@ export function createFieldErrors() {
   };
 
   return {
-    /** Mostra o erro de cada campo inválido do painel e foca o primeiro. `true` se tudo válido. */
-    validatePanel(panel: HTMLElement): boolean {
+    /** Texto do erro do campo agora (`data-eds-error-message` ou a mensagem nativa). */
+    messageOf,
+    /**
+     * Mostra o erro de cada campo inválido do painel e foca o primeiro (`focus: false` deixa o foco
+     * para quem lista os erros). `onInvalid` recebe os campos recusados. `true` se tudo válido.
+     */
+    validatePanel(
+      panel: HTMLElement,
+      options: { focus?: boolean; onInvalid?: (controls: FieldControl[]) => void } = {},
+    ): boolean {
       const groups = new Set<string>();
       const invalid: FieldControl[] = [];
       for (const control of controlsOf(panel)) {
@@ -111,7 +122,8 @@ export function createFieldErrors() {
       }
       const first = invalid[0];
       if (!first) return true;
-      first.focus();
+      options.onInvalid?.(invalid);
+      if (options.focus !== false) first.focus();
       return false;
     },
     /** Ao editar: o erro some quando o campo fica válido; senão acompanha o motivo. */

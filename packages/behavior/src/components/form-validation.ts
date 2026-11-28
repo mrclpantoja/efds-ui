@@ -29,7 +29,24 @@ export interface FormController {
   addSummary(view: SummaryView): () => void;
   /** Conta um uso do controlador; devolve a liberação (a última desliga tudo). */
   retain(): () => void;
+  /**
+   * Para quem valida por conta própria (o Wizard): entrega os campos recusados aos resumos ligados.
+   * Devolve `true` se algum resumo ficou visível e recebeu o foco (então o chamador não foca o campo).
+   */
+  report(fields: readonly InvalidField[]): boolean;
+  /** Depois de editar um campo: tira do resumo o que foi corrigido (o resumo some ao zerar). */
+  sync(): void;
+  /** Esvazia e esconde os resumos (a validação passou ou a tela mudou). */
+  reset(): void;
 }
+
+const SELF_CHANGE_EVENTS = [
+  'eds:lookup-change',
+  'eds:combobox-change',
+  'eds:date-change',
+  'eds:daterange-change',
+  'eds:time-change',
+];
 
 const controllers = new WeakMap<HTMLFormElement, FormController>();
 
@@ -189,13 +206,38 @@ function createController(form: HTMLFormElement, dispose: () => void): FormContr
     refreshSummary();
   };
 
+  /**
+   * Campos que se validam sozinhos não reavaliam a cada edição, mas o erro que este controlador
+   * mostrou (recusa de envio) tem de sair quando eles passam a ser válidos (escolha, busca, `setValue`).
+   */
+  const clearSelfReportingIfValid = (target: EventTarget | null) => {
+    const root = target instanceof Element ? target.closest(SELF_REPORTING) : null;
+    if (!root) return;
+    for (const control of controls()) {
+      if (control.closest(SELF_REPORTING) !== root) continue;
+      const rep = representativeOf(control);
+      if (slots.get(rep)?.element && rep.validity.valid) slots.get(rep)?.clear();
+    }
+  };
+
   const onEdit = (event: Event) => {
     const control = controlOf(event.target);
     if (!control) return;
     // Só depois do primeiro erro mostrado: digitar pela primeira vez nunca acusa erro.
     if (armed.has(control) && !control.closest(SELF_REPORTING)) evaluate(control, false);
     // Os campos que se validam sozinhos atualizam a validade no próprio ouvinte; confere depois dele.
-    queueMicrotask(refreshSummary);
+    queueMicrotask(() => {
+      clearSelfReportingIfValid(event.target);
+      refreshSummary();
+    });
+  };
+
+  /** Escolha feita pelo próprio campo (autocompletar, modal, `setValue`): sem `input` nativo. */
+  const onSelfChange = (event: Event) => {
+    queueMicrotask(() => {
+      clearSelfReportingIfValid(event.target);
+      refreshSummary();
+    });
   };
 
   const onPointerDown = (event: Event) => {
@@ -220,11 +262,27 @@ function createController(form: HTMLFormElement, dispose: () => void): FormContr
     form.addEventListener('focusout', onFocusOut, { signal });
     form.addEventListener('input', onEdit, { signal });
     form.addEventListener('change', onEdit, { signal });
+    for (const name of SELF_CHANGE_EVENTS) form.addEventListener(name, onSelfChange, { signal });
     form.addEventListener('pointerdown', onPointerDown, { capture: true, signal });
     form.addEventListener('reset', onReset, { signal });
   }
 
   const controller: FormController = {
+    report(fields) {
+      shown = fields.map((field) => ({
+        ...field,
+        message: messageOf(field.element) || field.message,
+      }));
+      for (const view of summaries) view.render(shown);
+      let focused = false;
+      for (const view of summaries) focused = view.focus() || focused;
+      return focused;
+    },
+    sync: refreshSummary,
+    reset() {
+      shown = [];
+      for (const view of summaries) view.clear();
+    },
     addSummary(view) {
       summaries.add(view);
       return () => summaries.delete(view);

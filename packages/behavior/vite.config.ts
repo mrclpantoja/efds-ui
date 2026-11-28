@@ -15,6 +15,7 @@ export default defineConfig({
         'validate-entry': 'src/validate-entry.ts',
         'format-entry': 'src/format-entry.ts',
         'image-entry': 'src/image-entry.ts',
+        'files-entry': 'src/files-entry.ts',
         // Um gerador por formato, para o @efds-ui/react carregar sob demanda.
         'export/formats/csv': 'src/export/formats/csv.ts',
         'export/formats/json': 'src/export/formats/json.ts',

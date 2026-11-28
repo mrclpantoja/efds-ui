@@ -83,10 +83,13 @@ import ErrorSummaryPage from './pages/componentes/ErrorSummary';
 import FormSubmitPage from './pages/componentes/FormSubmit';
 import ValidacaoPage from './pages/comecar/Validacao';
 import ReceitasPage from './pages/comecar/Receitas';
+import ServidorArquivosPage from './pages/comecar/ServidorArquivos';
 import CopyPage from './pages/componentes/Copy';
 import TimelinePage from './pages/componentes/Timeline';
 import NotificationsPage from './pages/componentes/Notifications';
 import DirtyGuardPage from './pages/componentes/DirtyGuard';
+import FileViewerPage from './pages/componentes/FileViewer';
+import FileManagerPage from './pages/componentes/FileManager';
 import SessionTimeoutPage from './pages/componentes/SessionTimeout';
 import ConditionalPage from './pages/componentes/Conditional';
 import CepPage from './pages/componentes/Cep';
@@ -243,7 +246,9 @@ const componentCategory: Record<string, SectionId> = {
   ),
   ...Object.fromEntries(['image', 'gallery', 'image-cropper'].map((s) => [s, 'midia'])),
   ...Object.fromEntries(
-    ['dirty-guard', 'session-timeout', 'conditional', 'form-submit'].map((s) => [s, 'pagina']),
+    ['dirty-guard', 'session-timeout', 'conditional', 'form-submit', 'file-viewer', 'files'].map(
+      (s) => [s, 'pagina'],
+    ),
   ),
 };
 
@@ -258,6 +263,8 @@ const experimentalComponents: ReadonlySet<string> = new Set([
   'sortable',
   'lookup',
   'table-avancada',
+  'file-viewer',
+  'files',
 ]);
 
 const allRoutes: readonly DocRoute[] = [
@@ -290,6 +297,12 @@ const allRoutes: readonly DocRoute[] = [
     title: 'Receitas de formulário',
     section: 'comecar',
     page: ReceitasPage,
+  },
+  {
+    path: '/comecar/servidor-arquivos',
+    title: 'Servidor de arquivos',
+    section: 'comecar',
+    page: ServidorArquivosPage,
   },
   {
     path: '/comecar/formatadores',
@@ -547,6 +560,18 @@ const allRoutes: readonly DocRoute[] = [
     title: 'Alterações não salvas',
     section: 'componentes',
     page: DirtyGuardPage,
+  },
+  {
+    path: '/componentes/file-viewer',
+    title: 'Visualizador de arquivos',
+    section: 'componentes',
+    page: FileViewerPage,
+  },
+  {
+    path: '/componentes/files',
+    title: 'Gerenciador de arquivos',
+    section: 'componentes',
+    page: FileManagerPage,
   },
   {
     path: '/componentes/session-timeout',

@@ -185,7 +185,8 @@ export default function Comportamento() {
           OTP, NumberInput, Lookup, copiar, notificações, alterações não salvas, sessão por
           inatividade, campos condicionais e o estado de carregamento da imagem (
           <code>.eds-image</code>) estão nos dois; a galeria (<code>data-eds-gallery</code>) e o
-          corte de foto (<code>data-eds-cropper</code>) só existem no completo. O{' '}
+          corte de foto (<code>data-eds-cropper</code>) e o visualizador de arquivos (
+          <code>data-eds-viewer</code>, <code>EDS.viewer</code>) só existem no completo. O{' '}
           <code>eds-behavior.js</code> segue completo. As funções puras de imagem (carregar,
           reduzir, cortar, <code>srcset</code>) ficam no subcaminho{' '}
           <code>@efds-ui/behavior/image</code>.

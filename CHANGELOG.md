@@ -2,10 +2,24 @@
 
 Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons`, `@efds-ui/behavior` e `@efds-ui/editor`.
 
-## 1.0.1 (não publicada)
+## 1.1.0 (não publicada)
+
+Versão menor: só acréscimos e correções, sem quebra de API. O visualizador e o gerenciador de arquivos entram como **experimentais**.
+
+### Novidades
+
+- **Visualizador de arquivos (`FileViewer`).** Diálogo modal que mostra PDF (leitor do próprio navegador, com aviso e links onde não há leitor ou em toque), imagem (zoom, tamanho real, giro de 90 graus e arrasto, por teclado, roda com Ctrl e ponteiro), vídeo e áudio (controles nativos, legendas por `tracks`) e texto (sempre como texto, nunca como HTML, com limite configurável), mais "Sem pré-visualização" com Baixar e Abrir em nova aba para os demais tipos, inclusive SVG e HTML. Navega entre os arquivos de um grupo (setas, PageUp/PageDown, Home, End, sem laço) e anuncia cada troca; erro e tempo limite mostram "Tentar de novo". Ligação por `data-eds-viewer` / `data-eds-viewer-group` ou `EDS.viewer.open(items, index, options)` (só na compilação completa do `@efds-ui/behavior`, com `configure({ viewer })` e os eventos `eds:viewer-open|change|close|error`), e no React por `<FileViewer>` e `useFileViewer()`. Espaço livre no rodapé para as ações do sistema. Nenhum visualizador externo, nenhuma dependência nova e nenhuma chamada a terceiros.
+- **Gerenciador de arquivos (`FileManager`).** Em HTML (`[data-eds-files]`, só no `eds-behavior.js` completo) e React (`<FileManager api|adapter>`): trilha, árvore de pastas (vira o painel "Pastas" em contêiner estreito), lista ou grade, busca, ordenação, seleção com barra de lote e menu por item, envio com progresso, cancelar e tentar de novo, com limites conferidos antes de enviar. Mover e copiar por arrastar (Ctrl copia), recortar/copiar/colar e "Mover para…", com diálogo de conflito de nome ("Substituir", "Manter os dois", "Pular", "Aplicar a todos"). Exclusão vai para a lixeira com "Desfazer"; visão da lixeira (restaurar, excluir definitivamente, esvaziar) e versões em um Drawer. Fala só com a API HTTP do sistema ou com um adaptador próprio, e nada é requisitado sem `api` configurada. Nova subentrada `@efds-ui/behavior/files` com `createHttpAdapter`, `createMemoryAdapter` (dados fictícios, para testes e demos) e os tipos do contrato. Eventos `eds:files-*`, `EDS.files(el)` e `configure({ files: { headers, credentials, adapter } })`. Abre os arquivos no visualizador.
+- **Servidor de arquivos.** Contrato HTTP documentado (página "Servidor de arquivos" e `docs/architecture/arquivos.md`), com a segurança exigida do servidor, e implementações de referência em `examples/servidor-arquivos/` para Laravel (Flysystem, disco local ou S3) e Node (drivers de disco e S3), sob MIT.
+- **Ícone no Stat e nos itens de notificação.** O `Stat` ganhou um disco de ícone decorativo no canto do card (`<span class="eds-icon-disc eds-stat-icon">` no HTML; `icon` e `iconTone` no React), com o rótulo reservando o espaço e sem desalinhar a grade. Cada item do `NotificationBell` aceita um disco pequeno antes do texto (`.eds-notification-icon`; `icon` e `iconTone` no React). Os ícones são `aria-hidden`; o significado continua no texto.
+- **Wizard com resumo de erros.** Ao recusar o avanço ou o envio final, os campos inválidos do painel alimentam o resumo de erros (`[data-eds-error-summary]` no HTML, prop `errorSummary` no React), que recebe o foco e perde itens ao corrigir.
+- `describeColumnFilter` em `@efds-ui/behavior/export` e `@efds-ui/react`, para chips próprios do filtro por coluna; `kindOf(mime, nome)` em `@efds-ui/behavior/internal`.
+- Templates gratuitos (Painel, Cadastro, Portal) com os recursos da 1.0.0 e desta versão.
 
 ### Correções
 
+- Table avançada: linhas que o app redesenha depois de o usuário reordenar colunas são reordenadas a partir da ordem original (células e `hidden` na coluna certa); colunas fixas escritas no meio do HTML vão para a ponta ao ligar, e a ordem salva nas preferências é a mesma que aparece depois de recarregar; os chips do filtro por coluna mostram os limites no formato da coluna (número, moeda, percentual, data) em vez do valor cru.
+- O aviso "Preencha este campo." de Lookup, Combobox, DatePicker, DateRangePicker e TimePicker obrigatórios sai assim que o campo fica válido (autocompletar, busca em diálogo ou `setValue`); no React, escolher no Lookup avisa o `useFormValidation`.
 - `data-eds-confirm` em botão de envio ou formulário só pergunta depois da validação: com campo inválido, os erros aparecem e a confirmação não abre (`formnovalidate` pergunta sem validar). O mesmo vale para o `ConfirmButton` do React com `type="submit"`, com validação nativa ou `useFormValidation`. Antes, a pergunta vinha primeiro e, depois do "sim", o envio era recusado.
 - `isVoterId` (`data-eds-validate="titulo"`) aceita títulos antigos sem os zeros à esquerda da sequência (5 a 11 dígitos). A regra dos verificadores foi conferida contra o brazilian-utils, sem mudança.
 

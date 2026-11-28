@@ -167,6 +167,7 @@ export {
   sortTableData,
   filterTableData,
   useTableFilter,
+  describeColumnFilter,
   useTableColumns,
   useTableQuery,
   TableColumnsMenu,
@@ -203,6 +204,8 @@ export type {
   TableColumnsMenuProps,
   TableColumnsMenuTexts,
   FilterValue,
+  DescribeFilterOptions,
+  FilterTextType,
   TableColumnFilterOption,
   TableColumnFilterProps,
   TableColumnFilterTexts,
@@ -243,7 +246,7 @@ export type { OptionCardGroupProps, OptionCardProps } from './components/OptionC
 export { IconDisc } from './components/IconDisc';
 export type { IconDiscProps, IconDiscSize, IconDiscTone } from './components/IconDisc';
 export { Wizard } from './components/Wizard';
-export type { WizardProps, WizardStep, WizardTexts } from './components/Wizard';
+export type { WizardProps, WizardStep, WizardTexts, WizardErrorSummary } from './components/Wizard';
 export { Stat, StatGrid } from './components/Stat';
 export type {
   StatProps,
@@ -521,3 +524,23 @@ export type {
   ImageCropperTexts,
 } from './components/ImageCropper';
 export type { Crop as ImageCrop, CropState as ImageCropState } from '@efds-ui/behavior/image';
+// Visualizador de arquivos
+export { FileViewer, useFileViewer } from './components/FileViewer';
+export type {
+  FileViewerControlProps,
+  FileViewerProps,
+  FileViewerTexts,
+  UseFileViewerResult,
+  ViewerItem,
+  ViewerTrack,
+} from './components/FileViewer';
+// Gerenciador de arquivos (adaptadores em `@efds-ui/behavior/files`)
+export { FileManager } from './components/FileManager';
+export type {
+  FileManagerChange,
+  FileManagerError,
+  FileManagerProps,
+  FileEntry,
+  FilesAdapter,
+  FilesTexts,
+} from './components/FileManager';

@@ -5,6 +5,9 @@ import { PropsTable } from '../../components/PropsTable';
 import { Section } from '../../components/Section';
 import { UseCases } from '../../components/UseCases';
 import { toHref } from '../../router';
+import ComIcones from '../../examples/notifications/icones';
+import iconesHtml from '../../examples/notifications/icones.html?raw';
+import iconesSource from '../../examples/notifications/icones.tsx?raw';
 import Basico from '../../examples/notifications/basico';
 import basicoHtml from '../../examples/notifications/basico.html?raw';
 import basicoSource from '../../examples/notifications/basico.tsx?raw';
@@ -35,6 +38,12 @@ export default function NotificationsPage() {
           html={basicoHtml}
           react={{ Component: Basico, source: basicoSource }}
         />
+        <Example
+          title="Com ícones por item"
+          description="Cada item pode levar um disco de ícone pequeno (decorativo) com tom próprio, entre o ponto e o texto. O status e o título continuam dizendo o que é: o ícone só reforça o tipo da notificação. Em telas estreitas o texto quebra e o disco não encolhe."
+          html={iconesHtml}
+          react={{ Component: ComIcones, source: iconesSource }}
+        />
       </Section>
 
       <Section title="HTML puro">
@@ -61,7 +70,7 @@ export default function NotificationsPage() {
               name: 'items',
               type: 'NotificationItem[]',
               required: true,
-              description: 'id, title, text, time, dateTime, href, unread.',
+              description: 'id, title, text, time, dateTime, href, unread, icon, iconTone.',
             },
             {
               name: 'onRead',
@@ -114,6 +123,11 @@ export default function NotificationsPage() {
             {
               name: '.eds-notification-link / -dot / -body / -status / -title / -text / -time',
               effect: 'Partes do item. O status "Não lida" é texto e some quando lida.',
+            },
+            {
+              name: '.eds-icon-disc.eds-icon-disc-sm.eds-notification-icon',
+              effect:
+                'Ícone opcional do item (disco decorativo, aria-hidden), entre o ponto e o corpo. No React: icon e iconTone no item.',
             },
           ]}
         />

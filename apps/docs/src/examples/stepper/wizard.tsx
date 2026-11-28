@@ -7,6 +7,7 @@ export default function WizardExemplo() {
     <>
       <Wizard
         aria-label="Etapas do cadastro"
+        errorSummary
         onComplete={(dados) => setEnviado(String(dados.get('nome')))}
         steps={[
           {

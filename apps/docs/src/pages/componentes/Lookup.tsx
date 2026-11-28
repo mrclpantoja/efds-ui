@@ -129,6 +129,16 @@ export default function LookupPage() {
         />
       </Section>
 
+      <Section title="Campo obrigatório">
+        <p>
+          Com <code>required</code>, o aviso de campo obrigatório que o formulário mostra ao recusar
+          o envio some assim que o campo fica válido: ao escolher pelo autocompletar ou pelo
+          diálogo, ao confirmar um código digitado e por <code>EDS.lookup(el).setValue(...)</code>.
+          Em React, escolher pela lista ou pelo diálogo avisa o <code>useFormValidation</code> (o
+          erro de <code>errorOf</code> some sem digitar nada).
+        </p>
+      </Section>
+
       <Section title="API React">
         <PropsTable
           caption="Props de Lookup"

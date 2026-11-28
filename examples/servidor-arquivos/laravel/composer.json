@@ -1,0 +1,49 @@
+{
+  "name": "efds-ui/servidor-arquivos-laravel-exemplo",
+  "description": "Implementacao de referencia do contrato HTTP de arquivos do efDS.ui para Laravel (disco local e S3)",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": "^8.2",
+    "illuminate/auth": "^11.0 || ^12.0",
+    "illuminate/contracts": "^11.0 || ^12.0",
+    "illuminate/filesystem": "^11.0 || ^12.0",
+    "illuminate/http": "^11.0 || ^12.0",
+    "illuminate/routing": "^11.0 || ^12.0",
+    "illuminate/support": "^11.0 || ^12.0",
+    "league/flysystem": "^3.25"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^9.0 || ^10.0",
+    "phpunit/phpunit": "^11.0"
+  },
+  "suggest": {
+    "league/flysystem-aws-s3-v3": "Necessario para o disco s3 (versao compativel com o seu Laravel).",
+    "ext-intl": "Ordenacao por nome em pt-BR e normalizacao Unicode (NFC)."
+  },
+  "autoload": {
+    "psr-4": {
+      "Efds\\Files\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Efds\\Files\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Efds\\Files\\FilesServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

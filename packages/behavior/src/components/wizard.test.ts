@@ -1,7 +1,9 @@
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { flush } from '../test-utils/dom-polyfills';
-import { initWizard } from './wizard';
+import { bindAll } from '../core/registry';
+import { errorSummaryBehavior } from './error-summary';
+import { initWizard, wizardBehavior } from './wizard';
 
 const item = (state: string, label: string, current = false) => `
   <li class="eds-stepper-item" data-state="${state}"${current ? ' aria-current="step"' : ''}>
@@ -220,5 +222,89 @@ describe('wizard', () => {
     const user = userEvent.setup();
     await user.type($('nome'), 'Maria{Enter}');
     expect($('p2')).not.toHaveAttribute('hidden');
+  });
+});
+
+describe('wizard com resumo de erros', () => {
+  const withSummary = html
+    .replace(
+      '<section data-eds-wizard-step id="p1">',
+      `<div class="eds-error-summary" id="resumo" data-eds-error-summary tabindex="-1" hidden>
+        <h2 class="eds-error-summary-title"></h2><ul class="eds-error-summary-list"></ul>
+      </div>
+      <section data-eds-wizard-step id="p1">`,
+    )
+    .replace(
+      '<label for="nome">Nome</label><input id="nome" name="nome" required />',
+      '<label for="nome">Nome</label><input id="nome" name="nome" required /><label for="mae">Mãe</label><input id="mae" name="mae" required />',
+    );
+  let stop: () => void;
+  beforeEach(() => {
+    document.body.innerHTML = withSummary;
+    stop = bindAll(document, [wizardBehavior, errorSummaryBehavior]);
+  });
+  afterEach(() => {
+    stop();
+    document.body.innerHTML = '';
+  });
+  // O texto é o da mensagem nativa do navegador (a mesma que aparece junto do campo).
+  const links = () =>
+    Array.from(document.querySelectorAll('#resumo a')).map(
+      (a) => (a.textContent ?? '').split(':')[0],
+    );
+
+  it('recusar o avanço lista os campos do painel e foca o resumo', async () => {
+    const user = userEvent.setup();
+    await user.click($('next'));
+    expect($('resumo')).not.toHaveAttribute('hidden');
+    expect(links()).toEqual(['Nome', 'Mãe']);
+    expect(document.activeElement).toBe($('resumo'));
+    expect($('nome')).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('corrigir tira o item; zerar esconde; avançar esvazia', async () => {
+    const user = userEvent.setup();
+    await user.click($('next'));
+    await user.type($('nome'), 'Ana');
+    await flush();
+    expect(links()).toEqual(['Mãe']);
+    await user.type($('mae'), 'Bia');
+    await flush();
+    expect($('resumo')).toHaveAttribute('hidden');
+    await user.click($('next'));
+    expect($('p2')).not.toHaveAttribute('hidden');
+    expect($('resumo')).toHaveAttribute('hidden');
+  });
+
+  it('o link do item leva o foco ao campo', async () => {
+    const user = userEvent.setup();
+    await user.click($('next'));
+    await user.click(document.querySelectorAll('#resumo a')[1] as HTMLElement);
+    expect(document.activeElement).toBe($('mae'));
+  });
+
+  it('o envio final que volta a um painel anterior também alimenta o resumo', async () => {
+    const user = userEvent.setup();
+    await user.type($('nome'), 'Ana');
+    await user.type($('mae'), 'Bia');
+    await user.click($('next'));
+    await user.type($('cep'), '96000000');
+    await user.click($('next'));
+    ($('nome') as HTMLInputElement).value = '';
+    await user.click($('fim'));
+    expect($('p1')).not.toHaveAttribute('hidden');
+    expect(links()).toEqual(['Nome']);
+  });
+});
+
+describe('wizard sem resumo de erros', () => {
+  it('segue como antes: o foco vai ao primeiro campo inválido', async () => {
+    document.body.innerHTML = html;
+    const stop = initWizard(document);
+    const user = userEvent.setup();
+    await user.click($('next'));
+    expect(document.activeElement).toBe($('nome'));
+    stop();
+    document.body.innerHTML = '';
   });
 });

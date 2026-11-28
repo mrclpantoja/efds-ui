@@ -1,0 +1,322 @@
+/* Visualizador de arquivos (FileViewer): <dialog> modal que mostra PDF, imagem, vídeo, áudio e
+   texto, com navegação entre os arquivos de um grupo.
+   Markup (o JS gera igual; o servidor pode entregá-lo pronto para personalizar):
+     <dialog class="eds-viewer" aria-labelledby="eds-viewer-title" data-mode="dark" data-theme="…">
+       <header class="eds-viewer-header">
+         <h2 class="eds-viewer-title" id="eds-viewer-title">Contrato social.pdf</h2>
+         <p class="eds-viewer-position">2 de 5</p>
+         <div class="eds-viewer-tools" role="group" aria-label="Ferramentas">
+           <button class="eds-button eds-button-ghost eds-button-icon" aria-label="Ampliar">…</button>
+           <a class="eds-button eds-button-ghost eds-button-icon" href="…" download aria-label="Baixar">…</a>
+         </div>
+         <button class="eds-button eds-button-ghost eds-button-icon eds-viewer-close" aria-label="Fechar">…</button>
+       </header>
+       <div class="eds-viewer-stage" data-state="loading|ready|error|unsupported">
+         <img class="eds-viewer-image" alt="…" />            (imagem)
+         <iframe class="eds-viewer-frame" title="…"></iframe>  (PDF, leitor do navegador)
+         <video class="eds-viewer-video" controls></video>     (vídeo)
+         <audio class="eds-viewer-audio" controls></audio>     (áudio)
+         <pre class="eds-viewer-text" tabindex="0"></pre>      (texto: sempre texto, nunca HTML)
+         <div class="eds-empty">…</div>                        (erro e "sem pré-visualização")
+       </div>
+       <footer class="eds-viewer-footer">
+         <button class="eds-button eds-button-secondary eds-viewer-prev">Anterior</button>
+         <div class="eds-viewer-actions"><!-- espaço livre do autor --></div>
+         <button class="eds-button eds-button-secondary eds-viewer-next">Próximo</button>
+       </footer>
+     </dialog>
+   - Escuro no palco: o JS escreve data-mode="dark" + o data-theme vigente (os tokens do modo escuro
+     valem na subárvore). Sem o atributo ele segue o modo da página.
+   - Ocupa quase toda a tela; abaixo de 40rem de largura vira tela cheia.
+   - Estado do palco: loading (o círculo girando só aparece com data-slow, depois de 300 ms),
+     ready, error e unsupported (ambos mostram um .eds-empty com as ações).
+   - Imagem: o JS escreve --_viewer-zoom (1 = ajustada ao palco), --_viewer-x/-y (deslocamento) e
+     --_viewer-rotate no palco; data-rotated indica giro de 90 ou 270 graus (troca os limites de
+     tamanho); data-zoomed liga o cursor de arrastar; data-dragging desliga a transição.
+   - Sem animação de entrada e de saída: o diálogo troca de arquivo toda hora e abre sobre a página. */
+@layer eds.components {
+  .eds-viewer {
+    --_viewer-gutter: var(--eds-inset-md);
+    --_viewer-radius: var(--eds-radius-lg);
+
+    box-sizing: border-box;
+    inline-size: calc(100% - 2 * var(--_viewer-gutter));
+    block-size: calc(100dvh - 2 * var(--_viewer-gutter));
+    max-inline-size: none;
+    max-block-size: none;
+    margin: auto;
+    padding: 0;
+    overflow: hidden;
+    overscroll-behavior: contain;
+    border: var(--eds-border-width) solid var(--eds-color-border-default);
+    border-radius: var(--_viewer-radius);
+    background: var(--eds-color-bg-page);
+    color: var(--eds-color-text-primary);
+    box-shadow: var(--eds-shadow-lg);
+
+    /* display só em [open], como no Modal: fechado, segue com display:none do navegador. */
+    &[open] {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    &::backdrop {
+      background: var(--eds-color-bg-overlay);
+    }
+
+    /* Estreito (e a tela cheia do navegador): sem moldura nem margem. */
+    @media (max-width: 40rem) {
+      --_viewer-gutter: 0rem;
+      --_viewer-radius: 0;
+
+      border-width: 0;
+    }
+
+    &:fullscreen {
+      --_viewer-gutter: 0rem;
+      --_viewer-radius: 0;
+
+      inline-size: 100%;
+      block-size: 100%;
+      border-width: 0;
+    }
+  }
+
+  .eds-viewer-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-2) var(--eds-space-3);
+    padding: var(--eds-inset-sm) var(--eds-inset-md);
+    border-block-end: var(--eds-border-width) solid var(--eds-color-border-default);
+    background: var(--eds-color-bg-surface);
+  }
+
+  .eds-viewer-title {
+    flex: 1 1 10rem;
+    min-inline-size: 0;
+    margin: 0;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    color: var(--eds-color-text-primary);
+    font-size: var(--eds-font-size-label);
+    line-height: var(--eds-line-height-label);
+    font-weight: var(--eds-font-weight-semibold);
+  }
+
+  .eds-viewer-position {
+    margin: 0;
+    color: var(--eds-color-text-secondary);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-small);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .eds-viewer-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--eds-space-1);
+  }
+
+  /* Fechar fica por último na linha larga e sobe para junto do nome na estreita. */
+  .eds-viewer-close {
+    order: 2;
+  }
+
+  /* Estreito: nome, posição e Fechar na primeira linha; as ferramentas ocupam a segunda
+     (tela cheia do navegador não faz sentido: o diálogo já ocupa a tela toda). */
+  @media (max-width: 40rem) {
+    .eds-viewer-tools {
+      order: 3;
+      flex: 1 1 100%;
+      justify-content: space-between;
+
+      & > [data-eds-viewer-tool='fullscreen'] {
+        display: none;
+      }
+    }
+  }
+
+  /* Texto curto num botão de ferramenta ("100%"): os ícones já cobrem o resto. */
+  .eds-viewer-tools .eds-button:not(.eds-button-icon) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eds-viewer-stage {
+    position: relative;
+    display: grid;
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+    place-items: center;
+    min-block-size: 0;
+    min-inline-size: 0;
+    overflow: hidden;
+    container-type: size;
+    background: var(--eds-color-bg-subtle);
+
+    /* O arquivo some enquanto carrega; o círculo só entra depois de 300 ms (data-slow). */
+    &[data-state='loading'] > :is(img, iframe, video, audio, pre) {
+      opacity: 0;
+    }
+
+    &[data-state='loading'][data-slow]::after {
+      content: '';
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-start: 50%;
+      inline-size: var(--eds-icon-size-xl);
+      block-size: var(--eds-icon-size-xl);
+      margin: calc(var(--eds-icon-size-xl) / -2);
+      box-sizing: border-box;
+      border: calc(var(--eds-icon-size-xl) / 8) solid
+        color-mix(in srgb, var(--eds-color-text-primary) 25%, transparent);
+      border-block-start-color: var(--eds-color-text-primary);
+      border-inline-end-color: var(--eds-color-text-primary);
+      border-radius: 50%;
+      animation: eds-viewer-spin var(--eds-motion-duration-slow) linear infinite;
+    }
+
+    /* Erro e "sem pré-visualização": o aviso ocupa o palco, rolável se a tela for baixa. */
+    & > .eds-empty {
+      align-self: center;
+      max-block-size: 100%;
+      overflow: auto;
+    }
+  }
+
+  .eds-viewer-image {
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    inline-size: auto;
+    block-size: auto;
+    object-fit: contain;
+    transform-origin: center;
+    transform: translate(var(--_viewer-x, 0px), var(--_viewer-y, 0px))
+      rotate(var(--_viewer-rotate, 0deg)) scale(var(--_viewer-zoom, 1));
+    transition:
+      transform var(--eds-motion-duration-fast) var(--eds-motion-easing-standard),
+      opacity var(--eds-motion-duration-base) var(--eds-motion-easing-standard);
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* Girada de lado: cabe pela altura do palco na largura e vice-versa. */
+  .eds-viewer-stage[data-rotated] > .eds-viewer-image {
+    max-inline-size: 100cqb;
+    max-block-size: 100cqi;
+  }
+
+  .eds-viewer-stage[data-zoomed] > .eds-viewer-image {
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .eds-viewer-stage[data-dragging] > .eds-viewer-image {
+    cursor: grabbing;
+    transition: none;
+  }
+
+  .eds-viewer-frame {
+    inline-size: 100%;
+    block-size: 100%;
+    border: 0;
+    background: var(--eds-color-bg-surface);
+  }
+
+  .eds-viewer-video {
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    background: var(--eds-color-bg-page);
+  }
+
+  .eds-viewer-audio {
+    inline-size: min(calc(100% - 2 * var(--eds-inset-md)), 32rem);
+  }
+
+  .eds-viewer-text {
+    box-sizing: border-box;
+    inline-size: min(100%, 100ch);
+    block-size: 100%;
+    margin: 0;
+    padding: var(--eds-inset-md);
+    overflow: auto;
+    background: var(--eds-color-bg-surface);
+    color: var(--eds-color-text-primary);
+    font-family: var(--eds-font-family-code);
+    font-size: var(--eds-font-size-small);
+    line-height: var(--eds-line-height-body);
+    tab-size: 4;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .eds-viewer-footer {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--eds-space-2) var(--eds-space-3);
+    padding: var(--eds-inset-sm) var(--eds-inset-md);
+    border-block-start: var(--eds-border-width) solid var(--eds-color-border-default);
+    background: var(--eds-color-bg-surface);
+  }
+
+  .eds-viewer-prev {
+    grid-column: 1;
+  }
+
+  .eds-viewer-next {
+    grid-column: 3;
+  }
+
+  /* Espaço livre do autor (ex.: "Aprovar" e "Recusar"): fica entre Anterior e Próximo. */
+  .eds-viewer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    grid-column: 2;
+    align-items: center;
+    justify-content: center;
+    gap: var(--eds-space-2);
+    min-inline-size: 0;
+  }
+
+  @keyframes eds-viewer-spin {
+    to {
+      rotate: 1turn;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eds-viewer-image {
+      transition: none;
+    }
+
+    /* O arco fica parado: o carregamento segue indicado, sem girar. */
+    .eds-viewer-stage[data-state='loading'][data-slow]::after {
+      animation: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .eds-viewer {
+      border-color: CanvasText;
+    }
+
+    .eds-viewer-stage[data-state='loading'][data-slow]::after {
+      border-color: GrayText;
+      border-block-start-color: CanvasText;
+      border-inline-end-color: CanvasText;
+    }
+  }
+
+  @media print {
+    .eds-viewer {
+      display: none;
+    }
+  }
+}

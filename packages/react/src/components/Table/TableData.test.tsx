@@ -10,6 +10,7 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
+  describeColumnFilter,
   filterTableData,
   sortTableData,
   useTableFilter,
@@ -192,5 +193,17 @@ describe('useTableFilter', () => {
     await waitFor(() =>
       expect(screen.getByRole('status')).toHaveTextContent('Filtro removido. 4 linhas.'),
     );
+  });
+});
+
+describe('describeColumnFilter', () => {
+  it('formata os limites pelo tipo da coluna, no locale', () => {
+    expect(
+      describeColumnFilter({ gte: '50000' }, { type: 'currency' }).replace(/\u00a0/g, ' '),
+    ).toBe('a partir de R$ 50.000,00');
+    expect(describeColumnFilter({ gte: '2026-03-01', lte: '2026-03-31' }, { type: 'date' })).toBe(
+      'de 01/03/2026 a 31/03/2026',
+    );
+    expect(describeColumnFilter({ lte: '9' })).toBe('até 9');
   });
 });

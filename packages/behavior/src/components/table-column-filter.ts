@@ -16,6 +16,7 @@ import {
   isRemote,
   type TableHub,
 } from '../core/table-hub';
+import { describeColumnFilter, type FilterTextType } from '../core/filter-text';
 import { popoverBehavior } from './popover';
 import { cellFilterValue, refreshRows, removeRowSource, setRowSource } from '../core/table-rows';
 
@@ -37,15 +38,9 @@ function registerSource(table: HTMLTableElement, hub: TableHub): void {
   });
 }
 
-/** Texto curto de um filtro para o chip (e a descrição). */
-export function describeFilter(filter: FilterValue): string {
-  const m = getMessages();
-  if (typeof filter === 'string') return filter;
-  if (Array.isArray(filter)) return filter.join(', ');
-  if (filter.gte && filter.lte)
-    return format(m.filterChipRange, { min: filter.gte, max: filter.lte });
-  if (filter.gte) return format(m.filterChipGte, { min: filter.gte });
-  return format(m.filterChipLte, { max: filter.lte ?? '' });
+/** Texto curto de um filtro para o chip (e a descrição); `type` formata os limites. */
+export function describeFilter(filter: FilterValue, type?: FilterTextType): string {
+  return describeColumnFilter(filter, { type });
 }
 
 /**
@@ -335,7 +330,20 @@ export const columnFilterBehavior: Behavior = {
 
 /** Descrição de um filtro com o nome da coluna ("Total: de 100 a 500"). */
 function chipText(table: HTMLTableElement, key: string, filter: FilterValue): string {
-  return `${columnLabel(headerOf(table, key)) || key}: ${describeFilter(filter)}`;
+  const th = headerOf(table, key);
+  return `${columnLabel(th) || key}: ${describeFilter(filter, typeOfColumn(th))}`;
+}
+
+const COLUMN_TYPES: readonly string[] = ['number', 'currency', 'percent', 'date'];
+
+/** Tipo da coluna: `th[data-type]` (o mesmo do exportador) ou o tipo do filtro (`number`, `date`). */
+function typeOfColumn(th: HTMLTableCellElement | undefined | null): FilterTextType | undefined {
+  const declared = th?.getAttribute('data-type') ?? '';
+  if (COLUMN_TYPES.includes(declared)) return declared as FilterTextType;
+  const filter = th
+    ?.querySelector('[data-eds-column-filter]')
+    ?.getAttribute('data-eds-column-filter');
+  return filter === 'number' || filter === 'date' ? filter : undefined;
 }
 
 /** `ul[data-eds-table-chips="ID"]`: um chip por filtro aplicado; remover devolve o foco. */

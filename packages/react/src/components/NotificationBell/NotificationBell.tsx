@@ -3,6 +3,7 @@ import { useAnnouncer } from '../../internal/announcer';
 import { cx } from '../../utils/cx';
 import { mergeTexts } from '../../utils/texts';
 import { Button } from '../Button';
+import { IconDisc, type IconDiscTone } from '../IconDisc';
 import { Popover, type PopoverPlacement } from '../Popover';
 
 export interface NotificationItem {
@@ -17,6 +18,10 @@ export interface NotificationItem {
   href?: string;
   /** Não lida. A cor e o ponto reforçam; o texto "Não lida" diz. */
   unread?: boolean;
+  /** Ícone decorativo (um `<svg>`) num disco pequeno antes do texto. O título continua dizendo o que é. */
+  icon?: ReactNode;
+  /** Tom do disco do `icon`. Padrão: `accent`. */
+  iconTone?: IconDiscTone;
 }
 
 export interface NotificationBellTexts {
@@ -145,6 +150,11 @@ export const NotificationBell = forwardRef<HTMLButtonElement, NotificationBellPr
                 const body = (
                   <>
                     <span className="eds-notification-dot" aria-hidden="true" />
+                    {item.icon != null && (
+                      <IconDisc size="sm" tone={item.iconTone} className="eds-notification-icon">
+                        {item.icon}
+                      </IconDisc>
+                    )}
                     <span className="eds-notification-body">
                       <span className="eds-notification-status">{t.unread}</span>
                       <span className="eds-notification-title">{item.title}</span>

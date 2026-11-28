@@ -56,6 +56,12 @@ export default function ErrorSummaryPage() {
             recusar o envio, dá o foco ao resumo, leva o foco ao campo pelo link e atualiza ao
             corrigir. Sem o atributo, o resumo é só CSS e o servidor o renderiza.
           </p>
+          <p>
+            Num <a href={toHref('/componentes/stepper')}>Wizard</a> (<code>data-eds-wizard</code>) o
+            resumo recebe os campos inválidos do painel atual a cada avanço recusado; em React,{' '}
+            <code>{'<Wizard errorSummary />'}</code> renderiza o <code>ErrorSummary</code> sozinho.
+            Ponha-o fora dos painéis.
+          </p>
         </Alert>
         <ClassTable
           caption="Classes e atributos"

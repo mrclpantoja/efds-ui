@@ -53,6 +53,32 @@ describe('NotificationBell', () => {
     expect(items[0]!.querySelector('.eds-notification-status')).toHaveTextContent('Não lida');
   });
 
+  it('icon por item vira disco pequeno decorativo, sem mudar o nome do link', () => {
+    render(
+      <NotificationBell
+        items={[
+          {
+            id: 'i1',
+            title: 'Pedido aprovado',
+            href: '#a',
+            unread: true,
+            icon: <svg data-testid="ico" />,
+            iconTone: 'success',
+          },
+          { id: 'i2', title: 'Sem ícone', href: '#b' },
+        ]}
+      />,
+    );
+    const discs = document.querySelectorAll('.eds-notification-icon');
+    expect(discs).toHaveLength(1);
+    const disc = discs[0] as HTMLElement;
+    expect(disc).toHaveClass('eds-icon-disc', 'eds-icon-disc-sm', 'eds-icon-disc-success');
+    expect(disc).toHaveAttribute('aria-hidden', 'true');
+    expect(disc.previousElementSibling).toHaveClass('eds-notification-dot');
+    expect(disc.nextElementSibling).toHaveClass('eds-notification-body');
+    expect(document.querySelector('a[href="#a"]')).toHaveTextContent('Não lidaPedido aprovado');
+  });
+
   it('abrir um item não lido chama onRead e atualiza a contagem', async () => {
     const user = userEvent.setup();
     render(<Harness />);

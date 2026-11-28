@@ -291,3 +291,77 @@ describe('colunas fixas e exportação', () => {
     expect(data.columns.map((c) => c.label)).toEqual(['Código', 'Situação', 'Total']);
   });
 });
+
+describe('colunas: linhas desenhadas pelo app e fixa fora da ponta', () => {
+  const rowHtml = (id: string) =>
+    `<tr>${cell('td', '', `${id}-codigo`)}${cell('td', '', `${id}-cliente`)}${cell('td', '', `${id}-total`)}${cell('td', '', `${id}-situacao`)}<td>x</td></tr>`;
+
+  it('linhas novas, escritas na ordem original, são reordenadas e ocultadas pela coluna certa', async () => {
+    build('data-eds-table-reorder');
+    start();
+    const user = userEvent.setup();
+    handle('situacao').focus();
+    await user.keyboard(' {ArrowLeft} ');
+    expect(headers().slice(0, 4)).toEqual(['codigo', 'cliente', 'situacao', 'total']);
+    const box = document.querySelector('[data-eds-col-id="cliente"] input') as HTMLInputElement;
+    await user.click(box);
+    // O app redesenha o corpo na ordem de origem.
+    T().tBodies[0]!.innerHTML = rowHtml('A') + rowHtml('B');
+    await Promise.resolve();
+    await Promise.resolve();
+    const row = T().tBodies[0]!.rows[0]!;
+    expect(Array.from(row.cells).map((c) => c.textContent)).toEqual([
+      'A-codigo',
+      'A-cliente',
+      'A-situacao',
+      'A-total',
+      'x',
+    ]);
+    expect(Array.from(row.cells).map((c) => c.hidden)).toEqual([false, true, false, false, false]);
+    // Nova rodada com o corpo já arranjado continua estável.
+    T().tBodies[0]!.insertAdjacentHTML('beforeend', rowHtml('C'));
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(Array.from(T().tBodies[0]!.rows[0]!.cells).map((c) => c.textContent)).toEqual([
+      'A-codigo',
+      'A-cliente',
+      'A-situacao',
+      'A-total',
+      'x',
+    ]);
+    expect(Array.from(T().tBodies[0]!.rows[2]!.cells).map((c) => c.textContent)).toEqual([
+      'C-codigo',
+      'C-cliente',
+      'C-situacao',
+      'C-total',
+      'x',
+    ]);
+  });
+
+  it('fixa fora da ponta: a ordem salva é a que aparece depois de recarregar', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const markup = () => {
+      build('data-eds-table-reorder data-eds-table-prefs="fixa"');
+      // Move o th e as células da fixa para a segunda posição (origem com a fixa no meio).
+      const head = T().tHead!.rows[0]!;
+      head.insertBefore(head.cells[0]!, head.cells[2]!);
+      for (const r of Array.from(T().tBodies[0]!.rows)) {
+        if (r.cells.length === 5) r.insertBefore(r.cells[0]!, r.cells[2]!);
+      }
+    };
+    markup();
+    start();
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const seen = headers();
+    expect(seen.slice(0, 4)).toEqual(['codigo', 'cliente', 'total', 'situacao']);
+    const box = document.querySelector('[data-eds-col-id="total"] input') as HTMLInputElement;
+    await user.click(box);
+    vi.advanceTimersByTime(350);
+    const saved = JSON.parse(localStorage.getItem('eds:table:fixa') ?? '{}');
+    expect(saved.order).toEqual(seen.slice(0, 4));
+    stop();
+    markup();
+    start();
+    expect(headers().slice(0, 4)).toEqual(saved.order);
+  });
+});

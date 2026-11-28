@@ -2,6 +2,8 @@ import { describeBy, emit, ensureId, focusEl } from '../core/dom';
 import { format, getMessages } from '../core/config';
 import { bindAll, type Behavior } from '../core/registry';
 import { createAnnouncer } from '../core/status';
+import { fieldLabel, representativeOf, type InvalidField } from '../core/form-errors';
+import { formControllerOf } from './form-validation';
 
 type StepState = 'done' | 'current' | 'upcoming' | 'error';
 
@@ -80,8 +82,25 @@ function createFieldErrors() {
     }
   };
 
-  /** Valida o painel: erro visível em cada campo inválido e foco no primeiro. */
-  const validatePanel = (panel: HTMLElement): boolean => {
+  const toField = (control: Control): InvalidField => {
+    const element = representativeOf(control);
+    return {
+      element,
+      id: ensureId(element, 'field'),
+      name: element.name,
+      label: fieldLabel(element),
+      message: messageOf(control),
+    };
+  };
+
+  /**
+   * Valida o painel: erro visível em cada campo inválido e foco no primeiro. `report` entrega os
+   * inválidos a um resumo de erros (devolve `true` se ele recebeu o foco, no lugar do campo).
+   */
+  const validatePanel = (
+    panel: HTMLElement,
+    report?: (fields: InvalidField[]) => boolean,
+  ): boolean => {
     const seenGroups = new Set<string>();
     const invalid: Control[] = [];
     for (const control of controlsOf(panel)) {
@@ -103,7 +122,8 @@ function createFieldErrors() {
     }
     const first = invalid[0];
     if (!first) return true;
-    first.focus();
+    const focused = report ? report(invalid.map(toField)) : false;
+    if (!focused) first.focus();
     return false;
   };
 
@@ -166,7 +186,10 @@ export const wizardBehavior: Behavior = {
     }
     const announcer = createAnnouncer(status);
     const fieldErrors = createFieldErrors();
-    const { validatePanel } = fieldErrors;
+    const summary = () => formControllerOf(form as HTMLFormElement);
+    // Resumo de erros do formulário (`[data-eds-error-summary]`), se houver: recebe os inválidos do painel.
+    const validateCurrent = (panel: HTMLElement): boolean =>
+      fieldErrors.validatePanel(panel, (fields) => summary().report(fields));
 
     const hadNoValidate = (form as HTMLFormElement).noValidate;
     (form as HTMLFormElement).noValidate = true;
@@ -283,6 +306,7 @@ export const wizardBehavior: Behavior = {
       const from = current;
       if (!emit(form, 'wizard-beforechange', { from, to, direction }, true)) return false;
       current = to;
+      summary().reset();
       render();
       if (moveFocus) focusEl(focusTargetOf(to));
       announcer.say(
@@ -299,7 +323,8 @@ export const wizardBehavior: Behavior = {
     const advance = () => {
       const panel = panels[current];
       if (!panel) return;
-      if (!validatePanel(panel)) return;
+      if (!validateCurrent(panel)) return;
+      summary().reset();
       completed.add(current);
       errored.delete(current);
       if (current < total - 1) goTo(current + 1, 'next');
@@ -349,8 +374,8 @@ export const wizardBehavior: Behavior = {
         event.preventDefault();
         event.stopImmediatePropagation();
         errored.add(i);
-        if (i === current) validatePanel(panel);
-        else if (goTo(i, 'jump')) validatePanel(panel);
+        if (i === current) validateCurrent(panel);
+        else if (goTo(i, 'jump')) validateCurrent(panel);
         render();
         return;
       }
@@ -375,8 +400,10 @@ export const wizardBehavior: Behavior = {
         t instanceof HTMLInputElement ||
         t instanceof HTMLSelectElement ||
         t instanceof HTMLTextAreaElement
-      )
+      ) {
         fieldErrors.refresh(t);
+        queueMicrotask(() => summary().sync());
+      }
     };
 
     form.addEventListener('input', onEdit);

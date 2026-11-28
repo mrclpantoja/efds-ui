@@ -26,6 +26,10 @@ import { commandBehavior, initCommand } from './components/command';
 // Imagem: galeria e corte (só na compilação completa)
 import { galleryBehavior, initGallery } from './components/gallery';
 import { cropperBehavior, initCropper } from './components/cropper';
+// Visualizador de arquivos (só na compilação completa)
+import { initViewer, viewer, viewerBehavior } from './components/viewer';
+// Gerenciador de arquivos (só na compilação completa)
+import { filesBehavior, filesHandle, initFiles } from './components/files';
 
 export * from './setup';
 
@@ -51,6 +55,8 @@ export function init(root: ParentNode = document, options?: BehaviorOptions): ()
     agendaBehavior,
     galleryBehavior,
     cropperBehavior,
+    viewerBehavior,
+    filesBehavior,
   ]);
 }
 
@@ -119,3 +125,12 @@ export type { AgendaEvent, AgendaTone } from './components/agenda';
 export type { CommandItem } from './components/command';
 // Imagem: galeria (Lightbox) e corte de foto; as funções puras estão em `@efds-ui/behavior/image`
 export { initGallery, initCropper };
+// Visualizador de arquivos: `EDS.viewer.open(items, index)`
+export { initViewer, viewer };
+export type { ViewerController, ViewerOpenDetail } from './components/viewer';
+// Gerenciador de arquivos: `EDS.files(el)`; o cliente e os adaptadores estão em `@efds-ui/behavior/files`
+export { initFiles, filesHandle as files };
+export type { FilesHandle } from './components/files';
+export type { FilesConfig } from './files/config';
+export type { ViewerItem, ViewerTrack } from './core/viewer-logic';
+export type { FileKind } from './core/file-kind';

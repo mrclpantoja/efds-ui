@@ -79,6 +79,11 @@
       "types": "./dist/image-entry.d.ts",
       "default": "./dist/image-entry.js"
     },
+    "./files": {
+      "development": "./src/files-entry.ts",
+      "types": "./dist/files-entry.d.ts",
+      "default": "./dist/files-entry.js"
+    },
     "./eds-behavior.js": "./dist/eds-behavior.js",
     "./eds-behavior-core.js": "./dist/eds-behavior-core.js",
     "./package.json": "./package.json"
@@ -141,6 +146,10 @@
       "./image": {
         "types": "./dist/image-entry.d.ts",
         "default": "./dist/image-entry.js"
+      },
+      "./files": {
+        "types": "./dist/files-entry.d.ts",
+        "default": "./dist/files-entry.js"
       },
       "./eds-behavior.js": "./dist/eds-behavior.js",
       "./eds-behavior-core.js": "./dist/eds-behavior-core.js",

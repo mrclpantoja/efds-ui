@@ -113,7 +113,12 @@ export default function TableAvancadaPage() {
               <code>select</code>, <code>number</code> e <code>date</code> (faixa). Enter ou Aplicar
               filtra, fecha e devolve o foco ao botão; Esc fecha sem aplicar. O filtro ativo aparece
               no ícone e no nome do botão, e nos chips acima da tabela. Combina com a busca geral (E
-              lógico).
+              lógico). Os chips mostram os limites no formato da coluna (<code>th[data-type]</code>{' '}
+              com <code>number</code>, <code>currency</code>, <code>percent</code> ou{' '}
+              <code>date</code>, ou o tipo do filtro) e no locale configurado: &quot;Limite: a
+              partir de R$ 50.000,00&quot;. Em React,{' '}
+              <code>describeColumnFilter(valor, {'{ type, locale, currency }'})</code> devolve o
+              mesmo texto para os seus chips.
             </>
           }
           html={filtroColunaHtml}
@@ -163,7 +168,11 @@ export default function TableAvancadaPage() {
               <kbd>End</kbd> vão às pontas, <kbd>Esc</kbd> cancela. O mesmo se faz com o ponteiro
               (arrastar a alça, arrastar a borda do cabeçalho) e, sem arrastar, pelo painel
               &quot;Colunas&quot; (marcar, mover, estreitar e alargar). A última coluna visível não
-              sai. Reordenar move as células no DOM, então a ordem de Tab é a ordem visual.
+              sai. Reordenar move as células no DOM, então a ordem de Tab é a ordem visual. Linhas
+              que o app desenha depois (o corpo refeito por <code>fetch</code>) podem vir na ordem
+              original das colunas: o JS as reordena a partir dela. As fixas ficam nas pontas: se o
+              HTML põe uma fixa no meio, o JS a leva ao início (ou ao fim) ao ligar, e a ordem salva
+              é sempre a que aparece na tela.
             </>
           }
           html={colunasHtml}

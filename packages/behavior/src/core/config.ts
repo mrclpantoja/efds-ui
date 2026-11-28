@@ -1,7 +1,10 @@
 /** Textos e configuração global. Sem efeitos colaterais: só estado de módulo. */
 import { validationMessages, type ValidationMessages } from './validate';
+import type { FilesTexts } from '../files/texts';
 
-export interface Messages extends ValidationMessages {
+// O Gerenciador de arquivos tem os próprios textos (`files*`, com padrões em `files/texts.ts`): aqui
+// só se aceita a troca, para a compilação core não carregar os padrões.
+export interface Messages extends ValidationMessages, Partial<FilesTexts> {
   /** Botão de fechar do toast. */
   toastClose: string;
   /** Prefixos ocultos de severidade do toast sem `title`. */
@@ -313,6 +316,37 @@ export interface Messages extends ValidationMessages {
   cropperFailed: string;
   cropperSmall: string;
   cropperApplied: string;
+  // Visualizador de arquivos: `{current}`, `{total}`, `{name}`, `{percent}`, `{degrees}`, `{size}`
+  viewerClose: string;
+  viewerPosition: string;
+  viewerPrev: string;
+  viewerNext: string;
+  viewerChange: string;
+  viewerSingle: string;
+  viewerTools: string;
+  viewerDownload: string;
+  viewerOpenNewTab: string;
+  viewerFullscreen: string;
+  viewerExitFullscreen: string;
+  viewerZoomIn: string;
+  viewerZoomOut: string;
+  viewerFit: string;
+  viewerActualSize: string;
+  viewerRotate: string;
+  viewerZoomStatus: string;
+  viewerFitStatus: string;
+  viewerRotated: string;
+  viewerLoading: string;
+  viewerErrorTitle: string;
+  viewerErrorText: string;
+  viewerErrorTimeout: string;
+  viewerErrorTooLarge: string;
+  viewerRetry: string;
+  viewerUnsupportedTitle: string;
+  viewerUnsupportedText: string;
+  viewerPdfLinkText: string;
+  viewerErrorStatus: string;
+  viewerUnsupportedStatus: string;
   // Envio de formulário
   submitBusy: string;
   submitSuccess: string;
@@ -675,6 +709,38 @@ export const defaultMessages: Messages = {
   cropperLoadError: 'Não foi possível abrir a imagem. Tente outro arquivo.',
   cropperFailed: 'Não foi possível ajustar a imagem. Tente de novo.',
   cropperApplied: 'Foto ajustada.',
+  viewerClose: 'Fechar',
+  viewerPosition: '{current} de {total}',
+  viewerPrev: 'Anterior',
+  viewerNext: 'Próximo',
+  viewerChange: 'Arquivo {current} de {total}: {name}.',
+  viewerSingle: 'Arquivo: {name}.',
+  viewerTools: 'Ferramentas do arquivo',
+  viewerDownload: 'Baixar',
+  viewerOpenNewTab: 'Abrir em nova aba',
+  viewerFullscreen: 'Tela cheia',
+  viewerExitFullscreen: 'Sair da tela cheia',
+  viewerZoomIn: 'Ampliar',
+  viewerZoomOut: 'Reduzir',
+  viewerFit: 'Ajustar à tela',
+  viewerActualSize: '100%, tamanho real',
+  viewerRotate: 'Girar 90 graus',
+  viewerZoomStatus: 'Zoom {percent}%.',
+  viewerFitStatus: 'Imagem ajustada à tela.',
+  viewerRotated: 'Girada {degrees} graus.',
+  viewerLoading: 'Carregando {name}.',
+  viewerErrorTitle: 'Não foi possível abrir o arquivo',
+  viewerErrorText: 'Verifique a conexão e tente de novo, ou baixe o arquivo.',
+  viewerErrorTimeout: 'A abertura demorou mais que o esperado. Tente de novo ou baixe o arquivo.',
+  viewerErrorTooLarge:
+    'O arquivo é grande demais para ver aqui (limite de {size}). Baixe para abrir.',
+  viewerRetry: 'Tentar de novo',
+  viewerUnsupportedTitle: 'Sem pré-visualização',
+  viewerUnsupportedText: 'Este tipo de arquivo não pode ser visto aqui. Baixe ou abra em nova aba.',
+  viewerPdfLinkText:
+    'O leitor de PDF não está disponível neste aparelho. Abra em nova aba ou baixe.',
+  viewerErrorStatus: 'Não foi possível abrir {name}.',
+  viewerUnsupportedStatus: '{name}: sem pré-visualização.',
   cropperSmall:
     'A imagem é menor que o tamanho final ({size} px): a foto pode ficar com pouca nitidez.',
   // Envio de formulário

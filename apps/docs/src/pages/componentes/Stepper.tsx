@@ -73,9 +73,9 @@ export default function StepperPage() {
             <code>data-eds-wizard-step</code> (os outros ficam <code>hidden</code>); nos botões,{' '}
             <code>data-eds-wizard-prev</code> e <code>data-eds-wizard-next</code>. O{' '}
             <a href={toHref('/comecar/comportamento')}>@efds-ui/behavior</a> valida com{' '}
-            <code>checkValidity</code> e <code>reportValidity</code>, troca os painéis, atualiza o{' '}
-            <code>.eds-stepper</code> do formulário e anuncia a etapa. O título do painel é o{' '}
-            <code>data-eds-wizard-title</code>, o primeiro cabeçalho ou o valor de{' '}
+            <code>checkValidity</code> (erro visível em cada campo, sem balão nativo), troca os
+            painéis, atualiza o <code>.eds-stepper</code> do formulário e anuncia a etapa. O título
+            do painel é o <code>data-eds-wizard-title</code>, o primeiro cabeçalho ou o valor de{' '}
             <code>data-eds-wizard-step</code>. Sem <code>data-eds-wizard-finish</code> (botão que só
             aparece na última etapa), o &quot;avançar&quot; da última etapa envia o formulário.
           </p>
@@ -85,6 +85,17 @@ export default function StepperPage() {
             <code>eds:wizard-change</code> (<code>from</code>, <code>to</code>, <code>step</code>,{' '}
             <code>total</code>). Enter antes da última etapa avança; o evento <code>submit</code> só
             chega ao seu código no envio final.
+          </p>
+          <p>
+            <strong>Resumo de erros.</strong> Ponha um{' '}
+            <a href={toHref('/componentes/error-summary')}>
+              <code>[data-eds-error-summary]</code>
+            </a>{' '}
+            dentro do formulário, fora dos painéis (por exemplo, entre o indicador e o primeiro
+            painel). Ao recusar o avanço (ou o envio final, que volta ao painel inválido), o Wizard
+            lista nele os campos inválidos do painel atual, leva o foco ao resumo no lugar do
+            primeiro campo e o atualiza ao corrigir; ao avançar ou voltar, ele se esconde. Sem o
+            resumo, nada muda: o foco vai ao primeiro campo inválido.
           </p>
         </Alert>
       </Section>
@@ -219,6 +230,13 @@ export default function StepperPage() {
               name: 'onComplete',
               type: '(data: FormData, form) => void',
               description: 'Envio final com todos os painéis válidos. O envio nativo é impedido.',
+            },
+            {
+              name: 'errorSummary',
+              type: 'boolean | WizardErrorSummary',
+              default: 'false',
+              description:
+                'Mostra um ErrorSummary com os campos inválidos do painel quando o avanço é recusado (recebe o foco no lugar do primeiro campo, perde itens ao corrigir e some ao mudar de etapa). Um objeto ajusta o resumo (headingLevel, title, texts).',
             },
             {
               name: 'texts',

@@ -14,12 +14,16 @@
      down = 180deg, flat = 90deg), então a direção nunca depende só de cor.
    - .eds-stat-delta-{success,danger,warning} = leitura do resultado (neutral é o padrão): cor via status-*-text.
      Subir pode ser ruim (ex.: inadimplência): por isso trend e tone são independentes.
+   - Ícone opcional no canto (decorativo): <span class="eds-icon-disc eds-stat-icon"><svg aria-hidden="true">…</svg></span>
+     como primeiro filho do .eds-stat. Tom por .eds-icon-disc-{info,success,warning,danger} (independe do tom da
+     variação); o rótulo ganha folga do lado do disco. O significado vem sempre do rótulo.
    - Carregando: aria-busy="true" no .eds-stat com .eds-skeleton dentro do rótulo, do valor e da variação.
    - .eds-stat-grid: grade que responde à largura do próprio contêiner (1 → 2 → 4 colunas). */
 @layer eds.components {
   .eds-stat {
     --_stat-gap: var(--eds-space-1);
 
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--_stat-gap);
@@ -105,12 +109,25 @@
     font-weight: var(--eds-font-weight-regular);
   }
 
-  /* Ícone opcional ao lado do rótulo (ex.: <svg class="eds-stat-icon">). */
-  .eds-stat-icon {
+  /* Ícone simples (<svg class="eds-stat-icon">), sem disco, na linha do rótulo. */
+  svg.eds-stat-icon {
     flex: none;
     inline-size: var(--eds-icon-size-md);
     block-size: var(--eds-icon-size-md);
     color: var(--eds-color-text-muted);
+  }
+
+  /* Disco de ícone no canto (<span class="eds-icon-disc eds-stat-icon">): fora do fluxo, então
+     não vira linha da subgrade nem desalinha os números da fileira. */
+  span.eds-stat-icon {
+    position: absolute;
+    inset-block-start: var(--eds-inset-md);
+    inset-inline-end: var(--eds-inset-md);
+  }
+
+  /* O rótulo não passa por baixo do disco (largura do disco + respiro). */
+  .eds-stat:has(> span.eds-stat-icon) > .eds-stat-label {
+    padding-inline-end: calc(var(--eds-icon-size-xl) + var(--eds-space-4));
   }
 
   /* Carregando: os blocos Skeleton ocupam a largura de um valor típico (sem layout shift). */

@@ -49,6 +49,7 @@
 @import './components/alert-dialog.css';
 @import './components/sortable.css';
 @import './components/tree.css';
+@import './components/files.css';
 @import './components/accordion.css';
 @import './components/tooltip.css';
 @import './components/popover.css';
@@ -81,6 +82,7 @@
 @import './components/image.css';
 @import './components/gallery.css';
 @import './components/cropper.css';
+@import './components/viewer.css';
 @import './components/stat.css';
 @import './components/filter-bar.css';
 @import './components/progress.css';

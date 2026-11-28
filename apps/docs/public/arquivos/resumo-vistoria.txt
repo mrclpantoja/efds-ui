@@ -1,0 +1,14 @@
+RESUMO DA VISTORIA (texto fictício)
+
+Obra ........: Escola Municipal Exemplo
+Etapa .......: estrutura em andamento
+Avanço ......: 42%
+
+Pendências
+  1. Conferir o prumo dos pilares do bloco B.
+  2. Repor o lote de blocos recusado na entrega.
+  3. Atualizar o cronograma com a nova data de concretagem.
+
+Linhas longas quebram dentro da área de leitura, sem criar rolagem para os lados, e o conteúdo é sempre mostrado como texto, nunca como HTML: <b>isto não é negrito</b>.
+
+Todos os nomes, valores e datas deste arquivo foram inventados.

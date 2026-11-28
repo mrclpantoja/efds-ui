@@ -31,6 +31,10 @@ export default defineConfig({
         replacement: fromSource('../../../packages/behavior/src/image-entry.ts'),
       },
       {
+        find: '@efds-ui/behavior/files',
+        replacement: fromSource('../../../packages/behavior/src/files-entry.ts'),
+      },
+      {
         find: '@efds-ui/behavior/theme',
         replacement: fromSource('../../../packages/behavior/src/theme-entry.ts'),
       },

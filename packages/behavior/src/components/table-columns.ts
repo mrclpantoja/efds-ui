@@ -77,11 +77,33 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
 
   const initial = readCols();
   const colById = new Map(initial.map((c) => [c.id, c]));
+  const rank = (id: string) => {
+    const pin = colById.get(id)?.pin;
+    return pin === 'start' ? 0 : pin === 'end' ? 2 : 1;
+  };
+  // Fixas ficam nas pontas: a ordem de origem já é a do grupo (início, livres, fim), de modo que
+  // a ordem salva nas preferências é a mesma que aparece na tela depois de recarregar.
   const defaults: TableColumnState = {
-    order: initial.map((c) => c.id),
+    order: initial
+      .map((c, i) => ({ id: c.id, i }))
+      .sort((a, b) => rank(a.id) - rank(b.id) || a.i - b.i)
+      .map((x) => x.id),
     hidden: initial.filter((c) => c.th.hidden).map((c) => c.id),
     widths: {},
   };
+  // Cabeçalho como foi escrito (a ordem de origem): linhas que o app desenha depois vêm nela.
+  const origHead = Array.from(headRow()?.cells ?? []);
+  const origIndex = new Map<string, number>();
+  origHead.forEach((th, i) => {
+    const id = th.getAttribute('data-eds-col');
+    if (id) origIndex.set(id, i);
+  });
+  const origSlots: number[] = [];
+  origHead.forEach((th, i) => {
+    if (!isLocked(th)) origSlots.push(i);
+  });
+  /** Último arranjo feito em cada pai (linha ou colgroup): reconhece o que já está arranjado. */
+  const placed = new WeakMap<Element, { orig: Element[]; now: Element[] }>();
   const state: TableColumnState = {
     order: [...defaults.order],
     hidden: [...defaults.hidden],
@@ -105,7 +127,7 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
     let cg = table.querySelector('colgroup');
     if (!cg) {
       const created = doc.createElement('colgroup');
-      for (const th of Array.from(headRow()?.cells ?? [])) {
+      for (const th of origHead) {
         const col = doc.createElement('col');
         const id = th.getAttribute('data-eds-col');
         if (id) col.setAttribute('data-eds-col', id);
@@ -116,42 +138,48 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
       cg = created;
     }
     colgroup = Array.from(cg.querySelectorAll('col'));
-    return colgroup.length === count ? colgroup : [];
+    if (colgroup.length !== count) return [];
+    arrange(colgroup, cg);
+    return colgroup;
   };
 
   let applying = false;
 
+  /**
+   * Põe os itens (células de uma linha ou `<col>`s) na ordem do estado. Parte sempre da ordem de
+   * origem: se o pai ainda tem o arranjo anterior, usa a origem guardada; senão (linha nova do
+   * app, escrita na ordem original) o que está no DOM é a origem.
+   */
+  function arrange(items: Element[], parent: Element): void {
+    const rec = placed.get(parent);
+    const known = rec && rec.now.length === items.length && rec.now.every((n, i) => n === items[i]);
+    const orig = known ? rec.orig : items;
+    const next = orig.slice();
+    origSlots.forEach((slot, k) => {
+      const from = origIndex.get(state.order[k] ?? '');
+      if (from !== undefined) next[slot] = orig[from] as Element;
+    });
+    const children = Array.from(parent.children);
+    next.forEach((node, i) => {
+      const current = children[i];
+      if (current !== node) {
+        parent.insertBefore(node, current ?? null);
+        children.splice(children.indexOf(node), 1);
+        children.splice(i, 0, node);
+      }
+    });
+    placed.set(parent, { orig, now: next });
+  }
+
   const applyOrder = () => {
-    const head = headRow();
-    if (!head) return;
-    const H = Array.from(head.cells);
-    const slots: number[] = [];
-    H.forEach((th, i) => {
-      if (!isLocked(th)) slots.push(i);
-    });
-    const indexOf = new Map<string, number>();
-    H.forEach((th, i) => {
-      const id = th.getAttribute('data-eds-col');
-      if (id) indexOf.set(id, i);
-    });
-    const arrange = <T extends Element>(items: T[], parent: Element | null, move: boolean) => {
-      const next = items.slice();
-      slots.forEach((slot, k) => {
-        const from = indexOf.get(state.order[k] ?? '');
-        if (from !== undefined) next[slot] = items[from] as T;
-      });
-      if (!move || !parent) return;
-      next.forEach((node, i) => {
-        const current = Array.from(parent.children)[i];
-        if (current !== node) parent.insertBefore(node, current ?? null);
-      });
-    };
-    const cols = ensureColgroupIfAny();
+    if (origHead.length === 0) return;
     for (const row of Array.from(table.rows)) {
-      if (row.cells.length !== H.length) continue;
-      arrange(Array.from(row.cells), row, true);
+      if (row.cells.length !== origHead.length) continue;
+      arrange(Array.from(row.cells), row);
     }
-    if (cols.length === H.length) arrange(cols, cols[0]?.parentElement ?? null, true);
+    const cols = ensureColgroupIfAny();
+    const first = cols[0];
+    if (first?.parentElement && cols.length === origHead.length) arrange(cols, first.parentElement);
   };
 
   const ensureColgroupIfAny = (): HTMLTableColElement[] => {
@@ -372,7 +400,6 @@ function createInstance(table: HTMLTableElement, hub: TableHub, onDestroy: () =>
       // Cada coluna fica no grupo dela (fixas não saem do próprio grupo).
       const rest = state.order.filter((id) => !known.includes(id));
       const merged = [...known, ...rest];
-      const rank = (id: string) => (group(id) === 'start' ? 0 : group(id) === 'end' ? 2 : 1);
       state.order = merged
         .map((id, i) => ({ id, i }))
         .sort((a, b) => rank(a.id) - rank(b.id) || a.i - b.i)

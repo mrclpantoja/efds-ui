@@ -1,3 +1,4 @@
+import { describeColumnFilter } from '../core/filter-text';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { bindAll } from '../core/registry';
@@ -243,6 +244,28 @@ describe('filtro por coluna', () => {
     expect(document.activeElement).toBe(chips()[0]);
     await user.click(chips()[0] as HTMLElement);
     expect(document.activeElement).toBe(th('total').querySelector('.eds-table-filter-btn'));
+  });
+
+  it('chips: limites formatados pelo tipo da coluna (moeda, número e data)', async () => {
+    const user = userEvent.setup();
+    th('total').setAttribute('data-type', 'currency');
+    await user.type(document.getElementById('min') as HTMLInputElement, '50000');
+    await user.type(document.getElementById('max') as HTMLInputElement, '90000.5{Enter}');
+    const text = () =>
+      Array.from(document.querySelectorAll<HTMLElement>('[data-eds-chip-remove]')).map((c) =>
+        (c.textContent ?? '').replace(/\u00a0/g, ' '),
+      );
+    expect(text()).toEqual(['Total: de R$ 50.000,00 a R$ 90.000,50']);
+    expect(describeColumnFilter({ gte: '2026-03-01' }, { type: 'date' })).toBe(
+      'a partir de 01/03/2026',
+    );
+    expect(describeColumnFilter({ lte: '1234.5' }, { type: 'number' })).toBe('até 1.234,5');
+    expect(describeColumnFilter({ gte: '12' }, { type: 'percent' })).toBe('a partir de 12%');
+    expect(
+      describeColumnFilter({ gte: '5' }, { type: 'currency', locale: 'en-US', currency: 'USD' }),
+    ).toBe('a partir de $5.00');
+    expect(describeColumnFilter({ gte: 'abc' }, { type: 'number' })).toBe('a partir de abc');
+    expect(describeColumnFilter('beta')).toBe('beta');
   });
 
   it('combina com a busca geral (E lógico) e emite um evento cancelável', async () => {

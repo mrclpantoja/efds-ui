@@ -23,6 +23,13 @@ function Glifo({ children }: { children: ReactNode }) {
   );
 }
 
+/** Glifo a partir de um traçado (viewBox 24), para os discos de ícone dos dados. */
+export const TracoIcon = ({ d }: { d: string }) => (
+  <Glifo>
+    <path d={d} />
+  </Glifo>
+);
+
 export const MarcaIcon = () => (
   <Glifo>
     <path d="M12 2 3 7v10l9 5 9-5V7z" />

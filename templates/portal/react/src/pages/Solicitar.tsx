@@ -241,6 +241,7 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                   ref={formRef}
                   aria-label="Etapas da solicitação"
                   aria-busy={sending || undefined}
+                  errorSummary
                   texts={{ finish: sending ? 'Enviando…' : 'Enviar solicitação' }}
                   onStepChange={(index) => {
                     if (index === 3 && formRef.current) setReview(readForm(formRef.current));

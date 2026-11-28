@@ -61,21 +61,3 @@
   .pn-inbox-none {
   display: block;
 }
-
-/*
- * Disco de ícone no canto do indicador (Stat). O rótulo ganha folga do lado do disco para não
- * passar por baixo dele. O mesmo bloco existe na versão HTML (assets/painel.css).
- */
-.pn-stat {
-  position: relative;
-}
-
-.pn-stat > .pn-stat-icon {
-  position: absolute;
-  inset-block-start: var(--eds-inset-md);
-  inset-inline-end: var(--eds-inset-md);
-}
-
-.pn-stat > .eds-stat-label {
-  padding-inline-end: calc(var(--eds-icon-size-xl) + var(--eds-space-4));
-}

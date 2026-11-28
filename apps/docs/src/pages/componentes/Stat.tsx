@@ -6,6 +6,9 @@ import { UseCases } from '../../components/UseCases';
 import Basico from '../../examples/stat/basico';
 import basicoHtml from '../../examples/stat/basico.html?raw';
 import basicoSource from '../../examples/stat/basico.tsx?raw';
+import ComIcone from '../../examples/stat/icone';
+import iconeHtml from '../../examples/stat/icone.html?raw';
+import iconeSource from '../../examples/stat/icone.tsx?raw';
 import Grade from '../../examples/stat/grade';
 import gradeHtml from '../../examples/stat/grade.html?raw';
 import gradeSource from '../../examples/stat/grade.tsx?raw';
@@ -41,6 +44,12 @@ export default function StatPage() {
           description="A grade passa de 1 para 2 e 4 colunas conforme a largura do contêiner. O último indicador mostra o estado carregando: aria-busy, Skeleton nas mesmas dimensões e anúncio."
           html={gradeHtml}
           react={{ Component: Grade, source: gradeSource }}
+        />
+        <Example
+          title="Com ícone"
+          description="Um disco de ícone decorativo no canto (o IconDisc do core), sem mudar a leitura do número. O tom do disco é independente do tom da variação, e o rótulo ganha folga para não passar por baixo dele. O ícone é aria-hidden: o significado vem do rótulo."
+          html={iconeHtml}
+          react={{ Component: ComIcone, source: iconeSource }}
         />
       </Section>
 
@@ -84,6 +93,18 @@ export default function StatPage() {
               description: 'aria-busy e Skeleton no lugar do conteúdo.',
             },
             {
+              name: 'icon',
+              type: 'ReactNode',
+              description:
+                'Ícone (um <svg>) num disco no canto, decorativo (aria-hidden). Independe de tone.',
+            },
+            {
+              name: 'iconTone',
+              type: "'accent' | 'neutral' | 'info' | 'success' | 'warning' | 'danger'",
+              default: "'accent'",
+              description: 'Tom do disco do ícone.',
+            },
+            {
               name: 'texts',
               type: 'Partial<StatTexts>',
               description: 'up, down, flat (texto oculto da direção) e loading.',
@@ -116,7 +137,15 @@ export default function StatPage() {
               effect: 'Cor do texto de status.',
             },
             { name: '.eds-stat-meta', effect: 'Referência da variação, em tom secundário.' },
-            { name: '.eds-stat-icon', effect: 'Ícone opcional do indicador.' },
+            {
+              name: 'span.eds-icon-disc.eds-stat-icon',
+              effect:
+                'Disco de ícone no canto (primeiro filho do .eds-stat); o rótulo reserva o espaço. Tons por .eds-icon-disc-*.',
+            },
+            {
+              name: 'svg.eds-stat-icon',
+              effect: 'Ícone simples, sem disco, na coluna do indicador.',
+            },
             { name: '[aria-busy="true"]', effect: 'Estado carregando (com Skeleton dentro).' },
             { name: '.eds-stat-grid', effect: 'Grade de 1, 2 e 4 colunas conforme o contêiner.' },
           ]}

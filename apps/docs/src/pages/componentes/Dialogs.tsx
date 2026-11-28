@@ -255,8 +255,9 @@ export default function DialogsPage() {
         <p>
           <code>ConfirmButton</code> é o equivalente em React do <code>data-eds-confirm</code>: um{' '}
           <code>Button</code> (ou link, com <code>href</code>) que pergunta antes de agir. Fica fora
-          do <code>Button</code> para que quem não confirma nada não carregue o diálogo. Exige um{' '}
-          <code>DialogProvider</code> acima.
+          do <code>Button</code> para que quem não confirma nada não carregue o diálogo. Com{' '}
+          <code>type="submit"</code>, só pergunta se o formulário estiver válido (validação nativa
+          ou <code>useFormValidation</code>). Exige um <code>DialogProvider</code> acima.
         </p>
         <PropsTable
           caption="Props de ConfirmButton (além das de Button)"
@@ -380,7 +381,9 @@ export default function DialogsPage() {
                 <>
                   Em <code>button</code>, <code>a</code> ou <code>form</code>: pergunta antes de
                   agir. Só confirmado, o link navega, o botão age (um botão de envio envia o
-                  formulário com ele como <code>submitter</code>) e o formulário é enviado.
+                  formulário com ele como <code>submitter</code>) e o formulário é enviado. Botão de
+                  envio e formulário só perguntam depois da validação: com campo inválido, os erros
+                  aparecem e a pergunta não abre (<code>formnovalidate</code> pergunta sem validar).
                 </>
               ),
             },

@@ -1,5 +1,6 @@
 import { getMessages } from '../core/config';
 import { emit, ensureId } from '../core/dom';
+import { markValidating } from '../core/form-state';
 import { createErrorSlot, type ErrorSlot } from '../core/error-slot';
 import {
   SELF_REPORTING,
@@ -215,6 +216,7 @@ function createController(form: HTMLFormElement, dispose: () => void): FormContr
 
   if (!wizard) {
     form.addEventListener('submit', onSubmit, { capture: true, signal });
+    markValidating(form, true);
     form.addEventListener('focusout', onFocusOut, { signal });
     form.addEventListener('input', onEdit, { signal });
     form.addEventListener('change', onEdit, { signal });
@@ -237,7 +239,10 @@ function createController(form: HTMLFormElement, dispose: () => void): FormContr
         if (uses > 0) return;
         ac.abort();
         for (const control of controls()) slots.get(control)?.clear();
-        if (!wizard) form.noValidate = wasNoValidate;
+        if (!wizard) {
+          form.noValidate = wasNoValidate;
+          markValidating(form, false);
+        }
         controllers.delete(form);
         dispose();
       };

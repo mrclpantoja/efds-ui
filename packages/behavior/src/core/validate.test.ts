@@ -324,6 +324,21 @@ describe('isVoterId', () => {
     expect(isVoterId(`${base.slice(0, 8)}29${base.slice(10)}`)).toBe(false);
     expect(isVoterId('111111111111')).toBe(false);
     expect(isVoterId('12345678')).toBe(false);
+    expect(isVoterId('1234')).toBe(false);
+    expect(isVoterId('1023850106710')).toBe(false);
+  });
+
+  it('confere com exemplo independente (mesma regra do brazilian-utils)', () => {
+    expect(isVoterId('102385010671')).toBe(true);
+    expect(isVoterId('1023 8501 0671')).toBe(true);
+    expect(isVoterId('102385010672')).toBe(false);
+  });
+
+  it('completa com zeros os títulos antigos sem os zeros à esquerda', () => {
+    expect(isVoterId('000123450655')).toBe(true);
+    expect(isVoterId('123450655')).toBe(true);
+    expect(isVoterId('12345 06 55')).toBe(true);
+    expect(isVoterId('123450656')).toBe(false);
   });
 });
 

@@ -94,6 +94,60 @@ describe('confirmação declarativa (data-eds-confirm)', () => {
     expect(dlg()).toBeNull();
   });
 
+  it('valida antes de perguntar: formulário inválido mostra os erros e não abre a confirmação', async () => {
+    document.body.innerHTML =
+      '<form id="f"><label for="c">CPF</label><input id="c" name="cpf" required data-eds-validate="cpf" /><button id="s" type="submit" data-eds-confirm="Salvar?">Salvar</button></form>';
+    destroy = init(document);
+    const form = document.getElementById('f') as HTMLFormElement;
+    const input = document.getElementById('c') as HTMLInputElement;
+    const sent: Array<Element | null> = [];
+    const invalid = vi.fn();
+    form.addEventListener('eds:form-invalid', invalid);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      sent.push((e as SubmitEvent).submitter);
+    });
+
+    document.getElementById('s')!.click();
+    await flush();
+    expect(dlg()).toBeNull();
+    expect(invalid).toHaveBeenCalledTimes(1);
+    expect(sent).toHaveLength(0);
+
+    input.value = '52998224725';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    document.getElementById('s')!.click();
+    await flush();
+    expect(dlg()).not.toBeNull();
+    expect(sent).toHaveLength(0);
+    await press('Confirmar');
+    expect(sent).toHaveLength(1);
+    expect(sent[0]!.id).toBe('s');
+    expect(invalid).toHaveBeenCalledTimes(1);
+  });
+
+  it('form com confirmação e validação: inválido não pergunta; formnovalidate pergunta sem validar', async () => {
+    document.body.innerHTML =
+      '<form id="f" data-eds-confirm="Enviar?"><label for="c">CPF</label><input id="c" name="cpf" required data-eds-validate="cpf" /><button id="s" type="submit">Enviar</button><button id="r" type="submit" formnovalidate>Rascunho</button></form>';
+    destroy = init(document);
+    const form = document.getElementById('f') as HTMLFormElement;
+    const sent: Array<Element | null> = [];
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      sent.push((e as SubmitEvent).submitter);
+    });
+    document.getElementById('s')!.click();
+    await flush();
+    expect(dlg()).toBeNull();
+    expect(sent).toHaveLength(0);
+
+    document.getElementById('r')!.click();
+    await flush();
+    expect(dlg()).not.toBeNull();
+    await press('Confirmar');
+    expect(sent.map((x) => x?.id)).toEqual(['r']);
+  });
+
   it('form: intercepta o envio, confirma e reenvia com o submitter; botão com confirmação própria não pergunta duas vezes', async () => {
     document.body.innerHTML =
       '<form id="f" data-eds-confirm="Enviar?"><button id="s" type="submit">Enviar</button></form>';

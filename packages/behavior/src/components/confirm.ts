@@ -1,3 +1,4 @@
+import { isFormValid, isValidating } from '../core/form-state';
 import { confirm, type DialogTone } from './dialogs';
 
 const TONES: readonly DialogTone[] = ['info', 'success', 'warning', 'danger', 'question'];
@@ -16,8 +17,10 @@ function ask(el: HTMLElement): Promise<boolean> {
 /**
  * Confirmação declarativa: `data-eds-confirm="Excluir o pedido?"` em `button`, `a` ou `form`
  * intercepta o clique (ou o envio), pergunta com `confirm` e, só se o usuário confirmar,
- * prossegue: o link navega, o botão age (um botão de envio envia o formulário com ele como
- * `submitter`) e o formulário é enviado. Opcionais: `data-eds-confirm-title`,
+ * prossegue: o link navega, o botão age e o formulário é enviado. Botão de envio e formulário
+ * perguntam no envio, depois da validação: formulário inválido mostra os erros e não pergunta
+ * (validação nativa, ou a do efDS.ui com `data-eds-validate`/`data-eds-validate-form`); o envio
+ * confirmado sai com o botão como `submitter`. `formnovalidate` no botão pergunta sem validar. Opcionais: `data-eds-confirm-title`,
  * `-tone` (`info|success|warning|danger|question`) e `-ok` (texto do botão principal).
  * Ouvintes de captura em `root`; devolve a limpeza.
  */
@@ -34,6 +37,8 @@ export function initConfirm(root: ParentNode = document): () => void {
     if (!el || !(root as Node).contains(el)) return;
     if (approved.has(el)) return;
     if (el instanceof HTMLButtonElement && el.disabled) return;
+    // Botão de envio: a pergunta fica para o `submit`, que só acontece depois da validação.
+    if (el instanceof HTMLButtonElement && el.type === 'submit' && el.form) return;
     if (el.getAttribute('aria-busy') === 'true') return;
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -42,17 +47,6 @@ export function initConfirm(root: ParentNode = document): () => void {
     void ask(el)
       .then((ok) => {
         if (!ok || !el.isConnected) return;
-        const form = el instanceof HTMLButtonElement ? el.form : null;
-        if (form && el instanceof HTMLButtonElement && el.type === 'submit') {
-          // O envio já foi confirmado aqui: o `submit` do form não pergunta de novo.
-          approved.add(form);
-          try {
-            form.requestSubmit(el);
-          } finally {
-            approved.delete(form);
-          }
-          return;
-        }
         approved.add(el);
         try {
           el.click();
@@ -67,15 +61,24 @@ export function initConfirm(root: ParentNode = document): () => void {
 
   const onSubmit = (event: Event) => {
     const form = event.target;
-    if (!(form instanceof HTMLFormElement) || !form.matches(FORM)) return;
-    if (!(root as Node).contains(form)) return;
+    if (!(form instanceof HTMLFormElement) || !(root as Node).contains(form)) return;
     if (approved.has(form)) return;
+    const submitter = (event as SubmitEvent).submitter;
+    const source =
+      submitter instanceof HTMLButtonElement && submitter.matches(TRIGGER)
+        ? submitter
+        : form.matches(FORM)
+          ? form
+          : null;
+    if (!source) return;
+    // Envio que a validação do efDS.ui vai recusar: deixa passar para ela mostrar os erros.
+    const skipValidation = submitter instanceof HTMLButtonElement && submitter.formNoValidate;
+    if (!skipValidation && isValidating(form) && !isFormValid(form)) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     if (pending.has(form)) return;
     pending.add(form);
-    const submitter = (event as SubmitEvent).submitter;
-    void ask(form)
+    void ask(source)
       .then((ok) => {
         if (!ok || !form.isConnected) return;
         approved.add(form);

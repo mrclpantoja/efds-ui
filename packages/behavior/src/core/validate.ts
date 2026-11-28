@@ -287,11 +287,17 @@ export function isPis(value: string): boolean {
 
 /**
  * Título de eleitor: 8 dígitos de sequência, 2 da UF (01 a 28; 28 é o exterior) e 2 verificadores.
- * Resto 10 vira 0; para SP (01) e MG (02), resto 0 vira 1.
+ * Módulo 11 (Res. TSE 23.659/2021, art. 36): pesos 2 a 9 na sequência; o segundo usa a UF e o
+ * primeiro verificador com pesos 7, 8 e 9. Resto 10 vira 0; para SP (01) e MG (02), resto 0 vira 1.
+ * A resolução só diz "módulo 11"; os pesos e as regras de resto seguem as referências da
+ * comunidade (as mesmas do brazilian-utils). Títulos antigos impressos sem os zeros à esquerda
+ * da sequência (5 a 11 dígitos) são completados com zeros.
  */
 export function isVoterId(value: string): boolean {
-  const text = value.trim().replace(/[.\-\s]/g, '');
-  if (!/^\d{12}$/.test(text) || allSame(text)) return false;
+  const raw = value.trim().replace(/[.\-\s]/g, '');
+  if (!/^\d{5,12}$/.test(raw)) return false;
+  const text = raw.padStart(12, '0');
+  if (allSame(text)) return false;
   const d = text.split('').map(Number);
   const uf = d[8]! * 10 + d[9]!;
   if (uf < 1 || uf > 28) return false;

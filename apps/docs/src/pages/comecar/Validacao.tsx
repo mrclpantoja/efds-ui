@@ -99,7 +99,8 @@ export default function ValidacaoPage() {
             { name: 'pis', effect: 'PIS, PASEP ou NIS: 11 dígitos com verificador.' },
             {
               name: 'titulo',
-              effect: 'Título de eleitor: 12 dígitos, UF de 01 a 28 e os dois verificadores.',
+              effect:
+                'Título de eleitor: 12 dígitos (os antigos sem os zeros à esquerda também), UF de 01 a 28 e os dois verificadores.',
             },
             { name: 'placa', effect: 'Padrão antigo (ABC-1234) ou Mercosul (ABC1D23).' },
             {

@@ -2,6 +2,13 @@
 
 Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons`, `@efds-ui/behavior` e `@efds-ui/editor`.
 
+## 1.0.1 (não publicada)
+
+### Correções
+
+- `data-eds-confirm` em botão de envio ou formulário só pergunta depois da validação: com campo inválido, os erros aparecem e a confirmação não abre (`formnovalidate` pergunta sem validar). O mesmo vale para o `ConfirmButton` do React com `type="submit"`, com validação nativa ou `useFormValidation`. Antes, a pergunta vinha primeiro e, depois do "sim", o envio era recusado.
+- `isVoterId` (`data-eds-validate="titulo"`) aceita títulos antigos sem os zeros à esquerda da sequência (5 a 11 dígitos). A regra dos verificadores foi conferida contra o brazilian-utils, sem mudança.
+
 ## 1.0.0 (27/11/2026)
 
 Primeira versão estável: a API pública fica congelada e segue o SemVer descrito na página Políticas do site. Reúne tudo o que foi feito depois da 0.1.2 e uma revisão de consistência da API que **quebra contrato**. Antes de atualizar, leia o [guia de migração](docs/migracao-1.0.md), que traz cada nome antigo e o novo.

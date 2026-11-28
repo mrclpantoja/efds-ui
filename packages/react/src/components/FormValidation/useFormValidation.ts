@@ -12,6 +12,7 @@ import {
   fieldLabel,
   fieldMessage,
   isFormControl,
+  markValidating,
   representativeOf,
   validatableControls,
   type FormControl,
@@ -91,6 +92,13 @@ const keyOf = (control: FormControl): string => control.name || control.id;
 export function useFormValidation(options: UseFormValidationOptions = {}): UseFormValidationResult {
   const { onSubmit, onInvalid, texts } = options;
   const formRef = useRef<HTMLFormElement | null>(null);
+  // Avisa o ConfirmButton de que um envio inválido será recusado aqui (ele não pergunta).
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+    markValidating(form, true);
+    return () => markValidating(form, false);
+  }, []);
   const summaryRef = useRef<HTMLDivElement | null>(null);
   const armed = useRef(new Set<string>());
   const skipBlurUntil = useRef(0);

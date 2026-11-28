@@ -30,6 +30,7 @@ export {
   validatorMessage,
 } from './core/form-errors';
 export type { FormControl } from './core/form-errors';
+export { isFormValid, isValidating, markValidating } from './core/form-state';
 // Galeria e cortador de imagem
 export {
   announcement,

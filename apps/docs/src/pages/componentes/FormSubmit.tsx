@@ -74,12 +74,12 @@ export default function FormSubmitPage() {
             </li>
           </ul>
           <p>
-            Em todos os modos o envio só conta se for válido: a validação do navegador, da
-            confirmação (<code>data-eds-confirm</code>) e do Wizard acontecem antes. O evento{' '}
-            <code>eds:form-submit</code> (cancelável) sai logo antes; cancelá-lo impede o envio. Em
-            fetch, <code>detail.data</code> é o <code>FormData</code> e aceita campos extras (token
-            CSRF). Depois do sucesso o behavior chama <code>markClean(form)</code>: o aviso de
-            alterações não salvas some.
+            Em todos os modos o envio só conta se for válido: a validação (do navegador ou do
+            efDS.ui), a do Wizard e, depois dela, a confirmação (<code>data-eds-confirm</code>)
+            acontecem antes. O evento <code>eds:form-submit</code> (cancelável) sai logo antes;
+            cancelá-lo impede o envio. Em fetch, <code>detail.data</code> é o <code>FormData</code>{' '}
+            e aceita campos extras (token CSRF). Depois do sucesso o behavior chama{' '}
+            <code>markClean(form)</code>: o aviso de alterações não salvas some.
           </p>
         </Alert>
         <Alert tone="warning" title="Convivência com o PageLoader">

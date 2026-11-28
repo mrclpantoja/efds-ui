@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { abrirExemplo, camadas, textos } from '../support/docs.ts';
+import { abrirExemplo, camadas } from '../support/docs.ts';
 
 /**
  * Gerenciador de arquivos sobre o adaptador em memória da documentação (dados fictícios). Cada
@@ -9,7 +9,6 @@ import { abrirExemplo, camadas, textos } from '../support/docs.ts';
 const ROTA = '/componentes/files';
 const TITULO = 'Gerenciador completo';
 
-const nomes = (bloco: Locator) => textos(bloco.locator('tbody tr .eds-files-label'));
 const linha = (bloco: Locator, nome: string) =>
   bloco.locator('tbody tr', { has: bloco.page().getByText(nome, { exact: true }) }).first();
 const gerenciador = (bloco: Locator) => bloco.locator('.eds-files').first();
@@ -21,7 +20,10 @@ for (const camada of camadas) {
     }) => {
       const bloco = await abrirExemplo(page, ROTA, TITULO, camada);
       await expect(bloco.getByRole('table')).toBeVisible();
-      expect(await nomes(bloco)).toContain('Contratos');
+      // Sem evaluateAll: o Firefox do Playwright derruba a aba ao ler os textos (ver table.spec.ts).
+      await expect(
+        bloco.locator('tbody tr .eds-files-label', { hasText: 'Contratos' }),
+      ).toHaveCount(1);
 
       await bloco.getByRole('link', { name: 'Contratos', exact: true }).click();
       await expect(bloco.getByRole('link', { name: 'Contrato social.pdf' })).toBeVisible();

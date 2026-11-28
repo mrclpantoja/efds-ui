@@ -452,13 +452,26 @@
                 id="form-dados"
                 aria-labelledby="per-dados-t"
                 novalidate
-                data-pn-validar
+                data-eds-validate-form
+                data-eds-submit="manual"
+                data-pn-salvar
                 data-pn-sucesso="Dados pessoais salvos."
               >
                 <header class="eds-card-header">
                   <h2 class="eds-card-title" id="per-dados-t">Dados pessoais</h2>
                 </header>
                 <div class="eds-card-body eds-grid">
+                  <div
+                    class="eds-error-summary eds-col-span-12"
+                    data-eds-error-summary
+                    tabindex="-1"
+                    aria-labelledby="per-dados-erros-t"
+                    hidden
+                  >
+                    <h3 class="eds-error-summary-title" id="per-dados-erros-t"></h3>
+                    <ul class="eds-error-summary-list"></ul>
+                  </div>
+
                   <div class="eds-field eds-col-span-md-6">
                     <label class="eds-label" for="nome" data-required>Nome completo</label>
                     <input
@@ -469,7 +482,6 @@
                       value="Ana Exemplo"
                       required
                     />
-                    <p class="eds-error" id="nome-erro" hidden></p>
                   </div>
                   <div class="eds-field eds-col-span-md-6">
                     <label class="eds-label" for="email" data-required>E-mail</label>
@@ -481,8 +493,8 @@
                       autocomplete="email"
                       value="ana.exemplo@exemplo.com.br"
                       required
+                      data-eds-validate="email"
                     />
-                    <p class="eds-error" id="email-erro" hidden></p>
                   </div>
                   <div class="eds-field eds-col-span-md-6">
                     <label class="eds-label" for="telefone">Telefone</label>
@@ -493,8 +505,8 @@
                       autocomplete="tel"
                       value="(11) 90000-0000"
                       data-eds-mask="telefone"
+                      data-eds-validate="telefone"
                     />
-                    <p class="eds-error" id="telefone-erro" hidden></p>
                   </div>
                   <div class="eds-field eds-col-span-md-6">
                     <label class="eds-label" for="unidade">Unidade</label>
@@ -505,7 +517,6 @@
                       <option value="compras">Compras</option>
                       <option value="planejamento">Planejamento</option>
                     </select>
-                    <p class="eds-error" id="unidade-erro" hidden></p>
                   </div>
                   <div class="eds-field eds-col-span-md-6">
                     <label class="eds-label" for="cargo">Cargo</label>
@@ -518,7 +529,6 @@
                       aria-describedby="cargo-ajuda"
                     />
                     <p class="eds-helper" id="cargo-ajuda">Definido pela equipe de pessoal.</p>
-                    <p class="eds-error" id="cargo-erro" hidden></p>
                   </div>
                 </div>
                 <footer class="eds-card-footer">
@@ -532,7 +542,9 @@
                 class="eds-card eds-col-span-lg-8"
                 aria-labelledby="per-senha-t"
                 novalidate
-                data-pn-validar
+                data-eds-validate-form
+                data-eds-submit="manual"
+                data-pn-salvar
                 data-pn-senha
                 data-pn-sucesso="Senha alterada."
               >
@@ -540,6 +552,16 @@
                   <h2 class="eds-card-title" id="per-senha-t">Trocar senha</h2>
                 </header>
                 <div class="eds-card-body eds-stack eds-gap-4">
+                  <div
+                    class="eds-error-summary"
+                    data-eds-error-summary
+                    tabindex="-1"
+                    aria-labelledby="per-senha-erros-t"
+                    hidden
+                  >
+                    <h3 class="eds-error-summary-title" id="per-senha-erros-t"></h3>
+                    <ul class="eds-error-summary-list"></ul>
+                  </div>
                   <div class="eds-field">
                     <label class="eds-label" for="senha-atual" data-required>Senha atual</label>
                     <div class="eds-input-group">
@@ -575,7 +597,6 @@
                         </svg>
                       </button>
                     </div>
-                    <p class="eds-error" id="senha-atual-erro" hidden></p>
                   </div>
                   <div class="eds-field">
                     <label class="eds-label" for="senha-nova" data-required>Nova senha</label>
@@ -632,7 +653,6 @@
                         <span class="eds-visually-hidden">Pendente: </span>Ao menos um símbolo
                       </li>
                     </ul>
-                    <p class="eds-error" id="senha-nova-erro" hidden></p>
                   </div>
                   <div class="eds-field">
                     <label class="eds-label" for="senha-confirmacao" data-required
@@ -671,7 +691,6 @@
                         </svg>
                       </button>
                     </div>
-                    <p class="eds-error" id="senha-confirmacao-erro" hidden></p>
                   </div>
                 </div>
                 <footer class="eds-card-footer">

@@ -186,6 +186,8 @@
     var select = $('#servico');
     if (wanted && $('option[value="' + wanted + '"]', select)) select.value = wanted;
 
+    var CHANNELS = { presencial: 'Presencial', online: 'On-line', retirada: 'Retirada' };
+
     function fillReview() {
       var data = new FormData(form);
       var option = select.options[select.selectedIndex];
@@ -198,6 +200,9 @@
         cpf: data.get('cpf'),
         email: data.get('email'),
         telefone: data.get('telefone'),
+        cep: data.get('cep'),
+        titulo: data.get('titulo'),
+        canal: CHANNELS[data.get('canal')] || '',
         contato: data.get('contato'),
         detalhes: data.get('detalhes'),
         anexos: names.join(', '),
@@ -225,12 +230,15 @@
     });
 
     /*
-     * Envio: aqui só simulamos. Num sistema real, remova este ouvinte e deixe o formulário
-     * seguir para o seu servidor (defina action e method no <form>).
+     * Envio: aqui só simulamos. O formulário usa data-eds-submit="manual": EDS.submit(form).track(...)
+     * mostra o botão ocupado (círculo de espera), avisa "Enviando…" e ignora um segundo envio até o
+     * "servidor" responder (900 ms fictícios). Num sistema real, troque a promessa por um fetch
+     * (ou use data-eds-submit="fetch" e remova este ouvinte).
      */
-    form.addEventListener('submit', function (event) {
-      if (event.defaultPrevented) return;
-      event.preventDefault();
+    var finish = $('[data-eds-wizard-finish]', form);
+    var finishLabel = finish.textContent;
+
+    function save() {
       var number = newProtocolNumber();
       var option = select.options[select.selectedIndex];
       var list = storedProtocols();
@@ -240,7 +248,10 @@
         opened: new Date().toLocaleDateString('pt-BR'),
       });
       write(KEY_PROTOCOLS, JSON.stringify(list));
+      return number;
+    }
 
+    function confirm(number) {
       form.hidden = true;
       var confirmation = $('#confirmacao');
       $('#protocolo-numero').textContent = number;
@@ -249,9 +260,25 @@
         'consultar-protocolo.html?protocolo=' + encodeURIComponent(number),
       );
       confirmation.hidden = false;
-      var title = $('#confirmacao-t');
-      title.focus();
+      $('#confirmacao-t').focus();
       window.scrollTo(0, 0);
+    }
+
+    form.addEventListener('submit', function (event) {
+      if (event.defaultPrevented) return;
+      event.preventDefault();
+      if (window.EDS.submit(form).state === 'busy') return;
+      finish.textContent = 'Enviando…';
+      var request = new Promise(function (resolve) {
+        window.setTimeout(function () {
+          resolve(save());
+        }, 900);
+      });
+      window.EDS.submit(form)
+        .track(request)
+        .then(confirm, function () {
+          finish.textContent = finishLabel;
+        });
     });
   }
 
@@ -314,6 +341,35 @@
       $('[data-f="' + name + '"]', scope).textContent = value;
     }
 
+    var STATE_TEXT = { done: 'concluída', current: 'em curso', upcoming: 'a fazer' };
+
+    /* Andamento em ordem cronológica: as etapas registradas e, se o pedido não terminou, a resposta final. */
+    function progressItems(record) {
+      var finished = record.status[0] === 'success';
+      var events = record.events.slice().reverse();
+      var items = events.map(function (event, index) {
+        return {
+          state: finished || index < events.length - 1 ? 'done' : 'current',
+          title: event.title,
+          time: event.time,
+          dateTime: event.dateTime,
+          text: event.text,
+        };
+      });
+      if (!finished) {
+        items.push({
+          state: 'upcoming',
+          title: 'Resposta final',
+          text: record.forecast
+            ? 'Previsão: ' + record.forecast
+            : record.status[0] === 'warning'
+              ? 'Depende de resolver a pendência.'
+              : 'Ainda sem previsão.',
+        });
+      }
+      return items;
+    }
+
     function render(record) {
       var scope = show('tpl-encontrado');
       text(scope, 'numero', record.number);
@@ -336,10 +392,11 @@
       badge.classList.add('eds-badge-' + record.status[0]);
       badge.textContent = record.status[1];
       var list = $('[data-f="andamento"]', scope);
-      record.events.forEach(function (event) {
+      list.setAttribute('aria-label', 'Andamento do protocolo ' + record.number);
+      progressItems(record).forEach(function (event) {
         var item = document.createElement('li');
         item.className = 'eds-timeline-item';
-        if (event.tone) item.classList.add('eds-timeline-item-' + event.tone);
+        item.setAttribute('data-state', event.state);
         var marker = document.createElement('span');
         marker.className = 'eds-timeline-marker';
         marker.setAttribute('aria-hidden', 'true');
@@ -350,11 +407,18 @@
         var title = document.createElement('span');
         title.className = 'eds-timeline-title';
         title.textContent = event.title;
-        var time = document.createElement('time');
-        time.className = 'eds-timeline-time';
-        time.setAttribute('datetime', event.dateTime);
-        time.textContent = event.time;
-        header.append(title, time);
+        var hidden = document.createElement('span');
+        hidden.className = 'eds-visually-hidden';
+        hidden.textContent = ' (' + STATE_TEXT[event.state] + ')';
+        title.appendChild(hidden);
+        header.appendChild(title);
+        if (event.time) {
+          var time = document.createElement('time');
+          time.className = 'eds-timeline-time';
+          time.setAttribute('datetime', event.dateTime);
+          time.textContent = event.time;
+          header.appendChild(time);
+        }
         content.appendChild(header);
         if (event.text) {
           var body = document.createElement('p');

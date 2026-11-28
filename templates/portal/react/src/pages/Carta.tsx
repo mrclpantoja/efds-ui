@@ -18,6 +18,7 @@ import {
   Stack,
 } from '@efds-ui/react';
 import { SearchIcon } from '@efds-ui/icons';
+import { CategoryDisc } from '../components/CategoryDisc';
 import { categories, services, type Service } from '../data';
 import { usePageTitle } from '../components/usePageTitle';
 import { href } from '../router';
@@ -121,8 +122,11 @@ export function Carta({ params }: { params: URLSearchParams }) {
               const headingId = `cat-${category.slug}`;
               return (
                 <Stack as="section" gap={3} key={category.slug} aria-labelledby={headingId}>
-                  <h2 className="eds-text-h3" id={headingId}>
-                    {category.name} <Badge tone="neutral">{items.length}</Badge>
+                  <h2 className="eds-text-h3 portal-category-heading" id={headingId}>
+                    <CategoryDisc category={category} size="sm" />
+                    <span>
+                      {category.name} <Badge tone="neutral">{items.length}</Badge>
+                    </span>
                   </h2>
                   <Accordion>
                     {items.map((s) => (

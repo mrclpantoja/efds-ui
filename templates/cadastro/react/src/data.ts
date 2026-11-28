@@ -4,7 +4,20 @@
  */
 
 export type Situacao = 'ativo' | 'pendente' | 'inativo';
-export type Tipo = 'pj' | 'pf';
+/** Pessoa jurídica, pessoa física ou estrangeiro. */
+export type Tipo = 'pj' | 'pf' | 'est';
+
+export const rotuloTipo: Record<Tipo, string> = {
+  pj: 'Pessoa jurídica',
+  pf: 'Pessoa física',
+  est: 'Estrangeiro',
+};
+
+export const rotuloDocumento: Record<Tipo, string> = {
+  pj: 'CNPJ',
+  pf: 'CPF',
+  est: 'Passaporte ou identificação fiscal',
+};
 
 export interface Cidade {
   value: string;
@@ -28,6 +41,8 @@ export interface Evento {
 export interface Fornecedor {
   id: string;
   tipo: Tipo;
+  /** País de origem (só para estrangeiros). */
+  pais?: string;
   razao: string;
   fantasia: string;
   documento: string;
@@ -64,7 +79,21 @@ export const cidades: Cidade[] = [
   { value: 'spo', label: 'São Paulo', uf: 'SP' },
 ];
 
-export const categorias = ['Materiais', 'Serviços', 'Tecnologia', 'Transporte', 'Manutenção'];
+/** Categorias do Lookup: código curto + descrição. O cadastro guarda a descrição. */
+export interface CategoriaItem {
+  code: string;
+  description: string;
+}
+
+export const categoriasLookup: CategoriaItem[] = [
+  { code: 'MAT', description: 'Materiais' },
+  { code: 'SRV', description: 'Serviços' },
+  { code: 'TEC', description: 'Tecnologia' },
+  { code: 'TRA', description: 'Transporte' },
+  { code: 'MAN', description: 'Manutenção' },
+];
+
+export const categorias = categoriasLookup.map((c) => c.description);
 
 export const situacoes: Record<
   Situacao,
@@ -121,23 +150,49 @@ const BASE: Base[] = [
   ['Bruno Modelo Reparos', 'Bruno Modelo (autônomo)', 'Manutenção', 'pel', 'pendente', 'pf'],
   ['Clara Teste Tradução', 'Clara Teste (autônoma)', 'Serviços', 'pf', 'ativo', 'pf'],
   ['Diego Fictício Transportes', 'Diego Fictício (autônomo)', 'Transporte', 'cax', 'inativo', 'pf'],
+  ['Nordic Supplies', 'Nordic Supplies Exemplo AB', 'Materiais', 'poa', 'ativo', 'est'],
 ];
 
 const pad = (n: number, size: number) => String(n).padStart(size, '0');
 
+// CNPJ e CPF FICTÍCIOS, mas com dígitos verificadores corretos (a validação do formulário os aceita).
+function digitoVerificador(digitos: number[], pesos: number[]): number {
+  const soma = pesos.reduce((acc, peso, k) => acc + (digitos[k] ?? 0) * peso, 0);
+  const resto = soma % 11;
+  return resto < 2 ? 0 : 11 - resto;
+}
+
+function cnpjFicticio(base12: string): string {
+  const d = base12.split('').map(Number);
+  d.push(digitoVerificador(d, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]));
+  d.push(digitoVerificador(d, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]));
+  const t = d.join('');
+  return `${t.slice(0, 2)}.${t.slice(2, 5)}.${t.slice(5, 8)}/${t.slice(8, 12)}-${t.slice(12)}`;
+}
+
+function cpfFicticio(base9: string): string {
+  const d = base9.split('').map(Number);
+  d.push(digitoVerificador(d, [10, 9, 8, 7, 6, 5, 4, 3, 2]));
+  d.push(digitoVerificador(d, [11, 10, 9, 8, 7, 6, 5, 4, 3, 2]));
+  const t = d.join('');
+  return `${t.slice(0, 3)}.${t.slice(3, 6)}.${t.slice(6, 9)}-${t.slice(9)}`;
+}
+
 export const seed: Fornecedor[] = BASE.map(
   ([fantasia, razao, categoria, cidade, situacao, tipo], i) => {
     const c = cidades.find((x) => x.value === cidade) ?? cidades[0]!;
-    const dv = pad((i * 7 + 13) % 100, 2);
     const documento =
       tipo === 'pj'
-        ? `${pad(10 + i, 2)}.000.${pad(100 + i, 3)}/0001-${dv}`
-        : `000.000.${pad(100 + i, 3)}-${dv}`;
+        ? cnpjFicticio(`${pad(10 + i, 2)}000${pad(100 + i, 3)}0001`)
+        : tipo === 'pf'
+          ? cpfFicticio(`000000${pad(100 + i, 3)}`)
+          : `SE556000-${pad(100 + i, 4)}`;
     const dia = pad((i % 27) + 1, 2);
     const mes = pad((i % 12) + 1, 2);
     return {
       id: `FOR-${pad(i + 1, 4)}`,
       tipo,
+      ...(tipo === 'est' ? { pais: 'Suécia' } : {}),
       razao,
       fantasia,
       documento,
@@ -191,3 +246,52 @@ export const dataBr = (iso: string) => (iso ? iso.split('-').reverse().join('/')
 /** CNPJ/CPF mascarado: tudo vira asterisco, menos os dois últimos caracteres. */
 export const maskDoc = (doc: string) =>
   doc.slice(0, -2).replace(/[0-9A-Za-z]/g, '*') + doc.slice(-2);
+
+export interface Etapa {
+  titulo: string;
+  texto: string;
+  /** Data ISO da etapa concluída (vazia se ainda não aconteceu). */
+  data: string;
+  estado: 'done' | 'current' | 'upcoming';
+}
+
+/** Etapas do cadastro a partir da situação: Recebido, Em análise, Aprovado (e Inativado). */
+export function etapasSituacao(f: Fornecedor): Etapa[] {
+  const hist = f.historico;
+  const criado = hist[hist.length - 1]?.data ?? f.contratoEm;
+  const recente = hist[0]?.data ?? criado;
+  const conferido = hist.find((h) => h.titulo === 'Documentos conferidos');
+  const etapas: Etapa[] = [
+    { titulo: 'Recebido', texto: 'Cadastro registrado.', data: criado, estado: 'done' },
+  ];
+  if (f.situacao === 'pendente') {
+    etapas.push(
+      { titulo: 'Em análise', texto: 'Conferindo os documentos.', data: '', estado: 'current' },
+      { titulo: 'Aprovado', texto: 'Aguardando a análise.', data: '', estado: 'upcoming' },
+    );
+    return etapas;
+  }
+  etapas.push(
+    {
+      titulo: 'Em análise',
+      texto: 'Documentos conferidos.',
+      data: conferido?.data ?? criado,
+      estado: 'done',
+    },
+    {
+      titulo: 'Aprovado',
+      texto: 'Fornecedor habilitado.',
+      data: recente,
+      estado: f.situacao === 'inativo' ? 'done' : 'current',
+    },
+  );
+  if (f.situacao === 'inativo') {
+    etapas.push({
+      titulo: 'Inativado',
+      texto: f.motivo || 'Cadastro inativado.',
+      data: recente,
+      estado: 'current',
+    });
+  }
+  return etapas;
+}

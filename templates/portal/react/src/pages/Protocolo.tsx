@@ -15,6 +15,7 @@ import {
   PageHeader,
   Stack,
   Timeline,
+  type TimelineItem,
 } from '@efds-ui/react';
 import { failingProtocol, protocols, type Protocol } from '../data';
 import { usePageTitle } from '../components/usePageTitle';
@@ -47,12 +48,57 @@ function findProtocol(number: string): Protocol | null {
   return [...protocols, ...saved].find((item) => item.number === number) ?? null;
 }
 
+const stateText = { done: 'concluída', current: 'em curso', upcoming: 'a fazer' } as const;
+
+/**
+ * Andamento em ordem cronológica, para a linha do tempo horizontal: as etapas já registradas e,
+ * se o pedido ainda não terminou, a resposta final por vir.
+ */
+function progressItems(record: Protocol): TimelineItem[] {
+  const finished = record.status[0] === 'success';
+  const events = [...record.events].reverse();
+  const items: TimelineItem[] = events.map((event, index) => {
+    const state = finished || index < events.length - 1 ? 'done' : 'current';
+    return {
+      id: event.id,
+      state,
+      title: (
+        <>
+          {event.title}
+          <span className="eds-visually-hidden"> ({stateText[state]})</span>
+        </>
+      ),
+      time: event.time,
+      dateTime: event.dateTime,
+      text: event.text,
+    };
+  });
+  if (!finished) {
+    items.push({
+      id: 'final',
+      state: 'upcoming',
+      title: (
+        <>
+          Resposta final
+          <span className="eds-visually-hidden"> ({stateText.upcoming})</span>
+        </>
+      ),
+      text: record.forecast
+        ? `Previsão: ${record.forecast}`
+        : record.status[0] === 'warning'
+          ? 'Depende de resolver a pendência.'
+          : 'Ainda sem previsão.',
+    });
+  }
+  return items;
+}
+
 export function Protocolo({ params }: { params: URLSearchParams }) {
   usePageTitle('Consultar protocolo');
   const initial = params.get('protocolo') ?? '';
   const [value, setValue] = useState(initial);
   const [error, setError] = useState('');
-  const isComplete = (number: string) => number.replace(/D/g, '').length === 20;
+  const isComplete = (number: string) => number.replace(/\D/g, '').length === 20;
   const [result, setResult] = useState<Result>({ kind: isComplete(initial) ? 'loading' : 'idle' });
   const failedOnce = useRef(false);
   const timer = useRef(0);
@@ -199,7 +245,11 @@ export function Protocolo({ params }: { params: URLSearchParams }) {
                   />
                   <Stack gap={3}>
                     <h3 className="eds-text-h4">Andamento</h3>
-                    <Timeline items={result.record.events} />
+                    <Timeline
+                      orientation="horizontal"
+                      aria-label={`Andamento do protocolo ${result.record.number}`}
+                      items={progressItems(result.record)}
+                    />
                   </Stack>
                 </Stack>
               ) : null}

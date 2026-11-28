@@ -19,6 +19,8 @@ export const unidades = [
 export const indicadores = [
   {
     label: 'Usuários ativos',
+    icone:
+      'M16 20v-1a4 4 0 00-4-4H7a4 4 0 00-4 4v1M9.5 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7M21 20v-1a4 4 0 00-3-3.9M16 4.1a3.5 3.5 0 010 6.8',
     value: '1.284',
     delta: '4,2%',
     trend: 'up',
@@ -27,6 +29,7 @@ export const indicadores = [
   },
   {
     label: 'Chamados abertos',
+    icone: 'M3 13l3-8h12l3 8v6H3zM3 13h5l1 3h6l1-3h5',
     value: '37',
     delta: '12%',
     trend: 'down',
@@ -35,6 +38,7 @@ export const indicadores = [
   },
   {
     label: 'Tempo médio de resposta',
+    icone: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 7v5l3 2',
     value: '2 h 14 min',
     delta: '8%',
     trend: 'up',
@@ -43,6 +47,7 @@ export const indicadores = [
   },
   {
     label: 'Satisfação',
+    icone: 'M12 21a9 9 0 100-18 9 9 0 000 18zM8.5 14a4 4 0 007 0M9 9.5h.01M15 9.5h.01',
     value: '92%',
     delta: '0 ponto',
     trend: 'flat',
@@ -156,11 +161,16 @@ export interface Notificacao {
   time: string;
   dateTime: string;
   unread: boolean;
+  /** Tom e traçado (viewBox 24) do disco de ícone: decorativo, o título diz o que houve. */
+  tom: 'accent' | 'neutral' | 'info' | 'success' | 'warning';
+  icone: string;
 }
 
 export const notificacoesIniciais: Notificacao[] = [
   {
     id: 'n1',
+    tom: 'info',
+    icone: 'M3 13l3-8h12l3 8v6H3zM3 13h5l1 3h6l1-3h5',
     title: 'Chamado CH-2026-0418 atribuído a você',
     text: 'Acesso ao sistema de protocolo, unidade Financeiro.',
     time: 'há 10 minutos',
@@ -169,6 +179,8 @@ export const notificacoesIniciais: Notificacao[] = [
   },
   {
     id: 'n2',
+    tom: 'accent',
+    icone: 'M6 3h9l4 4v14H6zM14 3v5h5M9 13h6M9 17h6',
     title: 'Relatório mensal de acessos disponível',
     text: 'O arquivo fica disponível por 7 dias.',
     time: 'há 1 hora',
@@ -177,6 +189,8 @@ export const notificacoesIniciais: Notificacao[] = [
   },
   {
     id: 'n3',
+    tom: 'warning',
+    icone: 'M12 3l10 18H2zM12 10v5M12 18h.01',
     title: 'Manutenção programada no sábado',
     text: 'O sistema ficará indisponível das 22h às 23h.',
     time: 'há 3 horas',
@@ -185,6 +199,8 @@ export const notificacoesIniciais: Notificacao[] = [
   },
   {
     id: 'n4',
+    tom: 'neutral',
+    icone: 'M6 11h12v10H6zM8 11V8a4 4 0 018 0v3',
     title: 'Senha alterada',
     text: 'Se não foi você, avise a equipe de suporte.',
     time: 'ontem',
@@ -193,6 +209,9 @@ export const notificacoesIniciais: Notificacao[] = [
   },
   {
     id: 'n5',
+    tom: 'success',
+    icone:
+      'M15 20v-1a4 4 0 00-4-4H6a4 4 0 00-4 4v1M8.5 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7M19 8v6M16 11h6',
     title: 'Novo usuário cadastrado: Bruno Exemplo',
     text: 'Unidade Compras.',
     time: '20/11/2026',
@@ -201,6 +220,8 @@ export const notificacoesIniciais: Notificacao[] = [
   },
   {
     id: 'n6',
+    tom: 'success',
+    icone: 'M5 12l5 5 9-10',
     title: 'Cópia de segurança semanal concluída',
     time: '19/11/2026',
     dateTime: '2026-11-19T03:00',

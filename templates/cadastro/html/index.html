@@ -195,33 +195,30 @@
                   autocomplete="off"
                 />
                 <div class="cad-table-tools">
-                  <div class="cad-table-tools" id="acoes-lote" hidden>
-                    <span class="eds-text-label" id="sel-count">0 selecionados</span>
-                    <button
-                      type="button"
-                      class="eds-button eds-button-secondary eds-button-sm"
-                      id="lote-excluir"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                        focusable="false"
-                      >
-                        <path d="M3 6h18M8 6V4h8v2m-9 0l1 14h8l1-14" />
-                      </svg>
-                      Excluir selecionados
-                    </button>
+                  <button
+                    type="button"
+                    class="eds-button eds-button-secondary eds-button-sm"
+                    popovertarget="colunas-painel"
+                    data-eds-columns-for="tabela-fornecedores"
+                    hidden
+                  >
+                    Colunas
+                  </button>
+                  <div
+                    class="eds-popover eds-table-columns"
+                    id="colunas-painel"
+                    popover
+                    role="dialog"
+                    aria-labelledby="colunas-titulo"
+                  >
+                    <p class="eds-table-columns-title" id="colunas-titulo">Colunas visíveis</p>
+                    <ul class="eds-table-columns-list" data-eds-columns-list></ul>
                     <button
                       type="button"
                       class="eds-button eds-button-ghost eds-button-sm"
-                      id="lote-limpar"
+                      data-eds-columns-reset
                     >
-                      Limpar seleção
+                      Restaurar padrão
                     </button>
                   </div>
                   <button
@@ -284,8 +281,22 @@
                 </div>
               </div>
 
+              <ul
+                class="eds-filter-chips"
+                aria-label="Filtros das colunas"
+                data-eds-table-chips="tabela-fornecedores"
+                hidden
+              ></ul>
+
               <div class="eds-table-wrap">
-                <table class="eds-table" id="tabela-fornecedores" aria-busy="true">
+                <table
+                  class="eds-table"
+                  id="tabela-fornecedores"
+                  aria-busy="true"
+                  data-eds-sort-multi
+                  data-eds-table-reorder
+                  data-eds-table-prefs="cadastro-fornecedores"
+                >
                   <caption class="eds-table-caption eds-visually-hidden">
                     Lista de fornecedores
                   </caption>
@@ -300,7 +311,7 @@
                             data-eds-select-all
                         /></label>
                       </th>
-                      <th scope="col" data-key="id" data-sort-key="id" aria-sort="none">
+                      <th scope="col" data-eds-col="id" data-key="id" aria-sort="none">
                         <button type="button" class="eds-table-sort">
                           Código
                           <svg
@@ -314,41 +325,137 @@
                           </svg>
                         </button>
                       </th>
-                      <th scope="col" data-key="razao" data-sort-key="razao" aria-sort="ascending">
-                        <button type="button" class="eds-table-sort">
-                          Fornecedor
-                          <svg
-                            class="eds-table-sort-icon"
-                            viewBox="0 0 16 16"
-                            aria-hidden="true"
-                            focusable="false"
-                          >
-                            <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
-                            <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
-                          </svg>
-                        </button>
-                      </th>
-                      <th scope="col" data-key="documento">Documento</th>
                       <th
                         scope="col"
+                        data-eds-col="razao"
+                        data-key="razao"
+                        aria-sort="ascending"
+                        class="eds-table-pin-start eds-table-pin-edge"
+                      >
+                        <div class="eds-table-th">
+                          <button type="button" class="eds-table-sort">
+                            Fornecedor
+                            <svg
+                              class="eds-table-sort-icon"
+                              viewBox="0 0 16 16"
+                              aria-hidden="true"
+                              focusable="false"
+                            >
+                              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+                              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            class="eds-table-filter-btn"
+                            popovertarget="fc-razao"
+                            aria-label="Filtrar Fornecedor"
+                            aria-haspopup="dialog"
+                          >
+                            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                              <path d="M2.5 3h11l-4.25 5v4.5l-2.5 1.25V8z" />
+                            </svg>
+                          </button>
+                          <div
+                            class="eds-popover eds-table-filter"
+                            id="fc-razao"
+                            popover
+                            role="dialog"
+                            aria-label="Filtrar Fornecedor"
+                          >
+                            <form method="get" action="" data-eds-column-filter="text">
+                              <div class="eds-field">
+                                <label class="eds-label" for="fc-razao-q">Nome contém</label>
+                                <input
+                                  class="eds-input"
+                                  id="fc-razao-q"
+                                  type="search"
+                                  name="filter[razao]"
+                                  autocomplete="off"
+                                  autofocus
+                                />
+                              </div>
+                              <div class="eds-table-filter-actions">
+                                <button
+                                  type="submit"
+                                  class="eds-button eds-button-primary eds-button-sm"
+                                >
+                                  Aplicar
+                                </button>
+                                <button
+                                  type="reset"
+                                  class="eds-button eds-button-ghost eds-button-sm"
+                                  data-eds-filter-clear
+                                >
+                                  Limpar
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </th>
+                      <th scope="col" data-eds-col="documento" data-key="documento">Documento</th>
+                      <th
+                        scope="col"
+                        data-eds-col="categoria"
                         data-key="categoria"
-                        data-sort-key="categoria"
                         aria-sort="none"
                       >
-                        <button type="button" class="eds-table-sort">
-                          Categoria
-                          <svg
-                            class="eds-table-sort-icon"
-                            viewBox="0 0 16 16"
-                            aria-hidden="true"
-                            focusable="false"
+                        <div class="eds-table-th">
+                          <button type="button" class="eds-table-sort">
+                            Categoria
+                            <svg
+                              class="eds-table-sort-icon"
+                              viewBox="0 0 16 16"
+                              aria-hidden="true"
+                              focusable="false"
+                            >
+                              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+                              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            class="eds-table-filter-btn"
+                            popovertarget="fc-categoria"
+                            aria-label="Filtrar Categoria"
+                            aria-haspopup="dialog"
                           >
-                            <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
-                            <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
-                          </svg>
-                        </button>
+                            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                              <path d="M2.5 3h11l-4.25 5v4.5l-2.5 1.25V8z" />
+                            </svg>
+                          </button>
+                          <div
+                            class="eds-popover eds-table-filter"
+                            id="fc-categoria"
+                            popover
+                            role="dialog"
+                            aria-label="Filtrar Categoria"
+                          >
+                            <form method="get" action="" data-eds-column-filter="select">
+                              <fieldset class="eds-fieldset" id="fc-categoria-opcoes">
+                                <legend class="eds-label">Categoria</legend>
+                              </fieldset>
+                              <div class="eds-table-filter-actions">
+                                <button
+                                  type="submit"
+                                  class="eds-button eds-button-primary eds-button-sm"
+                                >
+                                  Aplicar
+                                </button>
+                                <button
+                                  type="reset"
+                                  class="eds-button eds-button-ghost eds-button-sm"
+                                  data-eds-filter-clear
+                                >
+                                  Limpar
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
                       </th>
-                      <th scope="col" data-key="cidade" data-sort-key="cidadeNome" aria-sort="none">
+                      <th scope="col" data-eds-col="cidade" data-key="cidade" aria-sort="none">
                         <button type="button" class="eds-table-sort">
                           Cidade
                           <svg
@@ -362,27 +469,87 @@
                           </svg>
                         </button>
                       </th>
-                      <th scope="col" data-key="situacao">Situação</th>
+                      <th scope="col" data-eds-col="situacao" data-key="situacao">Situação</th>
                       <th
                         scope="col"
-                        class="eds-table-num"
+                        data-eds-col="limite"
                         data-key="limite"
+                        class="eds-table-num"
                         data-type="currency"
-                        data-sort-key="limite"
                         aria-sort="none"
+                        data-eds-editor="ed-limite"
                       >
-                        <button type="button" class="eds-table-sort">
-                          Limite
-                          <svg
-                            class="eds-table-sort-icon"
-                            viewBox="0 0 16 16"
-                            aria-hidden="true"
-                            focusable="false"
+                        <div class="eds-table-th">
+                          <button type="button" class="eds-table-sort">
+                            Limite
+                            <svg
+                              class="eds-table-sort-icon"
+                              viewBox="0 0 16 16"
+                              aria-hidden="true"
+                              focusable="false"
+                            >
+                              <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
+                              <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            class="eds-table-filter-btn"
+                            popovertarget="fc-limite"
+                            aria-label="Filtrar Limite"
+                            aria-haspopup="dialog"
                           >
-                            <path class="eds-table-sort-up" d="M4.5 6.5 8 3l3.5 3.5" />
-                            <path class="eds-table-sort-down" d="M4.5 9.5 8 13l3.5-3.5" />
-                          </svg>
-                        </button>
+                            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                              <path d="M2.5 3h11l-4.25 5v4.5l-2.5 1.25V8z" />
+                            </svg>
+                          </button>
+                          <div
+                            class="eds-popover eds-table-filter"
+                            id="fc-limite"
+                            popover
+                            role="dialog"
+                            aria-label="Filtrar Limite"
+                          >
+                            <form method="get" action="" data-eds-column-filter="number">
+                              <div class="eds-field">
+                                <label class="eds-label" for="fc-limite-min">Mínimo</label>
+                                <input
+                                  class="eds-input"
+                                  id="fc-limite-min"
+                                  name="filter[limite][gte]"
+                                  inputmode="decimal"
+                                  autocomplete="off"
+                                  autofocus
+                                />
+                              </div>
+                              <div class="eds-field">
+                                <label class="eds-label" for="fc-limite-max">Máximo</label>
+                                <input
+                                  class="eds-input"
+                                  id="fc-limite-max"
+                                  name="filter[limite][lte]"
+                                  inputmode="decimal"
+                                  autocomplete="off"
+                                />
+                              </div>
+                              <div class="eds-table-filter-actions">
+                                <button
+                                  type="submit"
+                                  class="eds-button eds-button-primary eds-button-sm"
+                                >
+                                  Aplicar
+                                </button>
+                                <button
+                                  type="reset"
+                                  class="eds-button eds-button-ghost eds-button-sm"
+                                  data-eds-filter-clear
+                                >
+                                  Limpar
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
                       </th>
                       <th scope="col" class="eds-table-actions">
                         <span class="eds-visually-hidden">Ações</span>
@@ -392,7 +559,98 @@
                   <tbody id="tbody"></tbody>
                 </table>
               </div>
+              <p class="eds-helper" id="ajuda-ordem">
+                Dica: Shift + clique (ou Shift + Enter) no título de uma coluna ordena por mais de
+                uma coluna.
+              </p>
+
               <div class="eds-visually-hidden" role="status" id="tabela-status"></div>
+              <div
+                class="eds-table-bulk"
+                role="group"
+                aria-label="Ações em lote"
+                data-eds-table-bulk="tabela-fornecedores"
+                hidden
+              >
+                <p class="eds-table-bulk-count"><span data-eds-bulk-count></span></p>
+                <div class="eds-table-bulk-actions">
+                  <button
+                    type="button"
+                    class="eds-button eds-button-secondary eds-button-sm"
+                    id="exportar-sel-gatilho"
+                    popovertarget="exportar-sel-menu"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" />
+                    </svg>
+                    Exportar selecionados
+                  </button>
+                  <div
+                    id="exportar-sel-menu"
+                    class="eds-dropdown"
+                    role="group"
+                    aria-labelledby="exportar-sel-gatilho"
+                    popover="auto"
+                  >
+                    <button
+                      type="button"
+                      class="eds-dropdown-item"
+                      data-eds-export="xlsx"
+                      data-eds-export-target="tabela-fornecedores"
+                      data-eds-export-filename="fornecedores-selecionados"
+                      data-eds-export-title="Fornecedores selecionados"
+                      data-eds-export-subtitle="Dados fictícios. CNPJ e CPF mascarados."
+                    >
+                      Excel (.xlsx)
+                    </button>
+                    <button
+                      type="button"
+                      class="eds-dropdown-item"
+                      data-eds-export="csv"
+                      data-eds-export-target="tabela-fornecedores"
+                      data-eds-export-filename="fornecedores-selecionados"
+                      data-eds-export-title="Fornecedores selecionados"
+                      data-eds-export-subtitle="Dados fictícios. CNPJ e CPF mascarados."
+                    >
+                      CSV
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    class="eds-button eds-button-secondary eds-button-sm"
+                    data-eds-bulk-action="inativar"
+                    data-eds-confirm="Inativar os fornecedores selecionados? Eles deixam de aparecer como ativos."
+                    data-eds-confirm-title="Inativar fornecedores"
+                    data-eds-confirm-tone="warning"
+                    data-eds-confirm-ok="Inativar"
+                  >
+                    Inativar
+                  </button>
+                  <button
+                    type="button"
+                    class="eds-button eds-button-danger eds-button-sm"
+                    data-eds-bulk-action="excluir"
+                  >
+                    Excluir
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  class="eds-button eds-button-ghost eds-button-sm"
+                  data-eds-bulk-clear
+                >
+                  Limpar seleção
+                </button>
+              </div>
               <div class="eds-table-footer">
                 <p id="contagem"></p>
                 <nav class="eds-pagination" aria-label="Paginação" id="paginacao" hidden></nav>
@@ -402,6 +660,16 @@
         </div>
       </main>
     </div>
+    <template id="ed-limite">
+      <input
+        class="eds-input eds-input-sm"
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        data-eds-mask="moeda"
+        required
+      />
+    </template>
     <script src="assets/data.js"></script>
     <script src="assets/app.js"></script>
   </body>

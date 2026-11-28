@@ -16,7 +16,17 @@
     { value: 'spo', label: 'São Paulo', uf: 'SP' },
   ];
 
-  var CATEGORIAS = ['Materiais', 'Serviços', 'Tecnologia', 'Transporte', 'Manutenção'];
+  // Categorias do Lookup: código curto + descrição. O cadastro guarda a descrição.
+  var CATEGORIAS_LOOKUP = [
+    { code: 'MAT', description: 'Materiais' },
+    { code: 'SRV', description: 'Serviços' },
+    { code: 'TEC', description: 'Tecnologia' },
+    { code: 'TRA', description: 'Transporte' },
+    { code: 'MAN', description: 'Manutenção' },
+  ];
+  var CATEGORIAS = CATEGORIAS_LOOKUP.map(function (c) {
+    return c.description;
+  });
 
   var SITUACOES = {
     ativo: { label: 'Ativo', badge: 'success' },
@@ -24,7 +34,7 @@
     inativo: { label: 'Inativo', badge: 'neutral' },
   };
 
-  // [fantasia, razão social, categoria, cidade, situação, tipo]
+  // [fantasia, razão social, categoria, cidade, situação, tipo (pj, pf ou est = estrangeiro)]
   var BASE = [
     ['Aurora Papelaria', 'Aurora Papelaria Exemplo Ltda.', 'Materiais', 'poa', 'ativo', 'pj'],
     ['Boreal Serviços', 'Boreal Serviços Gerais Ltda.', 'Serviços', 'pel', 'ativo', 'pj'],
@@ -64,26 +74,61 @@
       'inativo',
       'pf',
     ],
+    ['Nordic Supplies', 'Nordic Supplies Exemplo AB', 'Materiais', 'poa', 'ativo', 'est'],
   ];
 
   function pad(n, size) {
     return String(n).padStart(size, '0');
   }
 
+  // CNPJ e CPF FICTÍCIOS, mas com dígitos verificadores corretos (a validação do formulário os aceita).
+  function digitoVerificador(digitos, pesos) {
+    var soma = 0;
+    for (var k = 0; k < pesos.length; k += 1) soma += digitos[k] * pesos[k];
+    var resto = soma % 11;
+    return resto < 2 ? 0 : 11 - resto;
+  }
+  function cnpjFicticio(base12) {
+    var d = base12.split('').map(Number);
+    d.push(digitoVerificador(d, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]));
+    d.push(digitoVerificador(d, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]));
+    var t = d.join('');
+    return (
+      t.slice(0, 2) +
+      '.' +
+      t.slice(2, 5) +
+      '.' +
+      t.slice(5, 8) +
+      '/' +
+      t.slice(8, 12) +
+      '-' +
+      t.slice(12)
+    );
+  }
+  function cpfFicticio(base9) {
+    var d = base9.split('').map(Number);
+    d.push(digitoVerificador(d, [10, 9, 8, 7, 6, 5, 4, 3, 2]));
+    d.push(digitoVerificador(d, [11, 10, 9, 8, 7, 6, 5, 4, 3, 2]));
+    var t = d.join('');
+    return t.slice(0, 3) + '.' + t.slice(3, 6) + '.' + t.slice(6, 9) + '-' + t.slice(9);
+  }
+
   var fornecedores = BASE.map(function (b, i) {
     var cidade = CIDADES.filter(function (c) {
       return c.value === b[3];
     })[0];
-    var dv = pad((i * 7 + 13) % 100, 2);
     var documento =
       b[5] === 'pj'
-        ? pad(10 + i, 2) + '.000.' + pad(100 + i, 3) + '/0001-' + dv
-        : '000.000.' + pad(100 + i, 3) + '-' + dv;
+        ? cnpjFicticio(pad(10 + i, 2) + '000' + pad(100 + i, 3) + '0001')
+        : b[5] === 'pf'
+          ? cpfFicticio('000000' + pad(100 + i, 3))
+          : 'SE556000-' + pad(100 + i, 4);
     var dia = pad((i % 27) + 1, 2);
     var mes = pad((i % 12) + 1, 2);
     return {
       id: 'FOR-' + pad(i + 1, 4),
       tipo: b[5],
+      pais: b[5] === 'est' ? 'Suécia' : '',
       razao: b[1],
       fantasia: b[0],
       documento: documento,
@@ -148,6 +193,7 @@
   window.CADASTRO = {
     cidades: CIDADES,
     categorias: CATEGORIAS,
+    categoriasLookup: CATEGORIAS_LOOKUP,
     situacoes: SITUACOES,
     ceps: CEPS,
     seed: fornecedores,

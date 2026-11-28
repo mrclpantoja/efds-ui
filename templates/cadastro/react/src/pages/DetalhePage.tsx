@@ -1,6 +1,10 @@
 import {
   Badge,
   Button,
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
   DescriptionList,
   EmptyState,
   Tab,
@@ -12,7 +16,7 @@ import {
   useToast,
 } from '@efds-ui/react';
 import { EditIcon, SearchIcon, TrashIcon } from '@efds-ui/icons';
-import { dataBr, moeda, situacoes } from '../data';
+import { dataBr, etapasSituacao, moeda, rotuloDocumento, rotuloTipo, situacoes } from '../data';
 import { Shell } from '../Shell';
 import { useStore } from '../store';
 
@@ -67,7 +71,7 @@ export function DetalhePage({ id }: { id: string }) {
     <Shell
       current="lista"
       title={f.razao}
-      description={`${f.id} · ${f.tipo === 'pj' ? 'Pessoa jurídica' : 'Pessoa física'}`}
+      description={`${f.id} · ${rotuloTipo[f.tipo]}`}
       breadcrumb={[
         { label: 'Início', href: '#/' },
         { label: 'Fornecedores', href: '#/' },
@@ -86,6 +90,38 @@ export function DetalhePage({ id }: { id: string }) {
         </>
       }
     >
+      <Card aria-labelledby="situacao-t">
+        <CardHeader>
+          <CardTitle level={2} id="situacao-t">
+            Situação do cadastro
+          </CardTitle>
+        </CardHeader>
+        <CardBody>
+          <Timeline
+            orientation="horizontal"
+            aria-label="Etapas do cadastro"
+            items={etapasSituacao(f).map((e) => ({
+              id: e.titulo,
+              state: e.estado,
+              title: (
+                <>
+                  {e.titulo}
+                  <span className="eds-visually-hidden">
+                    {e.estado === 'done'
+                      ? ' (concluída)'
+                      : e.estado === 'current'
+                        ? ' (etapa atual)'
+                        : ' (a fazer)'}
+                  </span>
+                </>
+              ),
+              ...(e.data ? { time: dataBr(e.data), dateTime: e.data } : {}),
+              text: e.texto,
+            }))}
+          />
+        </CardBody>
+      </Card>
+
       <Tabs defaultValue="dados">
         <TabList aria-label="Seções do fornecedor">
           <Tab value="dados">Dados</Tab>
@@ -98,8 +134,9 @@ export function DetalhePage({ id }: { id: string }) {
             items={[
               { label: 'Código', value: f.id },
               { label: 'Situação', value: <Badge tone={sit.badge}>{sit.label}</Badge> },
-              { label: f.tipo === 'pj' ? 'CNPJ' : 'CPF', value: f.documento },
-              { label: 'Nome fantasia', value: f.tipo === 'pj' ? f.fantasia : '' },
+              { label: rotuloDocumento[f.tipo], value: f.documento },
+              ...(f.tipo === 'est' ? [{ label: 'País de origem', value: f.pais }] : []),
+              { label: 'Nome fantasia', value: f.tipo !== 'pf' ? f.fantasia : '' },
               { label: 'Categoria', value: f.categoria },
               { label: 'E-mail', value: f.email },
               { label: 'Telefone', value: f.telefone },

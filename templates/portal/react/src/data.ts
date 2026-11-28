@@ -13,6 +13,8 @@ export interface Category {
   slug: string;
   name: string;
   text: string;
+  /** Traçado (viewBox 24) do ícone da categoria. */
+  icon: string;
 }
 
 export interface Service {
@@ -68,21 +70,25 @@ export const categories: Category[] = [
     slug: 'tributos',
     name: 'Tributos e taxas',
     text: 'IPTU, certidões e parcelamentos.',
+    icon: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6',
   },
   {
     slug: 'obras',
     name: 'Obras e meio ambiente',
     text: 'Alvarás, vistorias e arborização.',
+    icon: 'M3 21h18M5 21V9l7-5 7 5v12M10 21v-5h4v5',
   },
   {
     slug: 'cidadania',
     name: 'Cidadania e saúde',
     text: 'Cartão de saúde e programas sociais.',
+    icon: 'M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z',
   },
   {
     slug: 'educacao',
     name: 'Educação e cultura',
     text: 'Matrículas e espaços culturais.',
+    icon: 'M4 19.5A2.5 2.5 0 016.5 17H20V3H6.5A2.5 2.5 0 004 5.5zM8 7h8',
   },
 ];
 

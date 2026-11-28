@@ -242,7 +242,13 @@
               </div>
             </div>
 
-            <form class="eds-stack eds-gap-5" data-eds-wizard novalidate id="form-solicitacao">
+            <form
+              class="eds-stack eds-gap-5"
+              data-eds-wizard
+              data-eds-submit="manual"
+              novalidate
+              id="form-solicitacao"
+            >
               <ol class="eds-stepper" aria-label="Etapas da solicitação">
                 <li class="eds-stepper-item" data-state="current" aria-current="step">
                   <span class="eds-stepper-marker" aria-hidden="true"></span>
@@ -320,13 +326,30 @@
                         inputmode="numeric"
                         autocomplete="off"
                         required
-                        pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
                         data-eds-mask="cpf"
-                        data-eds-error-message="Informe o CPF completo, com 11 números."
+                        data-eds-validate="cpf"
+                        data-eds-error-message="Informe um CPF válido, com 11 números."
                         aria-describedby="cpf-ajuda"
                       />
                       <p class="eds-helper" id="cpf-ajuda">
-                        Usado só para identificar quem pede. Ex.: 123.456.789-00
+                        Usado só para identificar quem pede. Para testar: 529.982.247-25
+                      </p>
+                    </div>
+                    <div class="eds-field eds-col-span-12 eds-col-span-sm-6">
+                      <label class="eds-label" for="titulo">Título de eleitor</label>
+                      <input
+                        class="eds-input"
+                        id="titulo"
+                        name="titulo"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        maxlength="14"
+                        data-eds-validate="titulo"
+                        aria-describedby="titulo-ajuda"
+                      />
+                      <p class="eds-helper" id="titulo-ajuda">
+                        Opcional. Para testar: 1234 5678 0396
                       </p>
                     </div>
                   </div>
@@ -358,11 +381,142 @@
                         type="tel"
                         autocomplete="tel-national"
                         data-eds-mask="telefone"
+                        data-eds-validate="telefone"
                         aria-describedby="telefone-ajuda"
                       />
                       <p class="eds-helper" id="telefone-ajuda">Opcional. Com DDD.</p>
                     </div>
+                    <div class="eds-field eds-col-span-12 eds-col-span-sm-6">
+                      <label class="eds-label" for="cep">CEP</label>
+                      <input
+                        class="eds-input"
+                        id="cep"
+                        name="cep"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="postal-code"
+                        data-eds-mask="cep"
+                        data-eds-validate="cep"
+                        aria-describedby="cep-ajuda"
+                      />
+                      <p class="eds-helper" id="cep-ajuda">Opcional. Do seu endereço.</p>
+                    </div>
                   </div>
+                  <fieldset class="eds-fieldset">
+                    <legend class="eds-legend">Como prefere ser atendido?</legend>
+                    <div class="eds-option-cards">
+                      <label class="eds-option-card">
+                        <input type="radio" name="canal" value="presencial" />
+                        <span class="eds-option-card-icon" aria-hidden="true"
+                          ><span class="eds-icon-disc"
+                            ><svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              focusable="false"
+                              aria-hidden="true"
+                            >
+                              <path
+                                d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11zM12 12a2 2 0 100-4 2 2 0 000 4"
+                              /></svg></span
+                        ></span>
+                        <span class="eds-option-card-text">
+                          <span class="eds-option-card-title">Presencial</span>
+                          <span class="eds-option-card-description"
+                            >No balcão da prefeitura, com hora marcada.</span
+                          >
+                        </span>
+                        <span class="eds-option-card-mark" aria-hidden="true"
+                          ><svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            focusable="false"
+                            aria-hidden="true"
+                          >
+                            <path d="M5 12l5 5 9-10" /></svg
+                        ></span>
+                      </label>
+                      <label class="eds-option-card">
+                        <input type="radio" name="canal" value="online" checked />
+                        <span class="eds-option-card-icon" aria-hidden="true"
+                          ><span class="eds-icon-disc"
+                            ><svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              focusable="false"
+                              aria-hidden="true"
+                            >
+                              <path d="M3 5h18v11H3zM8 20h8M12 16v4" /></svg></span
+                        ></span>
+                        <span class="eds-option-card-text">
+                          <span class="eds-option-card-title">On-line</span>
+                          <span class="eds-option-card-description"
+                            >Tudo pelo portal, sem sair de casa.</span
+                          >
+                        </span>
+                        <span class="eds-option-card-mark" aria-hidden="true"
+                          ><svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            focusable="false"
+                            aria-hidden="true"
+                          >
+                            <path d="M5 12l5 5 9-10" /></svg
+                        ></span>
+                      </label>
+                      <label class="eds-option-card">
+                        <input type="radio" name="canal" value="retirada" />
+                        <span class="eds-option-card-icon" aria-hidden="true"
+                          ><span class="eds-icon-disc"
+                            ><svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              focusable="false"
+                              aria-hidden="true"
+                            >
+                              <path d="M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8" /></svg></span
+                        ></span>
+                        <span class="eds-option-card-text">
+                          <span class="eds-option-card-title">Retirada</span>
+                          <span class="eds-option-card-description"
+                            >Peça aqui e retire o documento no balcão.</span
+                          >
+                        </span>
+                        <span class="eds-option-card-mark" aria-hidden="true"
+                          ><svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            focusable="false"
+                            aria-hidden="true"
+                          >
+                            <path d="M5 12l5 5 9-10" /></svg
+                        ></span>
+                      </label>
+                    </div>
+                  </fieldset>
                   <fieldset class="eds-fieldset">
                     <legend class="eds-legend">Como prefere ser avisado?</legend>
                     <label class="eds-check"
@@ -475,6 +629,18 @@
                     <div>
                       <dt>Telefone</dt>
                       <dd data-review="telefone"></dd>
+                    </div>
+                    <div>
+                      <dt>CEP</dt>
+                      <dd data-review="cep"></dd>
+                    </div>
+                    <div>
+                      <dt>Título de eleitor</dt>
+                      <dd data-review="titulo"></dd>
+                    </div>
+                    <div>
+                      <dt>Atendimento</dt>
+                      <dd data-review="canal"></dd>
                     </div>
                     <div>
                       <dt>Aviso por</dt>

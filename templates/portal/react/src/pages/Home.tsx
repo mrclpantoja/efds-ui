@@ -16,6 +16,7 @@ import {
   Stack,
   Tag,
 } from '@efds-ui/react';
+import { CategoryDisc } from '../components/CategoryDisc';
 import { categories, featured, news, serviceBySlug, services, type Service } from '../data';
 import { usePageTitle } from '../components/usePageTitle';
 import { go, href } from '../router';
@@ -127,6 +128,7 @@ export function Home() {
               {categories.map((category) => (
                 <li className="portal-category" key={category.slug}>
                   <a href={href.carta({ categoria: category.slug })}>
+                    <CategoryDisc category={category} />
                     <span className="eds-text-h3 portal-category-name">{category.name}</span>
                     <span className="portal-category-text">{category.text}</span>
                     <span className="eds-text-small portal-muted">

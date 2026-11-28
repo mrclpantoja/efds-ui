@@ -1,7 +1,7 @@
 /*
  * Painel administrativo (HTML) — só o que o @efds-ui/behavior não faz:
- * aparência e preferências guardadas neste navegador, tempo de sessão escolhido, validação dos
- * formulários de exemplo com mensagem visível e o foco na caixa de notificações filtrada.
+ * aparência e preferências guardadas neste navegador, tempo de sessão escolhido, a confirmação da
+ * nova senha, o envio fictício dos formulários do perfil e o foco na caixa de notificações filtrada.
  * Carregado no <head> sem defer: a aparência vale antes do primeiro desenho (sem piscar o tema).
  */
 (function () {
@@ -59,50 +59,13 @@
   aplicarAparencia(ler(CHAVE_APARENCIA, APARENCIA));
   marcarSessao(ler(CHAVE_PREFERENCIAS, PREFERENCIAS).sessao);
 
-  // ---------- Validação com mensagem visível (p.eds-error), sem o balão nativo ----------
-  function mensagem(campo) {
-    var v = campo.validity;
-    if (v.valueMissing) return 'Preencha este campo.';
-    if (v.typeMismatch && campo.type === 'email')
-      return 'Informe um e-mail válido, como nome@exemplo.com.br.';
-    if (v.tooShort) return 'Use ao menos ' + campo.minLength + ' caracteres.';
-    return campo.validationMessage;
-  }
-
-  function mostrarErro(campo, texto) {
-    var erro = document.getElementById(campo.id + '-erro');
-    if (!erro) return;
-    var ids = (campo.getAttribute('aria-describedby') || '').split(' ').filter(function (id) {
-      return id && id !== erro.id;
-    });
-    if (texto) {
-      erro.textContent = texto;
-      erro.hidden = false;
-      campo.setAttribute('aria-invalid', 'true');
-      ids.unshift(erro.id);
-    } else {
-      erro.textContent = '';
-      erro.hidden = true;
-      campo.removeAttribute('aria-invalid');
-    }
-    if (ids.length) campo.setAttribute('aria-describedby', ids.join(' '));
-    else campo.removeAttribute('aria-describedby');
-  }
-
-  function validar(form) {
-    var primeiro = null;
-    Array.prototype.forEach.call(form.elements, function (campo) {
-      if (!campo.name || !campo.id || !campo.validity) return;
-      var texto = campo.validity.valid ? '' : mensagem(campo);
-      if (!texto && form.hasAttribute('data-pn-senha') && campo.name === 'confirmacao') {
-        if (campo.value !== form.elements.nova.value)
-          texto = 'A confirmação não confere com a nova senha.';
-      }
-      mostrarErro(campo, texto);
-      if (texto && !primeiro) primeiro = campo;
-    });
-    if (primeiro) primeiro.focus();
-    return !primeiro;
+  // ---------- Confirmação da nova senha: vira a validade nativa do campo ----------
+  // A validação visível (erro junto do campo e resumo) é do behavior: form[data-eds-validate-form].
+  function conferirSenha(form) {
+    var nova = form.elements.nova;
+    var confirmacao = form.elements.confirmacao;
+    var confere = confirmacao.value === '' || confirmacao.value === nova.value;
+    confirmacao.setCustomValidity(confere ? '' : 'A confirmação não confere com a nova senha.');
   }
 
   // ---------- Caixa de notificações: o item lido pode sair do filtro (CSS :has) ----------
@@ -181,15 +144,33 @@
       });
     }
 
+    // Salvar: o behavior só deixa chegar aqui um envio válido. EDS.submit(form).track mostra o botão
+    // ocupado, bloqueia o segundo envio e confirma ("Salvo"). O servidor é fictício (900 ms).
     Array.prototype.forEach.call(
-      document.querySelectorAll('form[data-pn-validar]'),
+      document.querySelectorAll('form[data-pn-salvar]'),
       function (form) {
+        if (form.hasAttribute('data-pn-senha')) {
+          var conferir = function () {
+            conferirSenha(form);
+          };
+          form.elements.nova.addEventListener('input', conferir);
+          form.elements.confirmacao.addEventListener('input', conferir);
+          form.addEventListener('reset', function () {
+            window.setTimeout(conferir, 0);
+          });
+        }
         form.addEventListener('submit', function (event) {
           event.preventDefault();
-          if (!validar(form)) return;
-          // Num sistema real, aqui vai o envio ao servidor.
-          if (form.hasAttribute('data-pn-senha')) form.reset();
-          avisar('success', form.getAttribute('data-pn-sucesso') || 'Salvo.');
+          if (!window.EDS) return;
+          var servidor = new Promise(function (ok) {
+            window.setTimeout(ok, 900);
+          });
+          window.EDS.submit(form)
+            .track(servidor)
+            .then(function () {
+              if (form.hasAttribute('data-pn-senha')) form.reset();
+              avisar('success', form.getAttribute('data-pn-sucesso') || 'Salvo.');
+            });
         });
       },
     );

@@ -6,6 +6,7 @@ import {
   CardBody,
   CardHeader,
   CardTitle,
+  IconDisc,
   SegmentedControl,
 } from '@efds-ui/react';
 import { caminhos, Shell, type ShellBaseProps } from '../Shell';
@@ -98,6 +99,20 @@ export function Notificacoes(props: ShellBaseProps) {
                 onClick={(event) => ler(event, n.id, n.unread)}
               >
                 <span className="eds-notification-dot" aria-hidden="true" />
+                <IconDisc size="sm" tone={n.tom}>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    focusable="false"
+                    aria-hidden="true"
+                  >
+                    <path d={n.icone} />
+                  </svg>
+                </IconDisc>
                 <span className="eds-notification-body">
                   <span className="eds-notification-status">Não lida</span>
                   <span className="eds-notification-title">{n.title}</span>

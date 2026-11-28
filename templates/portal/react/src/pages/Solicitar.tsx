@@ -14,7 +14,10 @@ import {
   FileUpload,
   Grid,
   GridItem,
+  IconDisc,
   Input,
+  OptionCard,
+  OptionCardGroup,
   Page,
   PageBody,
   PageHeader,
@@ -37,6 +40,9 @@ interface Review {
   cpf: string;
   email: string;
   telefone: string;
+  cep: string;
+  titulo: string;
+  canal: string;
   contato: string;
   detalhes: string;
   anexos: string;
@@ -48,6 +54,9 @@ const emptyReview: Review = {
   cpf: '',
   email: '',
   telefone: '',
+  cep: '',
+  titulo: '',
+  canal: '',
   contato: '',
   detalhes: '',
   anexos: '',
@@ -58,6 +67,42 @@ const text = (data: FormData, name: string) => {
   return typeof value === 'string' ? value : '';
 };
 
+const channels = [
+  {
+    value: 'presencial',
+    label: 'Presencial',
+    description: 'No balcão da prefeitura, com hora marcada.',
+    icon: 'M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11zM12 12a2 2 0 100-4 2 2 0 000 4',
+  },
+  {
+    value: 'online',
+    label: 'On-line',
+    description: 'Tudo pelo portal, sem sair de casa.',
+    icon: 'M3 5h18v11H3zM8 20h8M12 16v4',
+  },
+  {
+    value: 'retirada',
+    label: 'Retirada',
+    description: 'Peça aqui e retire o documento no balcão.',
+    icon: 'M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8',
+  },
+] as const;
+
+const glyph = (path: string) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    focusable="false"
+    aria-hidden="true"
+  >
+    <path d={path} />
+  </svg>
+);
+
 export function Solicitar({ params }: { params: URLSearchParams }) {
   usePageTitle('Solicitar um serviço');
   const wanted = params.get('servico') ?? '';
@@ -67,6 +112,8 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
   const files = useRef<File[]>([]);
   const [review, setReview] = useState<Review>(emptyReview);
   const [protocol, setProtocol] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
+  const sendingRef = useRef(false);
   const confirmationTitle = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -86,6 +133,9 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
       cpf: text(data, 'cpf'),
       email: text(data, 'email'),
       telefone: text(data, 'telefone'),
+      cep: text(data, 'cep'),
+      titulo: text(data, 'titulo'),
+      canal: channels.find((c) => c.value === text(data, 'canal'))?.label ?? '',
       contato: text(data, 'contato'),
       detalhes: text(data, 'detalhes'),
       anexos: files.current.map((file) => file.name).join(', '),
@@ -98,21 +148,41 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
     { label: 'CPF', value: review.cpf },
     { label: 'E-mail', value: review.email },
     { label: 'Telefone', value: review.telefone },
+    { label: 'CEP', value: review.cep },
+    { label: 'Título de eleitor', value: review.titulo },
+    { label: 'Atendimento', value: review.canal },
     { label: 'Aviso por', value: review.contato },
     { label: 'Detalhes', value: review.detalhes },
     { label: 'Documentos', value: review.anexos },
   ];
 
+  // Estado de envio: o botão final mostra "Enviando…" e um segundo envio é ignorado. O "servidor"
+  // é fictício (900 ms); num sistema real, troque o setTimeout pelo seu fetch e trate a falha.
   const complete = (data: FormData, form: HTMLFormElement) => {
+    if (sendingRef.current) return;
+    sendingRef.current = true;
+    setSending(true);
     const summary = readForm(form);
-    const number = newProtocolNumber();
-    saveProtocol({
-      number,
-      service: summary.servico || String(data.get('servico') ?? ''),
-      opened: new Date().toLocaleDateString('pt-BR'),
-    });
-    setProtocol(number);
+    window.setTimeout(() => {
+      const number = newProtocolNumber();
+      saveProtocol({
+        number,
+        service: summary.servico || String(data.get('servico') ?? ''),
+        opened: new Date().toLocaleDateString('pt-BR'),
+      });
+      sendingRef.current = false;
+      setSending(false);
+      setProtocol(number);
+    }, 900);
   };
+
+  // O botão final é do Wizard: o aria-busy (círculo de espera) é posto direto nele.
+  useEffect(() => {
+    const finish = formRef.current?.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (!finish) return;
+    if (sending) finish.setAttribute('aria-busy', 'true');
+    else finish.removeAttribute('aria-busy');
+  }, [sending]);
 
   const breadcrumb = (
     <Breadcrumb>
@@ -170,7 +240,8 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                 <Wizard
                   ref={formRef}
                   aria-label="Etapas da solicitação"
-                  texts={{ finish: 'Enviar solicitação' }}
+                  aria-busy={sending || undefined}
+                  texts={{ finish: sending ? 'Enviando…' : 'Enviar solicitação' }}
                   onStepChange={(index) => {
                     if (index === 3 && formRef.current) setReview(readForm(formRef.current));
                   }}
@@ -213,15 +284,29 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                               <Field
                                 label="CPF"
                                 required
-                                helper="Usado só para identificar quem pede. Ex.: 123.456.789-00"
+                                helper="Usado só para identificar quem pede. Para testar: 529.982.247-25"
                               >
                                 <Input
                                   name="cpf"
                                   mask="cpf"
+                                  validate="cpf"
                                   inputMode="numeric"
                                   autoComplete="off"
-                                  pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
-                                  data-eds-error-message="Informe o CPF completo, com 11 números."
+                                  data-eds-error-message="Informe um CPF válido, com 11 números."
+                                />
+                              </Field>
+                            </GridItem>
+                            <GridItem span={12} spanSm={6}>
+                              <Field
+                                label="Título de eleitor"
+                                helper="Opcional. Para testar: 1234 5678 0396"
+                              >
+                                <Input
+                                  name="titulo"
+                                  validate="titulo"
+                                  inputMode="numeric"
+                                  autoComplete="off"
+                                  maxLength={14}
                                 />
                               </Field>
                             </GridItem>
@@ -250,11 +335,40 @@ export function Solicitar({ params }: { params: URLSearchParams }) {
                                   name="telefone"
                                   type="tel"
                                   mask="telefone"
+                                  validate="telefone"
                                   autoComplete="tel-national"
                                 />
                               </Field>
                             </GridItem>
+                            <GridItem span={12} spanSm={6}>
+                              <Field label="CEP" helper="Opcional. Do seu endereço.">
+                                <Input
+                                  name="cep"
+                                  mask="cep"
+                                  validate="cep"
+                                  inputMode="numeric"
+                                  autoComplete="postal-code"
+                                />
+                              </Field>
+                            </GridItem>
                           </Grid>
+                          <OptionCardGroup
+                            legend="Como prefere ser atendido?"
+                            name="canal"
+                            defaultValue="online"
+                          >
+                            {channels.map((channel) => (
+                              <OptionCard
+                                key={channel.value}
+                                type="radio"
+                                value={channel.value}
+                                title={channel.label}
+                                description={channel.description}
+                                icon={<IconDisc>{glyph(channel.icon)}</IconDisc>}
+                                mark={glyph('M5 12l5 5 9-10')}
+                              />
+                            ))}
+                          </OptionCardGroup>
                           <RadioGroup
                             legend="Como prefere ser avisado?"
                             name="contato"

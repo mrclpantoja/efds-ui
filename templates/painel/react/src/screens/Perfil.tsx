@@ -1,4 +1,3 @@
-import { useState, type FormEvent } from 'react';
 import {
   AvatarUpload,
   Button,
@@ -8,45 +7,52 @@ import {
   CardHeader,
   CardTitle,
   DescriptionList,
+  ErrorSummary,
   Field,
   Grid,
   Input,
   PasswordInput,
   Select,
+  useFormValidation,
+  useSubmit,
   useToast,
 } from '@efds-ui/react';
 import { ultimoAcesso, unidades, usuario } from '../data';
 import { caminhos, Shell, type ShellBaseProps } from '../Shell';
-import { focarPrimeiroErro, validar } from '../validacao';
+
+/** "Servidor" fictício: responde em 900 ms. Num sistema real, troque pelo seu fetch. */
+const servidor = () => new Promise<void>((ok) => window.setTimeout(ok, 900));
+
+/** A confirmação precisa repetir a nova senha: vira a validade nativa do campo (setCustomValidity). */
+function conferirSenha(form: HTMLFormElement) {
+  const nova = form.elements.namedItem('nova');
+  const confirmacao = form.elements.namedItem('confirmacao');
+  if (!(nova instanceof HTMLInputElement) || !(confirmacao instanceof HTMLInputElement)) return;
+  const confere = confirmacao.value === '' || confirmacao.value === nova.value;
+  confirmacao.setCustomValidity(confere ? '' : 'A confirmação não confere com a nova senha.');
+}
 
 export function Perfil(props: ShellBaseProps) {
   const toast = useToast();
-  const [errosDados, setErrosDados] = useState<Record<string, string>>({});
-  const [errosSenha, setErrosSenha] = useState<Record<string, string>>({});
 
-  const salvarDados = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const erros = validar(form);
-    setErrosDados(erros);
-    if (Object.keys(erros).length > 0) return focarPrimeiroErro(form);
-    // Num sistema real, aqui vai o envio ao servidor.
-    toast.show({ tone: 'success', message: 'Dados pessoais salvos.' });
-  };
+  // Cada formulário: validação (resumo + erro junto do campo) e estado de envio (botão ocupado,
+  // sem duplo envio). A validação recusa o envio inválido antes de chegar ao `useSubmit`.
+  const enviarDados = useSubmit(
+    async () => {
+      await servidor();
+      toast.show({ tone: 'success', message: 'Dados pessoais salvos.' });
+    },
+    { texts: { success: 'Salvo' } },
+  );
+  const dados = useFormValidation({ onSubmit: enviarDados.handleSubmit });
 
-  const trocarSenha = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const enviarSenha = useSubmit(async (_data, event) => {
     const form = event.currentTarget;
-    const erros = validar(form);
-    const dados = new FormData(form);
-    if (!erros.confirmacao && dados.get('nova') !== dados.get('confirmacao')) {
-      erros.confirmacao = 'A confirmação não confere com a nova senha.';
-    }
-    setErrosSenha(erros);
-    if (Object.keys(erros).length > 0) return focarPrimeiroErro(form);
+    await servidor();
     form.reset();
     toast.show({ tone: 'success', message: 'Senha alterada.' });
-  };
+  });
+  const senha = useFormValidation({ onSubmit: enviarSenha.handleSubmit });
 
   return (
     <Shell
@@ -78,8 +84,7 @@ export function Perfil(props: ShellBaseProps) {
         <form
           className="eds-card eds-col-span-lg-8"
           aria-labelledby="per-dados-t"
-          noValidate
-          onSubmit={salvarDados}
+          {...dados.formProps}
         >
           <CardHeader>
             <CardTitle level={2} id="per-dados-t">
@@ -88,26 +93,38 @@ export function Perfil(props: ShellBaseProps) {
           </CardHeader>
           <CardBody>
             <Grid>
+              <ErrorSummary {...dados.summaryProps} headingLevel={3} className="eds-col-span-12" />
               <Field
                 label="Nome completo"
                 required
-                error={errosDados.nome}
+                error={dados.errorOf('nome')}
                 className="eds-col-span-md-6"
               >
                 <Input name="nome" autoComplete="name" defaultValue={usuario.nome} />
               </Field>
-              <Field label="E-mail" required error={errosDados.email} className="eds-col-span-md-6">
+              <Field
+                label="E-mail"
+                required
+                error={dados.errorOf('email')}
+                className="eds-col-span-md-6"
+              >
                 <Input
                   name="email"
                   type="email"
+                  validate="email"
                   autoComplete="email"
                   defaultValue={usuario.email}
                 />
               </Field>
-              <Field label="Telefone" error={errosDados.telefone} className="eds-col-span-md-6">
+              <Field
+                label="Telefone"
+                error={dados.errorOf('telefone')}
+                className="eds-col-span-md-6"
+              >
                 <Input
                   name="telefone"
                   mask="telefone"
+                  validate="telefone"
                   autoComplete="tel"
                   defaultValue={usuario.telefone}
                 />
@@ -131,7 +148,7 @@ export function Perfil(props: ShellBaseProps) {
             </Grid>
           </CardBody>
           <CardFooter>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" {...enviarDados.buttonProps}>
               Salvar alterações
             </Button>
           </CardFooter>
@@ -140,8 +157,11 @@ export function Perfil(props: ShellBaseProps) {
         <form
           className="eds-card eds-col-span-lg-8"
           aria-labelledby="per-senha-t"
-          noValidate
-          onSubmit={trocarSenha}
+          {...senha.formProps}
+          onInput={(event) => {
+            conferirSenha(event.currentTarget);
+            senha.formProps.onInput(event);
+          }}
         >
           <CardHeader>
             <CardTitle level={2} id="per-senha-t">
@@ -149,18 +169,19 @@ export function Perfil(props: ShellBaseProps) {
             </CardTitle>
           </CardHeader>
           <CardBody className="eds-stack eds-gap-4">
-            <Field label="Senha atual" required error={errosSenha.atual}>
+            <ErrorSummary {...senha.summaryProps} headingLevel={3} />
+            <Field label="Senha atual" required error={senha.errorOf('atual')}>
               <PasswordInput name="atual" autoComplete="current-password" />
             </Field>
-            <Field label="Nova senha" required error={errosSenha.nova}>
+            <Field label="Nova senha" required error={senha.errorOf('nova')}>
               <PasswordInput name="nova" autoComplete="new-password" minLength={8} strength rules />
             </Field>
-            <Field label="Confirme a nova senha" required error={errosSenha.confirmacao}>
+            <Field label="Confirme a nova senha" required error={senha.errorOf('confirmacao')}>
               <PasswordInput name="confirmacao" autoComplete="new-password" />
             </Field>
           </CardBody>
           <CardFooter>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" {...enviarSenha.buttonProps}>
               Trocar senha
             </Button>
           </CardFooter>

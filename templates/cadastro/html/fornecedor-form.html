@@ -131,26 +131,178 @@
 
             <div id="resumo-erros"></div>
 
+            <ol
+              class="eds-stepper"
+              id="secoes"
+              aria-label="Seções do cadastro"
+              data-eds-stepper-sections
+            >
+              <li class="eds-stepper-item" data-state="upcoming">
+                <span class="eds-stepper-marker" aria-hidden="true"></span>
+                <span class="eds-stepper-label"
+                  ><a class="eds-stepper-link" href="#sec-dados">Dados</a></span
+                >
+              </li>
+              <li class="eds-stepper-item" data-state="upcoming">
+                <span class="eds-stepper-marker" aria-hidden="true"></span>
+                <span class="eds-stepper-label"
+                  ><a class="eds-stepper-link" href="#sec-contato">Contato</a></span
+                >
+              </li>
+              <li class="eds-stepper-item" data-state="upcoming">
+                <span class="eds-stepper-marker" aria-hidden="true"></span>
+                <span class="eds-stepper-label"
+                  ><a class="eds-stepper-link" href="#sec-end">Endereço</a></span
+                >
+              </li>
+              <li class="eds-stepper-item" data-state="upcoming">
+                <span class="eds-stepper-marker" aria-hidden="true"></span>
+                <span class="eds-stepper-label"
+                  ><a class="eds-stepper-link" href="#sec-contrato">Documentos</a></span
+                >
+              </li>
+            </ol>
+
             <form
               id="form-fornecedor"
               class="eds-stack eds-gap-5"
               novalidate
+              data-eds-validate-form
+              data-eds-submit="manual"
               data-eds-dirty-guard
               data-eds-dirty-message="Há alterações não salvas neste fornecedor. Sair mesmo assim?"
             >
-              <section class="eds-card" aria-labelledby="sec-dados-t">
+              <div
+                class="eds-error-summary"
+                data-eds-error-summary
+                tabindex="-1"
+                aria-labelledby="erros-titulo"
+                hidden
+              >
+                <h2 class="eds-error-summary-title" id="erros-titulo"></h2>
+                <ul class="eds-error-summary-list"></ul>
+              </div>
+              <section class="eds-card" id="sec-dados" aria-labelledby="sec-dados-t">
                 <div class="eds-card-header">
                   <h2 class="eds-card-title" id="sec-dados-t">Dados do fornecedor</h2>
                 </div>
                 <div class="eds-card-body">
                   <fieldset class="eds-fieldset" aria-labelledby="sec-dados-t">
                     <div class="eds-grid">
-                      <div class="eds-field eds-col-span-sm-6">
-                        <label class="eds-label" for="f-tipo" data-required>Tipo de pessoa</label>
-                        <select class="eds-select" id="f-tipo" name="tipo">
-                          <option value="pj">Pessoa jurídica</option>
-                          <option value="pf">Pessoa física</option>
-                        </select>
+                      <div class="eds-col-span-12">
+                        <fieldset class="eds-fieldset">
+                          <legend class="eds-legend" data-required>Tipo de fornecedor</legend>
+                          <div class="eds-option-cards">
+                            <label class="eds-option-card">
+                              <input type="radio" name="tipo" value="pj" checked />
+                              <span class="eds-option-card-icon" aria-hidden="true"
+                                ><span class="eds-icon-disc eds-icon-disc-info"
+                                  ><svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    focusable="false"
+                                    aria-hidden="true"
+                                  >
+                                    <path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-6h6v6" /></svg></span
+                              ></span>
+                              <span class="eds-option-card-text">
+                                <span class="eds-option-card-title">Pessoa jurídica</span>
+                                <span class="eds-option-card-description">Empresa com CNPJ.</span>
+                              </span>
+                              <span class="eds-option-card-mark" aria-hidden="true"
+                                ><svg
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  focusable="false"
+                                  aria-hidden="true"
+                                >
+                                  <path d="M5 12l5 5 9-10" /></svg
+                              ></span>
+                            </label>
+                            <label class="eds-option-card">
+                              <input type="radio" name="tipo" value="pf" />
+                              <span class="eds-option-card-icon" aria-hidden="true"
+                                ><span class="eds-icon-disc eds-icon-disc-success"
+                                  ><svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    focusable="false"
+                                    aria-hidden="true"
+                                  >
+                                    <path
+                                      d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0"
+                                    /></svg></span
+                              ></span>
+                              <span class="eds-option-card-text">
+                                <span class="eds-option-card-title">Pessoa física</span>
+                                <span class="eds-option-card-description">Autônomo, com CPF.</span>
+                              </span>
+                              <span class="eds-option-card-mark" aria-hidden="true"
+                                ><svg
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  focusable="false"
+                                  aria-hidden="true"
+                                >
+                                  <path d="M5 12l5 5 9-10" /></svg
+                              ></span>
+                            </label>
+                            <label class="eds-option-card">
+                              <input type="radio" name="tipo" value="est" />
+                              <span class="eds-option-card-icon" aria-hidden="true"
+                                ><span class="eds-icon-disc eds-icon-disc-warning"
+                                  ><svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    focusable="false"
+                                    aria-hidden="true"
+                                  >
+                                    <path
+                                      d="M12 21a9 9 0 100-18 9 9 0 000 18zM3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"
+                                    /></svg></span
+                              ></span>
+                              <span class="eds-option-card-text">
+                                <span class="eds-option-card-title">Estrangeiro</span>
+                                <span class="eds-option-card-description"
+                                  >Empresa ou pessoa de outro país.</span
+                                >
+                              </span>
+                              <span class="eds-option-card-mark" aria-hidden="true"
+                                ><svg
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  focusable="false"
+                                  aria-hidden="true"
+                                >
+                                  <path d="M5 12l5 5 9-10" /></svg
+                              ></span>
+                            </label>
+                          </div>
+                        </fieldset>
                       </div>
                       <div class="eds-field eds-col-span-sm-6" data-eds-show-if="tipo=pj">
                         <label class="eds-label" for="f-cnpj" data-required>CNPJ</label>
@@ -160,11 +312,13 @@
                           name="cnpj"
                           autocomplete="off"
                           data-eds-mask="cnpj"
+                          data-eds-validate="cnpj"
                           data-eds-require-if="tipo=pj"
                           aria-describedby="f-cnpj-ajuda"
                         />
                         <p class="eds-helper" id="f-cnpj-ajuda">
-                          Fictício. Ex.: 10.000.100/0001-13
+                          Fictício. Aceita o CNPJ alfanumérico. Ex.: 11.222.333/0001-81 ou
+                          12.ABC.345/01DE-35
                         </p>
                       </div>
                       <div class="eds-field eds-col-span-sm-6" data-eds-show-if="tipo=pf" hidden>
@@ -175,10 +329,35 @@
                           name="cpf"
                           autocomplete="off"
                           data-eds-mask="cpf"
+                          data-eds-validate="cpf"
                           data-eds-require-if="tipo=pf"
                           aria-describedby="f-cpf-ajuda"
                         />
-                        <p class="eds-helper" id="f-cpf-ajuda">Fictício. Ex.: 000.000.100-13</p>
+                        <p class="eds-helper" id="f-cpf-ajuda">Fictício. Ex.: 529.982.247-25</p>
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6" data-eds-show-if="tipo=est" hidden>
+                        <label class="eds-label" for="f-docest" data-required
+                          >Passaporte ou identificação fiscal</label
+                        >
+                        <input
+                          class="eds-input"
+                          id="f-docest"
+                          name="docEstrangeiro"
+                          autocomplete="off"
+                          data-eds-require-if="tipo=est"
+                          aria-describedby="f-docest-ajuda"
+                        />
+                        <p class="eds-helper" id="f-docest-ajuda">Fictício. Ex.: SE556000-0100</p>
+                      </div>
+                      <div class="eds-field eds-col-span-sm-6" data-eds-show-if="tipo=est" hidden>
+                        <label class="eds-label" for="f-pais" data-required>País de origem</label>
+                        <input
+                          class="eds-input"
+                          id="f-pais"
+                          name="pais"
+                          autocomplete="off"
+                          data-eds-require-if="tipo=est"
+                        />
                       </div>
                       <div class="eds-field eds-col-span-sm-6">
                         <label class="eds-label" for="f-razao" data-required
@@ -189,10 +368,11 @@
                           id="f-razao"
                           name="razao"
                           autocomplete="off"
+                          required
                           placeholder="Ex.: Aurora Papelaria Exemplo Ltda."
                         />
                       </div>
-                      <div class="eds-field eds-col-span-sm-6" data-eds-show-if="tipo=pj">
+                      <div class="eds-field eds-col-span-sm-6" data-eds-show-if="tipo=pj|est">
                         <label class="eds-label" for="f-fantasia">Nome fantasia</label>
                         <input
                           class="eds-input"
@@ -203,9 +383,50 @@
                       </div>
                       <div class="eds-field eds-col-span-sm-6">
                         <label class="eds-label" for="f-categoria" data-required>Categoria</label>
-                        <select class="eds-select" id="f-categoria" name="categoria">
-                          <option value="" disabled selected>Selecione</option>
-                        </select>
+                        <div
+                          class="eds-lookup"
+                          data-eds-lookup
+                          data-eds-lookup-title="Buscar categoria"
+                          data-eds-lookup-create="Cadastrar novo…"
+                        >
+                          <script type="application/json" data-eds-lookup-items></script>
+                          <input
+                            class="eds-input eds-lookup-code"
+                            id="f-categoria"
+                            name="categoria"
+                            autocomplete="off"
+                            required
+                            aria-describedby="f-categoria-ajuda"
+                          />
+                          <button
+                            type="button"
+                            class="eds-button eds-button-secondary eds-button-icon"
+                            aria-label="Buscar categoria"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              focusable="false"
+                              aria-hidden="true"
+                            >
+                              <path d="M11 4a7 7 0 100 14 7 7 0 000-14zm9 16l-4-4" />
+                            </svg>
+                          </button>
+                          <output
+                            class="eds-lookup-description"
+                            for="f-categoria"
+                            aria-live="polite"
+                            data-empty
+                            >—</output
+                          >
+                        </div>
+                        <p class="eds-helper" id="f-categoria-ajuda">
+                          Digite o código ou parte do nome (MAT, Serviços…). Não achou? Cadastre.
+                        </p>
                       </div>
                       <div class="eds-field eds-col-span-sm-6">
                         <label class="eds-label" for="f-situacao" data-required>Situação</label>
@@ -236,7 +457,7 @@
                 </div>
               </section>
 
-              <section class="eds-card" aria-labelledby="sec-contato-t">
+              <section class="eds-card" id="sec-contato" aria-labelledby="sec-contato-t">
                 <div class="eds-card-header">
                   <h2 class="eds-card-title" id="sec-contato-t">Contato</h2>
                 </div>
@@ -252,6 +473,8 @@
                           type="email"
                           inputmode="email"
                           autocomplete="off"
+                          required
+                          data-eds-validate="email"
                           placeholder="nome@example.com"
                         />
                       </div>
@@ -264,6 +487,7 @@
                           type="tel"
                           autocomplete="off"
                           data-eds-mask="telefone"
+                          data-eds-validate="telefone"
                           aria-describedby="f-telefone-ajuda"
                         />
                         <p class="eds-helper" id="f-telefone-ajuda">Opcional. Com DDD.</p>
@@ -283,6 +507,7 @@
                           type="email"
                           inputmode="email"
                           autocomplete="off"
+                          data-eds-validate="email"
                         />
                       </div>
                     </div>
@@ -290,7 +515,7 @@
                 </div>
               </section>
 
-              <section class="eds-card" aria-labelledby="sec-end-t">
+              <section class="eds-card" id="sec-end" aria-labelledby="sec-end-t">
                 <div class="eds-card-header">
                   <h2 class="eds-card-title" id="sec-end-t">Endereço</h2>
                 </div>
@@ -309,6 +534,8 @@
                             placeholder="00000-000"
                             data-eds-cep
                             data-eds-mask="cep"
+                            data-eds-validate="cep"
+                            required
                             data-eds-cep-url="mock/cep/{cep}"
                             data-eds-cep-fill="logradouro:#f-logradouro,bairro:#f-bairro,uf:#f-uf"
                             aria-describedby="f-cep-ajuda f-cep-msg"
@@ -329,11 +556,18 @@
                           id="f-logradouro"
                           name="logradouro"
                           autocomplete="off"
+                          required
                         />
                       </div>
                       <div class="eds-field eds-col-span-sm-4">
                         <label class="eds-label" for="f-numero" data-required>Número</label>
-                        <input class="eds-input" id="f-numero" name="numero" autocomplete="off" />
+                        <input
+                          class="eds-input"
+                          id="f-numero"
+                          name="numero"
+                          autocomplete="off"
+                          required
+                        />
                       </div>
                       <div class="eds-field eds-col-span-sm-8">
                         <label class="eds-label" for="f-bairro">Bairro</label>
@@ -351,6 +585,7 @@
                             aria-expanded="false"
                             aria-controls="f-cidade-lista"
                             autocomplete="off"
+                            required
                           />
                           <input type="hidden" name="cidade" />
                           <div class="eds-combobox-popup" popover="manual">
@@ -371,7 +606,7 @@
                       </div>
                       <div class="eds-field eds-col-span-sm-4">
                         <label class="eds-label" for="f-uf" data-required>UF</label>
-                        <select class="eds-select" id="f-uf" name="uf" autocomplete="off">
+                        <select class="eds-select" id="f-uf" name="uf" autocomplete="off" required>
                           <option value="" disabled selected>Selecione</option>
                         </select>
                       </div>
@@ -380,7 +615,7 @@
                 </div>
               </section>
 
-              <section class="eds-card" aria-labelledby="sec-contrato-t">
+              <section class="eds-card" id="sec-contrato" aria-labelledby="sec-contrato-t">
                 <div class="eds-card-header">
                   <h2 class="eds-card-title" id="sec-contrato-t">Contrato e documentos</h2>
                 </div>
@@ -411,6 +646,7 @@
                             maxlength="10"
                             placeholder="dd/mm/aaaa"
                             autocomplete="off"
+                            required
                           />
                           <button
                             type="button"
@@ -485,7 +721,7 @@
                   >Cancelar</a
                 >
                 <button type="submit" class="eds-button eds-button-primary" id="salvar">
-                  Salvar fornecedor
+                  <span id="salvar-rotulo">Salvar fornecedor</span>
                 </button>
               </div>
             </form>

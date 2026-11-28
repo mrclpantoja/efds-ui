@@ -218,3 +218,16 @@ html[data-text-size='xl'] {
   flex: 0 1 auto;
   min-inline-size: 0;
 }
+
+/* Disco de ícone nas categorias de serviço */
+.portal-category .eds-icon-disc {
+  align-self: flex-start;
+  margin-block-end: var(--eds-space-2);
+}
+
+.portal-category-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--eds-space-3);
+  margin: 0;
+}

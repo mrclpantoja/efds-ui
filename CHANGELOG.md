@@ -2,7 +2,7 @@
 
 Todas as mudanças relevantes do efDS.ui. Mantido à mão. Versão única para `@efds-ui/core`, `@efds-ui/themes`, `@efds-ui/react`, `@efds-ui/icons`, `@efds-ui/behavior` e `@efds-ui/editor`.
 
-## 1.1.0 (não publicada)
+## 1.1.0 (28/11/2026)
 
 Versão menor: só acréscimos e correções, sem quebra de API. O visualizador e o gerenciador de arquivos entram como **experimentais**.
 
